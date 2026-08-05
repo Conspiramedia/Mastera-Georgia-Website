@@ -88,7 +88,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initClientUrgentOption();
     initMasterLeadFormTracking();
     initWhatsAppButtonTracking();
-    initBannerShift();
     initFAQ();
 });
 
@@ -1010,27 +1009,6 @@ function initScrollToTop() {
     window.addEventListener('scroll', () => {
         scrollButton.classList.toggle('visible', window.pageYOffset > 300);
     });
-}
-
-// Баннер #app-banner стоит внизу на всю ширину и налезает на FAB в правом углу.
-// Когда баннер виден — приподнимаем FAB и меню над ним (класс .banner-shift).
-// Инлайн-скрипт баннера меняет banner.style.display ('block'/'none'); следим за
-// этим через MutationObserver — ловит и показ через 1.5с, и закрытие крестиком.
-function initBannerShift() {
-    const banner = document.getElementById('app-banner');
-    const fab = document.getElementById('scrollToTop');
-    if (!banner || !fab) return;
-
-    const sync = () => {
-        const shown = getComputedStyle(banner).display !== 'none';
-        fab.classList.toggle('banner-shift', shown);
-        // Меню создаётся initWhatsAppButtonTracking() и живёт у <body>.
-        const menu = document.querySelector('.contact-fab-menu');
-        if (menu) menu.classList.toggle('banner-shift', shown);
-    };
-
-    new MutationObserver(sync).observe(banner, { attributes: true, attributeFilter: ['style'] });
-    sync();
 }
 
 // ============================================

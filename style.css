@@ -2430,7 +2430,7 @@ footer {
     visibility: hidden;
     transform: translateY(100px);
     transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-    z-index: 10000;   /* выше баннера #app-banner (9999), иначе плашка перекрывает FAB */
+    z-index: 10000;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2609,7 +2609,7 @@ footer {
     display: flex;
     flex-direction: column;
     gap: 14px;
-    z-index: 10001;   /* над FAB (10000) и баннером #app-banner (9999) */
+    z-index: 10001;   /* над FAB (10000) */
     opacity: 0;
     visibility: hidden;
     transform: translateY(12px);
@@ -2622,11 +2622,6 @@ footer {
     visibility: visible;
     transform: translateY(0);
     pointer-events: auto;
-}
-
-/* Меню едет вверх вместе с FAB, когда показан баннер (см. .scroll-to-top.banner-shift). */
-.contact-fab-menu.banner-shift {
-    bottom: 180px;   /* базовые 120px + 60px сдвига FAB */
 }
 
 .contact-opt {

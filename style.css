@@ -392,7 +392,7 @@ header {
 .hero h1,
 .hero-title {
     font-family: 'Montserrat', sans-serif;
-    font-size: clamp(2rem, 4.1vw, 6rem);
+    font-size: clamp(2rem, 4.1vw, 4rem);
     line-height: 1.2;
     margin-bottom: 1.5rem;
     animation: slideUp 0.8s ease-out 0.2s backwards;
@@ -403,7 +403,7 @@ header {
 
 @media (min-width: 769px) {
     .hero-title {
-        max-width: 648px;
+        max-width: 900px;
         margin-left: auto;
         margin-right: auto;
     }

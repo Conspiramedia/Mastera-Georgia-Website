@@ -43,15 +43,36 @@
   <link rel="apple-touch-icon" sizes="180x180" href="../image/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
 
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7SLML317LT"></script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17979861714"></script>
+  <!-- Preload LCP-картинки (hero-фон) — ускоряет первую отрисовку -->
+  <link rel="preload" as="image" href="../image/hero-bg.webp" fetchpriority="high">
+
+  <!-- Google Analytics (отложенная загрузка: не блокирует первую отрисовку) -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-7SLML317LT');
     gtag('config', 'AW-17979861714');
+    (function () {
+      var loaded = false;
+      function loadGA() {
+        if (loaded) return;
+        loaded = true;
+        ['G-7SLML317LT', 'AW-17979861714'].forEach(function (id) {
+          var s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=' + id;
+          document.head.appendChild(s);
+        });
+      }
+      var evts = ['scroll', 'pointerdown', 'keydown', 'touchstart'];
+      function once() {
+        loadGA();
+        evts.forEach(function (e) { window.removeEventListener(e, once); });
+      }
+      evts.forEach(function (e) { window.addEventListener(e, once, { passive: true, once: true }); });
+      window.addEventListener('load', function () { setTimeout(loadGA, 3500); });
+    })();
   </script>
 
   <!-- Устанавливаем язык ДО загрузки script.js -->
@@ -149,7 +170,9 @@
   <meta name="theme-color" content="#FDB913">
 
   <link rel="stylesheet" href="../style.css">
-  <link rel="stylesheet" href="../service.css">
+  <!-- service.css не нужен для первого экрана — грузим без блокировки рендера -->
+  <link rel="stylesheet" href="../service.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="../service.css"></noscript>
   <script src="../script.js" defer></script>
 </head>
 

@@ -2890,3 +2890,159 @@ body.modal-open {
         -webkit-tap-highlight-color: transparent;
     }
 }
+
+/* ============================================
+   МОДАЛКА ЗАЯВКИ НА ДЕСКТОПЕ — 2 КОЛОНКИ
+   Чтобы форма помещалась без прокрутки. На планшете/мобильном
+   остаётся одна колонка. Порог 992px: ниже двум колонкам тесно.
+   ============================================ */
+@media (min-width: 992px) {
+
+    /* Окно шире дефолтных 500px — иначе двум колонкам мало места */
+    #clientLeadFormModal .modal-content,
+    #masterLeadFormModal .modal-content {
+        max-width: 860px;
+        max-height: 92vh;
+        padding: 2rem 2.5rem;
+    }
+
+    /* Форма — сетка из двух равных колонок */
+    #clientLeadFormModal .contact-form,
+    #masterLeadFormModal .contact-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.85rem 1.25rem;
+        align-items: start;
+    }
+
+    /* Элементы во всю ширину (обе колонки) */
+    #clientLeadFormModal .contact-form textarea,
+    #clientLeadFormModal .lead-photo-wrap,
+    #clientLeadFormModal .consent-label,
+    #clientLeadFormModal .contact-form .submit-btn,
+    #masterLeadFormModal .contact-form textarea,
+    #masterLeadFormModal .lead-photo-wrap,
+    #masterLeadFormModal .consent-label,
+    #masterLeadFormModal .contact-form .submit-btn {
+        grid-column: 1 / -1;
+    }
+
+    /* Кнопка отправки — по ширине надписи, по центру строки */
+    #clientLeadFormModal .contact-form .submit-btn,
+    #masterLeadFormModal .contact-form .submit-btn {
+        justify-self: center;
+        width: auto;
+    }
+
+    /* Пара «Telegram ИЛИ WhatsApp» — левая колонка, «или» между ними */
+    #clientLeadFormModal .contact-form input[name="telegram"],
+    #masterLeadFormModal .contact-form input[name="telegram"] {
+        grid-column: 1;
+    }
+
+    #clientLeadFormModal .contact-or-text,
+    #masterLeadFormModal .contact-or-text {
+        grid-column: 1;
+        margin: 0;
+        margin-top: -0.35rem;
+        margin-bottom: -0.35rem;
+    }
+
+    #clientLeadFormModal .contact-form input[name="whatsapp"],
+    #masterLeadFormModal .contact-form input[name="whatsapp"] {
+        grid-column: 1;
+    }
+
+    /* Район и категория — правая колонка напротив блока контактов */
+    #clientLeadFormModal .contact-form select[name="district"],
+    #masterLeadFormModal .contact-form select[name="district"] {
+        grid-column: 2;
+        grid-row: 2;
+    }
+
+    #clientLeadFormModal .contact-form select[name="service"],
+    #masterLeadFormModal .contact-form select[name="service"] {
+        grid-column: 2;
+        grid-row: 4;
+    }
+
+    /* Описание задачи повыше — место есть */
+    #clientLeadFormModal .contact-form textarea,
+    #masterLeadFormModal .contact-form textarea {
+        min-height: 90px;
+    }
+
+    /* Скрытые служебные поля не занимают ячейку сетки */
+    #clientLeadFormModal .contact-form input[type="hidden"],
+    #masterLeadFormModal .contact-form input[type="hidden"],
+    #clientLeadFormModal .contact-form input[style*="display:none"],
+    #masterLeadFormModal .contact-form input[style*="display:none"] {
+        display: none;
+    }
+
+    /* Компактнее шапка окна */
+    #clientLeadFormModal .modal-title,
+    #masterLeadFormModal .modal-title {
+        margin-bottom: 0.75rem;
+    }
+
+    #clientLeadFormModal .modal-subtitle,
+    #masterLeadFormModal .modal-subtitle {
+        margin-top: -0.4rem;
+        margin-bottom: 1.25rem;
+    }
+
+    /* Поля чуть ниже стандартных */
+    #clientLeadFormModal .contact-form input,
+    #clientLeadFormModal .contact-form select,
+    #masterLeadFormModal .contact-form input,
+    #masterLeadFormModal .contact-form select {
+        padding: 0.8rem 1rem;
+    }
+}
+
+/* ── Низкие десктопные экраны (ноутбуки 1366×768 и подобные) ──────
+   При высоте окна до 820px ужимаем вертикальные отступы, чтобы
+   форма помещалась без скролла. */
+@media (min-width: 992px) and (max-height: 820px) {
+
+    #clientLeadFormModal .modal-content,
+    #masterLeadFormModal .modal-content {
+        padding: 1.5rem 2.5rem 1.75rem;
+        max-height: 96vh;
+    }
+
+    #clientLeadFormModal .contact-form,
+    #masterLeadFormModal .contact-form {
+        gap: 0.65rem 1.25rem;
+    }
+
+    #clientLeadFormModal .modal-title,
+    #masterLeadFormModal .modal-title {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    #clientLeadFormModal .modal-subtitle,
+    #masterLeadFormModal .modal-subtitle {
+        margin-bottom: 0.9rem;
+    }
+
+    #clientLeadFormModal .contact-form input,
+    #clientLeadFormModal .contact-form select,
+    #masterLeadFormModal .contact-form input,
+    #masterLeadFormModal .contact-form select {
+        padding: 0.65rem 1rem;
+    }
+
+    #clientLeadFormModal .contact-form textarea,
+    #masterLeadFormModal .contact-form textarea {
+        min-height: 70px;
+        padding: 0.65rem 1rem;
+    }
+
+    #clientLeadFormModal .contact-form .submit-btn,
+    #masterLeadFormModal .contact-form .submit-btn {
+        padding: 0.85rem 2.5rem;
+    }
+}

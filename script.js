@@ -1018,6 +1018,32 @@ function closeMasterLeadForm() { _modal('masterLeadFormModal',   'none'); }
 function _modal(id, display) {
     const el = document.getElementById(id);
     if (el) el.style.display = display;
+    _toggleBodyScrollLock();
+}
+
+// Блокировка прокрутки фона, пока открыта хотя бы одна модалка.
+// Фиксируем позицию скролла через position:fixed — иначе на мобильных
+// фон всё равно «протаскивается» пальцем под окном.
+let _savedScrollY = 0;
+function _toggleBodyScrollLock() {
+    const anyOpen = ['clientLeadFormModal', 'thankYouModal',
+                     'masterLeadFormModal', 'masterThankYouModal']
+        .some(id => {
+            const m = document.getElementById(id);
+            return m && m.style.display !== 'none' && m.style.display !== '';
+        });
+    const body = document.body;
+    const locked = body.classList.contains('modal-open');
+
+    if (anyOpen && !locked) {
+        _savedScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+        body.style.top = `-${_savedScrollY}px`;
+        body.classList.add('modal-open');
+    } else if (!anyOpen && locked) {
+        body.classList.remove('modal-open');
+        body.style.top = '';
+        window.scrollTo(0, _savedScrollY);
+    }
 }
 
 // ============================================

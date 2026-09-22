@@ -2333,7 +2333,10 @@ body.modal-open {
 }
 
 .consent-label {
-    display: flex;
+    /* inline-flex + fit-content: кликабельна только зона «чекбокс + текст»,
+       а не вся ширина формы (иначе клик по пустому месту переключал галочку). */
+    display: inline-flex;
+    width: fit-content;
     align-items: center;
     gap: 0.8rem;
     cursor: pointer;

@@ -22,6 +22,7 @@ const i18n = {
         photoRemove:         'Удалить',
         masterFinishTelegram:'✅ Завершить регистрацию в Telegram',
         urgentLabel:         '🚨 Срочный заказ',
+        addressInDescription: 'Укажите в описании только суть задачи, без адреса. Точный адрес вы сообщите мастеру лично, когда он возьмёт заявку.',
     },
     ka: {
         phoneInvalid:        'გთხოვთ, შეიყვანოთ სწორი ქართული ტელეფონის ნომერი ფორმატში: +995XXXXXXXXX (9 ციფრი +995-ის შემდეგ)',
@@ -37,6 +38,7 @@ const i18n = {
         photoRemove:         'წაშლა',
         masterFinishTelegram:'✅ რეგისტრაციის დასრულება Telegram-ში',
         urgentLabel:         '🚨 სასწრაფო შეკვეთა',
+        addressInDescription: 'აღწერაში მიუთითეთ მხოლოდ დავალება, მისამართის გარეშე. ზუსტი მისამართი უთხარით ხელოსნას, როდესაც იგი აიღებს განაცხადს.',
     },
     en: {
         phoneInvalid:        'Please enter a valid Georgian phone number in the format: +995XXXXXXXXX (9 digits after +995)',
@@ -52,6 +54,7 @@ const i18n = {
         photoRemove:         'Remove',
         masterFinishTelegram:'✅ Finish registration in Telegram',
         urgentLabel:         '🚨 Urgent order',
+        addressInDescription: 'Describe only the task, without the address. Share the exact address with the specialist directly once they take the request.',
     }
 };
 
@@ -890,6 +893,43 @@ function initClientLeadFormTracking() {
     }
 }
 
+
+// ============================================
+// Детектор адреса в описании заявки
+// ============================================
+// Описание уходит мастерам в рассылке ДО оплаты заявки: если там адрес,
+// мастер может приехать, не выкупив контакт (обход оплаты). Зеркало серверной
+// проверки бота (validators.contains_address) — предупреждаем сразу, чтобы
+// клиент не получил отказ уже после отправки формы.
+const ADDR_STREET_WORDS = [
+    'улица', 'улице', 'улицу', 'ул.', 'ул ',
+    'проспект', 'проспекте', 'пр-т', 'пр.', 'пр ',
+    'переулок', 'переулке', 'пер.',
+    'шоссе', 'бульвар', 'набережная', 'площадь', 'тупик', 'квартал',
+    'корпус', 'корп.', 'стр.', 'строение',
+    'street', 'str.', 'avenue', 'ave.', 'road', 'rd.', 'lane', 'square',
+    'ქუჩა', 'გამზირი', 'ციხი', 'მოედანი',
+    'мепе', 'мере'
+];
+const ADDR_UNIT_WORDS = [
+    'дом ', 'д.', 'квартира', 'кв.', 'кв ', 'подъезд', 'этаж', 'домофон',
+    'apt', 'apartment', 'flat', 'floor', 'entrance', 'building',
+    'ბინა', 'სადარბაზო', 'სართული'
+];
+const HOUSE_NUM_RE = /(^|[\s,.;])(д|дом|кв|квартира|корп|корпус|под|подъезд|эт|этаж)\.?\s*№?\s*\d+/i;
+const STREET_NUM_RE = /(улиц[а-яё]*|проспект[а-яё]*|пр-т|переул[а-яё]*|шоссе|бульвар|наб[а-яё]*|площад[а-яё]*|street|avenue|road|lane|ქუჩა|გამზირი|мепе|мере)\s*[^\s,;]{0,25}[\s,]*\d+/i;
+
+function containsAddress(text) {
+    if (!text) return false;
+    const low = ' ' + String(text).toLowerCase().replace(/\n/g, ' ') + ' ';
+    if (HOUSE_NUM_RE.test(low)) return true;
+    if (STREET_NUM_RE.test(low)) return true;
+    const hasStreet = ADDR_STREET_WORDS.some(function (w) { return low.indexOf(w) !== -1; });
+    const hasUnit   = ADDR_UNIT_WORDS.some(function (w) { return low.indexOf(w) !== -1; });
+    return hasStreet && hasUnit;
+}
+
+
 function validateLeadForm(e) {
     const form          = e.target;
     const phoneInput    = document.getElementById('leadPhone');
@@ -908,6 +948,15 @@ function validateLeadForm(e) {
 
     if (!validatePhone(phoneInput)) return false;
     if (telegramValue && !validateTelegram(telegramInput)) return false;
+
+    // Адрес в описании запрещён: текст уходит мастерам ДО оплаты,
+    // и сервер бота такую заявку всё равно отклонит (address_in_text).
+    const messageInput = form.querySelector('textarea[name="message"]');
+    if (messageInput && containsAddress(messageInput.value)) {
+        alert(t('addressInDescription'));
+        messageInput.focus();
+        return false;
+    }
 
     return true;
 }

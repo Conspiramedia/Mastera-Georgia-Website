@@ -406,9 +406,8 @@
       <form action="https://formspree.io/f/mykdoebj" method="POST" class="contact-form" id="masterLeadForm">
         <input type="text" name="name" placeholder="Your name" required minlength="2">
         <input type="tel" name="phone" id="masterLeadPhone" placeholder="+995 5__ __ __ __" required pattern="^\+995[0-9]{9}$">
-        <input type="text" name="telegram" placeholder="Telegram: @username" data-contact-required pattern="^(@[a-zA-Z0-9_]{5,32}|[0-9]{9,15})?$">
-        <p class="contact-or-text">OR</p>
-        <input type="text" name="whatsapp" placeholder="WhatsApp: phone number" data-contact-required>
+        <input type="text" name="telegram" placeholder="Telegram: @username" required pattern="^(@[a-zA-Z0-9_]{5,32}|[0-9]{9,15})$">
+        <input type="text" name="whatsapp" placeholder="WhatsApp: phone number (optional)">
         <select name="specialty" required>
           <option value="" disabled selected>Your specialty</option>
           <option value="Handyman">Handyman</option>

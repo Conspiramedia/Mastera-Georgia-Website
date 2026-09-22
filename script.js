@@ -13,6 +13,7 @@ const i18n = {
         phoneOperator:       'Пожалуйста, введите корректный код оператора. Номер должен начинаться с +995 и далее 55, 56, 57, 58, 59, 51-54, 68, 70-79, 90-99',
         telegramInvalid:     'Пожалуйста, введите корректный Telegram username (например: @username) или номер телефона',
         contactRequired:     'Пожалуйста, заполните хотя бы один из контактов: Telegram или WhatsApp',
+        telegramRequiredMaster: 'Пожалуйста, укажите Telegram — верификация мастера проходит в Telegram-боте',
         submitError:         'Ошибка при отправке. Попробуйте ещё раз.',
         photoLabel:          '📷 Фото проблемы (по желанию, до 3)',
         photoAdd:            'Прикрепить фото',
@@ -29,6 +30,7 @@ const i18n = {
         phoneOperator:       'გთხოვთ, შეიყვანოთ სწორი ოპერატორის კოდი. ნომერი უნდა იწყებოდეს +995-ით და შემდეგ 55, 56, 57, 58, 59, 51-54, 68, 70-79, 90-99',
         telegramInvalid:     'გთხოვთ, შეიყვანოთ სწორი Telegram მომხმარებლის სახელი (მაგ: @username) ან ტელეფონის ნომერი',
         contactRequired:     'გთხოვთ, შეავსოთ ერთ-ერთი საკონტაქტო ველი: Telegram ან WhatsApp',
+        telegramRequiredMaster: 'გთხოვთ, მიუთითოთ Telegram — ხელოსნის ვერიფიკაცია მიმდინარეობს Telegram-ბოტში',
         submitError:         'გაგზავნისას მოხდა შეცდომა. სცადეთ კიდევ ერთხელ.',
         photoLabel:          '📷 პრობლემის ფოტო (სურვილისამებრ, 3-მდე)',
         photoAdd:            'ფოტოს მიმაგრება',
@@ -45,6 +47,7 @@ const i18n = {
         phoneOperator:       'Please enter a valid operator code. The number must start with +995 followed by 55, 56, 57, 58, 59, 51-54, 68, 70-79, 90-99',
         telegramInvalid:     'Please enter a valid Telegram username (e.g. @username) or phone number',
         contactRequired:     'Please fill in at least one contact field: Telegram or WhatsApp',
+        telegramRequiredMaster: 'Please provide your Telegram — master verification is done in the Telegram bot',
         submitError:         'An error occurred while submitting. Please try again.',
         photoLabel:          '📷 Photo of the problem (optional, up to 3)',
         photoAdd:            'Attach photo',
@@ -1037,20 +1040,19 @@ function validateMasterLeadForm(e) {
     const form          = e.target;
     const phoneInput    = document.getElementById('masterLeadPhone');
     const telegramInput = form.querySelector('input[name="telegram"]');
-    const whatsappInput = form.querySelector('input[name="whatsapp"]');
 
     const telegramValue = telegramInput ? telegramInput.value.trim() : '';
-    const whatsappValue = whatsappInput ? whatsappInput.value.trim() : '';
 
-    if (!telegramValue && !whatsappValue) {
-        alert(t('contactRequired'));
-        if (telegramInput && !telegramValue) telegramInput.focus();
-        else if (whatsappInput) whatsappInput.focus();
+    // Для мастера Telegram обязателен: верификация (селфи+код) проходит в Telegram-боте.
+    // WhatsApp — по желанию, дополнительный контакт.
+    if (!telegramValue) {
+        alert(t('telegramRequiredMaster'));
+        if (telegramInput) telegramInput.focus();
         return false;
     }
 
     if (!validatePhone(phoneInput)) return false;
-    if (telegramValue && !validateTelegram(telegramInput)) return false;
+    if (!validateTelegram(telegramInput)) return false;
 
     return true;
 }

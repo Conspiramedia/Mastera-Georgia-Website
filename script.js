@@ -729,7 +729,11 @@ function sendMasterLeadToBot(formData) {
             telegram:  get('telegram'),
             whatsapp:  get('whatsapp'),
             specialty: experience ? `${specialty} (опыт: ${experience} лет)` : specialty,
-            message:   get('message'),
+            // Район работы мастера. В форме — slug (Vake), бот ждёт канон-RU (Ваке),
+            // как и в клиентской заявке. All → «Все районы».
+            district:  BOT_DISTRICT_MAP[get('district')] || (get('district') === 'All' ? 'Все районы' : get('district')) || 'Все районы',
+            // Описание в форме мастера — textarea name="about" (НЕ "message").
+            message:   get('about'),
             honeypot:  get('_gotcha'),
             lang:      ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru'
         };

@@ -24,6 +24,8 @@ const i18n = {
         masterFinishTelegram:'✅ Продолжить в Telegram',
         urgentLabel:         '🚨 Срочный заказ',
         addressInDescription: 'Укажите в описании только суть задачи, без адреса. Точный адрес вы сообщите мастеру лично, когда он возьмёт заявку.',
+        specialtyOtherPlaceholder: 'Укажите вашу специальность',
+        specialtyOtherRequired:    'Пожалуйста, укажите вашу специальность',
     },
     ka: {
         phoneInvalid:        'გთხოვთ, შეიყვანოთ სწორი ქართული ტელეფონის ნომერი ფორმატში: +995XXXXXXXXX (9 ციფრი +995-ის შემდეგ)',
@@ -41,6 +43,8 @@ const i18n = {
         masterFinishTelegram:'✅ გაგრძელება Telegram-ში',
         urgentLabel:         '🚨 სასწრაფო შეკვეთა',
         addressInDescription: 'აღწერაში მიუთითეთ მხოლოდ დავალება, მისამართის გარეშე. ზუსტი მისამართი უთხარით ხელოსნას, როდესაც იგი აიღებს განაცხადს.',
+        specialtyOtherPlaceholder: 'მიუთითეთ თქვენი სპეციალობა',
+        specialtyOtherRequired:    'გთხოვთ, მიუთითოთ თქვენი სპეციალობა',
     },
     en: {
         phoneInvalid:        'Please enter a valid Georgian phone number in the format: +995XXXXXXXXX (9 digits after +995)',
@@ -58,6 +62,8 @@ const i18n = {
         masterFinishTelegram:'✅ Continue in Telegram',
         urgentLabel:         '🚨 Urgent order',
         addressInDescription: 'Describe only the task, without the address. Share the exact address with the specialist directly once they take the request.',
+        specialtyOtherPlaceholder: 'Specify your specialty',
+        specialtyOtherRequired:    'Please specify your specialty',
     }
 };
 
@@ -93,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initClientDistrictOptions();
     initClientUrgentOption();
     initMasterLeadFormTracking();
+    initMasterSpecialtyOther();
     initWhatsAppButtonTracking();
     initFAQ();
 });
@@ -720,6 +727,42 @@ function initClientPhotoUpload() {
     initClientPhotoUpload._reset = () => { leadPhotoDataUrls = []; renderPreviews(); };
 }
 
+// Значение опции «Другое» в select специальности по языкам (value из HTML).
+const SPECIALTY_OTHER_VALUE = { ru: 'Другое', en: 'Other', ka: 'სხვა' };
+
+// Инжектит поле «уточните специальность» в форму мастера: показывается только
+// когда в select специальности выбрано «Другое». Без правки HTML каждой страницы
+// (как initClientPhotoUpload / initClientUrgentOption).
+function initMasterSpecialtyOther() {
+    const form = document.getElementById('masterLeadForm');
+    if (!form) return;
+    const select = form.querySelector('select[name="specialty"]');
+    if (!select) return;
+    if (form.querySelector('input[name="specialty_other"]')) return; // уже добавлено
+
+    const lang = ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru';
+    const otherValue = SPECIALTY_OTHER_VALUE[lang] || SPECIALTY_OTHER_VALUE.ru;
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.name = 'specialty_other';
+    input.placeholder = t('specialtyOtherPlaceholder');
+    input.style.display = 'none';           // скрыто, пока не выбрано «Другое»
+    input.minLength = 2;
+
+    // Вставляем сразу после select специальности
+    select.insertAdjacentElement('afterend', input);
+
+    function sync() {
+        const isOther = select.value === otherValue;
+        input.style.display = isOther ? '' : 'none';
+        input.required = isOther;
+        if (!isOther) input.value = '';
+    }
+    select.addEventListener('change', sync);
+    sync();
+}
+
 // Одноразовый код связки «анкета на сайте ↔ мастер в боте». Генерируется при
 // отправке формы, уходит в бота полем code и подставляется в диплинк кнопки
 // «Завершить регистрацию» (?start=m_<code>). По нему бот подтянет анкету, и
@@ -742,7 +785,14 @@ function generateMasterLeadCode() {
 function sendMasterLeadToBot(formData) {
     try {
         const get = (k) => (formData.get(k) || '').toString().trim();
-        const specialty = get('specialty');
+        // Специальность: если выбрано «Другое» и заполнено уточнение — берём его.
+        const lang = ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru';
+        const otherValue = SPECIALTY_OTHER_VALUE[lang] || SPECIALTY_OTHER_VALUE.ru;
+        const specialtyOther = get('specialty_other');
+        let specialty = get('specialty');
+        if (specialty === otherValue && specialtyOther) {
+            specialty = specialtyOther;   // напр. «Плиточник», «Маляр»
+        }
         const experience = get('experience');
         const payload = {
             name:      get('name'),
@@ -1093,6 +1143,19 @@ function validateMasterLeadForm(e) {
 
     if (!validatePhone(phoneInput)) return false;
     if (!validateTelegram(telegramInput)) return false;
+
+    // Если специальность «Другое» — уточнение обязательно.
+    const specialtySel = form.querySelector('select[name="specialty"]');
+    const otherInput   = form.querySelector('input[name="specialty_other"]');
+    if (specialtySel && otherInput) {
+        const lang = ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru';
+        const otherValue = SPECIALTY_OTHER_VALUE[lang] || SPECIALTY_OTHER_VALUE.ru;
+        if (specialtySel.value === otherValue && !otherInput.value.trim()) {
+            alert(t('specialtyOtherRequired'));
+            otherInput.focus();
+            return false;
+        }
+    }
 
     return true;
 }

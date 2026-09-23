@@ -2987,6 +2987,22 @@ body.modal-open {
         grid-row: 4;
     }
 
+    /* Форма мастера: специальность (правая, row 3) → уточнение «Другое» под ней
+       (правая, row 4) → опыт слева (row 4). Явные позиции, чтобы поле уточнения
+       не выталкивало «Опыт» в другую колонку. */
+    #masterLeadFormModal .contact-form select[name="specialty"] {
+        grid-column: 2;
+        grid-row: 3;
+    }
+    #masterLeadFormModal .contact-form input[name="specialty_other"] {
+        grid-column: 2;
+        grid-row: 4;
+    }
+    #masterLeadFormModal .contact-form input[name="experience"] {
+        grid-column: 1;
+        grid-row: 4;
+    }
+
     /* Описание задачи повыше — место есть */
     #clientLeadFormModal .contact-form textarea,
     #masterLeadFormModal .contact-form textarea {

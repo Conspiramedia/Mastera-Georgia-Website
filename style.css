@@ -2259,6 +2259,23 @@ body.modal-open {
     color: var(--construction-yellow);
 }
 
+/* Блок доверия в модалке благодарности мастеру: две строки «данные защищены /
+   не передаются третьим лицам». Нейтральный (не жёлтый) — это гарантия, а не акцент. */
+.thank-you-privacy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.thank-you-privacy-item {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
+}
+
 .thank-you-btn {
     background: linear-gradient(135deg, var(--safety-green), #00D488);
     color: var(--dark-concrete);

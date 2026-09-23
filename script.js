@@ -720,6 +720,24 @@ function initClientPhotoUpload() {
     initClientPhotoUpload._reset = () => { leadPhotoDataUrls = []; renderPreviews(); };
 }
 
+// Одноразовый код связки «анкета на сайте ↔ мастер в боте». Генерируется при
+// отправке формы, уходит в бота полем code и подставляется в диплинк кнопки
+// «Завершить регистрацию» (?start=m_<code>). По нему бот подтянет анкету, и
+// мастеру не придётся вводить данные заново — только пройти селфи-верификацию.
+let masterLeadCode = '';
+function generateMasterLeadCode() {
+    // 24 hex-символа в нижнем регистре: безопасно для диплинка Telegram (?start=…
+    // допускает [A-Za-z0-9_-]) и переживает .toLowerCase() при разборе в боте.
+    try {
+        const bytes = new Uint8Array(12);
+        crypto.getRandomValues(bytes);
+        return Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+    } catch (e) {
+        // Фолбэк без Web Crypto (очень старые браузеры)
+        return (Date.now().toString(16) + Math.random().toString(16).slice(2)).slice(0, 24);
+    }
+}
+
 // Отправка анкеты мастера в Telegram-бота (лид админу). Fire-and-forget, не влияет на email.
 function sendMasterLeadToBot(formData) {
     try {
@@ -737,6 +755,10 @@ function sendMasterLeadToBot(formData) {
             district:  BOT_DISTRICT_MAP[get('district')] || (get('district') === 'All' ? 'Все районы' : get('district')) || 'Все районы',
             // Описание в форме мастера — textarea name="about" (НЕ "message").
             message:   get('about'),
+            // Отдельные поля для автоподстановки в боте (specialty канон-RU, опыт числом).
+            specialty_raw: specialty,
+            experience:    experience,
+            code:          masterLeadCode,   // код связки с диплинком
             honeypot:  get('_gotcha'),
             lang:      ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru'
         };
@@ -751,22 +773,36 @@ function sendMasterLeadToBot(formData) {
     }
 }
 
-// Добавляет в модалку благодарности мастеру кнопку «Завершить регистрацию в Telegram» (один раз).
+// Диплинк «завершить регистрацию»: если есть код связки — ведём на ?start=m_<code>
+// (бот подтянет анкету и попросит только селфи), иначе на общий ?start=master.
+function masterFinishDeeplink() {
+    if (masterLeadCode) {
+        // Меняем аргумент master → m_<code>, сохраняя базовый URL бота.
+        return MASTER_BOT_DEEPLINK.replace(/\?start=.*$/, '') + '?start=m_' + masterLeadCode;
+    }
+    return MASTER_BOT_DEEPLINK;
+}
+
+// Добавляет в модалку благодарности мастеру кнопку «Завершить регистрацию в Telegram».
+// При повторном вызове (после отправки формы) обновляет href актуальным кодом связки.
 function ensureMasterTelegramButton() {
     const modal = document.getElementById('masterThankYouModal');
     if (!modal) return;
     const content = modal.querySelector('.thank-you-content');
-    if (!content || content.querySelector('.master-tg-finish-btn')) return;
-    const link = document.createElement('a');
-    link.className = 'master-tg-finish-btn';
-    link.href = MASTER_BOT_DEEPLINK;
-    link.target = '_blank';
-    link.rel = 'noopener';
-    link.textContent = t('masterFinishTelegram');
-    // Вставляем перед кнопкой «Отлично!», если она есть
-    const okBtn = content.querySelector('.thank-you-btn');
-    if (okBtn) content.insertBefore(link, okBtn);
-    else content.appendChild(link);
+    if (!content) return;
+    let link = content.querySelector('.master-tg-finish-btn');
+    if (!link) {
+        link = document.createElement('a');
+        link.className = 'master-tg-finish-btn';
+        link.target = '_blank';
+        link.rel = 'noopener';
+        link.textContent = t('masterFinishTelegram');
+        // Вставляем перед кнопкой «Отлично!», если она есть
+        const okBtn = content.querySelector('.thank-you-btn');
+        if (okBtn) content.insertBefore(link, okBtn);
+        else content.appendChild(link);
+    }
+    link.href = masterFinishDeeplink();
 }
 
 // ============================================
@@ -989,6 +1025,10 @@ function initMasterLeadFormTracking() {
         isSubmitting = true;
 
         const formData = new FormData(masterLeadForm);
+
+        // Новый код связки на каждую отправку: он уйдёт в бота и попадёт в диплинк
+        // кнопки «Завершить регистрацию» (?start=m_<code>).
+        masterLeadCode = generateMasterLeadCode();
 
         // Дублируем анкету мастера в Telegram-бота (лид админу), не влияет на email
         sendMasterLeadToBot(formData);

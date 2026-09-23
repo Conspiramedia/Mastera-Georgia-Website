@@ -2270,6 +2270,7 @@ body.modal-open {
 }
 
 .thank-you-privacy-item {
+    display: block;   /* каждая гарантия — своей строкой, даже без flex */
     font-family: 'Montserrat', sans-serif;
     font-size: 0.95rem;
     font-weight: 500;

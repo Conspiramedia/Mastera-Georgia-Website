@@ -172,6 +172,40 @@ header {
     line-height: 1;
 }
 
+/* Заголовок-логотип — ссылка на главную страницу своего языка.
+   Сам <a> обёрнут ВНУТРЬ .logo-title, поэтому размер и жирность наследуются от
+   родителя — менять типографику здесь не нужно. Задача этих правил одна: убрать
+   браузерные украшения ссылки, чтобы заголовок визуально не отличался от прежнего
+   <div> (без подчёркивания и без синего/фиолетового цвета посещённой ссылки).
+   :visited и :-webkit-any-link дублируют цвет намеренно — тот же приём, что у
+   .header-phone-link: без них WebKit/Safari перекрашивает посещённую ссылку. */
+.logo-title-link,
+.logo-title-link:visited,
+.logo-title-link:hover,
+.logo-title-link:active,
+.logo-title-link:focus,
+.logo-title-link:-webkit-any-link {
+    color: inherit;              /* жёлтый цвет берётся у .logo-title */
+    text-decoration: none;       /* главное требование: никакой полосы подчёркивания */
+    -webkit-text-decoration: none;  /* Safari: префиксное свойство перебивает дефолт */
+    text-decoration-line: none;  /* страховка, если где-то выставлен shorthand */
+    border-bottom: none;         /* на случай подчёркивания рамкой из других правил */
+    cursor: pointer;
+    display: inline-block;       /* корректная область клика по всей строке */
+}
+
+/* Наведение: лёгкое свечение вместо подчёркивания — как у остальных ссылок шапки. */
+.logo-title-link:hover {
+    text-shadow: 0 0 12px rgba(253, 185, 19, 0.55);
+}
+
+/* Доступность: видимая рамка только при переходе с клавиатуры (Tab), не по клику мышью. */
+.logo-title-link:focus-visible {
+    outline: 2px solid var(--construction-yellow);
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+
 .subtitle {
     font-family: 'Montserrat', sans-serif;
     color: var(--safety-green);

@@ -408,6 +408,10 @@
         <input type="tel" name="phone" id="masterLeadPhone" placeholder="+995 5__ __ __ __" required pattern="^\+995[0-9]{9}$">
         <input type="text" name="telegram" placeholder="Telegram: @username" required pattern="^(@[a-zA-Z0-9_]{5,32}|[0-9]{9,15})$">
         <input type="text" name="whatsapp" placeholder="WhatsApp: phone number (optional)">
+        <select name="district" required>
+          <option value="" disabled selected>Work district</option>
+          <option value="All"></option>
+        </select>
         <select name="specialty" required>
           <option value="" disabled selected>Your specialty</option>
           <option value="Handyman">Handyman</option>
@@ -420,10 +424,6 @@
           <option value="Other">Other</option>
         </select>
         <input type="number" name="experience" placeholder="Work experience (years)" required min="0" max="50">
-        <select name="district" required>
-          <option value="" disabled selected>Work district</option>
-          <option value="All"></option>
-        </select>
         <textarea name="about" rows="3" placeholder="Tell us about yourself and your experience" required minlength="20"></textarea>
         <input type="hidden" name="_subject" value="New master application - Registration">
         <input type="hidden" name="_language" value="en">

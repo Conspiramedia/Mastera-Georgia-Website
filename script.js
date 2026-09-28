@@ -10,6 +10,7 @@
 const i18n = {
     ru: {
         phoneInvalid:        'Пожалуйста, введите корректный грузинский номер телефона в формате: +995XXXXXXXXX (9 цифр после +995)',
+        nameInvalid:         'Пожалуйста, введите имя буквами — без цифр и символов (минимум 2 буквы)',
         phoneOperator:       'Пожалуйста, введите корректный код оператора. Номер должен начинаться с +995 и далее 55, 56, 57, 58, 59, 51-54, 68, 70-79, 90-99',
         telegramInvalid:     'Пожалуйста, введите корректный Telegram username (например: @username) или номер телефона',
         contactRequired:     'Пожалуйста, заполните хотя бы один из контактов: Telegram или WhatsApp',
@@ -31,6 +32,7 @@ const i18n = {
     },
     ka: {
         phoneInvalid:        'გთხოვთ, შეიყვანოთ სწორი ქართული ტელეფონის ნომერი ფორმატში: +995XXXXXXXXX (9 ციფრი +995-ის შემდეგ)',
+        nameInvalid:         'გთხოვთ, შეიყვანოთ სახელი მხოლოდ ასოებით — ციფრებისა და სიმბოლოების გარეშე (მინიმუმ 2 ასო)',
         phoneOperator:       'გთხოვთ, შეიყვანოთ სწორი ოპერატორის კოდი. ნომერი უნდა იწყებოდეს +995-ით და შემდეგ 55, 56, 57, 58, 59, 51-54, 68, 70-79, 90-99',
         telegramInvalid:     'გთხოვთ, შეიყვანოთ სწორი Telegram მომხმარებლის სახელი (მაგ: @username) ან ტელეფონის ნომერი',
         contactRequired:     'გთხოვთ, შეავსოთ ერთ-ერთი საკონტაქტო ველი: Telegram ან WhatsApp',
@@ -52,6 +54,7 @@ const i18n = {
     },
     en: {
         phoneInvalid:        'Please enter a valid Georgian phone number in the format: +995XXXXXXXXX (9 digits after +995)',
+        nameInvalid:         'Please enter your name using letters only — no digits or symbols (at least 2 letters)',
         phoneOperator:       'Please enter a valid operator code. The number must start with +995 followed by 55, 56, 57, 58, 59, 51-54, 68, 70-79, 90-99',
         telegramInvalid:     'Please enter a valid Telegram username (e.g. @username) or phone number',
         contactRequired:     'Please fill in at least one contact field: Telegram or WhatsApp',
@@ -431,24 +434,98 @@ function initModalForms() {
     });
 
     initPhoneFormatting();
+    initNamePatternAttr();
+}
+
+// Сколько цифр стоит после +995. Ровно как в боте (validators.is_valid_phone:
+// 995 + 9 цифр). Ввод обрезается по этой длине — лишние цифры не набрать.
+const PHONE_SUBSCRIBER_DIGITS = 9;
+
+// Приводит грузинский номер к виду +995XXXXXXXXX (код страны + 9 цифр).
+//
+// ⚠️ Отдельно разбирается НЕПОЛНЫЙ код страны («+99», «+9»). Он появляется,
+// когда человек стирает номер и доходит до префикса. Без этого остаток «99»
+// не считался кодом, и к нему спереди дописывалось «995»: «+995» → Backspace →
+// «+99599». Префикс размножался, и очистить поле было невозможно.
+function formatGeorgianPhone(raw) {
+    let digits = (raw || '').replace(/\D/g, '');
+    if (!digits) return '';
+
+    if (digits === '9' || digits === '99') {
+        digits = '995';
+    } else if (digits.startsWith('995')) {
+        // уже с кодом страны — оставляем как есть
+    } else if (digits.startsWith('99') && digits.length > 2) {
+        // «99» + абонентская часть: стёрта «5» из префикса — восстанавливаем код
+        digits = '995' + digits.substring(2);
+    } else {
+        digits = '995' + digits;
+    }
+
+    // Ноль сразу после кода страны лишний: в международном формате
+    // национальный номер пишется без него (+995 555…, а не +995 0555…).
+    digits = digits.replace(/^9950+/, '995');
+
+    // Код страны + PHONE_SUBSCRIBER_DIGITS цифр — больше не набрать
+    return '+' + digits.substring(0, 3 + PHONE_SUBSCRIBER_DIGITS);
 }
 
 // Форматирование телефонных номеров
 function initPhoneFormatting() {
     const phoneInputs = document.querySelectorAll('#leadPhone, #masterLeadPhone');
 
+    // Длина неизменяемого префикса: «+995».
+    const PREFIX_LEN = '+995'.length;
+
     phoneInputs.forEach(input => {
-        input.addEventListener('input', (e) => {
-            let value = e.target.value.replace(/\D/g, '');
-            if (!value.startsWith('995') && value.length > 0) {
-                value = '995' + value;
+        // Не даём курсору заходить внутрь «+995»: код страны подставляется
+        // автоматически и правке не подлежит.
+        function clampCaret() {
+            if (!input.value.startsWith('+995')) return;
+            const start = input.selectionStart, end = input.selectionEnd;
+            // Выделение всей строки (Ctrl+A) не трогаем — его смысл «стереть всё».
+            if (start === 0 && end === input.value.length) return;
+            if (start < PREFIX_LEN || end < PREFIX_LEN) {
+                input.setSelectionRange(Math.max(start, PREFIX_LEN), Math.max(end, PREFIX_LEN));
             }
-            if (value.length > 12) value = value.substring(0, 12);
-            e.target.value = value.length > 0 ? '+' + value : '';
+        }
+
+        input.addEventListener('input', (e) => {
+            const el = e.target;
+            el.value = formatGeorgianPhone(el.value);
+            // Никогда не оставляем курсор внутри «+995»
+            if (el.value.startsWith('+995') && el.selectionStart < PREFIX_LEN) {
+                el.setSelectionRange(el.value.length, el.value.length);
+            }
         });
+
+        // Backspace/Delete на границе префикса: гасим нажатие, иначе браузер
+        // съест цифру кода страны ДО того, как сработает input-обработчик.
+        input.addEventListener('keydown', (e) => {
+            if (e.key !== 'Backspace' && e.key !== 'Delete') return;
+            const el = e.target;
+            if (!el.value.startsWith('+995')) return;
+            const start = el.selectionStart, end = el.selectionEnd;
+            if (start === 0 && end === el.value.length) return;   // Ctrl+A — разрешаем
+            if (start !== end) return;                            // есть выделение — обычное поведение
+            if ((e.key === 'Backspace' && start <= PREFIX_LEN) ||
+                (e.key === 'Delete' && start < PREFIX_LEN)) {
+                e.preventDefault();
+                el.setSelectionRange(PREFIX_LEN, PREFIX_LEN);
+            }
+        });
+
+        // Клик/стрелки/Home не должны оставлять курсор в префиксе
+        input.addEventListener('click', clampCaret);
+        input.addEventListener('keyup', clampCaret);
 
         input.addEventListener('focus', (e) => {
             if (e.target.value === '') e.target.value = '+995';
+            requestAnimationFrame(() => {
+                if (e.target.value.startsWith('+995') && e.target.selectionStart < PREFIX_LEN) {
+                    e.target.setSelectionRange(e.target.value.length, e.target.value.length);
+                }
+            });
         });
 
         input.addEventListener('blur', (e) => {
@@ -462,8 +539,47 @@ function initPhoneFormatting() {
 // ============================================
 
 const VALID_OPERATOR_CODES = ['55','56','57','58','59','51','52','53','54','68','70','71','72','74','75','77','79','90','91','92','93','94','95','96','97','98','99'];
-const PHONE_PATTERN    = /^\+995[0-9]{9}$/;
+const PHONE_PATTERN    = new RegExp('^\\+995[0-9]{' + PHONE_SUBSCRIBER_DIGITS + '}$');
 const TELEGRAM_PATTERN = /^(@[a-zA-Z0-9_]{5,32}|[0-9]{9,15})$/;
+
+// Имя: только буквы (кириллица, латиница, грузинский алфавит), пробелы и дефис
+// для составных имён («Анна-Мария», «Giorgi Beridze»). Каждое слово — от 2 букв.
+//
+// Зеркало is_valid_fio в боте (validators.py): там имя проверяется isalpha(),
+// и цифры отклоняются. Без проверки здесь мусорное имя уходит в анкете мастера
+// в бота, тот её браковал — и мастер вводил заново всё, что заполнил на сайте.
+const NAME_PATTERN = /^[\p{L}]{2,}(?:[\s-][\p{L}]{2,})*$/u;
+
+// Тот же смысл для атрибута pattern: браузер компилирует его БЕЗ флага 'u',
+// и \p{L} там не работает как класс букв — проверка пропускала бы даже цифры.
+// Диапазоны: латиница, кириллица, грузинский (мхедрули).
+const NAME_PATTERN_ATTR =
+    '[A-Za-zÀ-ÖØ-öø-ÿĀ-žА-Яа-яЁёა-ჰ]{2,}' +
+    '(?:[ \\-][A-Za-zÀ-ÖØ-öø-ÿĀ-žА-Яа-яЁёა-ჰ]{2,})*';
+
+function validateName(nameInput) {
+    if (!nameInput) return true;
+    const val = nameInput.value.trim();
+    if (!val) return true;   // пустое поле ловит required самого браузера
+
+    if (!NAME_PATTERN.test(val)) {
+        alert(t('nameInvalid'));
+        nameInput.focus();
+        return false;
+    }
+    return true;
+}
+
+// Проставляет полям имени нативную проверку «только буквы» на всех страницах —
+// через JS, без правки HTML каждого лендинга (как районы выше).
+function initNamePatternAttr() {
+    document.querySelectorAll('#clientLeadForm input[name="name"], #masterLeadForm input[name="name"]')
+        .forEach(function (input) {
+            if (input.getAttribute('pattern')) return;   // уже задано в разметке
+            input.setAttribute('pattern', NAME_PATTERN_ATTR);
+            input.setAttribute('title', t('nameInvalid'));
+        });
+}
 
 function validatePhone(phoneInput) {
     if (!phoneInput) return true;
@@ -1209,12 +1325,16 @@ function containsAddress(text) {
 
 function validateLeadForm(e) {
     const form          = e.target;
+    const nameInput     = form.querySelector('input[name="name"]');
     const phoneInput    = document.getElementById('leadPhone');
     const telegramInput = form.querySelector('input[name="telegram"]');
     const whatsappInput = form.querySelector('input[name="whatsapp"]');
 
     const telegramValue = telegramInput ? telegramInput.value.trim() : '';
     const whatsappValue = whatsappInput ? whatsappInput.value.trim() : '';
+
+    // Имя буквами: цифры в этом поле — либо опечатка, либо спам-бот.
+    if (!validateName(nameInput)) return false;
 
     if (!telegramValue && !whatsappValue) {
         alert(t('contactRequired'));
@@ -1325,10 +1445,15 @@ function initMasterLeadFormTracking() {
 
 function validateMasterLeadForm(e) {
     const form          = e.target;
+    const nameInput     = form.querySelector('input[name="name"]');
     const phoneInput    = document.getElementById('masterLeadPhone');
     const telegramInput = form.querySelector('input[name="telegram"]');
 
     const telegramValue = telegramInput ? telegramInput.value.trim() : '';
+
+    // Имя буквами — зеркало is_valid_fio в боте. Если не проверить здесь, бот
+    // забракует анкету и мастер будет вводить все данные заново.
+    if (!validateName(nameInput)) return false;
 
     // Для мастера Telegram обязателен: верификация (селфи+код) проходит в Telegram-боте.
     // WhatsApp — по желанию, дополнительный контакт.

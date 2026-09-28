@@ -2989,7 +2989,11 @@ body.modal-open {
         width: auto;
     }
 
-    /* Пара «Telegram ИЛИ WhatsApp» — левая колонка, «или» между ними */
+    /* Пара «Telegram ИЛИ WhatsApp» — левая колонка, «или» между ними.
+       Только для КЛИЕНТСКОЙ формы: там это два взаимозаменяемых способа связи,
+       и они стоят друг под другом с разделителем. В анкете мастера Telegram
+       обязателен, а WhatsApp — дополнительный контакт, поэтому они идут парой
+       в одной строке (см. раскладку анкеты ниже). */
     #clientLeadFormModal .contact-form input[name="telegram"],
     #masterLeadFormModal .contact-form input[name="telegram"] {
         grid-column: 1;
@@ -3003,14 +3007,14 @@ body.modal-open {
         margin-bottom: -0.35rem;
     }
 
-    #clientLeadFormModal .contact-form input[name="whatsapp"],
-    #masterLeadFormModal .contact-form input[name="whatsapp"] {
+    #clientLeadFormModal .contact-form input[name="whatsapp"] {
         grid-column: 1;
     }
 
-    /* Район и категория — правая колонка напротив блока контактов */
-    #clientLeadFormModal .contact-form select[name="district"],
-    #masterLeadFormModal .contact-form select[name="district"] {
+    /* Район и категория — правая колонка напротив блока контактов.
+       Касается только клиентской формы: в анкете мастера своя раскладка
+       парами (ниже), и район там стоит в паре со специальностью. */
+    #clientLeadFormModal .contact-form select[name="district"] {
         grid-column: 2;
         grid-row: 2;
     }
@@ -3030,20 +3034,47 @@ body.modal-open {
         grid-row: 3;
     }
 
-    /* Форма мастера: специальность (правая, row 3) → уточнение «Другое» под ней
-       (правая, row 4) → опыт слева (row 4). Явные позиции, чтобы поле уточнения
-       не выталкивало «Опыт» в другую колонку. */
+    /* ── Анкета мастера: раскладка по парам ────────────────────────
+       В анкете мастера разделителя «или» нет (Telegram обязателен,
+       WhatsApp — по желанию), поэтому пары идут ровными строками:
+         row 1 — имя / телефон,
+         row 2 — Telegram / WhatsApp,
+         row 3 — район / специальность,
+         row 4 — опыт (левая колонка),
+         row 5 — уточнения «Другой район» и «Другое» (появляются по выбору).
+
+       Города в анкете нет: сервис работает в одном городе (Тбилиси),
+       и лишний вопрос только снижал бы конверсию.
+
+       Позиции задаём явно: иначе поля уточнений, появляющиеся по выбору
+       «Другой»/«Другое», встают в ближайшую свободную ячейку и двигают
+       соседние поля прямо на глазах у мастера. */
+    #masterLeadFormModal .contact-form input[name="whatsapp"] {
+        grid-column: 2;
+        grid-row: 2;
+    }
+    #masterLeadFormModal .contact-form select[name="district"] {
+        grid-column: 1;
+        grid-row: 3;
+    }
     #masterLeadFormModal .contact-form select[name="specialty"] {
         grid-column: 2;
         grid-row: 3;
     }
-    #masterLeadFormModal .contact-form input[name="specialty_other"] {
-        grid-column: 2;
-        grid-row: 4;
-    }
     #masterLeadFormModal .contact-form input[name="experience"] {
         grid-column: 1;
         grid-row: 4;
+    }
+    /* Уточнения — отдельной строкой, каждое под своим полем:
+       район слева, специальность справа. Во всю ширину они читались бы
+       как самостоятельный блок формы, а не как уточнение к полю выше. */
+    #masterLeadFormModal .contact-form input[name="district_other"] {
+        grid-column: 1;
+        grid-row: 5;
+    }
+    #masterLeadFormModal .contact-form input[name="specialty_other"] {
+        grid-column: 2;
+        grid-row: 5;
     }
 
     /* Описание задачи повыше — место есть */

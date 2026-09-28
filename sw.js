@@ -5,7 +5,7 @@
 // валидация имени и защита префикса +995. Версию ОБЯЗАТЕЛЬНО поднимать при
 // изменении script.js/style.css — иначе у вернувшихся посетителей останется
 // старая копия из кэша, и исправления до них не доедут.
-const CACHE_NAME = 'mastera-landing-v3';
+const CACHE_NAME = 'mastera-landing-v4';
 
 const PRECACHE_URLS = [
   '/',

@@ -26,6 +26,8 @@ const i18n = {
         addressInDescription: 'Укажите в описании только суть задачи, без адреса. Точный адрес вы сообщите мастеру лично, когда он возьмёт заявку.',
         specialtyOtherPlaceholder: 'Укажите вашу специальность',
         specialtyOtherRequired:    'Пожалуйста, укажите вашу специальность',
+        districtOtherPlaceholder:  'Укажите район или ориентир (напр. Вазисубани, метро Самгори)',
+        districtOtherRequired:     'Пожалуйста, укажите район или ближайший ориентир — без этого мастер не поймёт, куда ехать',
     },
     ka: {
         phoneInvalid:        'გთხოვთ, შეიყვანოთ სწორი ქართული ტელეფონის ნომერი ფორმატში: +995XXXXXXXXX (9 ციფრი +995-ის შემდეგ)',
@@ -45,6 +47,8 @@ const i18n = {
         addressInDescription: 'აღწერაში მიუთითეთ მხოლოდ დავალება, მისამართის გარეშე. ზუსტი მისამართი უთხარით ხელოსნას, როდესაც იგი აიღებს განაცხადს.',
         specialtyOtherPlaceholder: 'მიუთითეთ თქვენი სპეციალობა',
         specialtyOtherRequired:    'გთხოვთ, მიუთითოთ თქვენი სპეციალობა',
+        districtOtherPlaceholder:  'მიუთითეთ რაიონი ან ორიენტირი (მაგ. ვაზისუბანი, მეტრო სამგორი)',
+        districtOtherRequired:     'გთხოვთ, მიუთითოთ რაიონი ან უახლოესი ორიენტირი — ამის გარეშე ხელოსანი ვერ გაიგებს, სად უნდა მივიდეს',
     },
     en: {
         phoneInvalid:        'Please enter a valid Georgian phone number in the format: +995XXXXXXXXX (9 digits after +995)',
@@ -64,6 +68,8 @@ const i18n = {
         addressInDescription: 'Describe only the task, without the address. Share the exact address with the specialist directly once they take the request.',
         specialtyOtherPlaceholder: 'Specify your specialty',
         specialtyOtherRequired:    'Please specify your specialty',
+        districtOtherPlaceholder:  'Specify the district or a landmark (e.g. Vazisubani, Samgori metro)',
+        districtOtherRequired:     'Please specify the district or a nearby landmark — without it the specialist will not know where to go',
     }
 };
 
@@ -99,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initClientDistrictOptions();
     initClientUrgentOption();
     initMasterLeadFormTracking();
+    initMasterDistrictOptions();
     initMasterSpecialtyOther();
     initWhatsAppButtonTracking();
     initFAQ();
@@ -513,12 +520,96 @@ const BOT_REQUEST_URL = 'https://mastera-tbilisi-mastera-tbilisi.up.railway.app/
 // Эндпоинт бота для анкет мастеров с сайта (уведомление админу-лид).
 const BOT_MASTER_URL  = 'https://mastera-tbilisi-mastera-tbilisi.up.railway.app/site/new-master';
 
-// Район на сайте выбирается слугами (Vake, Saburtalo...), а бот ждёт названия по-русски.
-const BOT_DISTRICT_MAP = {
-    Vake: 'Ваке', Saburtalo: 'Сабуртало', Mtatsminda: 'Мтацминда', Didube: 'Дидубе',
-    Isani: 'Исани', Gldani: 'Глдани', Nadzaladevi: 'Надзаладеви', Chugureti: 'Чугурети',
-    Krtsanisi: 'Крцаниси', Samgori: 'Самгори', Other: 'Другой'
+// ============================================
+// 9.9 РАЙОНЫ ТБИЛИСИ — ЕДИНЫЙ ИСТОЧНИК ПРАВДЫ
+// ============================================
+//
+// Раньше список районов лежал в HTML каждой страницы, и они разъехались: где-то
+// 8 районов, где-то 10, Мтацминда и Крцаниси были не везде. Теперь весь список
+// живёт ЗДЕСЬ и строится скриптом (buildDistrictSelect), а в HTML достаточно
+// пустого <select name="district"> — добавление района правится в одном месте.
+//
+// Поля записи:
+//   slug  — value в <option> и ключ маппинга в канон-RU для бота;
+//   ru/en/ka — подпись района на языке страницы;
+//   hintRu/hintEn/hintKa — популярные местности района (подсказка в подписи).
+//
+// Подсказки нужны против «Другого»: клиент-экспат живёт на Вазисубани, не видит
+// его в списке и жмёт «Другой» — заявка приходит мастеру без географии. С
+// подсказкой «Исани / Вазисубани / Навтлуги» он узнаёт своё место и выбирает район.
+// Местности взяты из config.yaml бота (locations) и locales/geo.py (переводы),
+// чтобы подписи сайта и бота не расходились.
+//
+// ВАЖНО: slug → канон-RU обязан совпадать с ключами config.locations бота, иначе
+// заявка молча уедет в «Другой». Chugureti по-английски у бота — Chughureti
+// (locales/geo.py), держим ту же форму.
+const DISTRICTS = [
+    { slug: 'Vake',        ru: 'Ваке',        en: 'Vake',        ka: 'ვაკე',
+      hintRu: 'Нижний Ваке, Ваке-Сабурталинская, Черепашье озеро',
+      hintEn: 'Lower Vake, Turtle Lake, Mukhatgverdi',
+      hintKa: 'ქვემო ვაკე, კუს ტბა, მუხათგვერდი' },
+    { slug: 'Saburtalo',   ru: 'Сабуртало',   en: 'Saburtalo',   ka: 'საბურთალო',
+      hintRu: 'Делиси, Политехнический, Ваке-Сабуртало',
+      hintEn: 'Delisi, Politekhnikuri, Upper Saburtalo',
+      hintKa: 'დელისი, პოლიტექნიკური, ზემო საბურთალო' },
+    { slug: 'Mtatsminda',  ru: 'Мтацминда',   en: 'Mtatsminda',  ka: 'მთაწმინდა',
+      hintRu: 'Центр, Вера, Сололаки, Руставели',
+      hintEn: 'Center, Vera, Sololaki, Rustaveli',
+      hintKa: 'ცენტრი, ვერა, სოლოლაკი, რუსთაველი' },
+    { slug: 'Didube',      ru: 'Дидубе',      en: 'Didube',      ka: 'დიდუბე',
+      hintRu: 'Дигоми, Автовокзал, Дидубе-Чугурети',
+      hintEn: 'Digomi, Bus Station, Didube-Chughureti',
+      hintKa: 'დიღომი, ავტოსადგური, დიდუბე-ჩუღურეთი' },
+    { slug: 'Chugureti',   ru: 'Чугурети',    en: 'Chughureti',  ka: 'ჩუღურეთი',
+      hintRu: 'Авлабари, Метехи, Грмагеле',
+      hintEn: 'Avlabari, Metekhi, Grmaghele',
+      hintKa: 'ავლაბარი, მეტეხი, გრმაღელე' },
+    { slug: 'Isani',       ru: 'Исани',       en: 'Isani',       ka: 'ისანი',
+      hintRu: 'Вазисубани, Навтлуги, Ортачала',
+      hintEn: 'Vazisubani, Navtlugi, Ortachala',
+      hintKa: 'ვაზისუბანი, ნავთლუღი, ორთაჭალა' },
+    { slug: 'Samgori',     ru: 'Самгори',     en: 'Samgori',     ka: 'სამგორი',
+      hintRu: 'Варкетили, Лило, Восток',
+      hintEn: 'Varketili, Lilo, Vostok',
+      hintKa: 'ვარკეთილი, ლილო, აღმოსავლეთი' },
+    { slug: 'Gldani',      ru: 'Глдани',      en: 'Gldani',      ka: 'გლდანი',
+      hintRu: 'Темка, Ахметели, Муштаиди',
+      hintEn: 'Temka, Akhmeteli, Mushtaidi',
+      hintKa: 'თემქა, ახმეტელი, მუშთაიდი' },
+    { slug: 'Nadzaladevi', ru: 'Надзаладеви', en: 'Nadzaladevi', ka: 'ნაძალადევი',
+      hintRu: 'Вокзал, Церетели, Дидубе Рынок',
+      hintEn: 'Station, Tsereteli, Didube Market',
+      hintKa: 'ვაგზალი, წერეთელი, დიდუბის ბაზარი' },
+    { slug: 'Krtsanisi',   ru: 'Крцаниси',    en: 'Krtsanisi',   ka: 'კრწანისი',
+      hintRu: 'Понтичала, Лочини, Аэропорт',
+      hintEn: 'Ponichala, Lochini, Airport',
+      hintKa: 'ფონიჭალა, ლოჭინი, აეროპორტი' }
+];
+
+// Подписи служебных опций, которых нет в config.locations бота:
+//   Other — «мой район не в списке» (клиентская форма), уточняется текстом;
+//   All   — «работаю по всему городу» (форма мастера).
+const DISTRICT_SPECIAL = {
+    Other: { ru: 'Другой район', en: 'Other district', ka: 'სხვა რაიონი', bot: 'Другой' },
+    All:   { ru: 'Все районы',   en: 'All districts',  ka: 'ყველა რაიონი', bot: 'Все районы' }
 };
+
+// Район на сайте выбирается слугами (Vake, Saburtalo...), а бот ждёт названия
+// по-русски. Карта собирается из DISTRICTS автоматически — отдельный список
+// больше не ведём, рассинхрон невозможен.
+const BOT_DISTRICT_MAP = DISTRICTS.reduce(function (map, d) {
+    map[d.slug] = d.ru;
+    return map;
+}, { Other: DISTRICT_SPECIAL.Other.bot, All: DISTRICT_SPECIAL.All.bot });
+
+// Подпись района на языке страницы; с подсказкой местностей — для <option>.
+function districtLabel(entry, lang, withHint) {
+    const name = entry[lang] || entry.ru;
+    if (!withHint) return name;
+    const hintKey = 'hint' + lang.charAt(0).toUpperCase() + lang.slice(1);
+    const hint = entry[hintKey] || entry.hintRu;
+    return hint ? name + ' — ' + hint : name;
+}
 
 // Категория работ в EN/GE формах выбирается на своём языке, а бот принимает только
 // канонические русские названия (specialties в config.yaml). Без этого маппинга
@@ -577,9 +668,15 @@ function sendLeadToBot(formData) {
         if (name) descParts.push('Имя: ' + name);
         descParts.push('Задача: ' + (get('message') || '—'));
 
+        // Уточнение района: обязательно только при выборе «Другой» (см.
+        // initDistrictOtherInput). Уходит боту в subdistrict — он покажет мастеру
+        // «Район: Другой, Вазисубани» вместо бесполезного «Район: Другой».
+        // Для остальных районов поле пустое → шлём «Не указан», как и раньше.
+        const districtOther = get('district_other');
+
         const payload = {
             district:    BOT_DISTRICT_MAP[get('district')] || get('district') || 'Другой',
-            subdistrict: 'Не указан',                       // подрайон убрали — адрес точнее
+            subdistrict: districtOther || 'Не указан',      // подрайон спрашиваем только у «Другого»
             category:    resolveBotCategory(get('service')),   // всегда канон-RU для мастеров
             description: descParts.join('\n'),              // имя + задача → видно в превью
             address:     'Не указан',                       // адрес у клиента не спрашиваем — только район
@@ -859,32 +956,119 @@ function ensureMasterTelegramButton() {
 // 10.1 КАСКАД: РАЙОН → ПОДРАЙОН (данные из бота, config.yaml)
 // ============================================
 
-// Недостающие на сайте районы бота (slug -> подпись по языкам). Добавляются в <select> скриптом.
-const DISTRICT_LABELS = {
-    Mtatsminda: { ru: 'Мтацминда', en: 'Mtatsminda', ka: 'მთაწმინდა' },
-    Krtsanisi:  { ru: 'Крцаниси',  en: 'Krtsanisi',  ka: 'კრწანისი' }
-};
+// Пересобирает <select name="district"> из DISTRICTS — один список на все страницы.
+// Раньше районы лежали в HTML каждой страницы и разъехались (8/9/11 опций, Мтацминда
+// и Крцаниси не везде): клиент не находил свой район и жал «Другой». Теперь HTML-опции
+// полностью заменяются сгенерированными.
+//
+// Что сохраняется из исходного HTML:
+//   • плейсхолдер (<option value="">) с его подписью и data-* переводами;
+//   • предвыбранный район лендинга (<option selected>, напр. Ваке на /master-na-chas-vake/);
+//   • служебная опция «Все районы» (All) — она есть только в форме мастера.
+//
+// :param withHints: добавлять ли к подписи местности («Исани — Вазисубани, Навтлуги»).
+//     В клиентской форме — да (клиент ищет своё место), в форме мастера — нет
+//     (мастер знает районы, а длинные подписи там только мешают).
+function buildDistrictSelect(select, withHints) {
+    if (!select) return;
 
-// Дозаполняет недостающие районы бота в клиентской форме на всех страницах —
-// через JS, без правки HTML каждой страницы.
+    const lang = ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru';
+
+    // Запоминаем исходное состояние ДО очистки списка.
+    const placeholder = select.querySelector('option[value=""]');
+    const hadAll = !!select.querySelector('option[value="All"]');
+    const hadOther = !!select.querySelector('option[value="Other"]');
+    // Что было выбрано: value непустой — это предвыбор лендинга, его и восстановим.
+    const preselected = select.value;
+
+    // Собираем опцию с data-* переводами: при смене языка setLanguage переведёт её сам
+    // (в нём есть ветка для OPTION), без повторной пересборки списка.
+    const makeOption = (value, labels) => {
+        const opt = document.createElement('option');
+        opt.value = value;
+        opt.setAttribute('data-ru', labels.ru);
+        opt.setAttribute('data-en', labels.en);
+        opt.setAttribute('data-ka', labels.ka);
+        opt.textContent = labels[lang] || labels.ru;
+        return opt;
+    };
+
+    select.innerHTML = '';
+
+    // 1. Плейсхолдер «Выберите район» — переносим из HTML как есть (подписи у форм разные:
+    //    «Выберите район» у клиента, «Район работы» у мастера).
+    if (placeholder) select.appendChild(placeholder);
+
+    // 2. Районы бота — единым списком из DISTRICTS.
+    DISTRICTS.forEach(function (d) {
+        select.appendChild(makeOption(d.slug, {
+            ru: districtLabel(d, 'ru', withHints),
+            en: districtLabel(d, 'en', withHints),
+            ka: districtLabel(d, 'ka', withHints)
+        }));
+    });
+
+    // 3. Служебные опции — в том же составе, что были в HTML этой формы.
+    //    «Все районы» только у мастера, «Другой» — у клиента (там его уточняют текстом).
+    if (hadAll) select.appendChild(makeOption('All', DISTRICT_SPECIAL.All));
+    if (hadOther) select.appendChild(makeOption('Other', DISTRICT_SPECIAL.Other));
+
+    // 4. Возвращаем предвыбор лендинга (район страницы) — он пережил пересборку.
+    if (preselected) select.value = preselected;
+}
+
+// Собирает список районов в клиентской форме и включает уточнение для «Другого».
 function initClientDistrictOptions() {
     const form = document.getElementById('clientLeadForm');
     if (!form) return;
     const districtSel = form.querySelector('select[name="district"]');
     if (!districtSel) return;
 
-    const lang = ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru';
+    buildDistrictSelect(districtSel, true);   // с подсказками местностей
+    initDistrictOtherInput(form, districtSel);
+}
 
-    // Дозаполняем недостающие районы бота (Мтацминда, Крцаниси) — перед «Other», если он есть
-    Object.keys(DISTRICT_LABELS).forEach(function (slug) {
-        if (districtSel.querySelector('option[value="' + slug + '"]')) return;
-        const opt = document.createElement('option');
-        opt.value = slug;
-        opt.textContent = DISTRICT_LABELS[slug][lang] || DISTRICT_LABELS[slug].ru;
-        const other = districtSel.querySelector('option[value="Other"]');
-        if (other) districtSel.insertBefore(opt, other);
-        else districtSel.appendChild(opt);
-    });
+// Собирает список районов в форме мастера (там же опция «Все районы»).
+// Без подсказок местностей: мастер выбирает район работы, а не ищет свой адрес.
+function initMasterDistrictOptions() {
+    const form = document.getElementById('masterLeadForm');
+    if (!form) return;
+    buildDistrictSelect(form.querySelector('select[name="district"]'), false);
+}
+
+// Уточнение района для варианта «Другой»: без него заявка приходит мастеру как
+// «Район: Другой» — мастер не понимает, ехать ли ему, и либо не берёт заявку,
+// либо выкупает контакт вслепую за 10 ₾.
+//
+// Поле появляется ТОЛЬКО при выборе «Другой» и тогда же становится обязательным.
+// Значение уходит боту в subdistrict (а не в district): поле уже есть в контракте,
+// бот умеет показывать «Район, Подрайон» (notifications.py), менять бота не нужно.
+// Карточка мастера становится «🇬🇪 Район: Другой, Вазисубани».
+function initDistrictOtherInput(form, select) {
+    if (form.querySelector('input[name="district_other"]')) return; // уже добавлено
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.name = 'district_other';
+    input.className = 'district-other-input';
+    // data-*-placeholder → плейсхолдер переводится в setLanguage при смене языка.
+    input.setAttribute('data-ru-placeholder', i18n.ru.districtOtherPlaceholder);
+    input.setAttribute('data-en-placeholder', i18n.en.districtOtherPlaceholder);
+    input.setAttribute('data-ka-placeholder', i18n.ka.districtOtherPlaceholder);
+    input.placeholder = t('districtOtherPlaceholder');
+    input.style.display = 'none';   // скрыто, пока не выбран «Другой»
+    input.minLength = 3;            // «ок» и прочие отписки не пройдут
+
+    select.insertAdjacentElement('afterend', input);
+
+    function sync() {
+        const isOther = select.value === 'Other';
+        input.style.display = isOther ? '' : 'none';
+        input.required = isOther;
+        if (!isOther) input.value = '';   // чтобы скрытое поле не уехало в заявку
+    }
+    select.addEventListener('change', sync);
+    sync();
 }
 
 // Инжектит галочку «Срочный заказ» в клиентскую форму на всех страницах —
@@ -1041,6 +1225,19 @@ function validateLeadForm(e) {
 
     if (!validatePhone(phoneInput)) return false;
     if (telegramValue && !validateTelegram(telegramInput)) return false;
+
+    // Район «Другой» обязан быть уточнён: иначе мастер получает заявку без географии
+    // и не может решить, ехать ли. Проверяем здесь, а не только через required —
+    // поле создаётся скриптом, и на минимальную длину нужна явная проверка.
+    const districtSel = form.querySelector('select[name="district"]');
+    const districtOther = form.querySelector('input[name="district_other"]');
+    if (districtSel && districtSel.value === 'Other' && districtOther) {
+        if (districtOther.value.trim().length < 3) {
+            alert(t('districtOtherRequired'));
+            districtOther.focus();
+            return false;
+        }
+    }
 
     // Адрес в описании запрещён: текст уходит мастерам ДО оплаты,
     // и сервер бота такую заявку всё равно отклонит (address_in_text).

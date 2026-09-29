@@ -112,6 +112,9 @@
   <meta name="theme-color" content="#FDB913">
 
   <link rel="stylesheet" href="../../style.css">
+  <!-- service.css не нужен для первого экрана — грузим без блокировки рендера -->
+  <link rel="stylesheet" href="../../service.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="../../service.css"></noscript>
   <script src="../../script.js" defer></script>
 </head>
 
@@ -132,21 +135,37 @@
       </div>
     </div>
 
-    <!-- Языковой переключатель -->
-    <div class="language-switcher">
-      <a href="/ru/masters/" class="lang-btn active" data-lang="ru">RUS</a>
-      <a href="/ge/masters/" class="lang-btn" data-lang="ka">GEO</a>
-      <a href="/en/masters/" class="lang-btn" data-lang="en">ENG</a>
+    <div class="header-controls">
+      <!-- Группа навигации: город + язык -->
+      <div class="header-group">
+        <!-- Переключатель города — навигация по URL -->
+        <div class="city-switcher">
+          <span class="city-switcher-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+          <a href="/ru/" class="city-btn active" data-city="tbilisi">Тбилиси</a>
+          <a href="/ru/batumi/" class="city-btn" data-city="batumi">Батуми</a>
+        </div>
+
+        <!-- Языковой переключатель -->
+        <div class="language-switcher">
+          <a href="/ru/masters/" class="lang-btn active" data-lang="ru">RUS</a>
+          <a href="/ge/masters/" class="lang-btn" data-lang="ka">GEO</a>
+          <a href="/en/masters/" class="lang-btn" data-lang="en">ENG</a>
+        </div>
+      </div>
+
+      <!-- Группа статуса: «Для мастеров» + онлайн -->
+      <div class="header-group">
+        <a href="/ru/" class="audience-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/><path d="M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> <span class="audience-link-text">Для клиентов</span></a>
+
+        <div class="online-counter">
+          <span class="online-indicator"></span>
+          <span class="online-text">
+            Сейчас онлайн: <strong class="online-count" data-base="3">3</strong> мастеров
+          </span>
+        </div>
+      </div>
     </div>
 
-    <a href="/ru/" class="audience-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/><path d="M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> <span class="audience-link-text">Для клиентов</span></a>
-
-    <div class="online-counter">
-      <span class="online-indicator"></span>
-      <span class="online-text">
-        Сейчас онлайн: <strong class="online-count" data-base="3">3</strong> мастеров
-      </span>
-    </div>
   </header>
 
   <main>

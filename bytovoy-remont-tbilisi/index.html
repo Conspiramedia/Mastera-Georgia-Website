@@ -154,14 +154,30 @@
         </div>
       </div>
     </div>
-    <div class="language-switcher">
-      <a href="/bytovoy-remont-tbilisi/" class="lang-btn active" data-lang="ru">RUS</a>
-      <a href="/bytovoy-remont-tbilisi-ge/" class="lang-btn" data-lang="ka">GEO</a>
-      <a href="/bytovoy-remont-tbilisi-en/" class="lang-btn" data-lang="en">ENG</a>
-    </div>
-    <div class="online-counter">
-      <span class="online-indicator"></span>
-      <span class="online-text">Сейчас онлайн: <strong class="online-count" data-base="3">3</strong> мастеров</span>
+    <div class="header-controls">
+      <!-- Группа навигации: город + язык -->
+      <div class="header-group">
+        <!-- Переключатель города — навигация по URL -->
+        <div class="city-switcher">
+          <span class="city-switcher-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+          <a href="/ru/" class="city-btn active" data-city="tbilisi">Тбилиси</a>
+          <a href="/ru/batumi/" class="city-btn" data-city="batumi">Батуми</a>
+        </div>
+
+        <div class="language-switcher">
+          <a href="/bytovoy-remont-tbilisi/" class="lang-btn active" data-lang="ru">RUS</a>
+          <a href="/bytovoy-remont-tbilisi-ge/" class="lang-btn" data-lang="ka">GEO</a>
+          <a href="/bytovoy-remont-tbilisi-en/" class="lang-btn" data-lang="en">ENG</a>
+        </div>
+      </div>
+
+      <!-- Группа статуса: «Для мастеров» + онлайн -->
+      <div class="header-group">
+        <div class="online-counter">
+          <span class="online-indicator"></span>
+          <span class="online-text">Сейчас онлайн: <strong class="online-count" data-base="3">3</strong> мастеров</span>
+        </div>
+      </div>
     </div>
   </header>
 

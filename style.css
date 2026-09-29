@@ -3079,41 +3079,43 @@ body.modal-open {
        WhatsApp — по желанию), поэтому пары идут ровными строками:
          row 1 — имя / телефон,
          row 2 — Telegram / WhatsApp,
-         row 3 — район / специальность,
-         row 4 — опыт (левая колонка),
-         row 5 — уточнения «Другой район» и «Другое» (появляются по выбору).
+         row 3 — город / район,
+         row 4 — специальность / опыт,
+         row 5 — уточнение «Другое» (появляется по выбору).
 
-       Города в анкете нет: сервис работает в одном городе (Тбилиси),
-       и лишний вопрос только снижал бы конверсию.
+       Город и район стоят рядом намеренно: район зависит от города
+       (см. initMasterCityDistrict в script.js), и связь двух полей
+       должна быть видна глазом.
 
-       Позиции задаём явно: иначе поля уточнений, появляющиеся по выбору
-       «Другой»/«Другое», встают в ближайшую свободную ячейку и двигают
-       соседние поля прямо на глазах у мастера. */
+       Позиции задаём явно: иначе поле specialty_other, появляющееся
+       по выбору «Другое», встаёт в ближайшую свободную ячейку и
+       двигает соседние поля прямо на глазах у мастера. */
     #masterLeadFormModal .contact-form input[name="whatsapp"] {
         grid-column: 2;
         grid-row: 2;
     }
-    #masterLeadFormModal .contact-form select[name="district"] {
+    #masterLeadFormModal .contact-form select[name="city"] {
         grid-column: 1;
+        grid-row: 3;
+    }
+    #masterLeadFormModal .contact-form select[name="district"] {
+        grid-column: 2;
         grid-row: 3;
     }
     #masterLeadFormModal .contact-form select[name="specialty"] {
-        grid-column: 2;
-        grid-row: 3;
-    }
-    #masterLeadFormModal .contact-form input[name="experience"] {
         grid-column: 1;
         grid-row: 4;
     }
-    /* Уточнения — отдельной строкой, каждое под своим полем:
-       район слева, специальность справа. Во всю ширину они читались бы
-       как самостоятельный блок формы, а не как уточнение к полю выше. */
-    #masterLeadFormModal .contact-form input[name="district_other"] {
-        grid-column: 1;
-        grid-row: 5;
-    }
-    #masterLeadFormModal .contact-form input[name="specialty_other"] {
+    #masterLeadFormModal .contact-form input[name="experience"] {
         grid-column: 2;
+        grid-row: 4;
+    }
+    /* Уточнение специальности — отдельной строкой, в левой колонке:
+       поле появляется по выбору «Другое» и относится к селекту специальности
+       над ним. Растянутое на обе колонки оно читалось бы как самостоятельный
+       блок формы, а не как уточнение к полю выше. */
+    #masterLeadFormModal .contact-form input[name="specialty_other"] {
+        grid-column: 1;
         grid-row: 5;
     }
 

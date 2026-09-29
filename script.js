@@ -29,6 +29,11 @@ const i18n = {
         specialtyOtherRequired:    'Пожалуйста, укажите вашу специальность',
         districtOtherPlaceholder:  'Укажите район или ориентир (напр. Вазисубани, метро Самгори)',
         districtOtherRequired:     'Пожалуйста, укажите район или ближайший ориентир — без этого мастер не поймёт, куда ехать',
+        masterCityLabel:           'Город работы',
+        masterCityPlaceholder:     'Город',
+        masterDistrictPlaceholder: 'Сначала выберите город',
+        masterDistrictLabel:       'Район работы',
+        masterCityRequired:        'Пожалуйста, выберите город — заявки приходят мастерам своего города',
     },
     ka: {
         phoneInvalid:        'გთხოვთ, შეიყვანოთ სწორი ქართული ტელეფონის ნომერი ფორმატში: +995XXXXXXXXX (9 ციფრი +995-ის შემდეგ)',
@@ -51,6 +56,11 @@ const i18n = {
         specialtyOtherRequired:    'გთხოვთ, მიუთითოთ თქვენი სპეციალობა',
         districtOtherPlaceholder:  'მიუთითეთ რაიონი ან ორიენტირი (მაგ. ვაზისუბანი, მეტრო სამგორი)',
         districtOtherRequired:     'გთხოვთ, მიუთითოთ რაიონი ან უახლოესი ორიენტირი — ამის გარეშე ხელოსანი ვერ გაიგებს, სად უნდა მივიდეს',
+        masterCityLabel:           'სამუშაო ქალაქი',
+        masterCityPlaceholder:     'ქალაქი',
+        masterDistrictPlaceholder: 'ჯერ აირჩიეთ ქალაქი',
+        masterDistrictLabel:       'სამუშაო რაიონი',
+        masterCityRequired:        'გთხოვთ, აირჩიოთ ქალაქი — განაცხადები მიდის იმავე ქალაქის ხელოსნებთან',
     },
     en: {
         phoneInvalid:        'Please enter a valid Georgian phone number in the format: +995XXXXXXXXX (9 digits after +995)',
@@ -73,6 +83,11 @@ const i18n = {
         specialtyOtherRequired:    'Please specify your specialty',
         districtOtherPlaceholder:  'Specify the district or a landmark (e.g. Vazisubani, Samgori metro)',
         districtOtherRequired:     'Please specify the district or a nearby landmark — without it the specialist will not know where to go',
+        masterCityLabel:           'City of work',
+        masterCityPlaceholder:     'City',
+        masterDistrictPlaceholder: 'Choose a city first',
+        masterDistrictLabel:       'Work district',
+        masterCityRequired:        'Please choose a city — requests go to specialists in the same city',
     }
 };
 
@@ -702,6 +717,40 @@ const DISTRICTS = [
       hintKa: 'ფონიჭალა, ლოჭინი, აეროპორტი' }
 ];
 
+// ── Районы Батуми ──
+// Отдельный список: сервис работает в двух городах, и заявка рассылается
+// мастерам ТОЛЬКО своего города (бот фильтрует по city точным совпадением).
+// Названия ru — канонические: именно они уходят в бота и должны совпадать
+// с config.yaml (cities → Батуми).
+const BATUMI_DISTRICTS = [
+    { slug: 'OldBatumi',   ru: 'Старый Батуми',   en: 'Old Batumi',      ka: 'ძველი ბათუმი',
+      hintRu: 'Приморский бульвар, Пьяцца, Порт',
+      hintEn: 'Seaside Boulevard, Piazza, Port',
+      hintKa: 'ზღვისპირა ბულვარი, პიაცა, პორტი' },
+    { slug: 'NewBoulevard', ru: 'Новый бульвар',  en: 'New Boulevard',   ka: 'ახალი ბულვარი',
+      hintRu: 'Алфавитная башня, Дельфинарий, Ардагани',
+      hintEn: 'Alphabet Tower, Dolphinarium, Ardagani',
+      hintKa: 'ანბანის კოშკი, დელფინარიუმი, არდაგანი' },
+    { slug: 'Khimshiashvili', ru: 'Химшиашвили', en: 'Khimshiashvili',   ka: 'ხიმშიაშვილი',
+      hintRu: 'Тбел Абусеридзе, Инасаридзе, Ангиса',
+      hintEn: 'Tbel Abuseridze, Inasaridze, Angisa',
+      hintKa: 'თბელ აბუსერიძე, ინასარიძე, ანგისა' },
+    { slug: 'BatumiAirport', ru: 'Аэропорт Батуми', en: 'Batumi Airport', ka: 'ბათუმის აეროპორტი',
+      hintRu: 'Хелвачаури, Гонио, Квариати',
+      hintEn: 'Khelvachauri, Gonio, Kvariati',
+      hintKa: 'ხელვაჩაური, გონიო, კვარიათი' },
+    { slug: 'BoniGorodok', ru: 'Бони-Городок',   en: 'Boni-Gorodok',     ka: 'ბონი-გოროდოკი',
+      hintRu: 'Джавахишвили, Тамар Мепе, Аджария',
+      hintEn: 'Javakhishvili, Tamar Mepe, Adjara',
+      hintKa: 'ჯავახიშვილი, თამარ მეფე, აჭარა' }
+];
+
+// Города сервиса. Значение ru — каноническое для бота (users.city / requests.city).
+const CITIES = [
+    { value: 'Тбилиси', ru: 'Тбилиси', en: 'Tbilisi', ka: 'თბილისი', districts: DISTRICTS },
+    { value: 'Батуми',  ru: 'Батуми',  en: 'Batumi',  ka: 'ბათუმი',  districts: BATUMI_DISTRICTS }
+];
+
 // Подписи служебных опций, которых нет в config.locations бота:
 //   Other — «мой район не в списке» (клиентская форма), уточняется текстом;
 //   All   — «работаю по всему городу» (форма мастера).
@@ -713,10 +762,32 @@ const DISTRICT_SPECIAL = {
 // Район на сайте выбирается слугами (Vake, Saburtalo...), а бот ждёт названия
 // по-русски. Карта собирается из DISTRICTS автоматически — отдельный список
 // больше не ведём, рассинхрон невозможен.
-const BOT_DISTRICT_MAP = DISTRICTS.reduce(function (map, d) {
+const BOT_DISTRICT_MAP = DISTRICTS.concat(BATUMI_DISTRICTS).reduce(function (map, d) {
     map[d.slug] = d.ru;
     return map;
 }, { Other: DISTRICT_SPECIAL.Other.bot, All: DISTRICT_SPECIAL.All.bot });
+
+// Город мастера по выбранному району. Районы Тбилиси и Батуми НЕ пересекаются
+// (проверено в config.yaml бота), поэтому суффиксы вида StariGradNS, как в
+// Сербии, здесь не нужны — slug однозначно определяет город.
+// '' означает «город неизвестен»: бот спросит его сам на шаге дособора анкеты.
+function masterCityFromDistrict(slug) {
+    if (!slug || slug === 'All') return '';   // «все районы» без города — город неизвестен
+    if (slug === 'AllTB') return 'Тбилиси';
+    if (slug === 'AllBA') return 'Батуми';
+    var found = CITIES.find(function (c) {
+        return c.districts.some(function (d) { return d.slug === slug; });
+    });
+    return found ? found.value : '';
+}
+
+// Район мастера в каноническом виде для бота: «все районы» в пределах города
+// тоже сводим к общему значению, которое понимает бот.
+function masterDistrictForBot(slug) {
+    if (!slug) return 'Все районы';
+    if (slug === 'All' || slug === 'AllTB' || slug === 'AllBA') return 'Все районы';
+    return BOT_DISTRICT_MAP[slug] || slug;
+}
 
 // Подпись района на языке страницы; с подсказкой местностей — для <option>.
 function districtLabel(entry, lang, withHint) {
@@ -1013,9 +1084,14 @@ function sendMasterLeadToBot(formData) {
             telegram:  get('telegram'),
             whatsapp:  get('whatsapp'),
             specialty: experience ? `${specialty} (опыт: ${experience} лет)` : specialty,
+            // 🏙 Город работы мастера — канон-RU («Тбилиси»/«Батуми»), как в
+            // config.yaml бота. Заявки рассылаются мастерам ТОЛЬКО своего города,
+            // поэтому город обязателен. Если селекта ещё нет (старая страница из
+            // кэша) — выводим город из района; пусто → бот спросит сам.
+            city:      get('city') || masterCityFromDistrict(get('district')),
             // Район работы мастера. В форме — slug (Vake), бот ждёт канон-RU (Ваке),
-            // как и в клиентской заявке. All → «Все районы».
-            district:  BOT_DISTRICT_MAP[get('district')] || (get('district') === 'All' ? 'Все районы' : get('district')) || 'Все районы',
+            // как и в клиентской заявке. All/AllTB/AllBA → «Все районы».
+            district:  masterDistrictForBot(get('district')),
             // Описание в форме мастера — textarea name="about" (НЕ "message").
             message:   get('about'),
             // Отдельные поля для автоподстановки в боте (specialty канон-RU, опыт числом).
@@ -1144,12 +1220,106 @@ function initClientDistrictOptions() {
     initDistrictOtherInput(form, districtSel);
 }
 
-// Собирает список районов в форме мастера (там же опция «Все районы»).
-// Без подсказок местностей: мастер выбирает район работы, а не ищет свой адрес.
-function initMasterDistrictOptions() {
+// Связка «город → районы» в анкете мастера.
+//
+// Зачем: бот рассылает заявки мастерам ОДНОГО города (фильтр city в
+// get_masters_by_rating), поэтому город обязан быть известен точно. Раньше
+// сервис работал в одном Тбилиси и город не спрашивали вовсе. С появлением
+// Батуми мастер выбирает город явно, а список районов перестраивается под него
+// — рассогласование «Батуми + Ваке» стало невозможным в принципе.
+//
+// Селект города создаётся ЗДЕСЬ, а не в разметке: страниц много, и правка через
+// JS не требует обхода каждого HTML (тот же приём, что у районов и фото).
+function initMasterCityDistrict() {
     const form = document.getElementById('masterLeadForm');
     if (!form) return;
-    buildDistrictSelect(form.querySelector('select[name="district"]'), false);
+    const districtSel = form.querySelector('select[name="district"]');
+    if (!districtSel) return;
+
+    const lang = ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru';
+
+    // Селект города: создаём один раз и ставим ПЕРЕД селектом района.
+    let citySel = form.querySelector('select[name="city"]');
+    if (!citySel) {
+        citySel = document.createElement('select');
+        citySel.name = 'city';
+        citySel.required = true;
+        citySel.className = districtSel.className;   // те же стили, что у района
+
+        const ph = document.createElement('option');
+        ph.value = '';
+        ph.disabled = true;
+        ph.selected = true;
+        ph.setAttribute('data-ru', i18n.ru.masterCityPlaceholder);
+        ph.setAttribute('data-en', i18n.en.masterCityPlaceholder);
+        ph.setAttribute('data-ka', i18n.ka.masterCityPlaceholder);
+        ph.textContent = t('masterCityPlaceholder');
+        citySel.appendChild(ph);
+
+        CITIES.forEach(function (c) {
+            const opt = document.createElement('option');
+            opt.value = c.value;                      // канон-RU для бота
+            opt.setAttribute('data-ru', c.ru);
+            opt.setAttribute('data-en', c.en);
+            opt.setAttribute('data-ka', c.ka);
+            opt.textContent = c[lang] || c.ru;
+            citySel.appendChild(opt);
+        });
+
+        districtSel.insertAdjacentElement('beforebegin', citySel);
+    }
+
+    // Районы выбранного города. Пока город не выбран — район недоступен:
+    // выбирать не из чего, и это сразу видно по подписи.
+    function fillDistricts() {
+        const city = CITIES.find(function (c) { return c.value === citySel.value; });
+        districtSel.innerHTML = '';
+
+        const ph = document.createElement('option');
+        ph.value = '';
+        ph.disabled = true;
+        ph.selected = true;
+        const phKey = city ? 'masterDistrictLabel' : 'masterDistrictPlaceholder';
+        ph.setAttribute('data-ru', i18n.ru[phKey]);
+        ph.setAttribute('data-en', i18n.en[phKey]);
+        ph.setAttribute('data-ka', i18n.ka[phKey]);
+        ph.textContent = t(phKey);
+        districtSel.appendChild(ph);
+
+        if (!city) {
+            districtSel.disabled = true;
+            return;
+        }
+        districtSel.disabled = false;
+
+        city.districts.forEach(function (d) {
+            const opt = document.createElement('option');
+            opt.value = d.slug;
+            opt.setAttribute('data-ru', d.ru);
+            opt.setAttribute('data-en', d.en);
+            opt.setAttribute('data-ka', d.ka);
+            opt.textContent = d[lang] || d.ru;
+            districtSel.appendChild(opt);
+        });
+
+        // «Все районы» — в пределах ВЫБРАННОГО города, поэтому значение своё:
+        // по нему masterCityFromDistrict восстановит город, если он потеряется.
+        const allOpt = document.createElement('option');
+        allOpt.value = city.value === 'Батуми' ? 'AllBA' : 'AllTB';
+        allOpt.setAttribute('data-ru', DISTRICT_SPECIAL.All.ru);
+        allOpt.setAttribute('data-en', DISTRICT_SPECIAL.All.en);
+        allOpt.setAttribute('data-ka', DISTRICT_SPECIAL.All.ka);
+        allOpt.textContent = DISTRICT_SPECIAL.All[lang] || DISTRICT_SPECIAL.All.ru;
+        districtSel.appendChild(allOpt);
+    }
+
+    citySel.addEventListener('change', fillDistricts);
+    fillDistricts();
+}
+
+// Совместимость: старое имя вызывается из инициализации страниц.
+function initMasterDistrictOptions() {
+    initMasterCityDistrict();
 }
 
 // Уточнение района для варианта «Другой»: без него заявка приходит мастеру как

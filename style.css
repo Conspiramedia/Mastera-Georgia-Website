@@ -2117,7 +2117,12 @@ footer {
     background: transparent;
     border: 1px solid rgba(253, 185, 19, 0.3);
     color: rgba(255, 255, 255, 0.6);
-    padding: 0.5rem 1rem;
+    /* Отступы чуть меньше «круглых» 0.5rem: радужная рамка ::before занимает
+       внутри плашки 2px, и при 0.5rem кнопка вырастала до 39px — переключатель
+       языка выглядел толще переключателя города. С 0.42rem кнопка снова 36px,
+       а плашка целиком остаётся 52px, вровень со счётчиком и «Для мастеров».
+       Значение совпадает с эталоном (Сербия). */
+    padding: 0.42rem 1rem;
     border-radius: 20px;
     cursor: pointer;
     font-family: 'Montserrat', sans-serif;

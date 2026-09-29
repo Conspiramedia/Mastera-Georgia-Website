@@ -1301,10 +1301,15 @@ function initCityDropdown() {
     // сервисных и районных лендингах её в шапке нет — там равняемся на счётчик
     // онлайна. Без запасного варианта --city-switcher-w не задавалась вовсе, и
     // выпадающий список получал ширину по содержимому, не совпадающую с плашкой.
-    // Языковой переключатель, в отличие от Сербии, НЕ трогаем: у него радужная
-    // рамка через ::before, и навязанная ширина растянула бы её мимо плашки.
     const masters = document.querySelector('.audience-link')
                  || document.querySelector('.online-counter');
+
+    // Вторая пара: языковой переключатель равняется по счётчику онлайна, чтобы
+    // правые края обеих строк шапки сходились в одну вертикаль (как в Сербии).
+    // Радужной рамке (.language-switcher::before) это не вредит: она задана
+    // через inset: -2px от самого элемента и растягивается вместе с ним.
+    const lang = document.querySelector('.language-switcher');
+    const counter = document.querySelector('.online-counter');
 
     function syncWidth() {
         const root = document.documentElement.style;
@@ -1312,17 +1317,23 @@ function initCityDropdown() {
         if (!window.matchMedia(DESKTOP).matches) {
             // На мобильном ширины не навязываем — плашки тянутся сами
             root.removeProperty('--city-switcher-w');
+            root.removeProperty('--lang-switcher-w');
             return;
         }
 
-        // Снимаем прежнее значение, чтобы замерить естественную ширину
+        // Снимаем прежние значения, чтобы замерить естественную ширину
         root.removeProperty('--city-switcher-w');
+        root.removeProperty('--lang-switcher-w');
 
         // Округляем вверх: дробная ширина (например 174.6px) даёт субпиксельный
         // сдвиг, и рамка выпадающего списка не сходится с рамкой плашки ровно.
         if (masters) {
             const need = Math.ceil(Math.max(masters.offsetWidth, city.scrollWidth));
             root.setProperty('--city-switcher-w', need + 'px');
+        }
+        if (counter && lang) {
+            const need = Math.ceil(Math.max(counter.offsetWidth, lang.scrollWidth));
+            root.setProperty('--lang-switcher-w', need + 'px');
         }
     }
 

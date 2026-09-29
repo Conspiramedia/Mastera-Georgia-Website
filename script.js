@@ -120,6 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initScrollToTop();
     initClientLeadFormTracking();
     initClientPhotoUpload();
+    initCityDropdown();
     initClientDistrictOptions();
     initClientUrgentOption();
     initMasterLeadFormTracking();
@@ -767,6 +768,53 @@ const BOT_DISTRICT_MAP = DISTRICTS.concat(BATUMI_DISTRICTS).reduce(function (map
     return map;
 }, { Other: DISTRICT_SPECIAL.Other.bot, All: DISTRICT_SPECIAL.All.bot });
 
+// Город КЛИЕНТСКОЙ заявки — по URL страницы, а не вопросом в форме.
+//
+// Клиент оставляет заявку в момент проблемы, и каждое лишнее поле теряет часть
+// людей. Раз он открыл батумский лендинг — он в Батуми, спрашивать нечего.
+// Заодно пара «город + район» согласована автоматически: список районов в форме
+// на этой странице тоже батумский (см. clientDistrictsForPage).
+//
+// Бот рассылает заявку мастерам ТОЛЬКО этого города (фильтр city в
+// get_masters_by_rating), поэтому значение должно быть канон-RU из config.yaml.
+// Район, зашитый в разметку лендинга (<option ... selected>), снятый ОДИН РАЗ
+// при загрузке скрипта — до того, как buildDistrictSelect() пересоберёт список
+// и этот <option> из DOM исчезнет. Именно по нему определяется город страницы.
+var PAGE_DISTRICT_SLUG = (function () {
+    var opt = document.querySelector('#clientLeadForm select[name="district"] option[selected]');
+    return opt ? (opt.getAttribute('value') || '') : '';
+})();
+
+function botCityFromUrl() {
+    // Город страницы. Порядок проверок важен.
+    //
+    // 1) По РАЙОНУ лендинга (PAGE_DISTRICT_SLUG). Проверять URL на подстроку
+    //    «batumi» недостаточно: у районов novy-bulvar, khimshiashvili и
+    //    boni-gorodok названия города в slug нет, и заявка уходила бы в Тбилиси
+    //    с батумским районом — пара рассогласована, рассылка не нашла бы ни
+    //    одного мастера, и заявка молча пропала бы.
+    //
+    //    Значение берём из снимка выше, а не из живого селекта: список районов
+    //    строит buildDistrictSelect(), который сам спрашивает город у этой
+    //    функции. На момент вызова селект ещё тбилисский, а предвыбор уже
+    //    затёрт — получался замкнутый круг.
+    var byDistrict = PAGE_DISTRICT_SLUG ? masterCityFromDistrict(PAGE_DISTRICT_SLUG) : '';
+    if (byDistrict) return byDistrict;
+
+    // 2) По URL — для страниц без района: хабы (/ru/batumi/) и сервисные
+    //    лендинги вида santehnik-batumi.
+    return window.location.pathname.includes('batumi') ? 'Батуми' : 'Тбилиси';
+}
+
+
+
+// Районы для КЛИЕНТСКОЙ формы — по городу страницы (см. botCityFromUrl).
+// Показывать тбилисские районы на батумском лендинге нельзя: заявка ушла бы
+// с районом чужого города и не нашла бы ни одного мастера.
+function clientDistrictsForPage() {
+    return botCityFromUrl() === 'Батуми' ? BATUMI_DISTRICTS : DISTRICTS;
+}
+
 // Город мастера по выбранному району. Районы Тбилиси и Батуми НЕ пересекаются
 // (проверено в config.yaml бота), поэтому суффиксы вида StariGradNS, как в
 // Сербии, здесь не нужны — slug однозначно определяет город.
@@ -862,6 +910,7 @@ function sendLeadToBot(formData) {
         const districtOther = get('district_other');
 
         const payload = {
+            city:        botCityFromUrl(),                  // город страницы — бот рассылает своему городу
             district:    BOT_DISTRICT_MAP[get('district')] || get('district') || 'Другой',
             subdistrict: districtOther || 'Не указан',      // подрайон спрашиваем только у «Другого»
             category:    resolveBotCategory(get('service')),   // всегда канон-RU для мастеров
@@ -1191,8 +1240,10 @@ function buildDistrictSelect(select, withHints) {
     //    «Выберите район» у клиента, «Район работы» у мастера).
     if (placeholder) select.appendChild(placeholder);
 
-    // 2. Районы бота — единым списком из DISTRICTS.
-    DISTRICTS.forEach(function (d) {
+    // 2. Районы бота — по ГОРОДУ СТРАНИЦЫ (см. clientDistrictsForPage).
+    //    На батумском лендинге тбилисские районы показывать нельзя: заявка
+    //    ушла бы с районом чужого города и не нашла бы ни одного мастера.
+    clientDistrictsForPage().forEach(function (d) {
         select.appendChild(makeOption(d.slug, {
             ru: districtLabel(d, 'ru', withHints),
             en: districtLabel(d, 'en', withHints),
@@ -1207,6 +1258,88 @@ function buildDistrictSelect(select, withHints) {
 
     // 4. Возвращаем предвыбор лендинга (район страницы) — он пережил пересборку.
     if (preselected) select.value = preselected;
+}
+
+// ── Переключатель города в шапке ───────────────────────────────────────────
+// На десктопе плашка показывает только текущий город, остальные — списком по
+// клику: при добавлении городов ширина шапки не меняется. На мобильном (<769px)
+// кнопки остаются в ряд, там CSS-правила дропдауна не действуют.
+//
+// Ширину плашки считаем в JS, а не в CSS: она должна совпадать с «Для мастеров»
+// над ней, а длина той надписи меняется при переключении языка (RUS/GEO/ENG).
+function initCityDropdown() {
+    const DESKTOP = '(min-width: 769px)';
+    const city = document.querySelector('.city-switcher');
+    if (!city) return;
+
+    // Нумеруем пункты выпадающей части: CSS по --i ставит их друг под другом.
+    // Активный город в список не входит, поэтому считаем только остальные —
+    // иначе первый пункт уехал бы на место второго.
+    city.querySelectorAll('.city-btn:not(.active)').forEach((btn, i) => {
+        btn.style.setProperty('--i', i);
+    });
+
+    // Раскрытие по клику
+    city.addEventListener('click', (e) => {
+        if (!window.matchMedia(DESKTOP).matches) return;
+        // Клик по пункту списка — это переход по ссылке, не мешаем
+        if (e.target.closest('.city-btn:not(.active)')) return;
+        e.preventDefault();
+        city.classList.toggle('is-open');
+    });
+
+    // Клик вне плашки и Escape — закрываем
+    document.addEventListener('click', (e) => {
+        if (!city.contains(e.target)) city.classList.remove('is-open');
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') city.classList.remove('is-open');
+    });
+
+    // Плашка города не должна быть уже своего содержимого и должна совпадать
+    // по ширине с «Для мастеров». Языковой переключатель, в отличие от Сербии,
+    // НЕ трогаем: у него радужная рамка через ::before, и навязанная ширина
+    // растянула бы её мимо плашки.
+    const masters = document.querySelector('.audience-link');
+
+    function syncWidth() {
+        const root = document.documentElement.style;
+
+        if (!window.matchMedia(DESKTOP).matches) {
+            // На мобильном ширины не навязываем — плашки тянутся сами
+            root.removeProperty('--city-switcher-w');
+            return;
+        }
+
+        // Снимаем прежнее значение, чтобы замерить естественную ширину
+        root.removeProperty('--city-switcher-w');
+
+        // Округляем вверх: дробная ширина (например 174.6px) даёт субпиксельный
+        // сдвиг, и рамка выпадающего списка не сходится с рамкой плашки ровно.
+        if (masters) {
+            const need = Math.ceil(Math.max(masters.offsetWidth, city.scrollWidth));
+            root.setProperty('--city-switcher-w', need + 'px');
+        }
+    }
+
+    // Первый расчёт — после загрузки шрифтов: до неё ширины текста отличаются,
+    // и плашки разъезжались бы при подмене шрифта.
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(syncWidth);
+    } else {
+        syncWidth();
+    }
+    syncWidth();
+
+    // Пересчёт при изменении размера окна и смене языка
+    let t = null;
+    window.addEventListener('resize', () => {
+        clearTimeout(t);
+        t = setTimeout(syncWidth, 150);
+    });
+    document.querySelectorAll('.lang-btn').forEach(b =>
+        b.addEventListener('click', () => setTimeout(syncWidth, 50))
+    );
 }
 
 // Собирает список районов в клиентской форме и включает уточнение для «Другого».
@@ -1892,7 +2025,25 @@ function initTypingEffect() {
     };
 
     const langKey = isMastersPage ? currentLang + '_masters' : currentLang;
-    const parts = textParts[langKey] || textParts[currentLang] || textParts.ru;
+    const raw = textParts[langKey] || textParts[currentLang] || textParts.ru;
+
+    // Город в анимации — по URL страницы, а не захардкоженный.
+    // Тексты выше написаны под Тбилиси; на хабе Батуми анимация затирала бы
+    // правильный h1 из разметки тбилисским названием. Подменяем название
+    // города во всех трёх языках (в грузинском — форма местного падежа).
+    const CITY_SWAP = {
+        ru: ['Тбилиси', 'Батуми'],
+        en: ['Tbilisi', 'Batumi'],
+        ka: ['თბილისში', 'ბათუმში']
+    };
+    const isBatumi = window.location.pathname.includes('/batumi');
+    const swap = CITY_SWAP[currentLang] || CITY_SWAP.ru;
+    const fix = (t) => (isBatumi ? t.split(swap[0]).join(swap[1]) : t);
+    const parts = {
+        start:   fix(raw.start),
+        option1: fix(raw.option1),
+        option2: fix(raw.option2)
+    };
 
     const typeSpeed  = 180;
     const deleteSpeed = 50;

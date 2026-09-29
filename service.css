@@ -280,3 +280,239 @@
         height: 40px !important;
     }
 }
+
+
+/* ==== Переключатель города в шапке (хабы) ==== */
+/* Стилистически близок к .language-switcher, но с золотой рамкой и иконкой города */
+.city-switcher {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--dark-concrete);
+  padding: 0.4rem 0.5rem;
+  border-radius: 25px;
+  /* Обводка как у счётчика мастеров: зелёная 2px со свечением */
+  border: 2px solid var(--safety-green);
+  box-shadow: 0 4px 15px rgba(6, 255, 165, 0.3);
+}
+
+/* Иконка «локация» слева от кнопок */
+.city-switcher-icon {
+  display: flex;
+  align-items: center;
+  color: var(--construction-yellow);
+  margin: 0 0.15rem 0 0.25rem;
+}
+.city-switcher-icon svg { width: 18px; height: 18px; }
+
+/* Кнопка города */
+.city-btn {
+  background: transparent;
+  border: 1px solid rgba(253, 185, 19, 0.3);
+  color: rgba(255, 255, 255, 0.65);
+  padding: 0.45rem 0.9rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.city-btn:hover {
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Активный город */
+.city-btn.active {
+  background: linear-gradient(135deg, var(--construction-yellow), var(--construction-orange));
+  color: var(--dark-concrete);
+  border: none;
+  box-shadow: 0 4px 15px rgba(253, 185, 19, 0.4);
+}
+
+@media (max-width: 600px) {
+  .city-btn { padding: 0.4rem 0.7rem; font-size: 0.8rem; }
+  .city-switcher-icon { display: none; }
+}
+
+/* ============================================================
+   ДЕСКТОП: ВЫБОР ГОРОДА — ВЫПАДАЮЩИЙ СПИСОК
+   ============================================================
+
+   Было: обе кнопки городов видны сразу, плашка росла с каждым
+   новым городом. Стало: видна только текущая, остальные — в
+   списке по клику. При добавлении городов ширина не меняется.
+
+   Разметка та же (.city-switcher > .city-btn), меняем только
+   отображение — HTML 228 страниц править не потребовалось.
+   Раскрытием управляет класс .is-open (ставит script.js).
+
+   Мобильная версия (<769px) не затронута: там правила ниже
+   не действуют, кнопки остаются в ряд как были. */
+@media (min-width: 769px) {
+
+  .city-switcher {
+    position: relative;
+    /* Ширина равна плашке «Для мастеров» над ней — задаётся
+       переменной, которую считает скрипт после отрисовки шрифтов. */
+    width: var(--city-switcher-w, auto);
+    /* Контент по центру, как у соседних плашек шапки */
+    justify-content: center;
+    padding-right: 2.2rem;   /* место под стрелку справа */
+    padding-left: 2.2rem;    /* столько же слева — чтобы текст был по центру */
+    cursor: pointer;
+    /* Плашка в потоке всегда 52px: раскрывающаяся часть уходит в
+       абсолютное позиционирование (ниже), поэтому шапка не двигается. */
+    overflow: visible;
+    transition: box-shadow 0.28s ease;
+  }
+
+  /* Иконка «локация» — слева, поверх padding-слота */
+  .city-switcher > .city-switcher-icon {
+    position: absolute;
+    left: 0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0;
+  }
+
+  /* Текущий город — по центру плашки */
+  .city-switcher > .city-btn.active {
+    background: none;
+    box-shadow: none;
+    border: none;
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 0;
+    text-align: center;
+    pointer-events: none;   /* клик обрабатывает вся плашка */
+  }
+
+  /* ── Выпадающая часть ─────────────────────────────────────────
+     Абсолютная, поэтому НЕ меняет высоту плашки и не двигает шапку.
+     Визуально продолжает плашку: та же рамка и фон, скруглены только
+     нижние углы, верх состыкован встык. */
+  .city-switcher .city-btn:not(.active) {
+    position: absolute;
+    left: -2px;                       /* компенсация рамки плашки */
+    width: calc(100% + 4px);
+    box-sizing: border-box;
+    background: var(--dark-concrete);
+    border: 2px solid var(--safety-green);
+    border-top: none;                 /* стык с плашкой без двойной линии */
+    border-radius: 0 0 16px 16px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+    color: rgba(255, 255, 255, 0.85);
+    text-align: center;
+    padding: 0.7rem 1rem;
+    /* Позиция: вплотную под плашкой.
+       top:100% — это низ PADDING-box, а внешний край плашки ниже на
+       padding-bottom (0.4rem) + border (2px). Опускаем список на эту
+       величину и поднимаем на толщину рамки, чтобы его верхняя грань
+       легла на нижнюю рамку плашки, а не оставила щель.
+       Итого: +0.4rem. --i задаёт скрипт (0, 1, 2…). */
+    top: calc(100% + 0.4rem + var(--i, 0) * 2.6rem);
+    /* Подъём на толщину рамки: верхняя грань списка должна лечь НА
+       нижнюю рамку плашки. Без этого между ними остаётся тёмная щель
+       в 2–5px (её ширина плавает из-за дробного devicePixelRatio на
+       экранах с масштабом 125–150%), и линии визуально не сходятся.
+       Перекрываем с запасом — лишнее скрывается под рамкой плашки. */
+    margin-top: -5px;
+    /* Скрыта до клика */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    z-index: 200;
+  }
+
+  .city-switcher.is-open .city-btn:not(.active) {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  /* Пока открыто — у плашки скруглён только верх, чтобы стык
+     со списком выглядел одним элементом */
+  .city-switcher.is-open {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  /* Наведение: без заливки — только подсветка текста */
+  .city-switcher .city-btn:not(.active):hover {
+    color: var(--construction-yellow);
+  }
+
+  /* Стрелка ⌄ справа — рисуем псевдоэлементом, чтобы не трогать HTML */
+  .city-switcher::after {
+    content: '';
+    position: absolute;
+    right: 1.1rem;
+    top: 50%;
+    width: 9px;
+    height: 9px;
+    border-right: 2px solid var(--construction-yellow);
+    border-bottom: 2px solid var(--construction-yellow);
+    transform: translateY(-70%) rotate(45deg);
+    transition: transform 0.25s ease;
+    pointer-events: none;
+  }
+
+  .city-switcher.is-open::after {
+    transform: translateY(-30%) rotate(-135deg);
+  }
+
+}
+
+/* ============================================================
+   МОБИЛЬНЫЙ: шапка с переключателем города (<769px)
+   ============================================================
+
+   На десктопе плашки стоят в две строки в правом углу, а выпадающий список
+   города раскрывается по клику. На мобильном обе раскладки не нужны: плашки
+   идут вертикально во всю ширину, оба города видны сразу.
+
+   Без этого блока .header-controls остаётся горизонтальным рядом из четырёх
+   плашек и не помещается в 375px — счётчик обрезается за правым краем. */
+@media (max-width: 768px) {
+  .header-controls {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.7rem;
+  }
+  /* Группы тоже вертикальные: каждая плашка на своей строке */
+  .header-controls .header-group {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.7rem;
+    width: 100%;
+  }
+
+  /* Переключатель города — во всю ширину, города делят её поровну */
+  .city-switcher {
+    width: 100%;
+    justify-content: center;
+  }
+  .city-switcher .city-btn {
+    flex: 1 1 0;
+    text-align: center;
+  }
+
+  /* Единая высота плашек и на мобильном: в вертикальной колонке flex-растяжение
+     ломало бы «толщину». Языковой переключатель НЕ трогаем по ширине — у него
+     радужная рамка через ::before, и навязанная ширина увела бы её мимо плашки. */
+  header .city-switcher,
+  header .audience-link,
+  header .online-counter {
+    height: 52px;
+    flex: 0 0 auto;
+    box-sizing: border-box;
+  }
+}

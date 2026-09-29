@@ -2006,59 +2006,63 @@ function initTypingEffect() {
 
     const isMastersPage = window.location.pathname.includes('/masters/');
 
+    // Название города для КЛИЕНТСКИХ страниц — по городу страницы.
+    // Берём его из botCityFromUrl(): она определяет город по району лендинга,
+    // а не по подстроке «batumi» в адресе. У районов novy-bulvar,
+    // khimshiashvili и boni-gorodok названия города в slug нет, и проверка
+    // подстрокой показывала бы на них «Тбилиси».
+    const cityCanon = (typeof botCityFromUrl === 'function') ? botCityFromUrl() : 'Тбилиси';
+    const CITY_LABEL = {
+        ru: { 'Тбилиси': 'Тбилиси', 'Батуми': 'Батуми' },
+        en: { 'Тбилиси': 'Tbilisi',  'Батуми': 'Batumi' },
+        // грузинский: послеложная форма «в городе» — თბილისში / ბათუმში
+        ka: { 'Тбилиси': 'თბილისში', 'Батуми': 'ბათუმში' }
+    };
+    const cityLbl = (CITY_LABEL[currentLang] || CITY_LABEL.ru)[cityCanon]
+                 || CITY_LABEL.ru[cityCanon] || cityCanon;
+
+    // На страницах «Для мастеров» город НЕ показываем: партнёрское предложение
+    // действует по всей стране, а не в одном городе (так же в Сербии, где на
+    // /masters/ стоит «Сербия»).
     const textParts = {
         ru: {
             start:   'Сервис ',
-            option1: 'поиска мастеров Тбилиси',
-            option2: 'подбора мастеров Тбилиси'
+            option1: 'поиска мастеров ' + cityLbl,
+            option2: 'подбора мастеров ' + cityLbl
         },
         en: {
             start:   'Master ',
-            option1: 'search service Tbilisi',
-            option2: 'matching service Tbilisi'
+            option1: 'search service ' + cityLbl,
+            option2: 'matching service ' + cityLbl
         },
         ka: {
             start:   'სერვისი ',
-            option1: 'ძიების თბილისში',
-            option2: 'შერჩევის თბილისში'
+            option1: 'ძიების ' + cityLbl,
+            option2: 'შერჩევის ' + cityLbl
         },
         ru_masters: {
             start:   'Сервис ',
-            option1: 'поиска заказов Тбилиси',
-            option2: 'подбора заказов Тбилиси'
+            option1: 'поиска заказов Грузия',
+            option2: 'подбора заказов Грузия'
         },
         en_masters: {
             start:   'Order ',
-            option1: 'search service Tbilisi',
-            option2: 'matching service Tbilisi'
+            option1: 'search service Georgia',
+            option2: 'matching service Georgia'
         },
         ka_masters: {
             start:   'შეკვეთების ',
-            option1: 'ძიების სერვისი თბილისში',
-            option2: 'შერჩევის სერვისი თბილისში'
+            option1: 'ძიების სერვისი საქართველოში',
+            option2: 'შერჩევის სერვისი საქართველოში'
         }
     };
 
     const langKey = isMastersPage ? currentLang + '_masters' : currentLang;
     const raw = textParts[langKey] || textParts[currentLang] || textParts.ru;
 
-    // Город в анимации — по URL страницы, а не захардкоженный.
-    // Тексты выше написаны под Тбилиси; на хабе Батуми анимация затирала бы
-    // правильный h1 из разметки тбилисским названием. Подменяем название
-    // города во всех трёх языках (в грузинском — форма местного падежа).
-    const CITY_SWAP = {
-        ru: ['Тбилиси', 'Батуми'],
-        en: ['Tbilisi', 'Batumi'],
-        ka: ['თბილისში', 'ბათუმში']
-    };
-    const isBatumi = window.location.pathname.includes('/batumi');
-    const swap = CITY_SWAP[currentLang] || CITY_SWAP.ru;
-    const fix = (t) => (isBatumi ? t.split(swap[0]).join(swap[1]) : t);
-    const parts = {
-        start:   fix(raw.start),
-        option1: fix(raw.option1),
-        option2: fix(raw.option2)
-    };
+    // Подмена города больше не нужна: название подставляется прямо в тексты
+    // выше через cityLbl, а на страницах мастеров города нет вовсе.
+    const parts = raw;
 
     const typeSpeed  = 180;
     const deleteSpeed = 50;

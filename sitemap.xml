@@ -1,1130 +1,657 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
-
-  <!-- Главная страница (редирект по языку браузера) -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://mastera-tbilisi.ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/ru/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/en/"/>
-    <lastmod>2026-06-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-
-  <!-- Языковые версии главной страницы -->
-  <url>
-    <loc>https://mastera-tbilisi.ge/ru/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/ru/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/en/"/>
-    <lastmod>2026-06-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/ru/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/en/"/>
-    <lastmod>2026-06-01</lastmod>
-    <changefreq>weekly</changefreq>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://mastera-tbilisi.ge/en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/ru/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/en/"/>
-    <lastmod>2026-06-01</lastmod>
+    <lastmod>2026-10-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-
-  <!-- Сантехник в Тбилиси — все языки -->
   <url>
-    <loc>https://mastera-tbilisi.ge/santehnik-tbilisi/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/santehnik-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/santehnik-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/santehnik-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/santehnik-tbilisi-en/"/>
-    <lastmod>2026-06-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/santehnik-tbilisi-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/santehnik-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/santehnik-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/santehnik-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/santehnik-tbilisi-en/"/>
-    <lastmod>2026-06-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/santehnik-tbilisi-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/santehnik-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/santehnik-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/santehnik-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/santehnik-tbilisi-en/"/>
-    <lastmod>2026-06-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Электрик в Тбилиси — все языки -->
-  <url>
-    <loc>https://mastera-tbilisi.ge/elektrik-tbilisi/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/elektrik-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/elektrik-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/elektrik-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/elektrik-tbilisi-en/"/>
-    <lastmod>2026-06-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/elektrik-tbilisi-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/elektrik-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/elektrik-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/elektrik-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/elektrik-tbilisi-en/"/>
-    <lastmod>2026-06-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/elektrik-tbilisi-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/elektrik-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/elektrik-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/elektrik-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/elektrik-tbilisi-en/"/>
-    <lastmod>2026-06-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Мастер на час в Тбилиси — все языки -->
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-tbilisi/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-tbilisi-en/"/>
-    <lastmod>2026-06-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-tbilisi-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-tbilisi-en/"/>
-    <lastmod>2026-06-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-tbilisi-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-tbilisi-en/"/>
-    <lastmod>2026-06-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Сборка мебели в Тбилиси — все языки -->
-  <url>
-    <loc>https://mastera-tbilisi.ge/sborka-mebeli-tbilisi/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/sborka-mebeli-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/sborka-mebeli-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/sborka-mebeli-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/sborka-mebeli-tbilisi-en/"/>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/sborka-mebeli-tbilisi-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/sborka-mebeli-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/sborka-mebeli-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/sborka-mebeli-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/sborka-mebeli-tbilisi-en/"/>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/sborka-mebeli-tbilisi-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/sborka-mebeli-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/sborka-mebeli-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/sborka-mebeli-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/sborka-mebeli-tbilisi-en/"/>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Бытовой ремонт в Тбилиси — все языки -->
-  <url>
-    <loc>https://mastera-tbilisi.ge/bytovoy-remont-tbilisi/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/bytovoy-remont-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/bytovoy-remont-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/bytovoy-remont-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/bytovoy-remont-tbilisi-en/"/>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/bytovoy-remont-tbilisi-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/bytovoy-remont-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/bytovoy-remont-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/bytovoy-remont-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/bytovoy-remont-tbilisi-en/"/>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/bytovoy-remont-tbilisi-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/bytovoy-remont-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/bytovoy-remont-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/bytovoy-remont-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/bytovoy-remont-tbilisi-en/"/>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Навеска и монтаж в Тбилиси — все языки -->
-  <url>
-    <loc>https://mastera-tbilisi.ge/naveska-montazh-tbilisi/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/naveska-montazh-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/naveska-montazh-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/naveska-montazh-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/naveska-montazh-tbilisi-en/"/>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/naveska-montazh-tbilisi-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/naveska-montazh-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/naveska-montazh-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/naveska-montazh-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/naveska-montazh-tbilisi-en/"/>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/naveska-montazh-tbilisi-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/naveska-montazh-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/naveska-montazh-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/naveska-montazh-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/naveska-montazh-tbilisi-en/"/>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Ремонт компьютеров в Тбилиси — все языки -->
-  <url>
-    <loc>https://mastera-tbilisi.ge/remont-kompyuterov-tbilisi/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/remont-kompyuterov-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/remont-kompyuterov-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/remont-kompyuterov-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/remont-kompyuterov-tbilisi-en/"/>
-    <lastmod>2026-09-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/remont-kompyuterov-tbilisi-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/remont-kompyuterov-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/remont-kompyuterov-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/remont-kompyuterov-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/remont-kompyuterov-tbilisi-en/"/>
-    <lastmod>2026-09-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/remont-kompyuterov-tbilisi-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/remont-kompyuterov-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/remont-kompyuterov-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/remont-kompyuterov-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/remont-kompyuterov-tbilisi-en/"/>
-    <lastmod>2026-09-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Грузчики в Тбилиси — все языки -->
-  <url>
-    <loc>https://mastera-tbilisi.ge/gruzchiki-tbilisi/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/gruzchiki-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/gruzchiki-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/gruzchiki-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/gruzchiki-tbilisi-en/"/>
-    <lastmod>2026-09-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/gruzchiki-tbilisi-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/gruzchiki-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/gruzchiki-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/gruzchiki-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/gruzchiki-tbilisi-en/"/>
-    <lastmod>2026-09-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/gruzchiki-tbilisi-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/gruzchiki-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/gruzchiki-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/gruzchiki-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/gruzchiki-tbilisi-en/"/>
-    <lastmod>2026-09-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Уборка / Клининг в Тбилиси — все языки -->
-  <url>
-    <loc>https://mastera-tbilisi.ge/klining-tbilisi/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/klining-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/klining-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/klining-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/klining-tbilisi-en/"/>
-    <lastmod>2026-09-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/klining-tbilisi-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/klining-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/klining-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/klining-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/klining-tbilisi-en/"/>
-    <lastmod>2026-09-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/klining-tbilisi-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/klining-tbilisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/klining-tbilisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/klining-tbilisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/klining-tbilisi-en/"/>
-    <lastmod>2026-09-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Районные страницы (Мастер на час по районам) — RU + KA + EN -->
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-vake/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-vake/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-vake-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-vake-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-vake-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-vake-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-vake/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-vake-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-vake-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-vake-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-vake-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-vake/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-vake-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-vake-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-vake-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-saburtalo/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-saburtalo/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-saburtalo-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-saburtalo-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-saburtalo-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-saburtalo-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-saburtalo/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-saburtalo-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-saburtalo-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-saburtalo-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-saburtalo-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-saburtalo/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-saburtalo-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-saburtalo-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-saburtalo-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-gldani/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-gldani/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-gldani-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-gldani-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-gldani-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-gldani-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-gldani/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-gldani-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-gldani-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-gldani-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-gldani-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-gldani/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-gldani-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-gldani-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-gldani-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-didube/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-didube/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-didube-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-didube-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-didube-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-didube-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-didube/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-didube-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-didube-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-didube-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-didube-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-didube/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-didube-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-didube-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-didube-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-chugureti/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-chugureti/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-chugureti-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-chugureti-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-chugureti-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-chugureti-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-chugureti/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-chugureti-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-chugureti-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-chugureti-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-chugureti-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-chugureti/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-chugureti-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-chugureti-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-chugureti-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-isani/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-isani/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-isani-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-isani-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-isani-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-isani-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-isani/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-isani-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-isani-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-isani-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-isani-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-isani/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-isani-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-isani-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-isani-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-samgori/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-samgori/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-samgori-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-samgori-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-samgori-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-samgori-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-samgori/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-samgori-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-samgori-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-samgori-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-samgori-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-samgori/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-samgori-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-samgori-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-samgori-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-nadzaladevi/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-nadzaladevi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-nadzaladevi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-nadzaladevi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-nadzaladevi-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-nadzaladevi-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-nadzaladevi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-nadzaladevi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-nadzaladevi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-nadzaladevi-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-nadzaladevi-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-nadzaladevi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-nadzaladevi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-nadzaladevi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-nadzaladevi-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-mtatsminda/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-mtatsminda/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-mtatsminda-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-mtatsminda-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-mtatsminda-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-mtatsminda-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-mtatsminda/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-mtatsminda-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-mtatsminda-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-mtatsminda-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-mtatsminda-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-mtatsminda/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-mtatsminda-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-mtatsminda-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-mtatsminda-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-krtsanisi/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-krtsanisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-krtsanisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-krtsanisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-krtsanisi-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-krtsanisi-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-krtsanisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-krtsanisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-krtsanisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-krtsanisi-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-krtsanisi-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-krtsanisi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-krtsanisi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-krtsanisi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-krtsanisi-en/"/>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- Страница для мастеров — все языки -->
-  <url>
-    <loc>https://mastera-tbilisi.ge/ru/masters/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/ru/masters/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/ge/masters/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/en/masters/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/en/masters/"/>
-    <lastmod>2026-06-03</lastmod>
+    <loc>https://mastera-tbilisi.ge/en/batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/ge/masters/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/ru/masters/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/ge/masters/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/en/masters/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/en/masters/"/>
-    <lastmod>2026-06-03</lastmod>
+    <loc>https://mastera-tbilisi.ge/en/batumi/bytovoy-remont-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/batumi/elektrik-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/batumi/gruzchiki-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/batumi/klining-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/batumi/master-na-chas-aeroport-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/batumi/master-na-chas-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/batumi/master-na-chas-stary-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/batumi/naveska-montazh-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/batumi/remont-kompyuterov-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/batumi/santehnik-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/batumi/sborka-mebeli-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/bytovoy-remont-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/elektrik-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/gruzchiki-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/klining-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/master-na-chas-boni-gorodok/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/master-na-chas-chugureti/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/master-na-chas-didube/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/master-na-chas-gldani/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/master-na-chas-isani/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/master-na-chas-khimshiashvili/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/master-na-chas-krtsanisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/master-na-chas-mtatsminda/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/master-na-chas-nadzaladevi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/master-na-chas-novy-bulvar/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/master-na-chas-saburtalo/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/master-na-chas-samgori/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/master-na-chas-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/master-na-chas-vake/</loc>
+    <lastmod>2026-10-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mastera-tbilisi.ge/en/masters/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/ru/masters/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/ge/masters/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/en/masters/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/en/masters/"/>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-10-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-
-
-  <!-- ═══ БАТУМИ ═══ -->
-
-  <!-- Хабы города Батуми -->
   <url>
-    <loc>https://mastera-tbilisi.ge/ru/batumi/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/ru/batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/ge/batumi/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/en/batumi/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/en/batumi/"/>
-    <lastmod>2026-09-29</lastmod>
+    <loc>https://mastera-tbilisi.ge/en/naveska-montazh-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/remont-kompyuterov-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/santehnik-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/en/sborka-mebeli-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
   </url>
   <url>
     <loc>https://mastera-tbilisi.ge/ge/batumi/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/ru/batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/ge/batumi/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/en/batumi/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/en/batumi/"/>
-    <lastmod>2026-09-29</lastmod>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/batumi/bytovoy-remont-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/batumi/elektrik-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/batumi/gruzchiki-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/batumi/klining-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/batumi/master-na-chas-aeroport-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/batumi/master-na-chas-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/batumi/master-na-chas-stary-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/batumi/naveska-montazh-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/batumi/remont-kompyuterov-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/batumi/santehnik-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/batumi/sborka-mebeli-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/bytovoy-remont-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/en/batumi/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/ru/batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/ge/batumi/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/en/batumi/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/en/batumi/"/>
-    <lastmod>2026-09-29</lastmod>
+    <loc>https://mastera-tbilisi.ge/ge/elektrik-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-
-  <!-- Услуги в Батуми -->
   <url>
-    <loc>https://mastera-tbilisi.ge/santehnik-batumi/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/santehnik-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/santehnik-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/santehnik-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/santehnik-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://mastera-tbilisi.ge/ge/gruzchiki-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/klining-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/master-na-chas-boni-gorodok/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/master-na-chas-chugureti/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/master-na-chas-didube/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/master-na-chas-gldani/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/master-na-chas-isani/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/master-na-chas-khimshiashvili/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/master-na-chas-krtsanisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/master-na-chas-mtatsminda/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/master-na-chas-nadzaladevi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/master-na-chas-novy-bulvar/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/master-na-chas-saburtalo/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/master-na-chas-samgori/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/master-na-chas-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/master-na-chas-vake/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/masters/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/naveska-montazh-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/remont-kompyuterov-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/santehnik-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ge/sborka-mebeli-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ru/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ru/batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/santehnik-batumi-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/santehnik-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/santehnik-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/santehnik-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/santehnik-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/santehnik-batumi-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/santehnik-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/santehnik-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/santehnik-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/santehnik-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/elektrik-batumi/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/elektrik-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/elektrik-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/elektrik-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/elektrik-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://mastera-tbilisi.ge/ru/batumi/bytovoy-remont-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/elektrik-batumi-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/elektrik-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/elektrik-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/elektrik-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/elektrik-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/elektrik-batumi-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/elektrik-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/elektrik-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/elektrik-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/elektrik-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-batumi/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://mastera-tbilisi.ge/ru/batumi/elektrik-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-batumi-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-batumi-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/sborka-mebeli-batumi/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/sborka-mebeli-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/sborka-mebeli-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/sborka-mebeli-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/sborka-mebeli-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://mastera-tbilisi.ge/ru/batumi/gruzchiki-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/sborka-mebeli-batumi-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/sborka-mebeli-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/sborka-mebeli-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/sborka-mebeli-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/sborka-mebeli-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/sborka-mebeli-batumi-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/sborka-mebeli-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/sborka-mebeli-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/sborka-mebeli-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/sborka-mebeli-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/bytovoy-remont-batumi/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/bytovoy-remont-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/bytovoy-remont-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/bytovoy-remont-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/bytovoy-remont-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://mastera-tbilisi.ge/ru/batumi/klining-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/bytovoy-remont-batumi-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/bytovoy-remont-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/bytovoy-remont-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/bytovoy-remont-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/bytovoy-remont-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/bytovoy-remont-batumi-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/bytovoy-remont-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/bytovoy-remont-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/bytovoy-remont-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/bytovoy-remont-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/naveska-montazh-batumi/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/naveska-montazh-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/naveska-montazh-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/naveska-montazh-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/naveska-montazh-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://mastera-tbilisi.ge/ru/batumi/master-na-chas-aeroport-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/naveska-montazh-batumi-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/naveska-montazh-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/naveska-montazh-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/naveska-montazh-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/naveska-montazh-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/naveska-montazh-batumi-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/naveska-montazh-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/naveska-montazh-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/naveska-montazh-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/naveska-montazh-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/remont-kompyuterov-batumi/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/remont-kompyuterov-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/remont-kompyuterov-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/remont-kompyuterov-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/remont-kompyuterov-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://mastera-tbilisi.ge/ru/batumi/master-na-chas-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/remont-kompyuterov-batumi-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/remont-kompyuterov-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/remont-kompyuterov-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/remont-kompyuterov-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/remont-kompyuterov-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/remont-kompyuterov-batumi-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/remont-kompyuterov-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/remont-kompyuterov-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/remont-kompyuterov-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/remont-kompyuterov-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/gruzchiki-batumi/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/gruzchiki-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/gruzchiki-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/gruzchiki-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/gruzchiki-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://mastera-tbilisi.ge/ru/batumi/master-na-chas-stary-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/gruzchiki-batumi-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/gruzchiki-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/gruzchiki-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/gruzchiki-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/gruzchiki-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/gruzchiki-batumi-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/gruzchiki-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/gruzchiki-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/gruzchiki-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/gruzchiki-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://mastera-tbilisi.ge/klining-batumi/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/klining-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/klining-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/klining-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/klining-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://mastera-tbilisi.ge/ru/batumi/naveska-montazh-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/klining-batumi-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/klining-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/klining-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/klining-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/klining-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://mastera-tbilisi.ge/ru/batumi/remont-kompyuterov-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ru/batumi/santehnik-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ru/batumi/sborka-mebeli-batumi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ru/bytovoy-remont-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/klining-batumi-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/klining-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/klining-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/klining-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/klining-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://mastera-tbilisi.ge/ru/elektrik-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-
-  <!-- Районы Батуми -->
   <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-stary-batumi/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-stary-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-stary-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-stary-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-stary-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://mastera-tbilisi.ge/ru/gruzchiki-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-stary-batumi-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-stary-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-stary-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-stary-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-stary-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://mastera-tbilisi.ge/ru/klining-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-stary-batumi-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-stary-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-stary-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-stary-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-stary-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://mastera-tbilisi.ge/ru/master-na-chas-boni-gorodok/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-novy-bulvar/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-novy-bulvar/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-novy-bulvar-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-novy-bulvar-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-novy-bulvar-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://mastera-tbilisi.ge/ru/master-na-chas-chugureti/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-novy-bulvar-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-novy-bulvar/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-novy-bulvar-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-novy-bulvar-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-novy-bulvar-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://mastera-tbilisi.ge/ru/master-na-chas-didube/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-novy-bulvar-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-novy-bulvar/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-novy-bulvar-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-novy-bulvar-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-novy-bulvar-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://mastera-tbilisi.ge/ru/master-na-chas-gldani/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-khimshiashvili/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-khimshiashvili/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-khimshiashvili-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-khimshiashvili-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-khimshiashvili-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://mastera-tbilisi.ge/ru/master-na-chas-isani/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-khimshiashvili-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-khimshiashvili/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-khimshiashvili-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-khimshiashvili-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-khimshiashvili-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://mastera-tbilisi.ge/ru/master-na-chas-khimshiashvili/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-khimshiashvili-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-khimshiashvili/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-khimshiashvili-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-khimshiashvili-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-khimshiashvili-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://mastera-tbilisi.ge/ru/master-na-chas-krtsanisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-aeroport-batumi/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-aeroport-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-aeroport-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-aeroport-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-aeroport-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://mastera-tbilisi.ge/ru/master-na-chas-mtatsminda/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-aeroport-batumi-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-aeroport-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-aeroport-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-aeroport-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-aeroport-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://mastera-tbilisi.ge/ru/master-na-chas-nadzaladevi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-aeroport-batumi-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-aeroport-batumi/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-aeroport-batumi-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-aeroport-batumi-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-aeroport-batumi-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://mastera-tbilisi.ge/ru/master-na-chas-novy-bulvar/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-boni-gorodok/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-boni-gorodok/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-boni-gorodok-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-boni-gorodok-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-boni-gorodok-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://mastera-tbilisi.ge/ru/master-na-chas-saburtalo/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-boni-gorodok-ge/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-boni-gorodok/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-boni-gorodok-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-boni-gorodok-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-boni-gorodok-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://mastera-tbilisi.ge/ru/master-na-chas-samgori/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://mastera-tbilisi.ge/master-na-chas-boni-gorodok-en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera-tbilisi.ge/master-na-chas-boni-gorodok/"/>
-    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera-tbilisi.ge/master-na-chas-boni-gorodok-ge/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://mastera-tbilisi.ge/master-na-chas-boni-gorodok-en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera-tbilisi.ge/master-na-chas-boni-gorodok-en/"/>
-    <lastmod>2026-09-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://mastera-tbilisi.ge/ru/master-na-chas-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
-
+  <url>
+    <loc>https://mastera-tbilisi.ge/ru/master-na-chas-vake/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ru/masters/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ru/naveska-montazh-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ru/remont-kompyuterov-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ru/santehnik-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mastera-tbilisi.ge/ru/sborka-mebeli-tbilisi/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>

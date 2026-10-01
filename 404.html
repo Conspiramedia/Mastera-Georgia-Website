@@ -1,368 +1,99 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>404 — Страница не найдена | Мастера Грузии</title>
-  <meta name="robots" content="noindex, follow">
-  <meta name="theme-color" content="#FDB913">
-  <link rel="icon" type="image/svg+xml" href="image/favicon.svg">
-  <link rel="icon" type="image/x-icon" href="image/favicon.ico">
-
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7SLML317LT"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-7SLML317LT');
-    gtag('event', 'page_not_found', {
-      page_location: window.location.href,
-      page_referrer: document.referrer
-    });
-  </script>
-
-  <style>
-    @font-face {
-      font-family: 'Montserrat';
-      font-weight: 400; font-style: normal; font-display: swap;
-      src: url('./fonts/montserrat-regular.woff2') format('woff2');
-    }
-    @font-face {
-      font-family: 'Montserrat';
-      font-weight: 600; font-style: normal; font-display: swap;
-      src: url('./fonts/montserrat-semibold.woff2') format('woff2');
-    }
-    @font-face {
-      font-family: 'Montserrat';
-      font-weight: 700; font-style: normal; font-display: swap;
-      src: url('./fonts/montserrat-bold.woff2') format('woff2');
-    }
-    @font-face {
-      font-family: 'Montserrat';
-      font-weight: 900; font-style: normal; font-display: swap;
-      src: url('./fonts/montserrat-bold.woff2') format('woff2');
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: 'Montserrat', sans-serif;
-      background: #0d0d0d;
-      color: #FAFAFA;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .gradient-dots-bg {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.5;
-      background-color: #0d0d0d;
-      background-image:
-        radial-gradient(circle at 50% 50%, transparent 1.2px, #0d0d0d 0 2px, transparent 2px),
-        radial-gradient(circle at 50% 50%, transparent 1.2px, #0d0d0d 0 2px, transparent 2px),
-        radial-gradient(circle at 50% 50%, #fb0094, transparent 60%),
-        radial-gradient(circle at 50% 50%, #ff8800, transparent 60%),
-        radial-gradient(circle at 50% 50%, #00ffff, transparent 60%),
-        radial-gradient(ellipse at 50% 50%, #8800ff, transparent 60%);
-      background-size:
-        4px 6.93px,
-        4px 6.93px,
-        200% 200%,
-        200% 200%,
-        200% 200%,
-        200% 6.93px;
-      background-position:
-        0px 0px, 2px 3.46px,
-        0% 0%, 0% 0%, 0% 0%, 0% 0px;
-      animation: gradientDotsMove 30s linear infinite, hueCycle 6s linear infinite;
-    }
-
-    @keyframes gradientDotsMove {
-      0% {
-        background-position:
-          0px 0px, 2px 3.46px,
-          800% 400%, 1000% -400%, -1200% -600%, 400% 6.93px;
-      }
-      100% {
-        background-position:
-          0px 0px, 2px 3.46px,
-          0% 0%, 0% 0%, 0% 0%, 0% 0px;
-      }
-    }
-
-    @keyframes hueCycle {
-      0% { filter: hue-rotate(0deg); }
-      100% { filter: hue-rotate(360deg); }
-    }
-
-    .container {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      padding: 2rem;
-      max-width: 700px;
-      width: 100%;
-    }
-
-    .error-code {
-      font-size: clamp(6rem, 15vw, 12rem);
-      font-weight: 900;
-      color: rgba(253, 185, 19, 0.15);
-      line-height: 1;
-      margin-bottom: -1.5rem;
-    }
-
-    .error-title {
-      font-size: clamp(1.5rem, 3vw, 2.2rem);
-      font-weight: 700;
-      color: #FDB913;
-      margin-bottom: 1rem;
-    }
-
-    .error-text {
-      font-size: clamp(0.9rem, 1.5vw, 1.1rem);
-      color: rgba(255, 255, 255, 0.6);
-      margin-bottom: 2.5rem;
-      line-height: 1.6;
-    }
-
-    .links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.8rem;
-      justify-content: center;
-      margin-bottom: 2rem;
-    }
-
-    .links a {
-      display: inline-block;
-      padding: 0.7rem 1.4rem;
-      border: 1px solid rgba(253, 185, 19, 0.3);
-      border-radius: 50px;
-      color: #ddd;
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 500;
-      transition: all 0.3s ease;
-      background: rgba(0, 0, 0, 0.35);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-    }
-
-    .links a:hover {
-      background: rgba(253, 185, 19, 0.12);
-      border-color: #FDB913;
-      color: #FDB913;
-      transform: translateY(-2px);
-    }
-
-    .links a.primary {
-      border-color: #06FFA5;
-      color: #06FFA5;
-      font-weight: 600;
-    }
-
-    .links a.primary:hover {
-      background: rgba(6, 255, 165, 0.12);
-      box-shadow: 0 0 20px rgba(6, 255, 165, 0.2);
-    }
-
-    .lang-switcher {
-      display: flex;
-      gap: 0.5rem;
-      justify-content: center;
-    }
-
-    .lang-switcher button {
-      background: none;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 4px;
-      padding: 0.4rem 0.8rem;
-      color: rgba(255, 255, 255, 0.4);
-      cursor: pointer;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-      transition: all 0.3s ease;
-    }
-
-    .lang-switcher button.active {
-      border-color: #FDB913;
-      color: #FDB913;
-    }
-
-    .lang-switcher button:hover {
-      border-color: #FDB913;
-      color: #FDB913;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Перенаправление...</title>
+    <script>
+        const path = window.location.pathname;
+        const redirects = {
+    "/klining-tbilisi/": "/ru/klining-tbilisi/",
+    "/gruzchiki-tbilisi/": "/ru/gruzchiki-tbilisi/",
+    "/santehnik-tbilisi/": "/ru/santehnik-tbilisi/",
+    "/elektrik-tbilisi/": "/ru/elektrik-tbilisi/",
+    "/master-na-chas-tbilisi/": "/ru/master-na-chas-tbilisi/",
+    "/sborka-mebeli-tbilisi/": "/ru/sborka-mebeli-tbilisi/",
+    "/naveska-montazh-tbilisi/": "/ru/naveska-montazh-tbilisi/",
+    "/bytovoy-remont-tbilisi/": "/ru/bytovoy-remont-tbilisi/",
+    "/remont-kompyuterov-tbilisi/": "/ru/remont-kompyuterov-tbilisi/",
+    "/klining-tbilisi-ge/": "/ge/klining-tbilisi/",
+    "/gruzchiki-tbilisi-ge/": "/ge/gruzchiki-tbilisi/",
+    "/santehnik-tbilisi-ge/": "/ge/santehnik-tbilisi/",
+    "/elektrik-tbilisi-ge/": "/ge/elektrik-tbilisi/",
+    "/master-na-chas-tbilisi-ge/": "/ge/master-na-chas-tbilisi/",
+    "/sborka-mebeli-tbilisi-ge/": "/ge/sborka-mebeli-tbilisi/",
+    "/naveska-montazh-tbilisi-ge/": "/ge/naveska-montazh-tbilisi/",
+    "/bytovoy-remont-tbilisi-ge/": "/ge/bytovoy-remont-tbilisi/",
+    "/remont-kompyuterov-tbilisi-ge/": "/ge/remont-kompyuterov-tbilisi/",
+    "/klining-tbilisi-en/": "/en/klining-tbilisi/",
+    "/gruzchiki-tbilisi-en/": "/en/gruzchiki-tbilisi/",
+    "/santehnik-tbilisi-en/": "/en/santehnik-tbilisi/",
+    "/elektrik-tbilisi-en/": "/en/elektrik-tbilisi/",
+    "/master-na-chas-tbilisi-en/": "/en/master-na-chas-tbilisi/",
+    "/sborka-mebeli-tbilisi-en/": "/en/sborka-mebeli-tbilisi/",
+    "/naveska-montazh-tbilisi-en/": "/en/naveska-montazh-tbilisi/",
+    "/bytovoy-remont-tbilisi-en/": "/en/bytovoy-remont-tbilisi/",
+    "/remont-kompyuterov-tbilisi-en/": "/en/remont-kompyuterov-tbilisi/",
+    "/master-na-chas-vake/": "/ru/master-na-chas-vake/",
+    "/master-na-chas-saburtalo/": "/ru/master-na-chas-saburtalo/",
+    "/master-na-chas-didube/": "/ru/master-na-chas-didube/",
+    "/master-na-chas-chugureti/": "/ru/master-na-chas-chugureti/",
+    "/master-na-chas-isani/": "/ru/master-na-chas-isani/",
+    "/master-na-chas-samgori/": "/ru/master-na-chas-samgori/",
+    "/master-na-chas-gldani/": "/ru/master-na-chas-gldani/",
+    "/master-na-chas-nadzaladevi/": "/ru/master-na-chas-nadzaladevi/",
+    "/master-na-chas-mtatsminda/": "/ru/master-na-chas-mtatsminda/",
+    "/master-na-chas-krtsanisi/": "/ru/master-na-chas-krtsanisi/",
+    "/master-na-chas-boni-gorodok/": "/ru/master-na-chas-boni-gorodok/",
+    "/master-na-chas-khimshiashvili/": "/ru/master-na-chas-khimshiashvili/",
+    "/master-na-chas-novy-bulvar/": "/ru/master-na-chas-novy-bulvar/",
+    "/klining-batumi/": "/ru/batumi/klining-batumi/",
+    "/gruzchiki-batumi/": "/ru/batumi/gruzchiki-batumi/",
+    "/santehnik-batumi/": "/ru/batumi/santehnik-batumi/",
+    "/elektrik-batumi/": "/ru/batumi/elektrik-batumi/",
+    "/master-na-chas-batumi/": "/ru/batumi/master-na-chas-batumi/",
+    "/sborka-mebeli-batumi/": "/ru/batumi/sborka-mebeli-batumi/",
+    "/naveska-montazh-batumi/": "/ru/batumi/naveska-montazh-batumi/",
+    "/bytovoy-remont-batumi/": "/ru/batumi/bytovoy-remont-batumi/",
+    "/remont-kompyuterov-batumi/": "/ru/batumi/remont-kompyuterov-batumi/",
+    "/master-na-chas-stary-batumi/": "/ru/batumi/master-na-chas-stary-batumi/",
+    "/master-na-chas-aeroport-batumi/": "/ru/batumi/master-na-chas-aeroport-batumi/",
+    "/klining-batumi-ge/": "/ge/batumi/klining-batumi/",
+    "/gruzchiki-batumi-ge/": "/ge/batumi/gruzchiki-batumi/",
+    "/santehnik-batumi-ge/": "/ge/batumi/santehnik-batumi/",
+    "/elektrik-batumi-ge/": "/ge/batumi/elektrik-batumi/",
+    "/master-na-chas-batumi-ge/": "/ge/batumi/master-na-chas-batumi/",
+    "/sborka-mebeli-batumi-ge/": "/ge/batumi/sborka-mebeli-batumi/",
+    "/naveska-montazh-batumi-ge/": "/ge/batumi/naveska-montazh-batumi/",
+    "/bytovoy-remont-batumi-ge/": "/ge/batumi/bytovoy-remont-batumi/",
+    "/remont-kompyuterov-batumi-ge/": "/ge/batumi/remont-kompyuterov-batumi/",
+    "/master-na-chas-stary-batumi-ge/": "/ge/batumi/master-na-chas-stary-batumi/",
+    "/master-na-chas-aeroport-batumi-ge/": "/ge/batumi/master-na-chas-aeroport-batumi/",
+    "/klining-batumi-en/": "/en/batumi/klining-batumi/",
+    "/gruzchiki-batumi-en/": "/en/batumi/gruzchiki-batumi/",
+    "/santehnik-batumi-en/": "/en/batumi/santehnik-batumi/",
+    "/elektrik-batumi-en/": "/en/batumi/elektrik-batumi/",
+    "/master-na-chas-batumi-en/": "/en/batumi/master-na-chas-batumi/",
+    "/sborka-mebeli-batumi-en/": "/en/batumi/sborka-mebeli-batumi/",
+    "/naveska-montazh-batumi-en/": "/en/batumi/naveska-montazh-batumi/",
+    "/bytovoy-remont-batumi-en/": "/en/batumi/bytovoy-remont-batumi/",
+    "/remont-kompyuterov-batumi-en/": "/en/batumi/remont-kompyuterov-batumi/",
+    "/master-na-chas-stary-batumi-en/": "/en/batumi/master-na-chas-stary-batumi/",
+    "/master-na-chas-aeroport-batumi-en/": "/en/batumi/master-na-chas-aeroport-batumi/"
+};
+        
+        // Ищем точное совпадение или совпадение с трейлинг слэшем
+        const target = redirects[path] || redirects[path + '/'] || redirects[path.replace(/\/$/, '') + '/'];
+        
+        if (target) {
+            // 301 редирект для поисковых роботов и пользователей
+            window.location.replace(target);
+        } else {
+            // Если редиректа нет, показываем стандартную 404
+            document.body.innerHTML = '<h1 style="text-align:center; margin-top:50px; font-family:Arial;">404 — Страница не найдена</h1><p style="text-align:center;"><a href="/">Вернуться на главную</a></p>';
+        }
+    </script>
 </head>
 <body>
-  <div class="gradient-dots-bg"></div>
-
-  <div class="container">
-    <div class="error-code">404</div>
-    <h1 class="error-title" data-ru="Страница не найдена" data-ka="გვერდი ვერ მოიძებნა" data-en="Page not found">Страница не найдена</h1>
-    <p class="error-text"
-      data-ru="Возможно, страница была удалена или в адресе опечатка. Воспользуйтесь ссылками ниже, чтобы вернуться на сайт."
-      data-ka="შესაძლოა, გვერდი წაშლილია ან მისამართში შეცდომაა. გამოიყენეთ ქვემოთ მოცემული ბმულები საიტზე დასაბრუნებლად."
-      data-en="The page may have been removed or the address contains a typo. Use the links below to return to the site."
-    >Возможно, страница была удалена или в адресе опечатка. Воспользуйтесь ссылками ниже, чтобы вернуться на сайт.</p>
-
-    <div class="links">
-      <a href="/" class="primary"
-        data-ru="На главную"
-        data-ka="მთავარზე"
-        data-en="Home"
-      >На главную</a>
-      <a href="/santehnik-tbilisi/"
-        data-ru="Сантехник"
-        data-ka="სანტექნიკოსი"
-        data-en="Plumber"
-      >Сантехник</a>
-      <a href="/elektrik-tbilisi/"
-        data-ru="Электрик"
-        data-ka="ელექტრიკოსი"
-        data-en="Electrician"
-      >Электрик</a>
-      <a href="/master-na-chas-tbilisi/"
-        data-ru="Мастер на час"
-        data-ka="ხელოსანი"
-        data-en="Handyman"
-      >Мастер на час</a>
-      <a href="/sborka-mebeli-tbilisi/"
-        data-ru="Сборка мебели"
-        data-ka="ავეჯის აწყობა"
-        data-en="Furniture Assembly"
-      >Сборка мебели</a>
-      <a href="/bytovoy-remont-tbilisi/"
-        data-ru="Бытовой ремонт"
-        data-ka="საყოფაცხოვრებო რემონტი"
-        data-en="Home Repairs"
-      >Бытовой ремонт</a>
-      <a href="/naveska-montazh-tbilisi/"
-        data-ru="Навеска и монтаж"
-        data-ka="დაკიდება და მონტაჟი"
-        data-en="Mounting & Installation"
-      >Навеска и монтаж</a>
-    </div>
-
-    <div class="lang-switcher">
-      <button data-lang="ru">RUS</button>
-      <button data-lang="ka">GEO</button>
-      <button data-lang="en">ENG</button>
-    </div>
-  </div>
-
-  <script>
-    (function () {
-      const translations = {
-        ru: {
-          title: 'Страница не найдена',
-          text: 'Возможно, страница была удалена или в адресе опечатка. Воспользуйтесь ссылками ниже, чтобы вернуться на сайт.',
-          home: 'На главную',
-          plumber: 'Сантехник',
-          electrician: 'Электрик',
-          handyman: 'Мастер на час',
-          assembly: 'Сборка мебели',
-          repairs: 'Бытовой ремонт',
-          mounting: 'Навеска и монтаж',
-          homeHref: '/ru/',
-          plumberHref: '/santehnik-tbilisi/',
-          electricianHref: '/elektrik-tbilisi/',
-          handymanHref: '/master-na-chas-tbilisi/',
-          assemblyHref: '/sborka-mebeli-tbilisi/',
-          repairsHref: '/bytovoy-remont-tbilisi/',
-          mountingHref: '/naveska-montazh-tbilisi/'
-        },
-        ka: {
-          title: 'გვერდი ვერ მოიძებნა',
-          text: 'შესაძლოა, გვერდი წაშლილია ან მისამართში შეცდომაა. გამოიყენეთ ქვემოთ მოცემული ბმულები საიტზე დასაბრუნებლად.',
-          home: 'მთავარზე',
-          plumber: 'სანტექნიკოსი',
-          electrician: 'ელექტრიკოსი',
-          handyman: 'ხელოსანი',
-          assembly: 'ავეჯის აწყობა',
-          repairs: 'საყოფაცხოვრებო რემონტი',
-          mounting: 'დაკიდება და მონტაჟი',
-          homeHref: '/ge/',
-          plumberHref: '/santehnik-tbilisi-ge/',
-          electricianHref: '/elektrik-tbilisi-ge/',
-          handymanHref: '/master-na-chas-tbilisi-ge/',
-          assemblyHref: '/sborka-mebeli-tbilisi-ge/',
-          repairsHref: '/bytovoy-remont-tbilisi-ge/',
-          mountingHref: '/naveska-montazh-tbilisi-ge/'
-        },
-        en: {
-          title: 'Page not found',
-          text: 'The page may have been removed or the address contains a typo. Use the links below to return to the site.',
-          home: 'Home',
-          plumber: 'Plumber',
-          electrician: 'Electrician',
-          handyman: 'Handyman',
-          assembly: 'Furniture Assembly',
-          repairs: 'Home Repairs',
-          mounting: 'Mounting & Installation',
-          homeHref: '/en/',
-          plumberHref: '/santehnik-tbilisi-en/',
-          electricianHref: '/elektrik-tbilisi-en/',
-          handymanHref: '/master-na-chas-tbilisi-en/',
-          assemblyHref: '/sborka-mebeli-tbilisi-en/',
-          repairsHref: '/bytovoy-remont-tbilisi-en/',
-          mountingHref: '/naveska-montazh-tbilisi-en/'
-        }
-      };
-
-      var browserLang = (navigator.language || navigator.userLanguage || 'ru').split('-')[0];
-      var lang = ['ka', 'en'].includes(browserLang) ? browserLang : 'ru';
-
-      function setLanguage(l) {
-        lang = l;
-        document.documentElement.lang = l;
-        var t = translations[l];
-
-        document.querySelector('.error-title').textContent = t.title;
-        document.querySelector('.error-text').textContent = t.text;
-
-        var links = document.querySelectorAll('.links a');
-        links[0].textContent = t.home;
-        links[0].href = t.homeHref;
-        links[1].textContent = t.plumber;
-        links[1].href = t.plumberHref;
-        links[2].textContent = t.electrician;
-        links[2].href = t.electricianHref;
-        links[3].textContent = t.handyman;
-        links[3].href = t.handymanHref;
-        links[4].textContent = t.assembly;
-        links[4].href = t.assemblyHref;
-        links[5].textContent = t.repairs;
-        links[5].href = t.repairsHref;
-        links[6].textContent = t.mounting;
-        links[6].href = t.mountingHref;
-
-        document.querySelectorAll('.lang-switcher button').forEach(function(btn) {
-          btn.classList.toggle('active', btn.dataset.lang === l);
-        });
-      }
-
-      setLanguage(lang);
-
-      document.querySelectorAll('.lang-switcher button').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          setLanguage(this.dataset.lang);
-        });
-      });
-    })();
-  </script>
+    <p>Перенаправление...</p>
 </body>
 </html>

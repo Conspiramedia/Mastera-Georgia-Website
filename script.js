@@ -1866,19 +1866,26 @@ function initWhatsAppButtonTracking() {
     if (!fab) return;
 
     const isMastersPage = window.location.pathname.includes('/masters/');
+    const isBatumiPage = /\/batumi(?:\/|$)/i.test(window.location.pathname);
     const lang = window.__FORCE_LANG__ || 'ru';
 
     // Предзаполненный текст для WhatsApp по языку страницы.
     const waTexts = {
         ru: encodeURIComponent(isMastersPage
             ? 'Здравствуйте! Хочу стать партнёром сервиса.'
-            : 'Здравствуйте! Нужен мастер в Тбилиси.'),
+            : isBatumiPage
+                ? 'Здравствуйте! Нужен мастер в Батуми.'
+                : 'Здравствуйте! Нужен мастер в Тбилиси.'),
         ka: encodeURIComponent(isMastersPage
             ? 'გამარჯობა! მინდა გავხდე პარტნიორი.'
-            : 'გამარჯობა! მჭირდება ოსტატი თბილისში.'),
+            : isBatumiPage
+                ? 'გამარჯობა! მჭირდება ოსტატი ბათუმში.'
+                : 'გამარჯობა! მჭირდება ოსტატი თბილისში.'),
         en: encodeURIComponent(isMastersPage
             ? 'Hello! I want to become a partner.'
-            : 'Hello! I need a handyman in Tbilisi.')
+            : isBatumiPage
+                ? 'Hello! I need a handyman in Batumi.'
+                : 'Hello! I need a handyman in Tbilisi.')
     };
     const waHref = 'https://wa.me/995557645196?text=' + (waTexts[lang] || waTexts.ru);
 

@@ -85,12 +85,13 @@ Current URL architecture:
 
 ## P0.5 BreadcrumbList
 
-- [ ] Make BreadcrumbList URLs match the actual localized page URLs.
-- [ ] Fix examples such as:
+- [x] Make BreadcrumbList URLs match the actual localized page URLs.
+- [x] Fix examples such as:
   - `/ru/tbilisi/santehnik-tbilisi/`
   - `/ru/batumi/santehnik-batumi/`
-- [ ] Apply the same correction to GE and EN pages.
-- [ ] Verify breadcrumb URLs use trailing slash consistently.
+- [x] Apply the same correction to GE and EN pages where BreadcrumbList is present.
+- [x] Verify breadcrumb URLs use trailing slash consistently.
+- [x] Restore the correct breadcrumb hierarchy for district pages (language root → service → district page).
 
 ## P0.6 Trailing slash consistency
 

@@ -32,19 +32,19 @@ Current URL architecture:
 
 ## P0.1 Sitemap
 
-- [ ] Regenerate `sitemap.xml` from the real URL structure.
-- [ ] Ensure every sitemap URL exactly matches a real public URL.
-- [ ] Include trailing slash consistently.
-- [ ] Remove obsolete URLs such as:
+- [x] Regenerate `sitemap.xml` from the real URL structure.
+- [x] Ensure every sitemap URL exactly matches a real public URL.
+- [x] Include trailing slash consistently.
+- [x] Remove obsolete URLs such as:
   - `/ru/santehnik-tbilisi/`
   - `/ge/santehnik-tbilisi/`
   - `/en/santehnik-tbilisi/`
-- [ ] Keep current real URLs such as:
+- [x] Keep current real URLs such as:
   - `/ru/tbilisi/santehnik-tbilisi/`
   - `/ge/tbilisi/santehnik-tbilisi/`
   - `/en/tbilisi/santehnik-tbilisi/`
-- [ ] Verify sitemap URL count after regeneration.
-- [ ] Verify every sitemap URL returns the expected page.
+- [x] Verify sitemap URL count after regeneration.
+- [x] Verify every sitemap URL returns the expected page.
 
 ## P0.2 Canonical
 

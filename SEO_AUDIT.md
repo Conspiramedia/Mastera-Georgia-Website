@@ -71,13 +71,17 @@ Current URL architecture:
 
 ## P0.4 Root `/` language handling
 
-Current root combines `noindex`, canonical, meta refresh and JS redirect.
-
-- [ ] Choose one intentional root strategy.
-- [ ] Remove conflicting SEO signals.
-- [ ] Preserve the desired language-selection/fallback behavior.
-- [ ] Ensure `x-default` points to the intended root/selector URL.
-- [ ] Verify crawler behavior and browser behavior separately.
+- [x] Root is treated as a technical language-router, not as an indexable content page.
+- [x] Keep `noindex, follow` on the root.
+- [x] Remove the root canonical because the root is not an indexable content URL.
+- [x] Remove the root `meta refresh` so there is only one redirect mechanism.
+- [x] Preserve automatic language selection via the existing JS redirect:
+  - `ka` → `/ge/`
+  - `en` → `/en/`
+  - other/unknown languages → `/ru/`
+- [x] Keep direct language links in the root fallback UI.
+- [x] Keep `x-default` on the indexable localized pages pointing to `/ru/`.
+- [x] Verify the root no longer has conflicting canonical/meta-refresh/hreflang SEO signals.
 
 ## P0.5 BreadcrumbList
 

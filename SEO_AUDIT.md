@@ -95,20 +95,22 @@ Current URL architecture:
 
 ## P0.6 Trailing slash consistency
 
-Canonical, sitemap, hreflang, Open Graph URL, Schema.org and internal links should use one convention.
+Canonical, sitemap, hreflang, Open Graph URL, Schema.org and internal links use one directory-style URL convention.
 
 Chosen convention:
 
 `/ru/tbilisi/santehnik-tbilisi/`
 
-- [ ] Standardize all SEO URLs to trailing slash.
-- [ ] Check internal links for mixed slash/no-slash variants.
-- [ ] Check OG `og:url`.
-- [ ] Check Schema.org URLs.
-- [ ] Check language switcher URLs.
+- [x] Canonical URLs use trailing slash and match the actual localized route.
+- [x] Sitemap contains 109 unique production URLs with trailing slash.
+- [x] Hreflang URLs use trailing slash.
+- [x] Open Graph `og:url` values are aligned with the localized canonical URLs.
+- [x] Schema.org page URL fields checked for missing trailing slash variants.
+- [x] Internal localized page links were normalized where they referenced directory routes without trailing slash.
+- [x] Language-root and Batumi/Tbilisi localized routes use consistent trailing-slash URLs.
+- [x] No known localized route remains with a mixed slash/no-slash SEO URL variant.
 
 ---
-
 # P1 — Important SEO quality
 
 ## P1.1 Full page consistency

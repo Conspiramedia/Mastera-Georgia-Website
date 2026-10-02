@@ -61,13 +61,13 @@ Current URL architecture:
 
 ## P0.3 Hreflang
 
-- [ ] Each localized page must reference itself.
-- [ ] Each localized page must reference the corresponding RU/GE/EN versions.
-- [ ] Remove unrelated Batumi alternates from Tbilisi pages.
-- [ ] Fix Batumi service hreflang paths.
-- [ ] Use full absolute production URLs.
-- [ ] Make `x-default` intentional and consistent with the chosen root/language architecture.
-- [ ] Verify reciprocal hreflang links across all language variants.
+- [x] Each localized page must reference itself.
+- [x] Each localized page must reference the corresponding RU/GE/EN versions.
+- [x] Remove unrelated Batumi alternates from Tbilisi pages.
+- [x] Fix Batumi service hreflang paths.
+- [x] Use full absolute production URLs.
+- [x] Make `x-default` intentional and consistent with the chosen root/language architecture.
+- [x] Verify reciprocal hreflang links across all language variants.
 
 ## P0.4 Root `/` language handling
 

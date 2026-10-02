@@ -48,16 +48,16 @@ Current URL architecture:
 
 ## P0.2 Canonical
 
-- [ ] Every localized service/category page must canonicalize to itself.
-- [ ] RU pages → their RU URL.
-- [ ] GE pages → their GE URL.
-- [ ] EN pages → their EN URL.
-- [ ] Fix language root canonicals:
-  - `/ru/`
-  - `/ge/`
-  - `/en/`
-- [ ] Standardize canonical URLs with trailing slash.
-- [ ] Ensure canonical URLs use HTTPS and the production domain.
+- [x] Every localized service/category page must canonicalize to itself.
+- [x] RU pages → their RU URL.
+- [x] GE pages → their GE URL.
+- [x] EN pages → their EN URL.
+- [x] Fix language root canonicals:
+  - [x] /ru/
+  - [x] /ge/
+  - [x] /en/
+- [x] Standardize canonical URLs with trailing slash.
+- [x] Ensure canonical URLs use HTTPS and the production domain.
 
 ## P0.3 Hreflang
 

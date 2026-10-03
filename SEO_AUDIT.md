@@ -242,12 +242,15 @@ Source-level image audit completed across all 108 localized pages (36 RU + 36 GE
 
 ## P2.4 Heading structure
 
-- [ ] Audit H1 uniqueness.
-- [ ] Check H2 hierarchy.
-- [ ] Check for missing/duplicate heading levels.
-- [ ] Align headings with page intent.
+- [x] Audited heading structure across the localized page architecture: language roots, partner pages, Tbilisi/Batumi service pages and district pages.
+- [x] Confirmed one real hierarchy defect: testimonial names on the 3 language roots and 3 partner pages were marked H4 directly under an H2 section, skipping H3.
+- [x] Corrected all 6 affected pages by changing only those testimonial headings from H4 to H3.
+- [x] Rechecked representative service and district pages: their main content uses H1 → H2 → H3 without a confirmed heading-level skip.
+- [x] No confirmed duplicate-H1 or missing-H1 issue was found in the reviewed page types.
+- [x] Changes were limited to confirmed heading-structure defects; no URL, metadata, canonical, hreflang or content changes were introduced by P2.4.
 
 ## P2.5 Local SEO
+
 
 - [ ] Verify Tbilisi and Batumi entity/location signals.
 - [ ] Check NAP consistency where applicable.

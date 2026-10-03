@@ -263,6 +263,29 @@ Source-level image audit completed across all 108 localized pages (36 RU + 36 GE
 
 Production Google Business Profile, local-pack visibility, live NAP verification and Search Console validation remain production-level tasks and are not claimed here.
 
+
+## P2.6 Technical On-Page / Meta Signals
+
+Source-level audit completed for the current localized page architecture (108 indexable pages = 36 RU + 36 GE + 36 EN), with representative verification across language roots, partner pages, Tbilisi/Batumi service pages and district pages.
+
+- [x] Verified localized HTML `lang` values: RU pages use `ru`, GE pages use `ka`, EN pages use `en`.
+- [x] Verified `charset="UTF-8"` and responsive `viewport` metadata on the audited page types.
+- [x] Verified indexable localized pages use `robots: index, follow` with the existing snippet/image preview controls; no confirmed accidental `noindex` signal was found.
+- [x] Verified each audited page has one descriptive `<title>` and one `meta description`; titles/descriptions are localized and aligned with the page intent.
+- [x] Checked title/description patterns for obvious duplication and stale legacy wording; no confirmed P2.6-level metadata defect requiring a mass edit was found.
+- [x] Verified self-referencing canonical URLs use the HTTPS production domain and the established trailing-slash architecture.
+- [x] Verified `og:url` matches the localized canonical URL on the audited page types.
+- [x] Verified `og:title`, `og:description`, `og:image` and `og:type` are present on the audited page types; OG image uses the absolute production asset URL.
+- [x] Verified Twitter Card metadata is present on the audited page types with localized title/description and the shared social preview image.
+- [x] Verified localized pages expose the complete RU / GE / EN / x-default hreflang set; URL values are absolute production URLs.
+- [x] Checked for legacy `meta keywords` usage; no confirmed use remains in the audited SEO page architecture.
+- [x] Checked for conflicting `meta refresh` on indexable localized pages; none found. Root-router behavior remains covered by P0.4.
+- [x] Confirmed that optional/non-ranking metadata such as `author`, `geo.*`, and additional social fields is not being treated as a mandatory SEO signal; no mass addition/removal is justified by this audit.
+- [x] No code changes were required by P2.6. Existing metadata is kept intentionally rather than rewritten for arbitrary character-count targets.
+- [ ] Validate rendered production metadata and final HTTP headers after deployment in Search Console / real crawl (covered by P3.1 and P3.4).
+
+Google's current documentation confirms that title links and snippets are generated from page signals rather than fixed character-count rules, and that `hreflang` should be reciprocal, self-inclusive and use fully qualified URLs. citeturn1search0turn0search3
+
 ## P3.1 Search Console
 
 - [ ] Submit/fetch corrected sitemap.

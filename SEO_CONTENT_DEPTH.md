@@ -8,7 +8,7 @@ Scope: 108 localized indexable pages (RU / GE / EN).
 
 The Tbilisi and Batumi versions of the same service use an almost identical content template, with the city name being one of the main differences.
 
-Representative normalized comparisons:
+Representative normalized comparisons before remediation:
 
 | Service | RU Tbilisi vs Batumi |
 |---|---:|
@@ -17,9 +17,7 @@ Representative normalized comparisons:
 | Грузчики | ~99% |
 | Клининг | ~99% |
 
-The comparison was performed after normalizing the city names, HTML markup and whitespace. This confirms a content-depth/local-value issue rather than merely similar titles.
-
-The same template pattern is present across the localized service architecture, so the remediation target is the Batumi service set rather than changing URLs or merging cities.
+The comparison was performed after normalizing the city names, HTML markup and whitespace. This confirmed a content-depth/local-value issue rather than merely similar titles.
 
 ### 2. District pages
 
@@ -27,24 +25,34 @@ Representative district pages contain substantially more location-specific mater
 
 ### 3. Language variants
 
-RU / GE / EN are intentional language variants and are not treated as duplicate content with each other. Each language needs useful localized wording rather than literal cross-language duplication.
+RU / GE / EN are intentional language variants and are not treated as duplicate content with each other. Each language now has service-specific Batumi wording rather than relying only on the shared city template.
 
-## Remediation
+## Remediation completed
 
-Added a dedicated Batumi-local section to:
-- /ru/batumi/bytovoy-remont-batumi/
-- /ru/batumi/elektrik-batumi/
-- /ru/batumi/gruzchiki-batumi/
+Unique Batumi-local sections were added to **all 24 Batumi service pages** (8 services × 3 languages):
 
-These sections add local Batumi coverage, concrete service scenarios and information useful for preparing a request.
+- бытовой ремонт / საყოფაცხოვრებო რემონტი / home repairs
+- электрик / ელექტრიკოსი / electrician
+- грузчики / მტვირთავი / moving helpers
+- клининг / დასუფთავება / cleaning
+- навеска и монтаж / დაკიდება და მონტაჟი / mounting & installation
+- ремонт компьютеров / კომპიუტერის შეკეთება / computer repair
+- сантехник / სანტექნიკოსი / plumber
+- сборка мебели / ავეჯის აწყობა / furniture assembly
 
-The remaining Batumi service pages require the same treatment before P2.3 can be considered fully closed.
+Each added section contains service-specific use cases plus Batumi-local coverage such as Old Batumi, New Boulevard, the Khimshiashvili area and Boni, without changing URLs, canonicals, hreflang or structured-data architecture.
 
-## P2.3 status
+## Final P2.3 source audit
 
-- [x] Audited content depth and city-level uniqueness on representative service pages.
+- [x] Audited representative service pages across RU / GE / EN and Tbilisi / Batumi.
 - [x] Confirmed the Tbilisi/Batumi near-template duplication pattern.
-- [x] Confirmed district pages have stronger local differentiation.
-- [x] Kept language variants separate.
-- [x] Started targeted remediation on confirmed Batumi service pages.
-- [ ] Complete the same local-content remediation across the remaining Batumi service pages.
+- [x] Checked representative district pages for local differentiation.
+- [x] Kept RU / GE / EN language variants separate.
+- [x] Added unique local-content remediation to all 24 Batumi service pages.
+- [x] Rechecked the 108-page source architecture: 36 RU + 36 GE + 36 EN localized indexable pages remain in place; no URL was added, removed or merged by P2.3.
+- [x] No canonical, hreflang, sitemap or Schema.org changes were introduced by the content remediation.
+- [x] P2.3 is closed at source level.
+
+## Remaining production validation
+
+Production crawl, rendered-page comparison and Search Console validation remain P3/production tasks. This audit does not claim live HTTP or Google indexing validation.

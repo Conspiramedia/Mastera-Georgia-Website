@@ -126,19 +126,19 @@ Audit pass by page type and language (current source tree: 108 localized pages =
 - Representative metadata, canonical, og:url, robots, language attributes, hreflang and Schema.org structures were checked by type/language.
 - Confirmed gap: GE + EN service pages were missing BreadcrumbList while RU service pages and district pages had it.
 - Confirmed gap fixed: added localized BreadcrumbList to all 32 GE/EN service pages (16 GE + 16 EN).
-- Remaining full-page checks are intentionally still open until the 108-page crawl covers every title, description, H1, robots directive, Schema.org field and internal-link set individually.
+- Full 108-page source crawl completed: title, description, H1, canonical, hreflang, OG URL, robots, JSON-LD presence/parseability and BreadcrumbList were checked by page. Four confirmed gaps were fixed: 2 missing localized BreadcrumbList blocks and 2 incorrect GE `og:url` values. Internal-link topology remains tracked separately under P1.2.
 
 
-- [ ] Audit all 108 localized pages.
-- [ ] Check title.
-- [ ] Check meta description.
-- [ ] Check H1.
-- [ ] Check canonical.
-- [ ] Check hreflang.
-- [ ] Check OG URL.
-- [ ] Check Schema.org.
-- [ ] Check BreadcrumbList.
-- [ ] Check robots directives.
+- [x] Audit all 108 localized pages.
+- [x] Check title.
+- [x] Check meta description.
+- [x] Check H1.
+- [x] Check canonical.
+- [x] Check hreflang.
+- [x] Check OG URL.
+- [x] Check Schema.org.
+- [x] Check BreadcrumbList.
+- [x] Check robots directives.
 
 ## P1.2 Internal linking
 

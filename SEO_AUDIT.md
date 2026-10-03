@@ -115,6 +115,20 @@ Chosen convention:
 
 ## P1.1 Full page consistency
 
+Audit pass by page type and language (current source tree: 108 localized pages = 36 RU + 36 GE + 36 EN):
+
+- Language roots checked: RU / GE / EN.
+- Partner pages checked: RU / GE / EN.
+- Tbilisi service pages checked across all service types and languages.
+- Tbilisi district pages checked across RU / GE / EN.
+- Batumi city roots checked across RU / GE / EN.
+- Batumi service pages checked across all service types and languages.
+- Representative metadata, canonical, og:url, robots, language attributes, hreflang and Schema.org structures were checked by type/language.
+- Confirmed gap: GE + EN service pages were missing BreadcrumbList while RU service pages and district pages had it.
+- Confirmed gap fixed: added localized BreadcrumbList to all 32 GE/EN service pages (16 GE + 16 EN).
+- Remaining full-page checks are intentionally still open until the 108-page crawl covers every title, description, H1, robots directive, Schema.org field and internal-link set individually.
+
+
 - [ ] Audit all 108 localized pages.
 - [ ] Check title.
 - [ ] Check meta description.

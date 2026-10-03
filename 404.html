@@ -15,24 +15,24 @@
     "/naveska-montazh-tbilisi/": "/ru/tbilisi/naveska-montazh-tbilisi",
     "/bytovoy-remont-tbilisi/": "/ru/tbilisi/bytovoy-remont-tbilisi",
     "/remont-kompyuterov-tbilisi/": "/ru/tbilisi/remont-kompyuterov-tbilisi",
-    "/ge/tbilisi/klining-tbilisi/": "/ge/tbilisi/klining-tbilisi",
-    "/ge/tbilisi/gruzchiki-tbilisi/": "/ge/tbilisi/gruzchiki-tbilisi",
-    "/ge/tbilisi/santehnik-tbilisi/": "/ge/tbilisi/santehnik-tbilisi",
-    "/ge/tbilisi/elektrik-tbilisi/": "/ge/tbilisi/elektrik-tbilisi",
-    "/ge/tbilisi/master-na-chas-tbilisi/": "/ge/tbilisi/master-na-chas-tbilisi",
-    "/ge/tbilisi/sborka-mebeli-tbilisi/": "/ge/tbilisi/sborka-mebeli-tbilisi",
-    "/ge/tbilisi/naveska-montazh-tbilisi/": "/ge/tbilisi/naveska-montazh-tbilisi",
-    "/ge/tbilisi/bytovoy-remont-tbilisi/": "/ge/tbilisi/bytovoy-remont-tbilisi",
-    "/ge/tbilisi/remont-kompyuterov-tbilisi/": "/ge/tbilisi/remont-kompyuterov-tbilisi",
-    "/en/tbilisi/klining-tbilisi/": "/en/tbilisi/klining-tbilisi",
-    "/en/tbilisi/gruzchiki-tbilisi/": "/en/tbilisi/gruzchiki-tbilisi",
-    "/en/tbilisi/santehnik-tbilisi/": "/en/tbilisi/santehnik-tbilisi",
-    "/en/tbilisi/elektrik-tbilisi/": "/en/tbilisi/elektrik-tbilisi",
-    "/en/tbilisi/master-na-chas-tbilisi/": "/en/tbilisi/master-na-chas-tbilisi",
-    "/en/tbilisi/sborka-mebeli-tbilisi/": "/en/tbilisi/sborka-mebeli-tbilisi",
-    "/en/tbilisi/naveska-montazh-tbilisi/": "/en/tbilisi/naveska-montazh-tbilisi",
-    "/en/tbilisi/bytovoy-remont-tbilisi/": "/en/tbilisi/bytovoy-remont-tbilisi",
-    "/en/tbilisi/remont-kompyuterov-tbilisi/": "/en/tbilisi/remont-kompyuterov-tbilisi",
+    "/ge/tbilisi/klining-tbilisi/": "/ge/tbilisi/klining-tbilisi/",
+    "/ge/tbilisi/gruzchiki-tbilisi/": "/ge/tbilisi/gruzchiki-tbilisi/",
+    "/ge/tbilisi/santehnik-tbilisi/": "/ge/tbilisi/santehnik-tbilisi/",
+    "/ge/tbilisi/elektrik-tbilisi/": "/ge/tbilisi/elektrik-tbilisi/",
+    "/ge/tbilisi/master-na-chas-tbilisi/": "/ge/tbilisi/master-na-chas-tbilisi/",
+    "/ge/tbilisi/sborka-mebeli-tbilisi/": "/ge/tbilisi/sborka-mebeli-tbilisi/",
+    "/ge/tbilisi/naveska-montazh-tbilisi/": "/ge/tbilisi/naveska-montazh-tbilisi/",
+    "/ge/tbilisi/bytovoy-remont-tbilisi/": "/ge/tbilisi/bytovoy-remont-tbilisi/",
+    "/ge/tbilisi/remont-kompyuterov-tbilisi/": "/ge/tbilisi/remont-kompyuterov-tbilisi/",
+    "/en/tbilisi/klining-tbilisi/": "/en/tbilisi/klining-tbilisi/",
+    "/en/tbilisi/gruzchiki-tbilisi/": "/en/tbilisi/gruzchiki-tbilisi/",
+    "/en/tbilisi/santehnik-tbilisi/": "/en/tbilisi/santehnik-tbilisi/",
+    "/en/tbilisi/elektrik-tbilisi/": "/en/tbilisi/elektrik-tbilisi/",
+    "/en/tbilisi/master-na-chas-tbilisi/": "/en/tbilisi/master-na-chas-tbilisi/",
+    "/en/tbilisi/sborka-mebeli-tbilisi/": "/en/tbilisi/sborka-mebeli-tbilisi/",
+    "/en/tbilisi/naveska-montazh-tbilisi/": "/en/tbilisi/naveska-montazh-tbilisi/",
+    "/en/tbilisi/bytovoy-remont-tbilisi/": "/en/tbilisi/bytovoy-remont-tbilisi/",
+    "/en/tbilisi/remont-kompyuterov-tbilisi/": "/en/tbilisi/remont-kompyuterov-tbilisi/",
     "/tbilisi/master-na-chas-vake/": "/ru/tbilisi/master-na-chas-vake/",
     "/tbilisi/master-na-chas-saburtalo/": "/ru/tbilisi/master-na-chas-saburtalo/",
     "/tbilisi/master-na-chas-didube/": "/ru/tbilisi/master-na-chas-didube/",
@@ -85,7 +85,7 @@
         const target = redirects[path] || redirects[path + '/'] || redirects[path.replace(/\/$/, '') + '/'];
         
         if (target) {
-            // 301 редирект для поисковых роботов и пользователей
+            // Клиентский fallback-редирект для старых URL; это не HTTP 301
             window.location.replace(target);
         } else {
             // Если редиректа нет, показываем стандартную 404

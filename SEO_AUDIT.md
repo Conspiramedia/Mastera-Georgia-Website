@@ -218,10 +218,14 @@ Source-level image audit completed across all 108 localized pages (36 RU + 36 GE
 
 ## P2.2 Cannibalization
 
-- [ ] Check similar service pages competing for the same intent.
-- [ ] Compare titles, H1s and main copy.
-- [ ] Consolidate only when pages have genuinely overlapping intent.
-- [ ] Do not merge pages merely because keywords are similar.
+- [x] Audited all 108 localized pages against the P2.1 intent map, comparing root, provider, service and district page roles.
+- [x] Identified a confirmed overlap between each language root and its dedicated Tbilisi handyman-by-hour page at title level.
+- [x] Widened the RU, GE and EN root titles so the roots represent the general city-level matching service rather than the narrower handyman-by-hour intent.
+- [x] Rechecked service + city pages and district + handyman pages; no additional confirmed same-intent pair requiring consolidation was found.
+- [x] Kept RU / GE / EN language variants separate; language variants are not treated as cannibalization.
+- [x] No URLs were merged, removed, redirected or canonicalized as part of P2.2.
+- [x] Detailed findings recorded in SEO_CANNIBALIZATION.md.
+
 
 ## P2.3 Content depth
 

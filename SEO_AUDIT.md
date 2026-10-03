@@ -251,15 +251,17 @@ Source-level image audit completed across all 108 localized pages (36 RU + 36 GE
 
 ## P2.5 Local SEO
 
+- [x] Audited the RU / GE / EN local page architecture for Tbilisi and Batumi, including city roots, service pages and district pages.
+- [x] Confirmed city-level LocalBusiness / Service structured data uses the intended city in `addressLocality` and `areaServed` on the reviewed local page types.
+- [x] Confirmed district Service pages use district-specific `areaServed` values and localized breadcrumb paths.
+- [x] Found and fixed Batumi root FAQ locality errors: the visible and JSON-LD FAQ answers incorrectly listed Tbilisi districts on all 3 Batumi language roots.
+- [x] Found and fixed 5 Georgian Batumi district pages where copied Tbilisi-local signals remained in JSON-LD descriptions/FAQ answers and the parent breadcrumb label.
+- [x] Replaced those copied signals with Batumi/district-specific local references; no URL, canonical, hreflang or sitemap changes were needed.
+- [x] Ran targeted repository searches after remediation; the confirmed erroneous Georgian/Tbilisi phrases no longer remain in the indexed source.
+- [x] No additional confirmed local SEO defect was found in the reviewed local architecture.
+- [x] P2.5 closed at source level.
 
-- [ ] Verify Tbilisi and Batumi entity/location signals.
-- [ ] Check NAP consistency where applicable.
-- [ ] Check local business structured data.
-- [ ] Review internal local navigation.
-
----
-
-# P3 — Validation & monitoring
+Production Google Business Profile, local-pack visibility, live NAP verification and Search Console validation remain production-level tasks and are not claimed here.
 
 ## P3.1 Search Console
 

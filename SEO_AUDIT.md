@@ -188,13 +188,13 @@ Full source-level structured-data audit completed across the 108 localized pages
 
 ## P1.5 Images
 
-Source-level image audit completed across all 108 localized pages (36 RU + 36 GE + 36 EN). Google recommends standard HTML `img` elements with crawlable `src` URLs and useful alt text; CSS background images are not indexed as page images. citeturn1search0
+Source-level image audit completed across all 108 localized pages (36 RU + 36 GE + 36 EN). Google recommends standard HTML `img` elements with crawlable `src` URLs and useful alt text; CSS background images are not indexed as page images.
 
 - [x] Checked all 108 localized pages for `<img>` elements: each page contains one WhatsApp floating-button image; no page has a missing `alt` attribute.
 - [x] Checked alt quality: all 108 image instances use `alt="WhatsApp"`, which accurately identifies the linked WhatsApp control and is not keyword stuffing.
 - [x] Checked loading behavior: all 108 image instances use native `loading="lazy"`; the image is a floating contact control rather than an above-the-fold content/LCP image.
 - [x] Checked dimensions: the image itself has no HTML `width/height` attributes, but the containing `.whatsapp-fab` is fixed at 65×65px and its child image is constrained to `width:100%; height:100%` in CSS; no confirmed source-level dimension defect was therefore found.
-- [x] Checked image formats/assets: the HTML image is PNG; CSS hero/footer background assets are already WebP. Google supports PNG, WebP and AVIF among other formats, so no confirmed format defect requires a change. citeturn1search0
+- [x] Checked image formats/assets: the HTML image is PNG; CSS hero/footer background assets are already WebP. Google supports PNG, WebP and AVIF among other formats, so no confirmed format defect requires a change.
 - [x] Checked important image discovery: the only HTML `<img>` is the WhatsApp control. The site's visual hero/footer images are CSS backgrounds, so they are not treated as indexable content images; the social preview image is exposed through `og:image` and the Schema.org `image` field on audited representative pages.
 - [x] Confirmed image asset paths are repository-backed: `/image/whatsapp-icon.png`, `/image/hero-bg.webp`, `/image/footer-cta-bg.webp`, and `/image/og-preview.png` exist in the source tree.
 - [x] Confirmed and fixed the only source-level path inconsistency found in the 108-page image pass: RU/GE/EN Batumi city roots used `/../image/whatsapp-icon.png`; normalized all three to the consistent absolute path `/image/whatsapp-icon.png`.

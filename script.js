@@ -883,62 +883,75 @@ function resolveBotCategory(rawService) {
 
 // Отправка клиентской заявки в Telegram-бота через прокси.
 // Не блокирует пользователя и не зависит от ответа — заявка в любом случае уйдёт на email.
-function sendLeadToBot(formData) {
+function generateSiteIdempotencyKey(prefix) {
     try {
-        const get = (k) => (formData.get(k) || '').toString().trim();
+        if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+            return prefix + '_' + window.crypto.randomUUID();
+        }
+    } catch (e) {}
+    return prefix + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2);
+}
 
-        const phone    = get('phone');
-        const telegram = get('telegram');
-        const whatsapp = get('whatsapp');
-        const name     = get('name');
-
-        // Контакты — откроются мастеру ТОЛЬКО после взятия заявки и списания.
-        const contactParts = [];
-        if (phone)    contactParts.push('📱 ' + phone);
-        if (telegram) contactParts.push('✈️ Telegram: ' + telegram);
-        if (whatsapp) contactParts.push('🟢 WhatsApp: ' + whatsapp);
-
-        // Что видят мастера СРАЗУ (в превью, до взятия): имя + задача, без контактов.
-        const descParts = [];
-        if (name) descParts.push('Имя: ' + name);
-        descParts.push('Задача: ' + (get('message') || '—'));
-
-        // Уточнение района: обязательно только при выборе «Другой» (см.
-        // initDistrictOtherInput). Уходит боту в subdistrict — он покажет мастеру
-        // «Район: Другой, Вазисубани» вместо бесполезного «Район: Другой».
-        // Для остальных районов поле пустое → шлём «Не указан», как и раньше.
-        const districtOther = get('district_other');
-
-        const payload = {
-            city:        botCityFromUrl(),                  // город страницы — бот рассылает своему городу
-            district:    BOT_DISTRICT_MAP[get('district')] || get('district') || 'Другой',
-            subdistrict: districtOther || 'Не указан',      // подрайон спрашиваем только у «Другого»
-            category:    resolveBotCategory(get('service')),   // всегда канон-RU для мастеров
-            description: descParts.join('\n'),              // имя + задача → видно в превью
-            address:     'Не указан',                       // адрес у клиента не спрашиваем — только район
-            contact:     contactParts.join('\n') || 'Нет контакта', // скрыто до оплаты
-            honeypot:    get('_gotcha'),                    // антиспам: люди это поле не заполняют
-            lang:        ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru',
-            // Срочность: галочка без name (в Formspree не уходит) — читаем состояние из DOM.
-            // false по умолчанию; бот помечает «🚨 СРОЧНО» только срочные заявки.
-            urgent:      !!(document.getElementById('leadUrgent') && document.getElementById('leadUrgent').checked),
-            photos:      leadPhotoDataUrls.slice(0, MAX_LEAD_PHOTOS) // сжатые фото (base64), до 3
-        };
-
-        // keepalive имеет лимит тела ~64 КБ — при наличии фото его НЕ используем
-        // (заявку всё равно держит открытая модалка благодарности, навигации нет).
-        const hasPhotos = payload.photos.length > 0;
-        fetch(BOT_REQUEST_URL, {
+async function postBotJson(url, payload, timeoutMs = 12000) {
+    const controller = typeof AbortController === 'function' ? new AbortController() : null;
+    const timer = controller ? setTimeout(() => controller.abort(), timeoutMs) : null;
+    try {
+        const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
-            keepalive: !hasPhotos
-        }).catch(() => {}); // молча игнорируем — на email заявка всё равно уходит
-    } catch (e) {
-        console.error('sendLeadToBot error:', e);
+            keepalive: true,
+            ...(controller ? { signal: controller.signal } : {})
+        });
+        const text = await response.text();
+        let data = null;
+        try { data = text ? JSON.parse(text) : null; } catch (e) {}
+        if (!response.ok || !data || data.ok !== true) {
+            const reason = data && data.error ? data.error : ('HTTP ' + response.status);
+            throw new Error('Bot rejected lead: ' + reason);
+        }
+        return data;
+    } finally {
+        if (timer) clearTimeout(timer);
     }
 }
 
+async function sendLeadToBot(formData, idempotencyKey) {
+    const get = (k) => (formData.get(k) || '').toString().trim();
+
+    const phone    = get('phone');
+    const telegram = get('telegram');
+    const whatsapp = get('whatsapp');
+    const name     = get('name');
+
+    const contactParts = [];
+    if (phone)    contactParts.push('📱 ' + phone);
+    if (telegram) contactParts.push('✈️ Telegram: ' + telegram);
+    if (whatsapp) contactParts.push('🟢 WhatsApp: ' + whatsapp);
+
+    const descParts = [];
+    if (name) descParts.push('Имя: ' + name);
+    descParts.push('Задача: ' + (get('message') || '—'));
+
+    const districtOther = get('district_other');
+
+    const payload = {
+        city:        botCityFromUrl(),
+        district:    BOT_DISTRICT_MAP[get('district')] || get('district') || 'Другой',
+        subdistrict: districtOther || 'Не указан',
+        category:    resolveBotCategory(get('service')),
+        description: descParts.join('\n'),
+        address:     'Не указан',
+        contact:     contactParts.join('\n') || 'Нет контакта',
+        honeypot:    get('_gotcha'),
+        lang:        ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru',
+        urgent:      !!(document.getElementById('leadUrgent') && document.getElementById('leadUrgent').checked),
+        photos:      leadPhotoDataUrls.slice(0, MAX_LEAD_PHOTOS),
+        idempotency_key: idempotencyKey
+    };
+
+    return await postBotJson(BOT_REQUEST_URL, payload);
+}
 // ============================================
 // 10.0 ФОТО ПРОБЛЕМЫ В КЛИЕНТСКОЙ ФОРМЕ (до 3, по желанию)
 // ============================================
@@ -1547,6 +1560,7 @@ function initClientLeadFormTracking() {
     if (!leadForm) return;
 
     let isSubmitting = false;
+    let pendingIdempotencyKey = null;
 
     leadForm.addEventListener('submit', async function (e) {
         e.preventDefault();
@@ -1557,11 +1571,14 @@ function initClientLeadFormTracking() {
 
         const formData = new FormData(leadForm);
         const transactionId = 'client_' + Date.now();
-
-        // Дублируем заявку в Telegram-бота (fire-and-forget, не влияет на отправку на email)
-        sendLeadToBot(formData);
+        if (!pendingIdempotencyKey) {
+            pendingIdempotencyKey = generateSiteIdempotencyKey('client');
+        }
 
         try {
+            // Telegram Bot — операционный канал. Успех формы показываем только
+            // после подтверждённого принятия заявки ботом.
+            await sendLeadToBot(formData, pendingIdempotencyKey);
             const response = await fetch('https://formspree.io/f/xpqjbpyk', {
                 method: 'POST',
                 body: formData,
@@ -1584,6 +1601,7 @@ function initClientLeadFormTracking() {
             closeClientLeadForm();
             openThankYou();
             leadForm.reset();
+            pendingIdempotencyKey = null;
             if (initClientPhotoUpload._reset) initClientPhotoUpload._reset(); // чистим превью фото
 
         } catch (error) {

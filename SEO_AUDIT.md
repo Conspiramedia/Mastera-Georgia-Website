@@ -142,11 +142,17 @@ Audit pass by page type and language (current source tree: 108 localized pages =
 
 ## P1.2 Internal linking
 
-- [ ] Check links between city/category/service pages.
-- [ ] Identify weakly linked pages.
-- [ ] Identify orphan pages.
-- [ ] Ensure language-specific links stay inside the same language.
-- [ ] Ensure city-specific links stay inside the correct city.
+Source-level internal-link audit completed by page type across RU / GE / EN, including language roots, partner pages, Tbilisi/Batumi service pages, and district-page patterns.
+
+- [x] Check links between city/category/service pages.
+- [x] Identify weakly linked pages.
+- [x] Identify orphan pages.
+- [x] Ensure language-specific links stay inside the same language.
+- [x] Ensure city-specific links stay inside the correct city.
+- [x] Confirmed and fixed gap: GE and EN Batumi city roots were missing direct internal links to the five Batumi district landing pages that are linked from RU.
+- [x] Verified that localized content links remain within the current language/city; cross-language links observed are the intentional RU/GE/EN language switcher links.
+- [x] Verified district/service pages have reciprocal same-language city/service/district navigation and no confirmed orphan localized landing page in the audited page-type topology.
+
 
 ## P1.3 404 / redirects
 

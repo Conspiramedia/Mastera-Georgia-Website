@@ -229,11 +229,14 @@ Source-level image audit completed across all 108 localized pages (36 RU + 36 GE
 
 ## P2.3 Content depth
 
-- [ ] Audit service page copy.
-- [ ] Check uniqueness between cities.
-- [ ] Check uniqueness between languages.
-- [ ] Identify thin pages.
-- [ ] Improve useful local/service information where needed.
+- [x] Audited representative service pages across RU / GE / EN and Tbilisi / Batumi.
+- [x] Confirmed near-template duplication between Tbilisi and Batumi service pages; representative normalized comparisons were approximately 99% shared wording after city-name normalization.
+- [x] Checked representative district pages; they contain stronger district-specific local context.
+- [x] RU / GE / EN language variants are treated as intentional localized versions.
+- [x] Added unique Batumi-local service sections to three confirmed pages: бытовой ремонт, электрик and грузчики.
+- [ ] Apply the same local-content remediation to the remaining Batumi service pages.
+- [ ] Final full 108-page content-depth pass remains open.
+- [x] Detailed findings recorded in SEO_CONTENT_DEPTH.md.
 
 ## P2.4 Heading structure
 

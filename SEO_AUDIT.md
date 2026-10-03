@@ -102,7 +102,7 @@ Chosen convention:
 `/ru/tbilisi/santehnik-tbilisi/`
 
 - [x] Canonical URLs use trailing slash and match the actual localized route.
-- [x] Sitemap contains 109 unique production URLs with trailing slash.
+- [x] Sitemap contains 108 unique production URLs with trailing slash.
 - [x] Hreflang URLs use trailing slash.
 - [x] Open Graph `og:url` values are aligned with the localized canonical URLs.
 - [x] Schema.org page URL fields checked for missing trailing slash variants.
@@ -154,17 +154,33 @@ Source-level internal-link audit completed by page type across RU / GE / EN, inc
 - [x] Verified district/service pages have reciprocal same-language city/service/district navigation and no confirmed orphan localized landing page in the audited page-type topology.
 
 
-NaN
+## P1.3 404 / redirects
+
+Source-level validation completed. Production HTTP validation remains pending because the current execution environment cannot resolve/reach `mastera-tbilisi.ge`.
+
+- [x] Sitemap contains only current localized indexable routes; `/` is excluded because it is `noindex`.
+- [x] All 108 sitemap URLs map to existing localized `index.html` routes.
+- [x] No obsolete localized URL remains in the current sitemap.
+- [x] Legacy redirect targets in `404.html` use canonical trailing-slash URLs.
+- [x] `404.html` uses `window.location.replace()` only as a client-side fallback; it is not represented as an HTTP 301.
+- [ ] Verify production 404 response status with an actual HTTP request.
+- [ ] Verify production legacy redirects return HTTP 301/308 at the hosting layer and do not rely on `404.html` JavaScript.
+- [ ] Verify redirect chains terminate directly on canonical localized URLs.
 
 ## P1.4 Structured data
 
-- [ ] Validate LocalBusiness.
-- [ ] Validate Service.
-- [ ] Validate FAQPage.
-- [ ] Validate BreadcrumbList.
-- [ ] Check all URLs inside JSON-LD.
-- [ ] Verify `aggregateRating` / `reviewCount` against visible page content.
-- [ ] Remove unsupported/test rating data if it is not backed by real visible reviews.
+Initial source-level structured-data audit is in progress across the localized page types.
+
+- [x] JSON-LD blocks parsed successfully on the representative RU/GE/EN service, district and city-root page types checked during P1.4.
+- [x] `Service` schema is present on representative Tbilisi/Batumi service and district pages.
+- [x] `FAQPage` schema is present on representative service/city pages and its `mainEntity` structure parses correctly.
+- [x] `BreadcrumbList` schema parses correctly on the representative page types and uses localized canonical trailing-slash URLs.
+- [x] Confirmed Batumi `LocalBusiness.areaServed` error on RU/GE city roots: both incorrectly declared Tbilisi; corrected to Batumi.
+- [ ] Complete LocalBusiness validation across all localized city roots and partner pages.
+- [ ] Complete Service/FAQPage/BreadcrumbList validation across all 108 localized pages.
+- [ ] Check every JSON-LD URL field for language/city/trailing-slash consistency.
+- [ ] Verify every `aggregateRating` / `reviewCount` against visible page content.
+- [ ] Remove unsupported/test rating data where no corresponding visible review evidence exists.
 
 ## P1.5 Images
 

@@ -666,11 +666,9 @@ const BOT_MASTER_URL  = 'https://mastera-tbilisi-mastera-tbilisi.up.railway.app/
 //   ru/en/ka — подпись района на языке страницы;
 //   hintRu/hintEn/hintKa — популярные местности района (подсказка в подписи).
 //
-// Подсказки нужны против «Другого»: клиент-экспат живёт на Вазисубани, не видит
-// его в списке и жмёт «Другой» — заявка приходит мастеру без географии. С
-// подсказкой «Исани / Вазисубани / Навтлуги» он узнаёт своё место и выбирает район.
-// Местности взяты из config.yaml бота (locations) и locales/geo.py (переводы),
-// чтобы подписи сайта и бота не расходились.
+// Подсказки хранятся здесь как справочные данные, но НЕ показываются в селекте:
+// на мобильном длинные подписи делают выбор района неудобным. Клиент выбирает
+// крупный район, а для «Другого» есть отдельное поле с ориентиром.
 //
 // ВАЖНО: slug → канон-RU обязан совпадать с ключами config.locations бота, иначе
 // заявка молча уедет в «Другой». Chugureti по-английски у бота — Chughureti
@@ -883,62 +881,77 @@ function resolveBotCategory(rawService) {
 
 // Отправка клиентской заявки в Telegram-бота через прокси.
 // Не блокирует пользователя и не зависит от ответа — заявка в любом случае уйдёт на email.
-function sendLeadToBot(formData) {
+function generateSiteIdempotencyKey(prefix) {
     try {
-        const get = (k) => (formData.get(k) || '').toString().trim();
+        if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+            return prefix + '_' + window.crypto.randomUUID();
+        }
+    } catch (e) {}
+    return prefix + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2);
+}
 
-        const phone    = get('phone');
-        const telegram = get('telegram');
-        const whatsapp = get('whatsapp');
-        const name     = get('name');
-
-        // Контакты — откроются мастеру ТОЛЬКО после взятия заявки и списания.
-        const contactParts = [];
-        if (phone)    contactParts.push('📱 ' + phone);
-        if (telegram) contactParts.push('✈️ Telegram: ' + telegram);
-        if (whatsapp) contactParts.push('🟢 WhatsApp: ' + whatsapp);
-
-        // Что видят мастера СРАЗУ (в превью, до взятия): имя + задача, без контактов.
-        const descParts = [];
-        if (name) descParts.push('Имя: ' + name);
-        descParts.push('Задача: ' + (get('message') || '—'));
-
-        // Уточнение района: обязательно только при выборе «Другой» (см.
-        // initDistrictOtherInput). Уходит боту в subdistrict — он покажет мастеру
-        // «Район: Другой, Вазисубани» вместо бесполезного «Район: Другой».
-        // Для остальных районов поле пустое → шлём «Не указан», как и раньше.
-        const districtOther = get('district_other');
-
-        const payload = {
-            city:        botCityFromUrl(),                  // город страницы — бот рассылает своему городу
-            district:    BOT_DISTRICT_MAP[get('district')] || get('district') || 'Другой',
-            subdistrict: districtOther || 'Не указан',      // подрайон спрашиваем только у «Другого»
-            category:    resolveBotCategory(get('service')),   // всегда канон-RU для мастеров
-            description: descParts.join('\n'),              // имя + задача → видно в превью
-            address:     'Не указан',                       // адрес у клиента не спрашиваем — только район
-            contact:     contactParts.join('\n') || 'Нет контакта', // скрыто до оплаты
-            honeypot:    get('_gotcha'),                    // антиспам: люди это поле не заполняют
-            lang:        ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru',
-            // Срочность: галочка без name (в Formspree не уходит) — читаем состояние из DOM.
-            // false по умолчанию; бот помечает «🚨 СРОЧНО» только срочные заявки.
-            urgent:      !!(document.getElementById('leadUrgent') && document.getElementById('leadUrgent').checked),
-            photos:      leadPhotoDataUrls.slice(0, MAX_LEAD_PHOTOS) // сжатые фото (base64), до 3
-        };
-
-        // keepalive имеет лимит тела ~64 КБ — при наличии фото его НЕ используем
-        // (заявку всё равно держит открытая модалка благодарности, навигации нет).
-        const hasPhotos = payload.photos.length > 0;
-        fetch(BOT_REQUEST_URL, {
+async function postBotJson(url, payload, timeoutMs = 12000) {
+    const controller = typeof AbortController === 'function' ? new AbortController() : null;
+    const timer = controller ? setTimeout(() => controller.abort(), timeoutMs) : null;
+    try {
+        const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
-            keepalive: !hasPhotos
-        }).catch(() => {}); // молча игнорируем — на email заявка всё равно уходит
-    } catch (e) {
-        console.error('sendLeadToBot error:', e);
+            keepalive: true,
+            ...(controller ? { signal: controller.signal } : {})
+        });
+        const text = await response.text();
+        let data = null;
+        try { data = text ? JSON.parse(text) : null; } catch (e) {}
+        if (!response.ok || !data || data.ok !== true) {
+            const reason = data && data.error ? data.error : ('HTTP ' + response.status);
+            throw new Error('Bot rejected lead: ' + reason);
+        }
+        return data;
+    } finally {
+        if (timer) clearTimeout(timer);
     }
 }
 
+async function sendLeadToBot(formData, idempotencyKey) {
+    const get = (k) => (formData.get(k) || '').toString().trim();
+
+    const phone    = get('phone');
+    const telegram = get('telegram');
+    const whatsapp = get('whatsapp');
+    const name     = get('name');
+
+    const contactParts = [];
+    if (phone)    contactParts.push('📱 ' + phone);
+    if (telegram) contactParts.push('✈️ Telegram: ' + telegram);
+    if (whatsapp) contactParts.push('🟢 WhatsApp: ' + whatsapp);
+
+    const descParts = [];
+    if (name) descParts.push('Имя: ' + name);
+    descParts.push('Задача: ' + (get('message') || '—'));
+
+    const districtOther = get('district_other');
+
+    const payload = {
+        city:        botCityFromUrl(),
+        name:        name,
+        phone:       phone,
+        district:    BOT_DISTRICT_MAP[get('district')] || get('district') || 'Другой',
+        subdistrict: districtOther || 'Не указан',
+        category:    resolveBotCategory(get('service')),
+        description: descParts.join('\n'),
+        address:     'Не указан',
+        contact:     contactParts.join('\n') || 'Нет контакта',
+        honeypot:    get('_gotcha'),
+        lang:        ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru',
+        urgent:      !!(document.getElementById('leadUrgent') && document.getElementById('leadUrgent').checked),
+        photos:      leadPhotoDataUrls.slice(0, MAX_LEAD_PHOTOS),
+        idempotency_key: idempotencyKey
+    };
+
+    return await postBotJson(BOT_REQUEST_URL, payload);
+}
 // ============================================
 // 10.0 ФОТО ПРОБЛЕМЫ В КЛИЕНТСКОЙ ФОРМЕ (до 3, по желанию)
 // ============================================
@@ -1115,52 +1128,36 @@ function generateMasterLeadCode() {
 }
 
 // Отправка анкеты мастера в Telegram-бота (лид админу). Fire-and-forget, не влияет на email.
-function sendMasterLeadToBot(formData) {
-    try {
-        const get = (k) => (formData.get(k) || '').toString().trim();
-        // Специальность: если выбрано «Другое» и заполнено уточнение — берём его.
-        const lang = ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru';
-        const otherValue = SPECIALTY_OTHER_VALUE[lang] || SPECIALTY_OTHER_VALUE.ru;
-        const specialtyOther = get('specialty_other');
-        let specialty = get('specialty');
-        if (specialty === otherValue && specialtyOther) {
-            specialty = specialtyOther;   // напр. «Плиточник», «Маляр»
-        }
-        const experience = get('experience');
-        const payload = {
-            name:      get('name'),
-            phone:     get('phone'),
-            telegram:  get('telegram'),
-            whatsapp:  get('whatsapp'),
-            specialty: experience ? `${specialty} (опыт: ${experience} лет)` : specialty,
-            // 🏙 Город работы мастера — канон-RU («Тбилиси»/«Батуми»), как в
-            // config.yaml бота. Заявки рассылаются мастерам ТОЛЬКО своего города,
-            // поэтому город обязателен. Если селекта ещё нет (старая страница из
-            // кэша) — выводим город из района; пусто → бот спросит сам.
-            city:      get('city') || masterCityFromDistrict(get('district')),
-            // Район работы мастера. В форме — slug (Vake), бот ждёт канон-RU (Ваке),
-            // как и в клиентской заявке. All/AllTB/AllBA → «Все районы».
-            district:  masterDistrictForBot(get('district')),
-            // Описание в форме мастера — textarea name="about" (НЕ "message").
-            message:   get('about'),
-            // Отдельные поля для автоподстановки в боте (specialty канон-RU, опыт числом).
-            specialty_raw: specialty,
-            experience:    experience,
-            code:          masterLeadCode,   // код связки с диплинком
-            honeypot:  get('_gotcha'),
-            lang:      ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru'
-        };
-        fetch(BOT_MASTER_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-            keepalive: true
-        }).catch(() => {});
-    } catch (e) {
-        console.error('sendMasterLeadToBot error:', e);
-    }
-}
+async function sendMasterLeadToBot(formData) {
+    const get = (k) => (formData.get(k) || '').toString().trim();
 
+    const lang = ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru';
+    const otherValue = SPECIALTY_OTHER_VALUE[lang] || SPECIALTY_OTHER_VALUE.ru;
+    const specialtyOther = get('specialty_other');
+    let specialty = get('specialty');
+    if (specialty === otherValue && specialtyOther) {
+        specialty = specialtyOther;
+    }
+    const experience = get('experience');
+
+    const payload = {
+        name:      get('name'),
+        phone:     get('phone'),
+        telegram:  get('telegram'),
+        whatsapp:  get('whatsapp'),
+        specialty: experience ? specialty + ' (опыт: ' + experience + ' лет)' : specialty,
+        city:      get('city') || masterCityFromDistrict(get('district')),
+        district:  masterDistrictForBot(get('district')),
+        message:   get('about'),
+        specialty_raw: specialty,
+        experience:    experience,
+        code:          masterLeadCode,
+        honeypot:      get('_gotcha'),
+        lang:         lang
+    };
+
+    return await postBotJson(BOT_MASTER_URL, payload);
+}
 // Диплинк «завершить регистрацию»: если есть код связки — ведём на ?start=m_<code>
 // (бот подтянет анкету и попросит только селфи), иначе на общий ?start=master.
 function masterFinishDeeplink() {
@@ -1207,9 +1204,9 @@ function ensureMasterTelegramButton() {
 //   • предвыбранный район лендинга (<option selected>, напр. Ваке на /master-na-chas-vake/);
 //   • служебная опция «Все районы» (All) — она есть только в форме мастера.
 //
-// :param withHints: добавлять ли к подписи местности («Исани — Вазисубани, Навтлуги»).
-//     В клиентской форме — да (клиент ищет своё место), в форме мастера — нет
-//     (мастер знает районы, а длинные подписи там только мешают).
+// :param withHints: добавлять ли к подписи справочные местности.
+//     В клиентской форме — нет: на мобильном длинные подписи мешают быстрому выбору.
+//     В форме мастера — также нет.
 function buildDistrictSelect(select, withHints) {
     if (!select) return;
 
@@ -1364,7 +1361,7 @@ function initClientDistrictOptions() {
     const districtSel = form.querySelector('select[name="district"]');
     if (!districtSel) return;
 
-    buildDistrictSelect(districtSel, true);   // с подсказками местностей
+    buildDistrictSelect(districtSel, false);  // только названия районов
     initDistrictOtherInput(form, districtSel);
 }
 
@@ -1547,6 +1544,7 @@ function initClientLeadFormTracking() {
     if (!leadForm) return;
 
     let isSubmitting = false;
+    let pendingIdempotencyKey = null;
 
     leadForm.addEventListener('submit', async function (e) {
         e.preventDefault();
@@ -1557,11 +1555,14 @@ function initClientLeadFormTracking() {
 
         const formData = new FormData(leadForm);
         const transactionId = 'client_' + Date.now();
-
-        // Дублируем заявку в Telegram-бота (fire-and-forget, не влияет на отправку на email)
-        sendLeadToBot(formData);
+        if (!pendingIdempotencyKey) {
+            pendingIdempotencyKey = generateSiteIdempotencyKey('client');
+        }
 
         try {
+            // Telegram Bot — операционный канал. Успех формы показываем только
+            // после подтверждённого принятия заявки ботом.
+            await sendLeadToBot(formData, pendingIdempotencyKey);
             const response = await fetch('https://formspree.io/f/xpqjbpyk', {
                 method: 'POST',
                 body: formData,
@@ -1584,6 +1585,7 @@ function initClientLeadFormTracking() {
             closeClientLeadForm();
             openThankYou();
             leadForm.reset();
+            pendingIdempotencyKey = null;
             if (initClientPhotoUpload._reset) initClientPhotoUpload._reset(); // чистим превью фото
 
         } catch (error) {
@@ -1698,6 +1700,7 @@ function initMasterLeadFormTracking() {
     if (!masterLeadForm) return;
 
     let isSubmitting = false;
+    let pendingMasterLeadCode = null;
 
     // Кнопка-диплинк в модалке благодарности готовится заранее (до открытия модалки)
     ensureMasterTelegramButton();
@@ -1711,14 +1714,13 @@ function initMasterLeadFormTracking() {
 
         const formData = new FormData(masterLeadForm);
 
-        // Новый код связки на каждую отправку: он уйдёт в бота и попадёт в диплинк
-        // кнопки «Завершить регистрацию» (?start=m_<code>).
-        masterLeadCode = generateMasterLeadCode();
-
-        // Дублируем анкету мастера в Telegram-бота (лид админу), не влияет на email
-        sendMasterLeadToBot(formData);
+        // Один код сохраняется до успешной отправки. При retry после сетевого
+        // сбоя бот получит тот же code и не создаст новую связку.
+        if (!pendingMasterLeadCode) pendingMasterLeadCode = generateMasterLeadCode();
+        masterLeadCode = pendingMasterLeadCode;
 
         try {
+            await sendMasterLeadToBot(formData);
             const response = await fetch('https://formspree.io/f/mykdoebj', {
                 method: 'POST',
                 body: formData,
@@ -1742,6 +1744,7 @@ function initMasterLeadFormTracking() {
             ensureMasterTelegramButton();
             openMasterThankYou();
             masterLeadForm.reset();
+            pendingMasterLeadCode = null;
 
         } catch (error) {
             console.error('Master form error:', error);

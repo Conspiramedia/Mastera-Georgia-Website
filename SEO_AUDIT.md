@@ -206,10 +206,15 @@ Source-level image audit completed across all 108 localized pages (36 RU + 36 GE
 
 ## P2.1 Keyword mapping
 
-- [ ] Build keyword map for RU / GE / EN.
-- [ ] Map one primary intent to each indexable page.
-- [ ] Check city + service combinations.
-- [ ] Identify missing high-value landing pages.
+- [x] Built a dedicated RU / GE / EN keyword-intent map for all 108 indexable pages in `SEO_KEYWORD_MAP.md`.
+- [x] Assigned one primary intent to each indexable page: 36 RU + 36 GE + 36 EN.
+- [x] Mapped city + service combinations separately for Tbilisi and Batumi.
+- [x] Mapped all district pages to the district + handyman intent rather than duplicating generic city-service intent.
+- [x] Kept provider/`masters/` pages on a separate B2B/provider intent.
+- [x] Checked representative current RU / GE / EN titles, descriptions and H1s against the intent map.
+- [x] Verified natural Georgian service-query formulations against current Georgian search results for representative services.
+- [ ] Quantitative search-volume/competition validation is still open; no unsupported volume or “high-value” claims were added.
+- [ ] P2.2 Cannibalization remains a separate next-stage audit; similar keywords alone are not treated as a reason to merge URLs.
 
 ## P2.2 Cannibalization
 

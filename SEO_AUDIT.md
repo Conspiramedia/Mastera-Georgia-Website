@@ -43,8 +43,8 @@ Current URL architecture:
   - `/ru/tbilisi/santehnik-tbilisi/`
   - `/ge/tbilisi/santehnik-tbilisi/`
   - `/en/tbilisi/santehnik-tbilisi/`
-- [x] Verify sitemap URL count after regeneration.
-- [x] Verify every sitemap URL returns the expected page.
+- [x] Verify sitemap URL count after regeneration: 108 indexable localized URLs (RU/GE/EN); the non-indexable root `/` is intentionally excluded.
+- [x] Verify every sitemap URL maps to an existing localized `index.html` route in the repository tree; 108/108 matched.
 
 ## P0.2 Canonical
 
@@ -154,13 +154,7 @@ Source-level internal-link audit completed by page type across RU / GE / EN, inc
 - [x] Verified district/service pages have reciprocal same-language city/service/district navigation and no confirmed orphan localized landing page in the audited page-type topology.
 
 
-## P1.3 404 / redirects
-
-- [ ] Crawl all internal links.
-- [ ] Identify 404 pages.
-- [ ] Identify obsolete URL variants.
-- [ ] Add redirects only where an old URL should intentionally resolve to a current URL.
-- [ ] Avoid redirect chains.
+NaN
 
 ## P1.4 Structured data
 

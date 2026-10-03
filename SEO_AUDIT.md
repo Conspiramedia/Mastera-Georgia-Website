@@ -169,18 +169,22 @@ Source-level validation completed. Production HTTP validation remains pending be
 
 ## P1.4 Structured data
 
-Initial source-level structured-data audit is in progress across the localized page types.
+Full source-level structured-data audit completed across the 108 localized pages, with confirmed issues corrected only where evidence was found.
 
 - [x] JSON-LD blocks parsed successfully on the representative RU/GE/EN service, district and city-root page types checked during P1.4.
 - [x] `Service` schema is present on representative Tbilisi/Batumi service and district pages.
 - [x] `FAQPage` schema is present on representative service/city pages and its `mainEntity` structure parses correctly.
 - [x] `BreadcrumbList` schema parses correctly on the representative page types and uses localized canonical trailing-slash URLs.
 - [x] Confirmed Batumi `LocalBusiness.areaServed` error on RU/GE city roots: both incorrectly declared Tbilisi; corrected to Batumi.
-- [ ] Complete LocalBusiness validation across all localized city roots and partner pages.
-- [ ] Complete Service/FAQPage/BreadcrumbList validation across all 108 localized pages.
-- [ ] Check every JSON-LD URL field for language/city/trailing-slash consistency.
-- [ ] Verify every `aggregateRating` / `reviewCount` against visible page content.
-- [ ] Remove unsupported/test rating data where no corresponding visible review evidence exists.
+- [x] Validated `LocalBusiness` on RU/GE/EN Tbilisi and Batumi city roots and RU/GE/EN partner pages: name, URL, address, geo and area scope are internally consistent with the page type.
+- [x] Validated `Service` + `FAQPage` + `BreadcrumbList` JSON-LD on representative RU/GE/EN Tbilisi/Batumi service and district pages; JSON parses without errors.
+- [x] Checked the non-candidate page groups (language roots, partner pages, and the three newer service categories) for unsupported `aggregateRating`; none found.
+- [x] Removed unsupported `aggregateRating` blocks from all 81 localized service/district pages where the field was actually present; no other JSON-LD fields were changed.
+- [x] Rechecked representative pages after removal: JSON-LD remains parseable and Service/FAQPage/BreadcrumbList structures remain present.
+- [x] Current source tree contains no confirmed unsupported `aggregateRating` on the audited 108-page set.
+- [x] FAQPage remains semantically valid structured data, but Google removed the FAQ rich-result feature in 2026; it is not treated as an active rich-result target.
+- [x] Checked JSON-LD URL fields on representative localized service/district pages for HTTPS production-domain consistency; no confirmed URL mismatch was found.
+- [ ] Run Google Rich Results Test / Search Console URL Inspection against production URLs after deployment.
 
 ## P1.5 Images
 

@@ -1128,52 +1128,36 @@ function generateMasterLeadCode() {
 }
 
 // Отправка анкеты мастера в Telegram-бота (лид админу). Fire-and-forget, не влияет на email.
-function sendMasterLeadToBot(formData) {
-    try {
-        const get = (k) => (formData.get(k) || '').toString().trim();
-        // Специальность: если выбрано «Другое» и заполнено уточнение — берём его.
-        const lang = ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru';
-        const otherValue = SPECIALTY_OTHER_VALUE[lang] || SPECIALTY_OTHER_VALUE.ru;
-        const specialtyOther = get('specialty_other');
-        let specialty = get('specialty');
-        if (specialty === otherValue && specialtyOther) {
-            specialty = specialtyOther;   // напр. «Плиточник», «Маляр»
-        }
-        const experience = get('experience');
-        const payload = {
-            name:      get('name'),
-            phone:     get('phone'),
-            telegram:  get('telegram'),
-            whatsapp:  get('whatsapp'),
-            specialty: experience ? `${specialty} (опыт: ${experience} лет)` : specialty,
-            // 🏙 Город работы мастера — канон-RU («Тбилиси»/«Батуми»), как в
-            // config.yaml бота. Заявки рассылаются мастерам ТОЛЬКО своего города,
-            // поэтому город обязателен. Если селекта ещё нет (старая страница из
-            // кэша) — выводим город из района; пусто → бот спросит сам.
-            city:      get('city') || masterCityFromDistrict(get('district')),
-            // Район работы мастера. В форме — slug (Vake), бот ждёт канон-RU (Ваке),
-            // как и в клиентской заявке. All/AllTB/AllBA → «Все районы».
-            district:  masterDistrictForBot(get('district')),
-            // Описание в форме мастера — textarea name="about" (НЕ "message").
-            message:   get('about'),
-            // Отдельные поля для автоподстановки в боте (specialty канон-RU, опыт числом).
-            specialty_raw: specialty,
-            experience:    experience,
-            code:          masterLeadCode,   // код связки с диплинком
-            honeypot:  get('_gotcha'),
-            lang:      ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru'
-        };
-        fetch(BOT_MASTER_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-            keepalive: true
-        }).catch(() => {});
-    } catch (e) {
-        console.error('sendMasterLeadToBot error:', e);
-    }
-}
+async function sendMasterLeadToBot(formData) {
+    const get = (k) => (formData.get(k) || '').toString().trim();
 
+    const lang = ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru';
+    const otherValue = SPECIALTY_OTHER_VALUE[lang] || SPECIALTY_OTHER_VALUE.ru;
+    const specialtyOther = get('specialty_other');
+    let specialty = get('specialty');
+    if (specialty === otherValue && specialtyOther) {
+        specialty = specialtyOther;
+    }
+    const experience = get('experience');
+
+    const payload = {
+        name:      get('name'),
+        phone:     get('phone'),
+        telegram:  get('telegram'),
+        whatsapp:  get('whatsapp'),
+        specialty: experience ? specialty + ' (опыт: ' + experience + ' лет)' : specialty,
+        city:      get('city') || masterCityFromDistrict(get('district')),
+        district:  masterDistrictForBot(get('district')),
+        message:   get('about'),
+        specialty_raw: specialty,
+        experience:    experience,
+        code:          masterLeadCode,
+        honeypot:      get('_gotcha'),
+        lang:         lang
+    };
+
+    return await postBotJson(BOT_MASTER_URL, payload);
+}
 // Диплинк «завершить регистрацию»: если есть код связки — ведём на ?start=m_<code>
 // (бот подтянет анкету и попросит только селфи), иначе на общий ?start=master.
 function masterFinishDeeplink() {
@@ -1716,6 +1700,7 @@ function initMasterLeadFormTracking() {
     if (!masterLeadForm) return;
 
     let isSubmitting = false;
+    let pendingMasterLeadCode = null;
 
     // Кнопка-диплинк в модалке благодарности готовится заранее (до открытия модалки)
     ensureMasterTelegramButton();
@@ -1729,14 +1714,13 @@ function initMasterLeadFormTracking() {
 
         const formData = new FormData(masterLeadForm);
 
-        // Новый код связки на каждую отправку: он уйдёт в бота и попадёт в диплинк
-        // кнопки «Завершить регистрацию» (?start=m_<code>).
-        masterLeadCode = generateMasterLeadCode();
-
-        // Дублируем анкету мастера в Telegram-бота (лид админу), не влияет на email
-        sendMasterLeadToBot(formData);
+        // Один код сохраняется до успешной отправки. При retry после сетевого
+        // сбоя бот получит тот же code и не создаст новую связку.
+        if (!pendingMasterLeadCode) pendingMasterLeadCode = generateMasterLeadCode();
+        masterLeadCode = pendingMasterLeadCode;
 
         try {
+            await sendMasterLeadToBot(formData);
             const response = await fetch('https://formspree.io/f/mykdoebj', {
                 method: 'POST',
                 body: formData,
@@ -1760,6 +1744,7 @@ function initMasterLeadFormTracking() {
             ensureMasterTelegramButton();
             openMasterThankYou();
             masterLeadForm.reset();
+            pendingMasterLeadCode = null;
 
         } catch (error) {
             console.error('Master form error:', error);

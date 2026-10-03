@@ -937,6 +937,8 @@ async function sendLeadToBot(formData, idempotencyKey) {
 
     const payload = {
         city:        botCityFromUrl(),
+        name:        name,
+        phone:       phone,
         district:    BOT_DISTRICT_MAP[get('district')] || get('district') || 'Другой',
         subdistrict: districtOther || 'Не указан',
         category:    resolveBotCategory(get('service')),

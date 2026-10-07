@@ -2,7 +2,7 @@
 
 Project: Mastera Georgia Website  
 Repository: `Conspiramedia/Mastera-Georgia-Website`  
-Domain: `https://mastera-tbilisi.ge`
+Domain: `https://mastera.ge`
 
 ## Goal
 
@@ -156,7 +156,7 @@ Source-level internal-link audit completed by page type across RU / GE / EN, inc
 
 ## P1.3 404 / redirects
 
-Source-level validation completed. Production HTTP validation remains pending because the current execution environment cannot resolve/reach `mastera-tbilisi.ge`.
+Source-level validation completed. Production HTTP validation remains pending because the current execution environment cannot resolve/reach `mastera.ge`.
 
 - [x] Sitemap contains only current localized indexable routes; `/` is excluded because it is `noindex`.
 - [x] All 108 sitemap URLs map to existing localized `index.html` routes.

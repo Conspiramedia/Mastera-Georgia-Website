@@ -1680,17 +1680,12 @@ footer {
     line-height: 1.5;
 }
 
-/* Мобильный футер: разделяем бренд, срочный выезд и длинный email,
-   чтобы строки не слипались на узких экранах. Десктоп не меняем. */
+/* Мобильный футер: бренд отдельно, срочный выезд отдельной строкой,
+   email ниже телефона. Десктоп не меняем. */
 @media (max-width: 768px) {
-    .footer-text strong::after {
-        content: "\\A";
-        white-space: pre;
-    }
-
     .footer-text a[href^="mailto:"] {
-        display: block;
-        margin-top: 0.15rem;
+        display: inline-block;
+        margin-top: 0.2rem;
     }
 }
 

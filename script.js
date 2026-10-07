@@ -2114,6 +2114,43 @@ function initTypingEffect() {
 }
 
 // ============================================
+// АКТУАЛЬНЫЙ EMAIL И МОБИЛЬНЫЙ ФУТЕР
+// ============================================
+function initFooter() {
+    document.querySelectorAll('.footer-text').forEach((footer) => {
+        const mail = footer.querySelector('a[href^="mailto:"]');
+        if (mail) {
+            mail.href = 'mailto:info@mastera.ge';
+            mail.textContent = 'info@mastera.ge';
+        }
+
+        if (window.innerWidth > 768 || footer.dataset.footerFixed === '1') return;
+
+        const brand = footer.querySelector('strong');
+        if (brand) {
+            const textAfterBrand = brand.nextSibling;
+            if (textAfterBrand && textAfterBrand.nodeType === Node.TEXT_NODE) {
+                textAfterBrand.nodeValue = textAfterBrand.nodeValue.replace(/^\\s*•\\s*/, '');
+                brand.insertAdjacentHTML('afterend', '<br>');
+            }
+        }
+
+        if (mail) {
+            const beforeMail = mail.previousSibling;
+            if (beforeMail && beforeMail.nodeType === Node.TEXT_NODE) {
+                beforeMail.nodeValue = beforeMail.nodeValue.replace(/\\s*•\\s*✉️\\s*/, '');
+            }
+            mail.parentNode.insertBefore(document.createElement('br'), mail);
+        }
+
+        footer.dataset.footerFixed = '1';
+    });
+}
+
+document.addEventListener('DOMContentLoaded', initFooter);
+window.addEventListener('resize', initFooter);
+
+// ============================================
 // ЭФФЕКТ ПЕЧАТНОЙ МАШИНКИ ДЛЯ H1 НА СТРАНИЦАХ СЕРВИСА
 // ============================================
 

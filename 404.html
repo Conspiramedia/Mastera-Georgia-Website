@@ -1,146 +1,50 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Перенаправление...</title>
-    <script>
-        const path = window.location.pathname;
-        const redirects = {
-    "/batumi/master-na-chas-aeroport-batumi/": "/ru/batumi/master-na-chas-aeroport-batumi/",
-    "/batumi/master-na-chas-batumi/": "/ru/batumi/master-na-chas-batumi/",
-    "/batumi/master-na-chas-boni-gorodok/": "/ru/batumi/master-na-chas-boni-gorodok/",
-    "/batumi/master-na-chas-khimshiashvili/": "/ru/batumi/master-na-chas-khimshiashvili/",
-    "/batumi/master-na-chas-novy-bulvar/": "/ru/batumi/master-na-chas-novy-bulvar/",
-    "/batumi/master-na-chas-stary-batumi/": "/ru/batumi/master-na-chas-stary-batumi/",
-    "/bytovoy-remont-batumi-en/": "/en/batumi/bytovoy-remont-batumi/",
-    "/bytovoy-remont-batumi-ge/": "/ge/batumi/bytovoy-remont-batumi/",
-    "/bytovoy-remont-batumi/": "/ru/batumi/bytovoy-remont-batumi/",
-    "/bytovoy-remont-tbilisi/": "/ru/tbilisi/bytovoy-remont-tbilisi/",
-    "/elektrik-batumi-en/": "/en/batumi/elektrik-batumi/",
-    "/elektrik-batumi-ge/": "/ge/batumi/elektrik-batumi/",
-    "/elektrik-batumi/": "/ru/batumi/elektrik-batumi/",
-    "/elektrik-tbilisi/": "/ru/tbilisi/elektrik-tbilisi/",
-    "/en/bytovoy-remont-tbilisi/": "/en/tbilisi/bytovoy-remont-tbilisi/",
-    "/en/gruzchiki-tbilisi/": "/en/tbilisi/gruzchiki-tbilisi/",
-    "/en/master-na-chas-boni-gorodok/": "/en/batumi/master-na-chas-boni-gorodok/",
-    "/en/master-na-chas-chugureti/": "/en/tbilisi/master-na-chas-chugureti/",
-    "/en/master-na-chas-gldani/": "/en/tbilisi/master-na-chas-gldani/",
-    "/en/master-na-chas-isani/": "/en/tbilisi/master-na-chas-isani/",
-    "/en/master-na-chas-khimshiashvili/": "/en/batumi/master-na-chas-khimshiashvili/",
-    "/en/master-na-chas-mtatsminda/": "/en/tbilisi/master-na-chas-mtatsminda/",
-    "/en/master-na-chas-nadzaladevi/": "/en/tbilisi/master-na-chas-nadzaladevi/",
-    "/en/master-na-chas-saburtalo/": "/en/tbilisi/master-na-chas-saburtalo/",
-    "/en/master-na-chas-samgori/": "/en/tbilisi/master-na-chas-samgori/",
-    "/en/master-na-chas-tbilisi/": "/en/tbilisi/master-na-chas-tbilisi/",
-    "/en/master-na-chas-vake/": "/en/tbilisi/master-na-chas-vake/",
-    "/en/naveska-montazh-tbilisi/": "/en/tbilisi/naveska-montazh-tbilisi/",
-    "/en/remont-kompyuterov-tbilisi/": "/en/tbilisi/remont-kompyuterov-tbilisi/",
-    "/en/santehnik-tbilisi/": "/en/tbilisi/santehnik-tbilisi/",
-    "/en/sborka-mebeli-tbilisi/": "/en/tbilisi/sborka-mebeli-tbilisi/",
-    "/ge/gruzchiki-tbilisi/": "/ge/tbilisi/gruzchiki-tbilisi/",
-    "/ge/klining-tbilisi/": "/ge/tbilisi/klining-tbilisi/",
-    "/ge/master-na-chas-boni-gorodok/": "/ge/batumi/master-na-chas-boni-gorodok/",
-    "/ge/master-na-chas-chugureti/": "/ge/tbilisi/master-na-chas-chugureti/",
-    "/ge/master-na-chas-didube/": "/ge/tbilisi/master-na-chas-didube/",
-    "/ge/master-na-chas-gldani/": "/ge/tbilisi/master-na-chas-gldani/",
-    "/ge/master-na-chas-isani/": "/ge/tbilisi/master-na-chas-isani/",
-    "/ge/master-na-chas-khimshiashvili/": "/ge/batumi/master-na-chas-khimshiashvili/",
-    "/ge/master-na-chas-krtsanisi/": "/ge/tbilisi/master-na-chas-krtsanisi/",
-    "/ge/master-na-chas-mtatsminda/": "/ge/tbilisi/master-na-chas-mtatsminda/",
-    "/ge/master-na-chas-nadzaladevi/": "/ge/tbilisi/master-na-chas-nadzaladevi/",
-    "/ge/master-na-chas-novy-bulvar/": "/ge/batumi/master-na-chas-novy-bulvar/",
-    "/ge/master-na-chas-saburtalo/": "/ge/tbilisi/master-na-chas-saburtalo/",
-    "/ge/master-na-chas-samgori/": "/ge/tbilisi/master-na-chas-samgori/",
-    "/ge/master-na-chas-tbilisi/": "/ge/tbilisi/master-na-chas-tbilisi/",
-    "/ge/naveska-montazh-tbilisi/": "/ge/tbilisi/naveska-montazh-tbilisi/",
-    "/ge/remont-kompyuterov-tbilisi/": "/ge/tbilisi/remont-kompyuterov-tbilisi/",
-    "/ge/sborka-mebeli-tbilisi/": "/ge/tbilisi/sborka-mebeli-tbilisi/",
-    "/gruzchiki-batumi-en/": "/en/batumi/gruzchiki-batumi/",
-    "/gruzchiki-batumi-ge/": "/ge/batumi/gruzchiki-batumi/",
-    "/gruzchiki-batumi/": "/ru/batumi/gruzchiki-batumi/",
-    "/gruzchiki-tbilisi/": "/ru/tbilisi/gruzchiki-tbilisi/",
-    "/klining-batumi-en/": "/en/batumi/klining-batumi/",
-    "/klining-batumi-ge/": "/ge/batumi/klining-batumi/",
-    "/klining-batumi/": "/ru/batumi/klining-batumi/",
-    "/klining-tbilisi/": "/ru/tbilisi/klining-tbilisi/",
-    "/master-na-chas-aeroport-batumi-en/": "/en/batumi/master-na-chas-aeroport-batumi/",
-    "/master-na-chas-aeroport-batumi-ge/": "/ge/batumi/master-na-chas-aeroport-batumi/",
-    "/master-na-chas-aeroport-batumi/": "/ru/batumi/master-na-chas-aeroport-batumi/",
-    "/master-na-chas-batumi-en/": "/en/batumi/master-na-chas-batumi/",
-    "/master-na-chas-batumi-ge/": "/ge/batumi/master-na-chas-batumi/",
-    "/master-na-chas-batumi/": "/ru/batumi/master-na-chas-batumi/",
-    "/master-na-chas-boni-gorodok-en/": "/en/batumi/master-na-chas-boni-gorodok/",
-    "/master-na-chas-boni-gorodok/": "/ru/batumi/master-na-chas-boni-gorodok/",
-    "/master-na-chas-boni-gorodok-ge/": "/ge/batumi/master-na-chas-boni-gorodok/",
-    "/master-na-chas-khimshiashvili-en/": "/en/batumi/master-na-chas-khimshiashvili/",
-    "/master-na-chas-khimshiashvili-ge/": "/ge/batumi/master-na-chas-khimshiashvili/",
-    "/master-na-chas-khimshiashvili/": "/ru/batumi/master-na-chas-khimshiashvili/",
-    "/master-na-chas-novy-bulvar-en/": "/en/batumi/master-na-chas-novy-bulvar/",
-    "/master-na-chas-novy-bulvar-ge/": "/ge/batumi/master-na-chas-novy-bulvar/",
-    "/master-na-chas-novy-bulvar/": "/ru/batumi/master-na-chas-novy-bulvar/",
-    "/master-na-chas-stary-batumi-en/": "/en/batumi/master-na-chas-stary-batumi/",
-    "/master-na-chas-stary-batumi-ge/": "/ge/batumi/master-na-chas-stary-batumi/",
-    "/master-na-chas-stary-batumi/": "/ru/batumi/master-na-chas-stary-batumi/",
-    "/master-na-chas-tbilisi/": "/ru/tbilisi/master-na-chas-tbilisi/",
-    "/naveska-montazh-batumi-en/": "/en/batumi/naveska-montazh-batumi/",
-    "/naveska-montazh-batumi-ge/": "/ge/batumi/naveska-montazh-batumi/",
-    "/naveska-montazh-batumi/": "/ru/batumi/naveska-montazh-batumi/",
-    "/naveska-montazh-tbilisi/": "/ru/tbilisi/naveska-montazh-tbilisi/",
-    "/remont-kompyuterov-batumi-en/": "/en/batumi/remont-kompyuterov-batumi/",
-    "/remont-kompyuterov-batumi-ge/": "/ge/batumi/remont-kompyuterov-batumi/",
-    "/remont-kompyuterov-batumi/": "/ru/batumi/remont-kompyuterov-batumi/",
-    "/remont-kompyuterov-tbilisi/": "/ru/tbilisi/remont-kompyuterov-tbilisi/",
-    "/ru/bytovoy-remont-tbilisi/": "/ru/tbilisi/bytovoy-remont-tbilisi/",
-    "/ru/gruzchiki-tbilisi/": "/ru/tbilisi/gruzchiki-tbilisi/",
-    "/ru/klining-tbilisi/": "/ru/tbilisi/klining-tbilisi/",
-    "/ru/master-na-chas-didube/": "/ru/tbilisi/master-na-chas-didube/",
-    "/ru/master-na-chas-gldani/": "/ru/tbilisi/master-na-chas-gldani/",
-    "/ru/master-na-chas-isani/": "/ru/tbilisi/master-na-chas-isani/",
-    "/ru/master-na-chas-khimshiashvili/": "/ru/batumi/master-na-chas-khimshiashvili/",
-    "/ru/master-na-chas-krtsanisi/": "/ru/tbilisi/master-na-chas-krtsanisi/",
-    "/ru/master-na-chas-mtatsminda/": "/ru/tbilisi/master-na-chas-mtatsminda/",
-    "/ru/master-na-chas-nadzaladevi/": "/ru/tbilisi/master-na-chas-nadzaladevi/",
-    "/ru/master-na-chas-novy-bulvar/": "/ru/batumi/master-na-chas-novy-bulvar/",
-    "/ru/master-na-chas-saburtalo/": "/ru/tbilisi/master-na-chas-saburtalo/",
-    "/ru/master-na-chas-samgori/": "/ru/tbilisi/master-na-chas-samgori/",
-    "/ru/master-na-chas-vake/": "/ru/tbilisi/master-na-chas-vake/",
-    "/ru/remont-kompyuterov-tbilisi/": "/ru/tbilisi/remont-kompyuterov-tbilisi/",
-    "/ru/sborka-mebeli-tbilisi/": "/ru/tbilisi/sborka-mebeli-tbilisi/",
-    "/santehnik-batumi-en/": "/en/batumi/santehnik-batumi/",
-    "/santehnik-batumi-ge/": "/ge/batumi/santehnik-batumi/",
-    "/santehnik-batumi/": "/ru/batumi/santehnik-batumi/",
-    "/santehnik-tbilisi/": "/ru/tbilisi/santehnik-tbilisi/",
-    "/sborka-mebeli-batumi-en/": "/en/batumi/sborka-mebeli-batumi/",
-    "/sborka-mebeli-batumi-ge/": "/ge/batumi/sborka-mebeli-batumi/",
-    "/sborka-mebeli-batumi/": "/ru/batumi/sborka-mebeli-batumi/",
-    "/sborka-mebeli-tbilisi/": "/ru/tbilisi/sborka-mebeli-tbilisi/",
-    "/tbilisi/master-na-chas-chugureti/": "/ru/tbilisi/master-na-chas-chugureti/",
-    "/tbilisi/master-na-chas-didube/": "/ru/tbilisi/master-na-chas-didube/",
-    "/tbilisi/master-na-chas-gldani/": "/ru/tbilisi/master-na-chas-gldani/",
-    "/tbilisi/master-na-chas-isani/": "/ru/tbilisi/master-na-chas-isani/",
-    "/tbilisi/master-na-chas-krtsanisi/": "/ru/tbilisi/master-na-chas-krtsanisi/",
-    "/tbilisi/master-na-chas-mtatsminda/": "/ru/tbilisi/master-na-chas-mtatsminda/",
-    "/tbilisi/master-na-chas-nadzaladevi/": "/ru/tbilisi/master-na-chas-nadzaladevi/",
-    "/tbilisi/master-na-chas-saburtalo/": "/ru/tbilisi/master-na-chas-saburtalo/",
-    "/tbilisi/master-na-chas-samgori/": "/ru/tbilisi/master-na-chas-samgori/",
-    "/tbilisi/master-na-chas-vake/": "/ru/tbilisi/master-na-chas-vake/"
-};
-        
-        // Ищем точное совпадение или совпадение с трейлинг слэшем
-        const target = redirects[path] || redirects[path + '/'] || redirects[path.replace(/\/$/, '') + '/'];
-        
-        if (target) {
-            // Клиентский fallback-редирект для старых URL; это не HTTP 301
-            window.location.replace(target);
-        } else {
-            // Если редиректа нет, показываем стандартную 404
-            document.body.innerHTML = '<h1 style="text-align:center; margin-top:50px; font-family:Arial;">404 — Страница не найдена</h1><p style="text-align:center;"><a href="/">Вернуться на главную</a></p>';
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 — Страница не найдена</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #fff;
+            color: #222;
         }
-    </script>
+        .error-page {
+            padding: 40px 20px;
+        }
+        h1 {
+            margin: 0 0 16px;
+            font-size: 48px;
+        }
+        p {
+            margin: 0 0 24px;
+            font-size: 18px;
+        }
+        a {
+            display: inline-block;
+            padding: 12px 22px;
+            color: #fff;
+            background: #455a64;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+        a:hover {
+            opacity: 0.9;
+        }
+    </style>
 </head>
 <body>
-    <p>Перенаправление...</p>
+    <main class="error-page">
+        <h1>404</h1>
+        <p>Страница не найдена.</p>
+        <a href="/">Вернуться на главную</a>
+    </main>
 </body>
 </html>
-
-

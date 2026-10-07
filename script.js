@@ -2124,23 +2124,34 @@ function initFooter() {
             mail.textContent = 'info@mastera.ge';
         }
 
+        // На мобильных: бренд — первая строка, срочный выезд — вторая.
+        // Убираем декоративный разделитель «•» перед срочным выездом.
         if (window.innerWidth > 768 || footer.dataset.footerFixed === '1') return;
 
         const brand = footer.querySelector('strong');
         if (brand) {
             const textAfterBrand = brand.nextSibling;
             if (textAfterBrand && textAfterBrand.nodeType === Node.TEXT_NODE) {
-                textAfterBrand.nodeValue = textAfterBrand.nodeValue.replace(/^\\s*•\\s*/, '');
+                textAfterBrand.nodeValue = textAfterBrand.nodeValue.replace(/^\s*•\s*/, '');
                 brand.insertAdjacentHTML('afterend', '<br>');
             }
         }
 
         if (mail) {
+            // Убираем «• ✉️» из строки с телефоном.
             const beforeMail = mail.previousSibling;
             if (beforeMail && beforeMail.nodeType === Node.TEXT_NODE) {
-                beforeMail.nodeValue = beforeMail.nodeValue.replace(/\\s*•\\s*✉️\\s*/, '');
+                beforeMail.nodeValue = beforeMail.nodeValue.replace(/\s*•\s*✉️\s*$/, '');
             }
-            mail.parentNode.insertBefore(document.createElement('br'), mail);
+
+            // Конверт и email должны быть на одной отдельной строке.
+            const emailLine = document.createElement('span');
+            emailLine.className = 'footer-email-mobile';
+            emailLine.appendChild(document.createTextNode('✉️ '));
+            emailLine.appendChild(mail);
+
+            mail.parentNode.insertBefore(emailLine, mail);
+            emailLine.parentNode.insertBefore(document.createElement('br'), emailLine);
         }
 
         footer.dataset.footerFixed = '1';

@@ -472,34 +472,39 @@ function formatGeorgianPhone(raw) {
     } else if (digits.startsWith('995')) {
         // уже с кодом страны — оставляем как есть
     } else if (digits.startsWith('99') && digits.length > 2) {
-        // «99» + абонентская часть: стёрта «5» из префикса — восстанавливаем код
         digits = '995' + digits.substring(2);
     } else {
         digits = '995' + digits;
     }
 
-    // Ноль сразу после кода страны лишний: в международном формате
-    // национальный номер пишется без него (+995 555…, а не +995 0555…).
     digits = digits.replace(/^9950+/, '995');
+    digits = digits.substring(0, 3 + PHONE_SUBSCRIBER_DIGITS);
 
-    // Код страны + PHONE_SUBSCRIBER_DIGITS цифр — больше не набрать
-    return '+' + digits.substring(0, 3 + PHONE_SUBSCRIBER_DIGITS);
+    const country = digits.substring(0, 3);
+    const subscriber = digits.substring(3);
+    const groups = subscriber.match(/.{1,3}/g) || [];
+    return '+' + country + (groups.length ? ' ' + groups.join(' ') : '');
+}
+
+function normalizeGeorgianPhone(value) {
+    const digits = (value || '').replace(/\D/g, '');
+    return digits ? '+' + digits.substring(0, 3 + PHONE_SUBSCRIBER_DIGITS) : '';
 }
 
 // Форматирование телефонных номеров
 function initPhoneFormatting() {
     const phoneInputs = document.querySelectorAll('#leadPhone, #masterLeadPhone');
-
-    // Длина неизменяемого префикса: «+995».
+    const whatsappInputs = document.querySelectorAll('input[name="whatsapp"]');
     const PREFIX_LEN = '+995'.length;
 
     phoneInputs.forEach(input => {
-        // Не даём курсору заходить внутрь «+995»: код страны подставляется
-        // автоматически и правке не подлежит.
+        // Визуальные пробелы не должны вызывать нативный patternMismatch.
+        // Реальная проверка выполняется validatePhone() ниже.
+        input.removeAttribute('pattern');
+
         function clampCaret() {
             if (!input.value.startsWith('+995')) return;
             const start = input.selectionStart, end = input.selectionEnd;
-            // Выделение всей строки (Ctrl+A) не трогаем — его смысл «стереть всё».
             if (start === 0 && end === input.value.length) return;
             if (start < PREFIX_LEN || end < PREFIX_LEN) {
                 input.setSelectionRange(Math.max(start, PREFIX_LEN), Math.max(end, PREFIX_LEN));
@@ -509,21 +514,18 @@ function initPhoneFormatting() {
         input.addEventListener('input', (e) => {
             const el = e.target;
             el.value = formatGeorgianPhone(el.value);
-            // Никогда не оставляем курсор внутри «+995»
             if (el.value.startsWith('+995') && el.selectionStart < PREFIX_LEN) {
                 el.setSelectionRange(el.value.length, el.value.length);
             }
         });
 
-        // Backspace/Delete на границе префикса: гасим нажатие, иначе браузер
-        // съест цифру кода страны ДО того, как сработает input-обработчик.
         input.addEventListener('keydown', (e) => {
             if (e.key !== 'Backspace' && e.key !== 'Delete') return;
             const el = e.target;
             if (!el.value.startsWith('+995')) return;
             const start = el.selectionStart, end = el.selectionEnd;
-            if (start === 0 && end === el.value.length) return;   // Ctrl+A — разрешаем
-            if (start !== end) return;                            // есть выделение — обычное поведение
+            if (start === 0 && end === el.value.length) return;
+            if (start !== end) return;
             if ((e.key === 'Backspace' && start <= PREFIX_LEN) ||
                 (e.key === 'Delete' && start < PREFIX_LEN)) {
                 e.preventDefault();
@@ -531,7 +533,6 @@ function initPhoneFormatting() {
             }
         });
 
-        // Клик/стрелки/Home не должны оставлять курсор в префиксе
         input.addEventListener('click', clampCaret);
         input.addEventListener('keyup', clampCaret);
 
@@ -546,6 +547,14 @@ function initPhoneFormatting() {
 
         input.addEventListener('blur', (e) => {
             if (e.target.value === '+995') e.target.value = '';
+        });
+    });
+
+    whatsappInputs.forEach(input => {
+        input.addEventListener('input', (e) => {
+            const el = e.target;
+            if (!el.value.trim()) return;
+            el.value = formatGeorgianPhone(el.value);
         });
     });
 }
@@ -599,7 +608,8 @@ function initNamePatternAttr() {
 
 function validatePhone(phoneInput) {
     if (!phoneInput) return true;
-    const val = phoneInput.value;
+    const digits = phoneInput.value.replace(/\D/g, '');
+    const val = '+' + digits;
 
     if (!PHONE_PATTERN.test(val)) {
         alert(t('phoneInvalid'));
@@ -607,7 +617,7 @@ function validatePhone(phoneInput) {
         return false;
     }
 
-    const code = val.substring(4, 6);
+    const code = digits.substring(3, 5);
     if (!VALID_OPERATOR_CODES.includes(code)) {
         alert(t('phoneOperator'));
         phoneInput.focus();
@@ -917,9 +927,9 @@ async function postBotJson(url, payload, timeoutMs = 12000) {
 async function sendLeadToBot(formData, idempotencyKey) {
     const get = (k) => (formData.get(k) || '').toString().trim();
 
-    const phone    = get('phone');
+    const phone    = normalizeGeorgianPhone(get('phone'));
     const telegram = get('telegram');
-    const whatsapp = get('whatsapp');
+    const whatsapp = normalizeGeorgianPhone(get('whatsapp'));
     const name     = get('name');
 
     const contactParts = [];
@@ -1142,9 +1152,9 @@ async function sendMasterLeadToBot(formData) {
 
     const payload = {
         name:      get('name'),
-        phone:     get('phone'),
+        phone:     normalizeGeorgianPhone(get('phone')),
         telegram:  get('telegram'),
-        whatsapp:  get('whatsapp'),
+        whatsapp:  normalizeGeorgianPhone(get('whatsapp')),
         specialty: experience ? specialty + ' (опыт: ' + experience + ' лет)' : specialty,
         city:      get('city') || masterCityFromDistrict(get('district')),
         district:  masterDistrictForBot(get('district')),

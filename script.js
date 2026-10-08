@@ -2134,16 +2134,41 @@ function initFooter() {
             mail.textContent = 'info@mastera.ge';
         }
 
-        // На мобильных: бренд — первая строка, срочный выезд — вторая.
-        // Убираем декоративный разделитель «•» перед срочным выездом.
+        // На мобильных: сначала срочный выезд и контакты, затем Telegram/Facebook,
+        // а строка © 2026 Мастера Грузии — последней.
         if (window.innerWidth > 768 || footer.dataset.footerFixed === '1') return;
 
         const brand = footer.querySelector('strong');
         if (brand) {
+            const copyrightText = document.createElement('span');
+            copyrightText.className = 'footer-copyright-mobile';
+            copyrightText.appendChild(document.createTextNode('© 2026 '));
+            copyrightText.appendChild(brand.cloneNode(true));
+
+            // Удаляем исходную строку с © 2026 и название бренда.
+            const beforeBrand = brand.previousSibling;
+            if (beforeBrand && beforeBrand.nodeType === Node.TEXT_NODE) {
+                beforeBrand.nodeValue = beforeBrand.nodeValue.replace(/©\s*2026\s*/, '');
+                if (!beforeBrand.nodeValue.trim()) beforeBrand.remove();
+            }
             const textAfterBrand = brand.nextSibling;
             if (textAfterBrand && textAfterBrand.nodeType === Node.TEXT_NODE) {
                 textAfterBrand.nodeValue = textAfterBrand.nodeValue.replace(/^\s*•\s*/, '');
-                brand.insertAdjacentHTML('afterend', '<br>');
+            }
+            brand.remove();
+
+            // Переносим copyright после Telegram/Facebook.
+            const facebook = footer.querySelector('a[href*="facebook.com"]');
+            if (facebook) {
+                const separator = facebook.previousSibling;
+                if (separator && separator.nodeType === Node.TEXT_NODE) {
+                    separator.nodeValue = separator.nodeValue.replace(/\s*•\s*/, '');
+                }
+                facebook.insertAdjacentElement('afterend', copyrightText);
+                copyrightText.parentNode.insertBefore(document.createElement('br'), copyrightText);
+            } else {
+                footer.appendChild(document.createElement('br'));
+                footer.appendChild(copyrightText);
             }
         }
 

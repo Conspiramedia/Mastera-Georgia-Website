@@ -1667,6 +1667,11 @@ footer {
     transition: color 0.3s ease;
 }
 
+.footer-copyright-mobile {
+    display: inline-block;
+    margin-top: 0.25rem;
+}
+
 .footer-link:hover {
     color: var(--construction-orange);
 }

@@ -571,7 +571,7 @@ const NAME_PATTERN = /^[\p{L}]{2,}(?:[\s-][\p{L}]{2,})*$/u;
 // Диапазоны: латиница, кириллица, грузинский (мхедрули).
 const NAME_PATTERN_ATTR =
     '[A-Za-zÀ-ÖØ-öø-ÿĀ-žА-Яа-яЁёა-ჰ]{2,}' +
-    '(?:[ \\-][A-Za-zÀ-ÖØ-öø-ÿĀ-žА-Яа-яЁёა-ჰ]{2,})*';
+    '(?:[ \\-][A-Za-zÀ-ÖØ-öø-ÿĀ-žА-Яа-яЁёა-ჰ]{2,})*[ ]*';
 
 function validateName(nameInput) {
     if (!nameInput) return true;

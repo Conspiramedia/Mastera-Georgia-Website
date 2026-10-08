@@ -2128,73 +2128,95 @@ function initTypingEffect() {
 // ============================================
 function initFooter() {
     document.querySelectorAll('.footer-text').forEach((footer) => {
+        // Десктоп не трогаем вообще.
+        if (window.innerWidth > 768) return;
+
+        // Сохраняем исходные элементы до перестройки DOM.
         const mail = footer.querySelector('a[href^="mailto:"]');
-        if (mail) {
-            mail.href = 'mailto:info@mastera.ge';
-            mail.textContent = 'info@mastera.ge';
-        }
-
-        // На мобильных: сначала срочный выезд и контакты, затем Telegram/Facebook,
-        // а строка © 2026 Мастера Грузии — последней.
-        if (window.innerWidth > 768 || footer.dataset.footerFixed === '1') return;
-
+        const phone = footer.querySelector('a[href^="tel:"]');
+        const telegram = footer.querySelector('a[href*="t.me/"]');
+        const facebook = footer.querySelector('a[href*="facebook.com"]');
         const brand = footer.querySelector('strong');
-        if (brand) {
-            const copyrightText = document.createElement('span');
-            copyrightText.className = 'footer-copyright-mobile';
-            copyrightText.appendChild(document.createTextNode('© 2026 '));
-            copyrightText.appendChild(brand.cloneNode(true));
+        const oldCopyright = footer.querySelector('.footer-copyright-mobile');
 
-            // Удаляем исходную строку с © 2026 и название бренда.
-            const beforeBrand = brand.previousSibling;
-            if (beforeBrand && beforeBrand.nodeType === Node.TEXT_NODE) {
-                beforeBrand.nodeValue = beforeBrand.nodeValue.replace(/©\s*2026\s*/, '');
-                if (!beforeBrand.nodeValue.trim()) beforeBrand.remove();
-            }
-            const textAfterBrand = brand.nextSibling;
-            if (textAfterBrand && textAfterBrand.nodeType === Node.TEXT_NODE) {
-                textAfterBrand.nodeValue = textAfterBrand.nodeValue.replace(/^\s*•\s*/, '');
-            }
-            brand.remove();
-
-            // Переносим copyright после Telegram/Facebook.
-            const facebook = footer.querySelector('a[href*="facebook.com"]');
-            if (facebook) {
-                const separator = facebook.previousSibling;
-                if (separator && separator.nodeType === Node.TEXT_NODE) {
-                    separator.nodeValue = separator.nodeValue.replace(/\s*•\s*/, '');
-                }
-                facebook.insertAdjacentElement('afterend', copyrightText);
-                copyrightText.parentNode.insertBefore(document.createElement('br'), copyrightText);
-            } else {
-                footer.appendChild(document.createElement('br'));
-                footer.appendChild(copyrightText);
-            }
+        // Текст после названия бренда содержит описание сервиса.
+        // Берём его из исходной разметки до очистки футера.
+        let urgentText = '';
+        if (brand && brand.nextSibling && brand.nextSibling.nodeType === Node.TEXT_NODE) {
+            urgentText = brand.nextSibling.nodeValue
+                .replace(/^\s*•\s*/, '')
+                .trim();
         }
 
-        if (mail) {
-            // Убираем «• ✉️» из строки с телефоном.
-            const beforeMail = mail.previousSibling;
-            if (beforeMail && beforeMail.nodeType === Node.TEXT_NODE) {
-                beforeMail.nodeValue = beforeMail.nodeValue.replace(/\s*•\s*✉️\s*$/, '');
-            }
+        // Если футер уже был обработан старой версией скрипта, восстанавливаем
+        // почтовую ссылку из уже созданного контейнера.
+        const existingMail = mail || footer.querySelector('.footer-email-mobile a[href^="mailto:"]');
+        const email = existingMail || document.createElement('a');
+        email.href = 'mailto:info@mastera.ge';
+        email.textContent = 'info@mastera.ge';
+        email.className = 'footer-link';
 
-            // Конверт и email должны быть на одной отдельной строке.
-            const emailLine = document.createElement('span');
-            emailLine.className = 'footer-email-mobile';
-            emailLine.appendChild(document.createTextNode('✉️ '));
-            emailLine.appendChild(mail);
+        // Берём название бренда из исходного <strong>. Если старый запуск уже
+        // удалил его, используем существующий copyright как резерв.
+        const copyrightStrong = brand
+            ? brand.cloneNode(true)
+            : oldCopyright?.querySelector('strong')?.cloneNode(true);
 
-            mail.parentNode.insertBefore(emailLine, mail);
-            emailLine.parentNode.insertBefore(document.createElement('br'), emailLine);
+        // Нормализуем футер целиком. Это делает функцию идемпотентной:
+        // повторный запуск никогда не создаёт дубликаты или пустые строки.
+        footer.replaceChildren();
+
+        const appendBreak = () => footer.appendChild(document.createElement('br'));
+
+        // 1. Срочный выезд
+        if (urgentText) {
+            footer.appendChild(document.createTextNode(urgentText));
         }
+        appendBreak();
+
+        // 2. Телефон
+        if (phone) {
+            footer.appendChild(document.createTextNode('📞 '));
+            footer.appendChild(phone);
+        }
+        appendBreak();
+
+        // 3. Telegram + Facebook — одна строка, без «•»
+        if (telegram) {
+            footer.appendChild(document.createTextNode('💬 '));
+            footer.appendChild(telegram);
+        }
+        if (facebook) {
+            footer.appendChild(document.createTextNode('  '));
+            footer.appendChild(document.createTextNode('📘 '));
+            footer.appendChild(facebook);
+        }
+        appendBreak();
+
+        // 4. Email — отдельная строка с иконкой
+        const emailLine = document.createElement('span');
+        emailLine.className = 'footer-email-mobile';
+        emailLine.appendChild(document.createTextNode('✉️ '));
+        emailLine.appendChild(email);
+        footer.appendChild(emailLine);
+        appendBreak();
+
+        // 5. Copyright — всегда последним
+        const copyrightLine = document.createElement('span');
+        copyrightLine.className = 'footer-copyright-mobile';
+        copyrightLine.appendChild(document.createTextNode('© 2026 '));
+        if (copyrightStrong) {
+            copyrightLine.appendChild(copyrightStrong);
+        } else {
+            copyrightLine.appendChild(document.createTextNode('Мастера Грузии'));
+        }
+        footer.appendChild(copyrightLine);
 
         footer.dataset.footerFixed = '1';
     });
 }
 
 document.addEventListener('DOMContentLoaded', initFooter);
-window.addEventListener('resize', initFooter);
 
 // ============================================
 // ЭФФЕКТ ПЕЧАТНОЙ МАШИНКИ ДЛЯ H1 НА СТРАНИЦАХ СЕРВИСА

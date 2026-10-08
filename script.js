@@ -908,7 +908,8 @@ async function postBotJson(url, payload, timeoutMs = 12000) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
-            keepalive: true,
+            // Не используем keepalive для заявок с фото: Base64-тело может превышать лимит браузера ~64 КБ.
+            keepalive: !(Array.isArray(payload.photos) && payload.photos.length > 0),
             ...(controller ? { signal: controller.signal } : {})
         });
         const text = await response.text();

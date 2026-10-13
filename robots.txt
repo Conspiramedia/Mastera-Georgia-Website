@@ -1,4 +1,4 @@
-# robots.txt для Мастера Тбилиси
+# robots.txt для «Мастера Грузии» (mastera.ge)
 
 User-agent: *
 Allow: /

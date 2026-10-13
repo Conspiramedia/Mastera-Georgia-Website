@@ -5,7 +5,12 @@
 // валидация имени и защита префикса +995. Версию ОБЯЗАТЕЛЬНО поднимать при
 // изменении script.js/style.css — иначе у вернувшихся посетителей останется
 // старая копия из кэша, и исправления до них не доедут.
-const CACHE_NAME = 'mastera-landing-v4';
+// v5: из прекэша убран путь /gradient-dots-bg--portable.css — такого файла в
+// репозитории нет и никогда не было (стили класса .gradient-dots-bg лежат в
+// style.css). Это ломало PWA целиком: cache.addAll() атомарен, один 404
+// отклоняет весь промис, событие install падает, и service worker не
+// устанавливался ВООБЩЕ — ни офлайна, ни ускорения повторных загрузок.
+const CACHE_NAME = 'mastera-landing-v5';
 
 const PRECACHE_URLS = [
   '/',
@@ -15,7 +20,6 @@ const PRECACHE_URLS = [
   '/site.webmanifest',
   '/style.css',
   '/service.css',
-  '/gradient-dots-bg--portable.css',
   '/script.js',
   '/image/favicon.svg',
   '/image/favicon.ico',

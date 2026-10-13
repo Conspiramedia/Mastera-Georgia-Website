@@ -1,7 +1,7 @@
 {
     "name": "Мастера Грузии",
     "short_name": "Мастера Грузии",
-    "description": "Сервис для поиска мастеров и заказов в Тбилиси. Find masters in Tbilisi.",
+    "description": "Сервис для поиска мастеров и заказов в Тбилиси и Батуми. Find masters in Tbilisi and Batumi.",
     "icons": [
         {
             "src": "image/web-app-manifest-192x192.png",

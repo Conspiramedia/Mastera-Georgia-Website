@@ -486,6 +486,23 @@ function formatGeorgianPhone(raw) {
     return '+' + country + (groups.length ? ' ' + groups.join(' ') : '');
 }
 
+// WhatsApp мастера/клиента может быть привязан к номеру ЛЮБОЙ страны — человек
+// переехал в Грузию, а мессенджер остался на домашнем номере. Поэтому здесь
+// никакого «+995» не навязываем: оставляем ведущий «+» (если был) и цифры.
+//
+// Зеркало normalize_whatsapp в боте (validators.py): 10–15 цифр по E.164.
+// Короче 10 цифр — почти наверняка местный номер без кода страны, ему
+// дописываем грузинский код, иначе бот такой контакт отбросит.
+function normalizeWhatsappPhone(value) {
+    const digits = (value || '').replace(/\D/g, '');
+    if (!digits) return '';
+    // Ровно 9 цифр — местный грузинский номер, набранный без кода страны
+    // («555123456»). Дописываем 995 сами: бот принимает WhatsApp только с
+    // кодом страны (normalize_whatsapp: 10-15 цифр), иначе контакт отбросится.
+    if (digits.length === PHONE_SUBSCRIBER_DIGITS) return '+995' + digits;
+    return '+' + digits.substring(0, 15);
+}
+
 function normalizeGeorgianPhone(value) {
     const digits = (value || '').replace(/\D/g, '');
     return digits ? '+' + digits.substring(0, 3 + PHONE_SUBSCRIBER_DIGITS) : '';
@@ -550,11 +567,18 @@ function initPhoneFormatting() {
         });
     });
 
+    // WhatsApp НЕ форматируем под грузинский шаблон: номер может быть любой
+    // страны. Раньше здесь стоял formatGeorgianPhone(), и британский
+    // «+44 7700 900123» превращался в «+995 447 700 900» — чужой несуществующий
+    // номер, по которому с мастером было не связаться.
+    // Чистим только мусорные символы, сохраняя ведущий «+».
     whatsappInputs.forEach(input => {
         input.addEventListener('input', (e) => {
             const el = e.target;
             if (!el.value.trim()) return;
-            el.value = formatGeorgianPhone(el.value);
+            const hasPlus = el.value.trimStart().startsWith('+');
+            const digits = el.value.replace(/\D/g, '').substring(0, 15);
+            el.value = digits ? (hasPlus ? '+' : '') + digits : '';
         });
     });
 }
@@ -933,7 +957,7 @@ async function sendLeadToBot(formData, idempotencyKey) {
 
     const phone    = normalizeGeorgianPhone(get('phone'));
     const telegram = get('telegram');
-    const whatsapp = normalizeGeorgianPhone(get('whatsapp'));
+    const whatsapp = normalizeWhatsappPhone(get('whatsapp'));
     const name     = get('name');
 
     const contactParts = [];
@@ -1158,7 +1182,7 @@ async function sendMasterLeadToBot(formData) {
         name:      get('name'),
         phone:     normalizeGeorgianPhone(get('phone')),
         telegram:  get('telegram'),
-        whatsapp:  normalizeGeorgianPhone(get('whatsapp')),
+        whatsapp:  normalizeWhatsappPhone(get('whatsapp')),
         specialty: experience ? specialty + ' (опыт: ' + experience + ' лет)' : specialty,
         city:      get('city') || masterCityFromDistrict(get('district')),
         district:  masterDistrictForBot(get('district')),

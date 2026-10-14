@@ -514,10 +514,16 @@ function initPhoneFormatting() {
     const whatsappInputs = document.querySelectorAll('input[name="whatsapp"]');
     const PREFIX_LEN = '+995'.length;
 
+    // Нативный pattern из HTML («^\+995[0-9]{9}$») не знает про пробелы, которые
+    // расставляет маска, поэтому полностью введённый «+995 555 123 456» считался
+    // бы ошибочным. Но просто снять pattern нельзя: тогда у поля остаётся один
+    // required, и подставленный при фокусе префикс «+995» уже делает его :valid —
+    // CSS красит рамку зелёным на пустом номере, человек думает, что ввод принят.
+    // Поэтому pattern не убираем, а заменяем на тот же шаблон С пробелами.
+    const PHONE_PATTERN_ATTR = '\\+995 ?[0-9]{3} ?[0-9]{3} ?[0-9]{3}';
+
     phoneInputs.forEach(input => {
-        // Визуальные пробелы не должны вызывать нативный patternMismatch.
-        // Реальная проверка выполняется validatePhone() ниже.
-        input.removeAttribute('pattern');
+        input.setAttribute('pattern', PHONE_PATTERN_ATTR);
 
         function clampCaret() {
             if (!input.value.startsWith('+995')) return;

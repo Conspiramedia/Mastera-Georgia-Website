@@ -2496,9 +2496,18 @@ body.modal-open {
    :placeholder-shown неприменим, поэтому условие было истинным всегда — и все
    обязательные селекты («Район работы», «Ваша специальность») краснели сразу
    при открытии формы, до того как человек к ним притронулся. */
-.contact-form input:invalid:not(:placeholder-shown),
-.contact-form textarea:invalid:not(:placeholder-shown) {
+.contact-form input:invalid:not(:placeholder-shown):not(:focus),
+.contact-form textarea:invalid:not(:placeholder-shown):not(:focus) {
     border-color: rgba(255, 100, 100, 0.5);
+}
+
+/* Поле телефона в фокусе: префикс «+995» подставляется автоматически, поэтому
+   :placeholder-shown уже ложно и правило выше раньше красило рамку красным
+   сразу по клику — человек видел «ошибку», ещё ничего не набрав.
+   Пока поле в фокусе, ведём себя как с любым другим: жёлтая рамка «заполняется».
+   Зелёной рамка станет только когда номер пройдёт pattern целиком. */
+.contact-form input[type="tel"]:invalid:focus {
+    border-color: var(--construction-yellow);
 }
 
 .contact-form input[type="number"]::-webkit-inner-spin-button,

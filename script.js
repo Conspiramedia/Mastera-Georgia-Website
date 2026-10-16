@@ -27,7 +27,14 @@ const i18n = {
         addressInDescription: 'Укажите в описании только суть задачи, без адреса. Точный адрес вы сообщите мастеру лично, когда он возьмёт заявку.',
         specialtyOtherPlaceholder: 'Укажите вашу специальность',
         specialtyOtherRequired:    'Пожалуйста, укажите вашу специальность',
-        districtOtherPlaceholder:  'Укажите район или ориентир (напр. Вазисубани, метро Самгори)',
+        // ⚠️ Коротко — по ширине поля, а не «на глаз». Прежние 60 символов
+        // обрезались и на десктопе (поле 378px в правой колонке модалки),
+        // и тем более на мобильном, где остаётся всего 264px под текст.
+        // Замеряно в браузере: этот вариант — 191px, влезает на обоих
+        // размерах с запасом. Смысл сохранён: перечислено, что принимаем.
+        // Правя текст, проверяй ширину — подсказка, которой не видно
+        // целиком, не подсказывает ничего.
+        districtOtherPlaceholder:  'Район, ориентир, метро',
         districtOtherRequired:     'Пожалуйста, укажите район или ближайший ориентир — без этого мастер не поймёт, куда ехать',
         masterCityLabel:           'Город работы',
         masterCityPlaceholder:     'Город',
@@ -54,7 +61,7 @@ const i18n = {
         addressInDescription: 'აღწერაში მიუთითეთ მხოლოდ დავალება, მისამართის გარეშე. ზუსტი მისამართი უთხარით ხელოსნას, როდესაც იგი აიღებს განაცხადს.',
         specialtyOtherPlaceholder: 'მიუთითეთ თქვენი სპეციალობა',
         specialtyOtherRequired:    'გთხოვთ, მიუთითოთ თქვენი სპეციალობა',
-        districtOtherPlaceholder:  'მიუთითეთ რაიონი ან ორიენტირი (მაგ. ვაზისუბანი, მეტრო სამგორი)',
+        districtOtherPlaceholder:  'რაიონი, ორიენტირი, მეტრო',
         districtOtherRequired:     'გთხოვთ, მიუთითოთ რაიონი ან უახლოესი ორიენტირი — ამის გარეშე ხელოსანი ვერ გაიგებს, სად უნდა მივიდეს',
         masterCityLabel:           'სამუშაო ქალაქი',
         masterCityPlaceholder:     'ქალაქი',
@@ -81,7 +88,7 @@ const i18n = {
         addressInDescription: 'Describe only the task, without the address. Share the exact address with the specialist directly once they take the request.',
         specialtyOtherPlaceholder: 'Specify your specialty',
         specialtyOtherRequired:    'Please specify your specialty',
-        districtOtherPlaceholder:  'Specify the district or a landmark (e.g. Vazisubani, Samgori metro)',
+        districtOtherPlaceholder:  'District, landmark, metro',
         districtOtherRequired:     'Please specify the district or a nearby landmark — without it the specialist will not know where to go',
         masterCityLabel:           'City of work',
         masterCityPlaceholder:     'City',

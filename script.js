@@ -980,8 +980,18 @@ async function sendLeadToBot(formData, idempotencyKey) {
     const whatsapp = normalizeWhatsappPhone(get('whatsapp'));
     const name     = get('name');
 
+    // Подпись к номеру нужна наравне с Telegram и WhatsApp: в карточке
+    // мастера строки идут столбиком, и без неё номер висел голым рядом с
+    // подписанными соседями — читалось как недоделка.
+    //
+    // ⚠️ Подпись НЕ переводим, хотя рядом есть i18n. Эта строка уходит в бота
+    // как есть (contact_hidden шифруется и показывается мастеру без всякой
+    // локализации), а читает её МАСТЕР, язык которого не связан с языком
+    // клиента: грузинская заявка «ტელეფონი:» ничего не сказала бы мастеру,
+    // работающему на русском. «Tel.» понятен на всех трёх языках — как и
+    // соседние Telegram/WhatsApp, которые тоже не переводятся.
     const contactParts = [];
-    if (phone)    contactParts.push('📱 ' + phone);
+    if (phone)    contactParts.push('📱 Tel.: ' + phone);
     if (telegram) contactParts.push('✈️ Telegram: ' + telegram);
     if (whatsapp) contactParts.push('🟢 WhatsApp: ' + whatsapp);
 

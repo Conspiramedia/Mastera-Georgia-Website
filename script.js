@@ -688,9 +688,16 @@ function validateForm(e) {
 
 // Адрес эндпоинта бота для приёма заявок с сайта (напрямую, без секрета).
 // Защита от спама на стороне бота: проверка домена-источника + honeypot.
-const BOT_REQUEST_URL = 'https://mastera-tbilisi-mastera-tbilisi.up.railway.app/site/new-request';
+//
+// ⚠️ Это НАШ поддомен (CNAME на Railway, проксируется Cloudflare), а не
+// технический адрес вида *.up.railway.app. Так и должно быть: прежний адрес
+// принадлежал Railway, и переименование сервиса или переезд на другой хостинг
+// тихо убили бы приём заявок — сайт ответа не ждёт (fire-and-forget), человек
+// всё равно увидел бы «Заявка отправлена», а лид не дошёл бы до мастеров.
+// Теперь любой переезд — это правка DNS, а не правка сайта.
+const BOT_REQUEST_URL = 'https://bot.mastera.ge/site/new-request';
 // Эндпоинт бота для анкет мастеров с сайта (уведомление админу-лид).
-const BOT_MASTER_URL  = 'https://mastera-tbilisi-mastera-tbilisi.up.railway.app/site/new-master';
+const BOT_MASTER_URL  = 'https://bot.mastera.ge/site/new-master';
 
 // ============================================
 // 9.9 РАЙОНЫ ТБИЛИСИ — ЕДИНЫЙ ИСТОЧНИК ПРАВДЫ

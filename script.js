@@ -16,6 +16,10 @@ const i18n = {
         contactRequired:     'Пожалуйста, заполните хотя бы один из контактов: Telegram или WhatsApp',
         telegramRequiredMaster: 'Пожалуйста, укажите Telegram — верификация мастера проходит в Telegram-боте',
         submitError:         'Ошибка при отправке. Попробуйте ещё раз.',
+        // Надпись на кнопке, пока заявка уходит. Отправка с фото занимает
+        // 4–10 секунд, и без обратной связи человек жал кнопку повторно,
+        // думая, что промахнулся.
+        submitSending:       'Отправляем…',
         photoLabel:          '📷 Фото проблемы (по желанию, до 3)',
         photoAdd:            'Прикрепить фото',
         photoTooMany:        'Можно прикрепить не более 3 фото',
@@ -50,6 +54,7 @@ const i18n = {
         contactRequired:     'გთხოვთ, შეავსოთ ერთ-ერთი საკონტაქტო ველი: Telegram ან WhatsApp',
         telegramRequiredMaster: 'გთხოვთ, მიუთითოთ Telegram — ხელოსნის ვერიფიკაცია მიმდინარეობს Telegram-ბოტში',
         submitError:         'გაგზავნისას მოხდა შეცდომა. სცადეთ კიდევ ერთხელ.',
+        submitSending:       'იგზავნება…',
         photoLabel:          '📷 პრობლემის ფოტო (სურვილისამებრ, 3-მდე)',
         photoAdd:            'ფოტოს მიმაგრება',
         photoTooMany:        'შეგიძლიათ მიამაგროთ მაქსიმუმ 3 ფოტო',
@@ -77,6 +82,7 @@ const i18n = {
         contactRequired:     'Please fill in at least one contact field: Telegram or WhatsApp',
         telegramRequiredMaster: 'Please provide your Telegram — master verification is done in the Telegram bot',
         submitError:         'An error occurred while submitting. Please try again.',
+        submitSending:       'Sending…',
         photoLabel:          '📷 Photo of the problem (optional, up to 3)',
         photoAdd:            'Attach photo',
         photoTooMany:        'You can attach up to 3 photos',
@@ -1620,6 +1626,18 @@ function initClientLeadFormTracking() {
         if (!validateLeadForm(e)) return;
 
         isSubmitting = true;
+        // 🕐 Показываем, что заявка уходит. Отправка занимает до 10 секунд,
+        // когда приложены фото (тело до ~1.6 МБ с мобильного интернета), и
+        // без обратной связи кнопка выглядела «мёртвой»: человек жал её
+        // повторно, думая, что промахнулся. Повторная отправка и раньше
+        // отсекалась флагом isSubmitting — не хватало именно ВИДИМОГО
+        // признака, что процесс идёт.
+        const submitBtn = leadForm.querySelector('button[type="submit"]');
+        const submitLabel = submitBtn ? submitBtn.textContent : null;
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = t('submitSending');
+        }
 
         const formData = new FormData(leadForm);
         const transactionId = 'client_' + Date.now();
@@ -1631,14 +1649,17 @@ function initClientLeadFormTracking() {
             // Telegram Bot — операционный канал. Успех формы показываем только
             // после подтверждённого принятия заявки ботом.
             await sendLeadToBot(formData, pendingIdempotencyKey);
-            const response = await fetch('https://formspree.io/f/xpqjbpyk', {
+
+            // 📧 Formspree — ДУБЛЬ заявки на почту, страховка на случай сбоя
+            // бота. Его ответа НЕ ждём: клиенту он не нужен, а ожидание
+            // добавляло к паузе ещё несколько секунд. Ошибку только логируем —
+            // заявка уже принята ботом, и показывать из-за почты «не удалось
+            // отправить» было бы прямой ложью.
+            fetch('https://formspree.io/f/xpqjbpyk', {
                 method: 'POST',
                 body: formData,
                 headers: { 'Accept': 'application/json' }
-            });
-
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.error || 'Submit failed');
+            }).catch((err) => console.error('Formspree (дубль заявки):', err));
 
             if (typeof gtag === 'function') {
                 gtag('event', 'generate_lead_client', {
@@ -1660,6 +1681,18 @@ function initClientLeadFormTracking() {
             console.error(error);
             alert(t('submitError'));
             isSubmitting = false;
+        } finally {
+            // Кнопку возвращаем в исходный вид ВСЕГДА — и после успеха тоже.
+            // Форма не пересоздаётся: при следующем открытии модалки клиент
+            // увидел бы ту же кнопку «Отправляем…», навсегда выключенную.
+            //
+            // disabled снимаем по состоянию галочки согласия: без неё кнопка
+            // должна остаться выключенной, как при первом открытии формы.
+            if (submitBtn) {
+                submitBtn.textContent = submitLabel;
+                const consent = document.getElementById('leadConsent');
+                submitBtn.disabled = !!(consent && !consent.checked);
+            }
         }
     });
 
@@ -1779,6 +1812,14 @@ function initMasterLeadFormTracking() {
         if (!validateMasterLeadForm(e)) return;
 
         isSubmitting = true;
+        // Состояние кнопки — как в клиентской форме: без него анкета
+        // выглядит «зависшей», и человек жмёт отправку повторно.
+        const submitBtn = masterLeadForm.querySelector('button[type="submit"]');
+        const submitLabel = submitBtn ? submitBtn.textContent : null;
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = t('submitSending');
+        }
 
         const formData = new FormData(masterLeadForm);
 
@@ -1789,14 +1830,15 @@ function initMasterLeadFormTracking() {
 
         try {
             await sendMasterLeadToBot(formData);
-            const response = await fetch('https://formspree.io/f/mykdoebj', {
+
+            // Formspree — дубль анкеты на почту, ответа не ждём (см. тот же
+            // приём в клиентской форме): анкета уже принята ботом, и держать
+            // мастера лишние секунды ради письма незачем.
+            fetch('https://formspree.io/f/mykdoebj', {
                 method: 'POST',
                 body: formData,
                 headers: { 'Accept': 'application/json' }
-            });
-
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.error || 'Submit failed');
+            }).catch((err) => console.error('Formspree (дубль анкеты):', err));
 
             if (typeof gtag === 'function') {
                 gtag('event', 'generate_lead_master', {
@@ -1818,6 +1860,14 @@ function initMasterLeadFormTracking() {
             console.error('Master form error:', error);
             alert(t('submitError'));
             isSubmitting = false;
+        } finally {
+            // Возвращаем кнопку всегда — иначе при повторном открытии анкеты
+            // она осталась бы выключенной с надписью «Отправляем…».
+            if (submitBtn) {
+                submitBtn.textContent = submitLabel;
+                const consent = document.getElementById('masterLeadConsent');
+                submitBtn.disabled = !!(consent && !consent.checked);
+            }
         }
     });
 

@@ -517,7 +517,9 @@ header .online-counter {
    ============================================ */
 .hero {
     position: relative;
-    padding: 3rem 5% 8rem;
+    /* Нижний отступ был 8rem под высокий блок цифр. Цифры стали подписью
+       к кнопке, и этот запас превращался в пустое чёрное поле под ней */
+    padding: 3rem 5% 4rem;
     text-align: center;
     z-index: 1;
     background-color: var(--dark-concrete);
@@ -591,8 +593,8 @@ header .online-counter {
 .stats {
     display: flex;
     justify-content: center;
-    gap: 3rem;
-    margin-bottom: 3rem;
+    gap: 2.5rem;
+    margin-bottom: 1.75rem;
     flex-wrap: wrap;
     animation: fadeIn 1s ease-out 0.7s backwards;
 }
@@ -601,9 +603,11 @@ header .online-counter {
     text-align: center;
 }
 
+/* Цифры стали подписью к кнопке, а не самостоятельным блоком:
+   они объясняют, почему стоит жать, но не перетягивают взгляд на себя */
 .stat-number {
     font-family: 'Montserrat', sans-serif;
-    font-size: 3.5rem;
+    font-size: 2rem;
     color: var(--safety-green);
     line-height: 1;
     font-weight: 700;
@@ -611,7 +615,7 @@ header .online-counter {
 
 .stat-label {
     font-family: 'Montserrat', sans-serif;
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     font-weight: 700;
     color: #999;
     text-transform: uppercase;
@@ -1081,6 +1085,55 @@ header .online-counter {
     border-color: var(--construction-orange);
     background: rgba(255, 107, 53, 0.15);
 }
+}
+
+/* ============================================
+   ГЛАВНОЕ ДЕЙСТВИЕ ПЕРВОГО ЭКРАНА
+   ============================================ */
+
+/* Кнопка стоит сразу под цифрами: сначала причина верить, потом действие.
+   Поэтому у обёртки нет верхнего отступа — связка читается как единый блок */
+/* Своего нижнего отступа у обёртки нет: за расстояние до следующей секции
+   отвечает padding-bottom самого .hero. Иначе отступы складываются и под
+   кнопкой повисает пустое чёрное поле */
+.hero-cta-wrap {
+    display: flex;
+    justify-content: center;
+    animation: fadeIn 1s ease-out 0.9s backwards;
+}
+
+/* Оформление штатное для сайта: стеклянный тёмный фон плюс оранжевый контур,
+   как у остальных кнопок (.cta-footer). Ничего своего не придумываем —
+   единый язык кнопок важнее отдельно выделенного первого экрана.
+   Блок стоит ПОСЛЕ .cta-button и .cta-clients намеренно: специфичность у них
+   одинаковая, и при обратном порядке зелёный контур перекрыл бы оранжевый */
+.hero-cta {
+    border: 3px solid var(--construction-orange);
+    /* Фон полностью прозрачный: сквозь кнопку видно hero-картинку, и сразу
+       понятно, что это действие, а не плашка. Базовый .cta-button даёт
+       тёмную стеклянную подложку — здесь её гасим вместе с размытием,
+       иначе прозрачности не будет видно */
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow:
+        0 8px 32px rgba(255, 107, 53, 0.3),
+        0 0 40px rgba(255, 107, 53, 0.2);
+}
+
+/* Размеры текста НЕ переопределяем: кнопка должна читаться так же, как
+   «Оставить заявку / Надёжно и быстро» — базовых .cta-main и .cta-sub
+   достаточно. Любое переопределение здесь снова разведёт кнопки по виду */
+
+@media (hover: hover) and (pointer: fine) {
+    .hero-cta:hover {
+        box-shadow:
+            0 12px 40px rgba(255, 107, 53, 0.5),
+            0 0 60px rgba(255, 107, 53, 0.4),
+            inset 0 1px 0 rgba(255, 107, 53, 0.3);
+        border-color: var(--construction-orange);
+        background: rgba(255, 107, 53, 0.15);
+    }
 }
 
 .cta-button span {
@@ -1748,7 +1801,7 @@ footer {
     }
 
     .hero {
-        padding: 4rem 4% 5rem;
+        padding: 4rem 4% 3.5rem;
     }
 
     .hero h1,
@@ -1886,8 +1939,8 @@ footer {
     }
 
     .stats {
-        gap: 1.5rem;
-        margin-bottom: 2rem;
+        gap: 1.25rem;
+        margin-bottom: 1.25rem;
     }
 
     .stat-item {
@@ -1895,11 +1948,19 @@ footer {
     }
 
     .stat-number {
-        font-size: 2.5rem;
+        font-size: 1.75rem;
     }
 
     .stat-label {
-        font-size: 0.75rem;
+        font-size: 0.68rem;
+        letter-spacing: 0.5px;
+    }
+
+    /* На узком экране кнопка тянется во всю ширину — в неё проще попасть
+       пальцем. Padding и размеры текста остаются общими для всех кнопок */
+    .hero-cta {
+        width: 100%;
+        max-width: 420px;
     }
 
     .split-sections {
@@ -2001,13 +2062,30 @@ footer {
     }
 
     .stat-number {
-        font-size: 2rem;
+        font-size: 1.5rem;
     }
 
+    /* Три цифры держим в одну строку и запрещаем перенос: при переносе
+       третья уходила вниз одна и выглядела как случайный остаток.
+       flex-wrap здесь обязателен — базовое правило разрешает перенос */
     .stats {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
+        gap: 0.75rem;
+        flex-wrap: nowrap;
+        margin-bottom: 1.1rem;
     }
+
+    .stat-item {
+        min-width: 0;
+        flex: 1 1 0;
+    }
+
+    /* Подписи в одно слово («Мастеров», «Отклик», «Заказов») — ширины хватает,
+       поэтому шрифт не давим до нечитаемого: 0.6rem это было 9.6px */
+    .stat-label {
+        font-size: 0.68rem;
+        letter-spacing: 0.3px;
+    }
+
 
     .section-title {
         font-size: 1.5rem;

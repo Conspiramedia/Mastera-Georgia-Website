@@ -236,16 +236,25 @@
       <div class="stats">
         <div class="stat-item">
           <div class="stat-number" data-target="49" data-suffix="+">0+</div>
-          <div class="stat-label">Verified masters</div>
+          <div class="stat-label">Masters</div>
         </div>
         <div class="stat-item">
           <div class="stat-number" data-target="60" data-suffix=" min">0 min</div>
-          <div class="stat-label">Average response</div>
+          <div class="stat-label">Response</div>
         </div>
         <div class="stat-item">
           <div class="stat-number" data-target="299" data-suffix="+">0+</div>
-          <div class="stat-label">Successful orders</div>
+          <div class="stat-label">Orders</div>
         </div>
+      </div>
+
+      <!-- Главное действие первого экрана: стоит сразу под цифрами,
+           чтобы читалось «почему верить → что сделать» -->
+      <div class="hero-cta-wrap">
+        <button class="cta-button hero-cta" onclick="openClientLeadForm()">
+          <span class="cta-main">Order a service</span>
+          <span class="cta-sub">We reply within 60 minutes</span>
+        </button>
       </div>
     </section>
 

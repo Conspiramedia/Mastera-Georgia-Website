@@ -1990,23 +1990,90 @@ function initWhatsAppButtonTracking() {
     const isBatumiPage = /\/batumi(?:\/|$)/i.test(window.location.pathname);
     const lang = window.__FORCE_LANG__ || 'ru';
 
+    // ── Услуга и район лендинга для предзаполненного текста WhatsApp ──
+    // Берём из скрытого поля service, а НЕ из URL: на каждом лендинге оно уже
+    // заполнено подписью на языке страницы («Сантехника», «Plumbing»,
+    // «სანტექნიკა», «Мастер на час — Ваке»), и это ровно то значение, которое
+    // уходит в заявке через resolveBotCategory(). Так подпись в WhatsApp
+    // гарантированно совпадает с категорией заявки, а переименование slug'ов
+    // в адресе текст не ломает.
+    //
+    // На главных страницах (/ru/, /ru/batumi/) поле ПУСТОЕ — услугу там клиент
+    // выбирает сам, поэтому остаётся прежний общий текст по городу.
+    const serviceField = document.querySelector('input[name="service"]');
+    const serviceValue = serviceField ? (serviceField.value || '').trim() : '';
+
+    // Лендинг района даёт «Мастер на час — Ваке»: делим по тире на услугу и
+    // район, чтобы собрать живую фразу вместо сухого перечисления.
+    // Тире именно длинное (—), как в разметке лендингов.
+    const serviceParts = serviceValue.split('—').map(s => s.trim()).filter(Boolean);
+    const svcName = serviceParts[0] || '';
+    const svcDistrict = serviceParts[1] || '';
+
+    // Город подписью на языке страницы — для хвоста фразы.
+    const cityNames = {
+        ru: isBatumiPage ? 'Батуми' : 'Тбилиси',
+        en: isBatumiPage ? 'Batumi' : 'Tbilisi',
+        ka: isBatumiPage ? 'ბათუმი' : 'თბილისი'
+    };
+
+    // Сборщик текста по языку: услуга есть → конкретная фраза, нет → общая.
+    // Формы «нужен/нужна» в русском зависят от рода услуги («нужен сантехник»,
+    // но «нужна сборка мебели»), поэтому род не угадываем, а строим фразу
+    // нейтрально: «Интересует услуга: …» — звучит естественно для любой.
+    //
+    // ⚠️ Поле service ЛОКАЛИЗОВАНО под язык страницы: на /ru/ там «Сантехника»,
+    // на /en/ — «Plumbing», на /ge/ — «სანტექნიკა». Поэтому подставлять его
+    // можно ТОЛЬКО в текст того же языка, что и страница. Иначе переключение
+    // языка на лету дало бы «I'm interested in: Мастер на час» — английская
+    // фраза с русской услугой. Для остальных языков отдаём общий текст:
+    // лучше нейтральная фраза целиком, чем смесь двух языков.
+    function buildWaText(code) {
+        const city = cityNames[code] || cityNames.ru;
+        const pageLang = window.__FORCE_LANG__ || 'ru';
+        // Услугу подставляем, только если текст на языке страницы.
+        const svcUsable = (code === pageLang) ? svcName : '';
+        const svcDistrictUsable = (code === pageLang) ? svcDistrict : '';
+
+        if (isMastersPage) {
+            return ({
+                ru: 'Здравствуйте! Хочу стать партнёром сервиса.',
+                en: 'Hello! I want to become a partner.',
+                ka: 'გამარჯობა! მინდა გავხდე პარტნიორი.'
+            })[code];
+        }
+
+        // Главная страница (service пустой) или чужой язык — общий текст.
+        if (!svcUsable) {
+            return ({
+                ru: 'Здравствуйте! Нужен мастер в ' + (isBatumiPage ? 'Батуми' : 'Тбилиси') + '.',
+                en: 'Hello! I need a handyman in ' + city + '.',
+                ka: 'გამარჯობა! მჭირდება ოსტატი ' + (isBatumiPage ? 'ბათუმში' : 'თბილისში') + '.'
+            })[code];
+        }
+
+        // Лендинг района: услуга + район + город.
+        if (svcDistrictUsable) {
+            return ({
+                ru: 'Здравствуйте! Интересует услуга: ' + svcUsable + ', район ' + svcDistrictUsable + ' (' + city + ').',
+                en: 'Hello! I\'m interested in: ' + svcUsable + ', ' + svcDistrictUsable + ' district (' + city + ').',
+                ka: 'გამარჯობა! მაინტერესებს: ' + svcUsable + ', ' + svcDistrictUsable + ' (' + city + ').'
+            })[code];
+        }
+
+        // Лендинг услуги без района: услуга + город.
+        return ({
+            ru: 'Здравствуйте! Интересует услуга: ' + svcUsable + ' (' + city + ').',
+            en: 'Hello! I\'m interested in: ' + svcUsable + ' (' + city + ').',
+            ka: 'გამარჯობა! მაინტერესებს: ' + svcUsable + ' (' + city + ').'
+        })[code];
+    }
+
     // Предзаполненный текст для WhatsApp по языку страницы.
     const waTexts = {
-        ru: encodeURIComponent(isMastersPage
-            ? 'Здравствуйте! Хочу стать партнёром сервиса.'
-            : isBatumiPage
-                ? 'Здравствуйте! Нужен мастер в Батуми.'
-                : 'Здравствуйте! Нужен мастер в Тбилиси.'),
-        ka: encodeURIComponent(isMastersPage
-            ? 'გამარჯობა! მინდა გავხდე პარტნიორი.'
-            : isBatumiPage
-                ? 'გამარჯობა! მჭირდება ოსტატი ბათუმში.'
-                : 'გამარჯობა! მჭირდება ოსტატი თბილისში.'),
-        en: encodeURIComponent(isMastersPage
-            ? 'Hello! I want to become a partner.'
-            : isBatumiPage
-                ? 'Hello! I need a handyman in Batumi.'
-                : 'Hello! I need a handyman in Tbilisi.')
+        ru: encodeURIComponent(buildWaText('ru')),
+        ka: encodeURIComponent(buildWaText('ka')),
+        en: encodeURIComponent(buildWaText('en'))
     };
     const waHref = 'https://wa.me/995557645196?text=' + (waTexts[lang] || waTexts.ru);
 

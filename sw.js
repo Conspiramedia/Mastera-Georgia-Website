@@ -30,7 +30,7 @@
 // Версию обязательно поднимать при любой правке style.css/script.js: статика
 // отдаётся Cache First, и без этого вернувшийся посетитель получит свежий HTML
 // со старым стилем — кнопка приедет неоформленной.
-const CACHE_NAME = 'mastera-landing-v20';
+const CACHE_NAME = 'mastera-landing-v21';
 
 const PRECACHE_URLS = [
   '/',

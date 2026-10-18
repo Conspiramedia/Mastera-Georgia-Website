@@ -1001,8 +1001,15 @@ async function sendLeadToBot(formData, idempotencyKey) {
     if (telegram) contactParts.push('✈️ Telegram: ' + telegram);
     if (whatsapp) contactParts.push('🟢 WhatsApp: ' + whatsapp);
 
+    // В описание идёт ТОЛЬКО задача клиента. Имя уходит отдельным полем payload.name
+    // — бот кладёт его в name_hidden (шифрованное) и печатает мастеру строкой
+    // «👤 Имя:», как у заявок из бота.
+    //
+    // ⚠️ Раньше имя вклеивалось сюда строкой «Имя: X», потому что handle_site_request
+    // поле name терял. Это давало три тихих проблемы: имя лежало в БД открытым
+    // текстом, карточка сайта не совпадала с карточкой бота, а служебная строка
+    // попадала в AI-оценку и модерацию описания. Не возвращать: бот имя принимает.
     const descParts = [];
-    if (name) descParts.push('Имя: ' + name);
     descParts.push('Задача: ' + (get('message') || '—'));
 
     const districtOther = get('district_other');

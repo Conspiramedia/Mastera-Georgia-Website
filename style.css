@@ -991,6 +991,12 @@ header .online-counter {
 .cta-button {
     display: block;
     margin: 0 auto;
+    /* -webkit- обязателен: Safari не понимает fit-content без префикса и
+       игнорирует всё правило. Тогда block-кнопка внутри flex-обёртки
+       .hero-cta-wrap растягивалась на всю ширину экрана — на iPhone кнопка
+       шла от края до края. Префиксную строку держим ПЕРЕД стандартной,
+       чтобы браузеры с полной поддержкой взяли последнюю. */
+    width: -webkit-fit-content;
     width: fit-content;
     padding: 1.2rem 2.5rem;
     text-align: center;
@@ -1099,6 +1105,12 @@ header .online-counter {
 .hero-cta-wrap {
     display: flex;
     justify-content: center;
+    /* align-items: center — страховка к width:fit-content у .cta-button.
+       По умолчанию у flex-контейнера stretch, и если браузер не понял
+       fit-content (Safari без -webkit-), кнопка растягивается по ширине
+       обёртки. С center она остаётся по размеру содержимого при любом
+       исходе — поэтому правило нужно даже при рабочих префиксах. */
+    align-items: center;
     animation: fadeIn 1s ease-out 0.9s backwards;
 }
 
@@ -1111,6 +1123,11 @@ header .online-counter {
    ⚠️ Фон НЕ гасим: на прозрачном кнопка сливалась со светлыми участками
    hero-фото и выглядела бледной — контур есть, а кнопки не видно. */
 .hero-cta {
+    /* flex: 0 0 auto — как у .steps-button/.testimonials-button/.faq-buttons:
+       во flex-обёртке кнопка иначе тянется по доступной ширине. Здесь правило
+       забыли, когда чинили остальные три, и на iPhone кнопка первого экрана
+       шла от края до края. */
+    flex: 0 0 auto;
     border: 3px solid var(--construction-orange);
     box-shadow:
         0 8px 32px rgba(255, 107, 53, 0.3),
@@ -2630,6 +2647,7 @@ body.modal-open {
     /* inline-flex + fit-content: кликабельна только зона «чекбокс + текст»,
        а не вся ширина формы (иначе клик по пустому месту переключал галочку). */
     display: inline-flex;
+    width: -webkit-fit-content;   /* см. комментарий у .cta-button */
     width: fit-content;
     align-items: center;
     gap: 0.8rem;

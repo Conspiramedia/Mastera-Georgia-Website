@@ -9,13 +9,10 @@
   <meta name="robots" content="noindex, nofollow">
   <title>Мастера Грузии — Facebook</title>
 
-  <!-- Мгновенный переход без JS: срабатывает, как только браузер разобрал <head>.
-       Стоит ДО стилей и картинок, чтобы не ждать их загрузки. -->
-  <meta http-equiv="refresh" content="0; url=https://www.facebook.com/profile.php?id=61595113524507">
-
   <!-- Карточка для WhatsApp/Telegram — та же, что у главной страницы сайта.
-       Мессенджер читает только эти теги и за refresh не идёт, поэтому превью
-       покажется наше, а не фейсбучное. -->
+       Переход намеренно сделан только на JS: meta refresh здесь стоять не должен —
+       Telegram его выполняет, уходит на Facebook и показывает ЕГО карточку
+       вместо нашей. Парсеры мессенджеров JS не исполняют, поэтому видят эти теги. -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://mastera.ge/ru/facebook/">
   <meta property="og:title" content="Мастера Грузии — мы в Facebook">
@@ -70,7 +67,9 @@
   <a class="fallback" href="https://www.facebook.com/profile.php?id=61595113524507">Перейти в Facebook</a>
 
   <script>
-    // Подстраховка к meta refresh. replace(), а не href: не оставляет запись
+    // Единственный способ перехода — см. комментарий у OG-блока: meta refresh
+    // ломает карточку в Telegram. Кто без JS — уйдёт по кнопке ниже.
+    // replace(), а не href: не оставляет запись
     // в истории — иначе кнопка «Назад» вернула бы клиента на этот переходник,
     // и он снова улетел бы в Facebook, не сумев выйти.
     window.location.replace('https://www.facebook.com/profile.php?id=61595113524507');

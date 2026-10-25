@@ -53,7 +53,9 @@ const i18n = {
         // Ночной вариант. Показывается в «тихие часы» бота: обещать отклик за
         // час в 01:30 — значит гарантированно его не сдержать и потерять
         // клиента утром, хотя заявка в системе есть и мастер её возьмёт.
-        thanksBadgeLabelNight:     'Заявка принята',
+        // ⚠️ Подпись не повторяет заголовок окна («Заявка принята!») — иначе
+        // одна и та же фраза стоит в окне дважды подряд и выглядит ошибкой.
+        thanksBadgeLabelNight:     'Время ответа',
         thanksBadgeValueNight:     'На связи с {time}',
         // Заявка уходит мастерам сразу (ночью — беззвучно), поэтому про
         // «возможно, раньше» говорим честно: ночные заявки иногда берут.
@@ -91,7 +93,7 @@ const i18n = {
         masterCityRequired:        'გთხოვთ, აირჩიოთ ქალაქი — განაცხადები მიდის იმავე ქალაქის ხელოსნებთან',
         thanksBadgeLabel:          'პასუხის საშუალო დრო',
         thanksBadgeValue:          '15–60 წუთი',
-        thanksBadgeLabelNight:     'განაცხადი მიღებულია',
+        thanksBadgeLabelNight:     'პასუხის დრო',
         thanksBadgeValueNight:     'დაგიკავშირდებით {time}-დან',
         thanksTextNight:           'თქვენი განაცხადი უკვე ხელოსნებთანაა. დაგიკავშირდებით {time}-დან — ან უფრო ადრე, თუ ვინმე ღამით აიღებს.',
         thanksTextNightUrgent:     'სასწრაფო განაცხადს ხელოსნები მაშინვე ხედავენ. ღამით პასუხები ნაკლებია, ამიტომ მოლოდინი შეიძლება გაგრძელდეს.',
@@ -125,7 +127,7 @@ const i18n = {
         masterCityRequired:        'Please choose a city — requests go to specialists in the same city',
         thanksBadgeLabel:          'Average response time',
         thanksBadgeValue:          '15–60 minutes',
-        thanksBadgeLabelNight:     'Request received',
+        thanksBadgeLabelNight:     'Response time',
         thanksBadgeValueNight:     'We reply from {time}',
         thanksTextNight:           'Your request is already with our specialists. We will get in touch from {time} — or sooner, if someone picks it up tonight.',
         thanksTextNightUrgent:     'Specialists see urgent requests right away. At night there are fewer of them online, so a reply may take longer.',

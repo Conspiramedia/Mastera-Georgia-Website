@@ -2762,9 +2762,16 @@ body.modal-open {
     background: transparent;
     border-radius: 50%;
     cursor: pointer;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(100px);
+    /* Кнопка видна сразу, с первого экрана: это главный канал связи, и
+       прятать его до прокрутки нельзя. Прежде здесь было opacity: 0 +
+       visibility: hidden + сдвиг вниз, а класс .visible вешал скрипт при
+       pageYOffset > 300.
+       Стартовые значения перенесены именно в CSS, а не оставлены на JS:
+       скрипт подключён с defer и выполняется после отрисовки, так что
+       кнопка иначе моргала бы пустым местом на первых кадрах. */
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
     transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
     z-index: 10000;
     display: flex;

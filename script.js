@@ -138,7 +138,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '25';
+const MASTERA_VERSION = '26';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Публичный username бота мастеров — для диплинка «завершить регистрацию».
@@ -2133,9 +2133,15 @@ function initScrollToTop() {
     const scrollButton = document.getElementById('scrollToTop');
     if (!scrollButton) return;
 
-    window.addEventListener('scroll', () => {
-        scrollButton.classList.toggle('visible', window.pageYOffset > 300);
-    });
+    // Кнопка WhatsApp видна СРАЗУ, с первого экрана, а не после прокрутки.
+    // Прежде класс visible вешался только при pageYOffset > 300: посетитель,
+    // готовый написать сразу, кнопки не видел и уходил. Это главный канал
+    // связи — прятать его до скролла нечем оправдать.
+    //
+    // Слушатель скролла убран совсем, а не оставлен «на всякий случай»:
+    // при любом его срабатывании toggle снял бы класс у самого верха
+    // страницы, и кнопка моргала бы при возврате наверх.
+    scrollButton.classList.add('visible');
 }
 
 // ============================================

@@ -56,7 +56,7 @@
 // неравномерно — один отдавал новый файл, другой старый, и сброс кэша
 // вручную (Purge Everything) требовался после КАЖДОГО деплоя. С версией в
 // адресе новый файл — это новый URL: он доезжает до людей сразу.
-const ASSET_VERSION = '23';
+const ASSET_VERSION = '24';
 
 const CACHE_NAME = `mastera-landing-v${ASSET_VERSION}`;
 

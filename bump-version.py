@@ -40,6 +40,7 @@ for stream in (sys.stdout, sys.stderr):
 # Папка сайта — та, где лежит сам скрипт
 ROOT = Path(__file__).resolve().parent
 SW = ROOT / "sw.js"
+SCRIPT = ROOT / "script.js"
 
 # Файлы статики, у которых в HTML стоит ?v=<номер>.
 # Пополняя список, добавь файл и в PRECACHE_URLS в sw.js.
@@ -76,14 +77,34 @@ def scan_html():
     return found
 
 
+def read_script_version():
+    """Номер из script.js (MASTERA_VERSION), либо None, если константы нет."""
+    if not SCRIPT.exists():
+        return None
+    m = re.search(
+        r"const\s+MASTERA_VERSION\s*=\s*['\"](\d+)['\"]",
+        SCRIPT.read_text(encoding="utf-8"),
+    )
+    return int(m.group(1)) if m else None
+
+
 def check(sw_version, found):
-    """Сверяет sw.js и страницы. Возвращает True, если всё согласовано."""
+    """Сверяет sw.js, script.js и страницы. True, если всё согласовано."""
     print(f"sw.js: ASSET_VERSION = {sw_version}")
     if not found:
         print("В страницах не найдено ни одной ссылки на статику — проверь ASSETS.")
         return False
 
     ok = True
+
+    script_version = read_script_version()
+    if script_version is None:
+        print("  (в script.js нет MASTERA_VERSION — проверка по консоли недоступна)")
+    elif script_version != sw_version:
+        print(f"  ⚠️  script.js: MASTERA_VERSION = {script_version} — расходится с sw.js")
+        ok = False
+    else:
+        print(f"  ✅ script.js: MASTERA_VERSION = {script_version}")
     for version, count in sorted(found.items(), key=lambda x: (x[0] is None, x[0])):
         if version is None:
             print(f"  ⚠️  без версии: {count} ссылок — кэш их не обновит")
@@ -97,7 +118,7 @@ def check(sw_version, found):
 
 
 def bump(old, new, sw_text):
-    """Меняет номер в sw.js и во всех страницах. Возвращает число правок."""
+    """Меняет номер в sw.js, script.js и во всех страницах."""
     # 1. sw.js
     new_sw = re.sub(
         r"(const\s+ASSET_VERSION\s*=\s*['\"])\d+(['\"])",
@@ -105,6 +126,19 @@ def bump(old, new, sw_text):
         sw_text,
     )
     SW.write_text(new_sw, encoding="utf-8", newline="")
+
+    # 2. script.js — константа MASTERA_VERSION, по ней в консоли видно,
+    #    какой файл реально исполняется у посетителя. Разойдётся с ?v= —
+    #    и проверка начнёт врать, поэтому поднимаем здесь же.
+    if SCRIPT.exists():
+        text = SCRIPT.read_text(encoding="utf-8")
+        new_text, n = re.subn(
+            r"(const\s+MASTERA_VERSION\s*=\s*['\"])\d+(['\"])",
+            rf"\g<1>{new}\g<2>",
+            text,
+        )
+        if n:
+            SCRIPT.write_text(new_text, encoding="utf-8", newline="")
 
     # 2. Страницы. Заменяем и ссылки со старой версией, и забытые без неё —
     #    иначе страница, добавленная мимо скрипта, молча осталась бы без кэша.

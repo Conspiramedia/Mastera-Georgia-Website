@@ -134,6 +134,13 @@ const i18n = {
     }
 };
 
+// Версия статики — та же, что в ?v= у <script> и в ASSET_VERSION (sw.js).
+// Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
+// в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
+// Поднимается скриптом bump-version.py вместе с остальными местами.
+const MASTERA_VERSION = '24';
+window.MASTERA_VERSION = MASTERA_VERSION;
+
 // Публичный username бота мастеров — для диплинка «завершить регистрацию».
 const MASTER_BOT_DEEPLINK = 'https://t.me/mastera_tbilisi_bot?start=master';
 

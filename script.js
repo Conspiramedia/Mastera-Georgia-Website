@@ -45,6 +45,22 @@ const i18n = {
         masterDistrictPlaceholder: 'Сначала выберите город',
         masterDistrictLabel:       'Район работы',
         masterCityRequired:        'Пожалуйста, выберите город — заявки приходят мастерам своего города',
+        // Бейдж в окне благодарности. До этого текст был зашит в HTML каждой
+        // из 105 страниц и успел разъехаться: на лендингах «15–60 минут», на
+        // главных «30–60». Теперь источник один — словарь, HTML не трогаем.
+        thanksBadgeLabel:          'Среднее время отклика',
+        thanksBadgeValue:          '15–60 минут',
+        // Ночной вариант. Показывается в «тихие часы» бота: обещать отклик за
+        // час в 01:30 — значит гарантированно его не сдержать и потерять
+        // клиента утром, хотя заявка в системе есть и мастер её возьмёт.
+        thanksBadgeLabelNight:     'Заявка принята',
+        thanksBadgeValueNight:     'На связи с {time}',
+        // Заявка уходит мастерам сразу (ночью — беззвучно), поэтому про
+        // «возможно, раньше» говорим честно: ночные заявки иногда берут.
+        thanksTextNight:           'Ваша заявка уже у мастеров. Свяжемся с {time} — или раньше, если кто-то возьмёт её ночью.',
+        // Для срочных ночных «свяжемся утром» читается как отказ, поэтому
+        // текст другой: срочность видна мастерам, но ночью откликов меньше.
+        thanksTextNightUrgent:     'Срочную заявку мастера видят сразу. Ночью откликов меньше, поэтому ответ может занять больше времени.',
     },
     ka: {
         phoneInvalid:        'გთხოვთ, შეიყვანოთ სწორი ქართული ტელეფონის ნომერი ფორმატში: +995XXXXXXXXX (9 ციფრი +995-ის შემდეგ)',
@@ -73,6 +89,12 @@ const i18n = {
         masterDistrictPlaceholder: 'ჯერ აირჩიეთ ქალაქი',
         masterDistrictLabel:       'სამუშაო რაიონი',
         masterCityRequired:        'გთხოვთ, აირჩიოთ ქალაქი — განაცხადები მიდის იმავე ქალაქის ხელოსნებთან',
+        thanksBadgeLabel:          'პასუხის საშუალო დრო',
+        thanksBadgeValue:          '15–60 წუთი',
+        thanksBadgeLabelNight:     'განაცხადი მიღებულია',
+        thanksBadgeValueNight:     'დაგიკავშირდებით {time}-დან',
+        thanksTextNight:           'თქვენი განაცხადი უკვე ხელოსნებთანაა. დაგიკავშირდებით {time}-დან — ან უფრო ადრე, თუ ვინმე ღამით აიღებს.',
+        thanksTextNightUrgent:     'სასწრაფო განაცხადს ხელოსნები მაშინვე ხედავენ. ღამით პასუხები ნაკლებია, ამიტომ მოლოდინი შეიძლება გაგრძელდეს.',
     },
     en: {
         phoneInvalid:        'Please enter a valid Georgian phone number in the format: +995XXXXXXXXX (9 digits after +995)',
@@ -101,6 +123,12 @@ const i18n = {
         masterDistrictPlaceholder: 'Choose a city first',
         masterDistrictLabel:       'Work district',
         masterCityRequired:        'Please choose a city — requests go to specialists in the same city',
+        thanksBadgeLabel:          'Average response time',
+        thanksBadgeValue:          '15–60 minutes',
+        thanksBadgeLabelNight:     'Request received',
+        thanksBadgeValueNight:     'We reply from {time}',
+        thanksTextNight:           'Your request is already with our specialists. We will get in touch from {time} — or sooner, if someone picks it up tonight.',
+        thanksTextNightUrgent:     'Specialists see urgent requests right away. At night there are fewer of them online, so a reply may take longer.',
     }
 };
 
@@ -1932,9 +1960,125 @@ function validateMasterLeadForm(e) {
 // 12. УПРАВЛЕНИЕ МОДАЛЬНЫМИ ОКНАМИ
 // ============================================
 
+// ============================================
+// 12.1 НОЧНОЙ РЕЖИМ ОКНА БЛАГОДАРНОСТИ
+// ============================================
+
+// «Тихие часы» — зеркало config.yaml → quiet_hours у бота (quiet_hours.py).
+// В это время бот шлёт заявку мастерам СРАЗУ, но беззвучно, поэтому ночью
+// отклик приходит в среднем не за час, а утром. Сайт обязан обещать то же
+// самое: иначе клиент ждёт звонка через час, не дожидается и уходит, хотя
+// заявка в системе есть и мастер её возьмёт.
+//
+// ⚠️ ПАРНАЯ ПРАВКА: меняя часы здесь, поменяй их в config.yaml бота
+// (секция quiet_hours) — и наоборот. Разъехавшиеся значения не ломают
+// ничего явно, но сайт начнёт называть время, которого бот не держит.
+const QUIET_HOURS = {
+    weekday: { start: '22:00', end: '08:00' },   // Пн–Пт
+    weekend: { start: '22:00', end: '09:00' },   // Сб, Вс
+};
+
+// Текущие дата и время в поясе Тбилиси.
+//
+// ⚠️ Считаем именно по Тбилиси, а НЕ по часам устройства: среди клиентов
+// много релокантов и туристов с чужим поясом на телефоне, плюс VPN. По
+// локальному времени мы показали бы «мы спим» в разгар рабочего дня.
+// Intl с timeZone даёт время города независимо от настроек устройства.
+function tbilisiNow() {
+    try {
+        const parts = new Intl.DateTimeFormat('en-GB', {
+            timeZone: 'Asia/Tbilisi',
+            hour: '2-digit', minute: '2-digit', weekday: 'short', hour12: false,
+        }).formatToParts(new Date());
+        const get = (type) => (parts.find(p => p.type === type) || {}).value;
+        const hour = parseInt(get('hour'), 10);
+        const minute = parseInt(get('minute'), 10);
+        // weekday приходит как Mon/Tue/…; переводим в номер (Пн=0 … Вс=6)
+        const days = { Mon: 0, Tue: 1, Wed: 2, Thu: 3, Fri: 4, Sat: 5, Sun: 6 };
+        const weekday = days[get('weekday')];
+        if (isNaN(hour) || isNaN(minute) || weekday === undefined) return null;
+        return { minutes: hour * 60 + minute, weekday };
+    } catch (e) {
+        // Старый браузер без поддержки timeZone в Intl — молча отключаем
+        // ночной режим. Показать обычный бейдж лучше, чем сломать окно.
+        return null;
+    }
+}
+
+function _hhmmToMinutes(value) {
+    const [h, m] = String(value).split(':').map(Number);
+    return h * 60 + m;
+}
+
+// Ночной ли сейчас час в Тбилиси. Окно пересекает полночь, поэтому момент
+// «тихий», если он либо после вечернего start, либо до утреннего end —
+// та же формула, что в quiet_hours.is_quiet у бота.
+// Возвращает время начала работы ('08:00') или null, если сейчас день.
+function quietHoursReplyTime() {
+    const now = tbilisiNow();
+    if (!now) return null;
+    const block = now.weekday >= 5 ? QUIET_HOURS.weekend : QUIET_HOURS.weekday;
+    const start = _hhmmToMinutes(block.start);
+    const end   = _hhmmToMinutes(block.end);
+    if (now.minutes < end) {
+        // Ночь после полуночи: отвечаем утром того же дня.
+        return block.end;
+    }
+    if (now.minutes >= start) {
+        // Вечер до полуночи: отвечаем утром СЛЕДУЮЩЕГО дня, а у него может
+        // быть другое время конца тишины (будни 08:00 / выходные 09:00).
+        const tomorrow = (now.weekday + 1) % 7;
+        const next = tomorrow >= 5 ? QUIET_HOURS.weekend : QUIET_HOURS.weekday;
+        return next.end;
+    }
+    return null;
+}
+
+// Заполняет окно благодарности: днём — обычный бейдж, ночью — честное
+// «свяжемся утром». Текст берётся из словаря i18n, а не из HTML страницы:
+// раньше он был зашит в каждую из 105 страниц и успел разъехаться
+// («15–60» на лендингах против «30–60» на главных).
+//
+// HTML при этом НЕ трогаем: зашитый текст остаётся запасным вариантом на
+// случай, если скрипт не отработает — пустое окно хуже неточной цифры.
+function applyThankYouBadge() {
+    const modal = document.getElementById('thankYouModal');
+    if (!modal) return;
+    const label = modal.querySelector('.badge-label');
+    const value = modal.querySelector('.badge-value');
+    const text  = modal.querySelector('.thank-you-text');
+    if (!label || !value) return;
+
+    // Исходный дневной текст запоминаем при первом вызове: окно открывается
+    // много раз за сессию, и без этого ночная подмена стала бы постоянной.
+    if (text && !text.dataset.dayText) text.dataset.dayText = text.innerHTML;
+
+    const replyTime = quietHoursReplyTime();
+
+    if (!replyTime) {
+        label.textContent = t('thanksBadgeLabel');
+        value.textContent = t('thanksBadgeValue');
+        if (text && text.dataset.dayText) text.innerHTML = text.dataset.dayText;
+        return;
+    }
+
+    label.textContent = t('thanksBadgeLabelNight');
+    value.textContent = t('thanksBadgeValueNight').replace('{time}', replyTime);
+
+    if (text) {
+        // Для срочной заявки «свяжемся утром» звучит как отказ — там свой текст.
+        const urgent = !!(document.getElementById('leadUrgent') &&
+                          document.getElementById('leadUrgent').checked);
+        text.textContent = urgent
+            ? t('thanksTextNightUrgent')
+            : t('thanksTextNight').replace('{time}', replyTime);
+    }
+}
+
 function openClientLeadForm()  { _modal('clientLeadFormModal',   'flex'); }
 function closeClientLeadForm() { _modal('clientLeadFormModal',   'none'); }
-function openThankYou()        { _modal('thankYouModal',          'flex'); }
+function openThankYou()        { applyThankYouBadge();
+                                 _modal('thankYouModal',          'flex'); }
 function closeThankYou()       { _modal('thankYouModal',          'none'); }
 function openMasterThankYou()  { _modal('masterThankYouModal',   'flex'); }
 function closeMasterThankYou() { _modal('masterThankYouModal',   'none'); }

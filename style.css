@@ -2947,8 +2947,12 @@ body.modal-open {
 /* Контейнер с двумя опциями — над FAB, отдельно от него (у FAB overflow:hidden). */
 .contact-fab-menu {
     position: fixed;
-    right: 45px;          /* центрируем 56px-опции под центром 80px-FAB (right:30 + (80-56)/2 - 3) */
-    bottom: 120px;        /* над FAB: 30 (bottom) + 80 (высота) + 10 (зазор) */
+    /* Опции 56px под FAB 65px: right = 30 (отступ FAB) + (65-56)/2 = 34.5,
+       bottom = 30 (отступ FAB) + 65 (высота) + 10 (зазор) = 105.
+       Прежние 45/120 считались от 80px-FAB, которого давно нет: опции
+       стояли на 9px левее центра кнопки и висели с лишним зазором. */
+    right: 34.5px;
+    bottom: 105px;
     display: flex;
     flex-direction: column;
     gap: 14px;
@@ -3010,12 +3014,17 @@ body.modal-open {
 .contact-fab-menu.open .contact-opt--wa { transition-delay: 0.10s; }
 
 @media (max-width: 768px) {
-    .contact-fab-menu { right: 35px; bottom: 110px; }  /* FAB на мобильных: bottom 20 + 80 + 10 */
+    /* Опции 48px под FAB 56px: right = 20 (отступ FAB) + (56-48)/2 = 24,
+       bottom = 20 (отступ FAB) + 56 (высота) + 10 (зазор) = 86. */
+    .contact-fab-menu { right: 24px; bottom: 86px; }
+    .contact-opt { width: 48px; height: 48px; }
 }
 
 @media (max-width: 480px) {
-    .contact-fab-menu { right: 30px; bottom: 105px; }  /* FAB: bottom 15 + 80 + 10 */
-    .contact-opt { width: 52px; height: 52px; }
+    /* Опции 46px под FAB 52px: right = 15 + (52-46)/2 = 18,
+       bottom = 15 + 52 + 10 = 77. */
+    .contact-fab-menu { right: 18px; bottom: 77px; gap: 12px; }
+    .contact-opt { width: 46px; height: 46px; }
 }
 
 /* Анимация подёргивания вверх-вниз */
@@ -3064,12 +3073,17 @@ body.modal-open {
         font-size: 0.8rem;
     }
     
-    /* Адаптация кнопки "Вверх" для мобильных */
-    .scroll-to-top {
+    /* Адаптация плавающей кнопки контактов для мобильных.
+       ⚠️ Селектор с ДВУМЯ классами: размер задаёт .scroll-to-top.whatsapp-fab
+       (65px), и правило по одному классу его не перебивало — специфичность
+       ниже. Отступы при этом применялись, из-за чего кнопка на телефоне
+       оставалась десктопного размера, хотя правка размера тут и лежала. */
+    .scroll-to-top,
+    .scroll-to-top.whatsapp-fab {
         bottom: 20px;
         right: 20px;
-        width: 50px;
-        height: 50px;
+        width: 56px;
+        height: 56px;
     }
     
     .scroll-to-top svg {
@@ -3079,11 +3093,15 @@ body.modal-open {
 }
 
 @media (max-width: 480px) {
-    .scroll-to-top {
+    /* Тот же приём с двумя классами, что и в блоке 768px выше. 52px — предел,
+       ниже которого попадать пальцем уже неуютно: рекомендованный минимум
+       цели касания 44px, плюс кнопка стоит у самого края экрана. */
+    .scroll-to-top,
+    .scroll-to-top.whatsapp-fab {
         bottom: 15px;
         right: 15px;
-        width: 45px;
-        height: 45px;
+        width: 52px;
+        height: 52px;
     }
     
     .scroll-to-top svg {

@@ -46,6 +46,15 @@ SCRIPT = ROOT / "script.js"
 # Пополняя список, добавь файл и в PRECACHE_URLS в sw.js.
 ASSETS = ("script.js", "style.css", "service.css")
 
+# OG-превью (картинка ссылки в соцсетях). Отдельно от ASSETS, потому что путь
+# в разметке АБСОЛЮТНЫЙ (https://mastera.ge/image/...) — так требуют Facebook и
+# Telegram. Шаблон ASSETS подставил бы относительный путь и сломал ссылку.
+#
+# Версия тут нужна острее, чем у CSS: соцсети кэшируют превью надолго и сами
+# его не перечитывают. Без нового адреса в ленте неделями висела бы старая
+# картинка.
+OG_IMAGES = ("og-preview-ru.jpg", "og-preview-en.jpg", "og-preview-ka.jpg")
+
 
 def read_sw_version():
     """Текущий номер из sw.js (ASSET_VERSION = '23')."""
@@ -154,6 +163,15 @@ def bump(old, new, sw_text):
             # /asset без версии (в кавычках, чтобы не задеть текст) → с версией
             text, n2 = re.subn(rf'(["\'])/{esc}\1', rf"\g<1>/{asset}?v={new}\g<1>", text)
             changed_links += n1 + n2
+
+        # OG-превью: путь абсолютный, поэтому правим ТОЛЬКО хвост ?v=<номер>,
+        # не трогая сам адрес (см. комментарий к OG_IMAGES выше).
+        for img in OG_IMAGES:
+            esc = img.replace(".", r"\.")
+            text, n3 = re.subn(rf"({esc})\?v=\d+", rf"\g<1>?v={new}", text)
+            # Без версии — дописываем её (кавычка закрывает значение атрибута).
+            text, n4 = re.subn(rf"""({esc})(["'])""", rf"\g<1>?v={new}\g<2>", text)
+            changed_links += n3 + n4
         if text != original:
             path.write_text(text, encoding="utf-8", newline="")
             changed_files += 1

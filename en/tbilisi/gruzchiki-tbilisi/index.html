@@ -81,9 +81,9 @@
   <meta name="geo.region" content="GE-TB">
   <meta name="geo.placename" content="Tbilisi, Georgia">
 
-  <link rel="stylesheet" href="/style.css?v=27">
-  <link rel="stylesheet" href="/service.css?v=27">
-  <script src="/script.js?v=27" defer></script>
+  <link rel="stylesheet" href="/style.css?v=28">
+  <link rel="stylesheet" href="/service.css?v=28">
+  <script src="/script.js?v=28" defer></script>
 
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://mastera.ge/en/"},{"@type":"ListItem","position":2,"name":"Movers in Tbilisi","item":"https://mastera.ge/en/tbilisi/gruzchiki-tbilisi/"}]}
@@ -164,7 +164,7 @@
       <div class="price-row"><span class="price-name">Piano / safe / heavy load</span><span class="price-val">from 100₾</span></div>
       <div class="price-row"><span class="price-name">Construction waste removal</span><span class="price-val">from 40₾</span></div>
       <div class="price-row"><span class="price-name">Cargo transport with driver</span><span class="price-val">from 50₾</span></div>
-      <p style="text-align:center; font-size:0.8rem; color:rgba(255,255,255,0.4); margin-top:1rem;">Exact price after clarifying the volume. The master quotes before starting work.</p>
+      <p style="text-align:center; font-size:0.8rem; color:rgba(255,255,255,0.55); margin-top:1rem;">Exact price after clarifying the volume. The master quotes before starting work.</p>
     </div>
 
     <div class="sections-container">
@@ -351,10 +351,10 @@
       </p>
     </footer>
 
-  <div id="clientLeadFormModal" class="modal">
+  <div id="clientLeadFormModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="clientLeadFormTitle">
     <div class="modal-content">
       <span class="modal-close" onclick="closeClientLeadForm()">&times;</span>
-      <h2 class="modal-title">Hire movers</h2>
+      <h2 class="modal-title" id="clientLeadFormTitle">Hire movers</h2>
       <p class="modal-subtitle">Describe the task — movers respond in 60 min</p>
       <form action="https://formspree.io/f/xpqjbpyk" method="POST" class="contact-form" id="clientLeadForm">
         <input type="text" name="name" placeholder="Your name" required minlength="2">

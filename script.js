@@ -45,6 +45,25 @@ const i18n = {
         masterDistrictPlaceholder: 'Сначала выберите город',
         masterDistrictLabel:       'Район работы',
         masterCityRequired:        'Пожалуйста, выберите город — заявки приходят мастерам своего города',
+        // Подписи полей форм для скринридера (aria-label). На экране их не
+        // видно: поля опознаются по placeholder, а он для скринридера не
+        // подпись — исчезает при вводе и читается не всеми программами.
+        // Особенно важно для <select>: без подписи он объявляется просто
+        // «список, свёрнут», и человек не понимает, что именно выбирает.
+        a11yName:                  'Ваше имя',
+        a11yPhone:                 'Номер телефона',
+        a11yTelegram:              'Telegram',
+        a11yWhatsapp:              'WhatsApp',
+        a11yDistrict:              'Район',
+        a11yService:               'Категория работ',
+        a11yMessage:               'Описание задачи',
+        a11yPhotos:                'Фотографии задачи (до 3 штук)',
+        a11yCity:                  'Город',
+        a11ySpecialty:             'Специальность',
+        a11yExperience:            'Опыт работы в годах',
+        a11yAbout:                 'О себе и опыте работы',
+        a11yDistrictOther:         'Уточните район или ориентир',
+        a11ySpecialtyOther:        'Уточните специальность',
         // Бейдж в окне благодарности. До этого текст был зашит в HTML каждой
         // из 105 страниц и успел разъехаться: на лендингах «15–60 минут», на
         // главных «30–60». Теперь источник один — словарь, HTML не трогаем.
@@ -91,6 +110,21 @@ const i18n = {
         masterDistrictPlaceholder: 'ჯერ აირჩიეთ ქალაქი',
         masterDistrictLabel:       'სამუშაო რაიონი',
         masterCityRequired:        'გთხოვთ, აირჩიოთ ქალაქი — განაცხადები მიდის იმავე ქალაქის ხელოსნებთან',
+        // Ველების სახელები სკრინრიდერისთვის (aria-label) — ეკრანზე არ ჩანს.
+        a11yName:                  'თქვენი სახელი',
+        a11yPhone:                 'ტელეფონის ნომერი',
+        a11yTelegram:              'Telegram',
+        a11yWhatsapp:              'WhatsApp',
+        a11yDistrict:              'რაიონი',
+        a11yService:               'სამუშაოს კატეგორია',
+        a11yMessage:               'დავალების აღწერა',
+        a11yPhotos:                'დავალების ფოტოები (3-მდე)',
+        a11yCity:                  'ქალაქი',
+        a11ySpecialty:             'სპეციალობა',
+        a11yExperience:            'სამუშაო გამოცდილება წლებში',
+        a11yAbout:                 'თქვენ შესახებ და გამოცდილება',
+        a11yDistrictOther:         'დააზუსტეთ რაიონი ან ორიენტირი',
+        a11ySpecialtyOther:        'დააზუსტეთ სპეციალობა',
         thanksBadgeLabel:          'პასუხის საშუალო დრო',
         thanksBadgeValue:          '15–60 წუთი',
         thanksBadgeLabelNight:     'პასუხის დრო',
@@ -125,6 +159,21 @@ const i18n = {
         masterDistrictPlaceholder: 'Choose a city first',
         masterDistrictLabel:       'Work district',
         masterCityRequired:        'Please choose a city — requests go to specialists in the same city',
+        // Field names for screen readers (aria-label) — not visible on screen.
+        a11yName:                  'Your name',
+        a11yPhone:                 'Phone number',
+        a11yTelegram:              'Telegram',
+        a11yWhatsapp:              'WhatsApp',
+        a11yDistrict:              'District',
+        a11yService:               'Service category',
+        a11yMessage:               'Task description',
+        a11yPhotos:                'Task photos (up to 3)',
+        a11yCity:                  'City',
+        a11ySpecialty:             'Specialty',
+        a11yExperience:            'Years of experience',
+        a11yAbout:                 'About you and your experience',
+        a11yDistrictOther:         'Specify the district or a landmark',
+        a11ySpecialtyOther:        'Specify your specialty',
         thanksBadgeLabel:          'Average response time',
         thanksBadgeValue:          '15–60 minutes',
         thanksBadgeLabelNight:     'Response time',
@@ -138,7 +187,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '27';
+const MASTERA_VERSION = '28';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Публичный username бота мастеров — для диплинка «завершить регистрацию».
@@ -399,6 +448,60 @@ function initLanguageSwitcher() {
     });
 }
 
+// Соответствие «поле формы → ключ подписи в i18n».
+// Ключи селекторов намеренно по name/типу, а не по id: id есть не у всех
+// полей, а разметка форм одинакова на всех 108 страницах.
+const A11Y_FIELD_LABELS = [
+    ['input[name="name"]',        'a11yName'],
+    ['input[name="phone"]',       'a11yPhone'],
+    ['input[name="telegram"]',    'a11yTelegram'],
+    ['input[name="whatsapp"]',    'a11yWhatsapp'],
+    ['select[name="district"]',   'a11yDistrict'],
+    ['select[name="service"]',    'a11yService'],
+    ['select[name="city"]',       'a11yCity'],
+    ['select[name="specialty"]',  'a11ySpecialty'],
+    ['textarea[name="message"]',  'a11yMessage'],
+    ['textarea[name="about"]',    'a11yAbout'],
+    ['input[name="experience"]',  'a11yExperience'],
+    ['input[name="district_other"]',  'a11yDistrictOther'],
+    ['input[name="specialty_other"]', 'a11ySpecialtyOther'],
+    ['.lead-photo-input',         'a11yPhotos'],
+];
+
+/**
+ * Проставляет полям форм aria-label — подпись, которую читает скринридер.
+ *
+ * Зачем это нужно. Поля опознаются только по placeholder, а он подписью не
+ * считается: исчезает при вводе и читается не всеми программами. Хуже всего
+ * с <select> — у них placeholder'а нет вовсе, и без подписи скринридер
+ * объявляет «список, свёрнут», не называя, что выбирают. Аудит доступности
+ * помечает это как critical.
+ *
+ * Почему в JS, а не атрибутом в разметке: подписи переводятся вместе со
+ * страницей (вызов стоит в setLanguage), и правка одна на все 108 страниц
+ * вместо 108 одинаковых правок в HTML.
+ *
+ * На внешний вид не влияет: aria-label не отображается, placeholder и
+ * оформление остаются как были.
+ */
+function applyFieldLabels() {
+    const lang = ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru';
+    const dict = i18n[lang] || i18n.ru;
+
+    A11Y_FIELD_LABELS.forEach(function (pair) {
+        const selector = pair[0];
+        const text = dict[pair[1]];
+        if (!text) return;
+        document.querySelectorAll(selector).forEach(function (el) {
+            // Скрытые служебные поля (honeypot _gotcha, hidden service на
+            // лендингах) озвучивать не нужно — скринридер их и так пропускает,
+            // а лишний aria-label сбивает с толку при отладке.
+            if (el.type === 'hidden') return;
+            el.setAttribute('aria-label', text);
+        });
+    });
+}
+
 function setLanguage(lang) {
     // Обновляем глобальную переменную
     currentLang = lang;
@@ -440,6 +543,9 @@ function setLanguage(lang) {
         const placeholder = element.dataset[lang + 'Placeholder'];
         if (placeholder) element.placeholder = placeholder;
     });
+
+    // Подписи полей форм для скринридера — на текущем языке страницы.
+    applyFieldLabels();
 
     // Title страницы
     const titleElement = document.querySelector('title');
@@ -1126,6 +1232,9 @@ function initClientPhotoUpload() {
     input.accept = 'image/*';
     input.multiple = true;
     input.className = 'lead-photo-input';
+    // Подпись для скринридера: у <input type="file"> нет placeholder'а, и без
+    // неё поле объявляется просто «кнопка выбора файла».
+    input.setAttribute('aria-label', t('a11yPhotos'));
     // Прячем нативный input: его текст («Выбрать файлы / Файлы не выбраны») задаётся
     // локалью браузера и не переводится. Вместо него — своя кнопка с переводом.
 
@@ -1211,6 +1320,7 @@ function initMasterSpecialtyOther() {
     input.type = 'text';
     input.name = 'specialty_other';
     input.placeholder = t('specialtyOtherPlaceholder');
+    input.setAttribute('aria-label', t('a11ySpecialtyOther'));
     input.style.display = 'none';           // скрыто, пока не выбрано «Другое»
     input.minLength = 2;
 
@@ -1507,6 +1617,7 @@ function initMasterCityDistrict() {
         citySel = document.createElement('select');
         citySel.name = 'city';
         citySel.required = true;
+        citySel.setAttribute('aria-label', t('a11yCity'));
         citySel.className = districtSel.className;   // те же стили, что у района
 
         const ph = document.createElement('option');
@@ -1605,6 +1716,7 @@ function initDistrictOtherInput(form, select) {
     input.setAttribute('data-en-placeholder', i18n.en.districtOtherPlaceholder);
     input.setAttribute('data-ka-placeholder', i18n.ka.districtOtherPlaceholder);
     input.placeholder = t('districtOtherPlaceholder');
+    input.setAttribute('aria-label', t('a11yDistrictOther'));
     input.style.display = 'none';   // скрыто, пока не выбран «Другой»
     input.minLength = 3;            // «ок» и прочие отписки не пройдут
 

@@ -81,9 +81,9 @@
   <meta name="geo.region" content="GE-TB">
   <meta name="geo.placename" content="Tbilisi, Georgia">
 
-  <link rel="stylesheet" href="/style.css?v=27">
-  <link rel="stylesheet" href="/service.css?v=27">
-  <script src="/script.js?v=27" defer></script>
+  <link rel="stylesheet" href="/style.css?v=28">
+  <link rel="stylesheet" href="/service.css?v=28">
+  <script src="/script.js?v=28" defer></script>
 
 <script type="application/ld+json">
 {
@@ -172,7 +172,7 @@
       <div class="price-row"><span class="price-name">ელ. ფარის შეცვლა / აწყობა</span><span class="price-val">120₾-დან</span></div>
       <div class="price-row"><span class="price-name">სრული გაყვანილობის შეცვლა (1 ოთახი)</span><span class="price-val">400₾-დან</span></div>
       <div class="price-row"><span class="price-name">დიაგნოსტიკა და გაუმართაობის ძიება</span><span class="price-val">30₾-დან</span></div>
-      <p style="text-align:center; font-size:0.8rem; color:rgba(255,255,255,0.4); margin-top:1rem;">ზუსტი ღირებულება — დათვალიერების შემდეგ. ოსტატი ფასს სამუშაოს დაწყებამდე ასახელებს.</p>
+      <p style="text-align:center; font-size:0.8rem; color:rgba(255,255,255,0.55); margin-top:1rem;">ზუსტი ღირებულება — დათვალიერების შემდეგ. ოსტატი ფასს სამუშაოს დაწყებამდე ასახელებს.</p>
     </div>
 
     <div class="sections-container">
@@ -419,10 +419,10 @@
       </p>
     </footer>
 
-  <div id="clientLeadFormModal" class="modal">
+  <div id="clientLeadFormModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="clientLeadFormTitle">
     <div class="modal-content">
       <span class="modal-close" onclick="closeClientLeadForm()">&times;</span>
-      <h2 class="modal-title">ელექტრიკოსის გამოძახება</h2>
+      <h2 class="modal-title" id="clientLeadFormTitle">ელექტრიკოსის გამოძახება</h2>
       <p class="modal-subtitle">აღწერეთ ამოცანა — ოსტატი 60 წთ-ში გამოეხმაურება</p>
       <form action="https://formspree.io/f/xpqjbpyk" method="POST" class="contact-form" id="clientLeadForm">
         <input type="text" name="name" placeholder="თქვენი სახელი" required minlength="2">

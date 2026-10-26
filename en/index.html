@@ -161,11 +161,11 @@
   <meta name="ICBM" content="41.7151, 44.8271">
   <meta name="theme-color" content="#FDB913">
 
-  <link rel="stylesheet" href="/style.css?v=27">
+  <link rel="stylesheet" href="/style.css?v=28">
   <!-- service.css не нужен для первого экрана — грузим без блокировки рендера -->
-  <link rel="stylesheet" href="/service.css?v=27" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="/service.css?v=27"></noscript>
-  <script src="/script.js?v=27" defer></script>
+  <link rel="stylesheet" href="/service.css?v=28" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="/service.css?v=28"></noscript>
+  <script src="/script.js?v=28" defer></script>
 </head>
 
 <body>
@@ -605,10 +605,10 @@
     </footer>
 
   <!-- Modal — client request -->
-  <div id="clientLeadFormModal" class="modal">
+  <div id="clientLeadFormModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="clientLeadFormTitle">
     <div class="modal-content">
       <span class="modal-close" onclick="closeClientLeadForm()">&times;</span>
-      <h2 class="modal-title">Submit a request</h2>
+      <h2 class="modal-title" id="clientLeadFormTitle">Submit a request</h2>
       <p class="modal-subtitle">Describe the task — we'll find a master</p>
       <form action="https://formspree.io/f/xpqjbpyk" method="POST" class="contact-form" id="clientLeadForm">
         <input type="text" name="name" placeholder="Your name" required minlength="2">

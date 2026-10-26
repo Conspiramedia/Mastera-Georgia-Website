@@ -113,9 +113,9 @@
   <meta name="geo.region" content="GE-TB">
   <meta name="geo.placename" content="Old Batumi, Batumi, Georgia">
 
-  <link rel="stylesheet" href="/style.css?v=27">
-  <link rel="stylesheet" href="/service.css?v=27">
-  <script src="/script.js?v=27" defer></script>
+  <link rel="stylesheet" href="/style.css?v=28">
+  <link rel="stylesheet" href="/service.css?v=28">
+  <script src="/script.js?v=28" defer></script>
 </head>
 
 <body>
@@ -515,10 +515,10 @@
       </p>
     </footer>
 
-  <div id="clientLeadFormModal" class="modal">
+  <div id="clientLeadFormModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="clientLeadFormTitle">
     <div class="modal-content">
       <span class="modal-close" onclick="closeClientLeadForm()">&times;</span>
-      <h2 class="modal-title">Call a handyman in Old Batumi</h2>
+      <h2 class="modal-title" id="clientLeadFormTitle">Call a handyman in Old Batumi</h2>
       <p class="modal-subtitle">Describe the task — a master responds in 60 min</p>
       <form action="https://formspree.io/f/xpqjbpyk" method="POST" class="contact-form" id="clientLeadForm">
         <input type="text" name="name" placeholder="Your name" required minlength="2">

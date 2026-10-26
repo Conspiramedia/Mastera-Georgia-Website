@@ -104,11 +104,11 @@
   <meta name="ICBM" content="41.7151, 44.8271">
   <meta name="theme-color" content="#FDB913">
 
-  <link rel="stylesheet" href="/style.css?v=27">
+  <link rel="stylesheet" href="/style.css?v=28">
   <!-- service.css не нужен для первого экрана — грузим без блокировки рендера -->
-  <link rel="stylesheet" href="/service.css?v=27" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="/service.css?v=27"></noscript>
-  <script src="/script.js?v=27" defer></script>
+  <link rel="stylesheet" href="/service.css?v=28" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="/service.css?v=28"></noscript>
+  <script src="/script.js?v=28" defer></script>
 </head>
 
 <body>
@@ -405,10 +405,10 @@
     </footer>
 
   <!-- Модальное окно — заявка мастера -->
-  <div id="masterLeadFormModal" class="modal">
+  <div id="masterLeadFormModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="masterLeadFormTitle">
     <div class="modal-content">
       <span class="modal-close" onclick="closeMasterLeadForm()">&times;</span>
-      <h2 class="modal-title">Оставить заявку</h2>
+      <h2 class="modal-title" id="masterLeadFormTitle">Оставить заявку</h2>
       <p class="modal-subtitle">Начните получать заказы уже сегодня</p>
       <form action="https://formspree.io/f/mykdoebj" method="POST" class="contact-form" id="masterLeadForm">
         <input type="text" name="name" placeholder="Ваше имя" required minlength="2">

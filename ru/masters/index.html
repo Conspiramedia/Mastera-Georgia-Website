@@ -23,7 +23,7 @@
   <meta property="og:url" content="https://mastera.ge/ru/masters/">
   <meta property="og:title" content="Мастера Грузии — Стать партнёром, получать заказы">
   <meta property="og:description" content="Получайте заказы на сантехнику, электрику, ремонт. 0% комиссии, бесплатная регистрация.">
-  <meta property="og:image" content="https://mastera.ge/image/og-preview-ru.jpg?v=38">
+  <meta property="og:image" content="https://mastera.ge/image/og-preview-ru.jpg?v=43">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="ru_RU">
@@ -34,7 +34,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Мастера Грузии — Стать партнёром, получать заказы">
   <meta name="twitter:description" content="Получайте заказы на сантехнику, электрику, ремонт. 0% комиссии, бесплатная регистрация.">
-  <meta name="twitter:image" content="https://mastera.ge/image/og-preview-ru.jpg?v=38">
+  <meta name="twitter:image" content="https://mastera.ge/image/og-preview-ru.jpg?v=43">
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/image/favicon.svg">
@@ -43,6 +43,10 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/image/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
 
+  <!-- Шрифт в критическом пути: без preload браузер узнаёт о нём
+       только после разбора style.css и начинает качать позже. -->
+  <link rel="preload" href="/fonts/montserrat-var.woff2" as="font"
+        type="font/woff2" crossorigin>
   <!-- Соединение со счётчиком заводится заранее: DNS, TCP и TLS к чужому
        домену занимают время, и без preconnect они стартуют только в момент
        запроса скрипта. -->
@@ -89,7 +93,7 @@
       "name": "Мастера Грузии",
       "description": "Сервис для мастеров по всей Грузии. Получайте заказы на сантехнику, электрику, ремонт. 0% комиссии, бесплатная регистрация.",
       "url": "https://mastera.ge/ru/masters/",
-      "image": "https://mastera.ge/image/og-preview-ru.jpg?v=38",
+      "image": "https://mastera.ge/image/og-preview-ru.jpg?v=43",
       "telephone": "+995557645196",
       "email": "info@mastera.ge",
       "priceRange": "₾₾",
@@ -127,11 +131,11 @@
   <meta name="ICBM" content="41.7151, 44.8271">
   <meta name="theme-color" content="#FDB913">
 
-  <link rel="stylesheet" href="/style.css?v=38">
+  <link rel="stylesheet" href="/style.css?v=43">
   <!-- service.css не нужен для первого экрана — грузим без блокировки рендера -->
-  <link rel="stylesheet" href="/service.css?v=38" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="/service.css?v=38"></noscript>
-  <script src="/script.js?v=38" defer></script>
+  <link rel="stylesheet" href="/service.css?v=43" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="/service.css?v=43"></noscript>
+  <script src="/script.js?v=43" defer></script>
 </head>
 
 <body>

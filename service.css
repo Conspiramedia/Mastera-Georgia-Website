@@ -38,7 +38,7 @@
 }
 
 .service-hero h1 {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     /* Эталон размеров H1 — .hero-title главных страниц (style.css).
        Потолок был 6rem против 4rem у главных: на широком экране заголовок
        лендинга вырастал больше эталонного. */
@@ -201,7 +201,7 @@
 }
 
 .districts h2 {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: clamp(1.4rem, 2.5vw, 1.8rem);
     font-weight: 700;
     color: var(--construction-yellow);
@@ -354,7 +354,7 @@
   padding: 0.45rem 0.9rem;
   border-radius: 20px;
   cursor: pointer;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'NotoGeo', 'Montserrat', sans-serif;
   font-size: 0.85rem;
   font-weight: 600;
   transition: all 0.3s ease;

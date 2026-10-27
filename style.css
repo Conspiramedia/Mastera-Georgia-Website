@@ -1,48 +1,74 @@
 /* ============================================
-   ЛОКАЛЬНЫЕ ШРИФТЫ MONTSERRAT
-   ============================================ */
+   ЛОКАЛЬНЫЕ ШРИФТЫ
+   ============================================
+
+   Было: пять статических начертаний Montserrat (400/500/600/700/900),
+   каждое ~100 КБ — 498 КБ на каждой загрузке страницы. Стало: один
+   вариативный файл на 47 КБ, покрывающий весь диапазон 400-900.
+   Начертания настоящие, а не синтезированные браузером.
+
+   Файлы собираются из исходников скриптом build-fonts.py (исходники
+   лежат вне репозитория). Подрезаны по диапазонам Unicode: латиница +
+   кириллица для Montserrat, грузинский для Noto. */
+
 @font-face {
     font-family: 'Montserrat';
+    /* Диапазон вместо одного числа: это вариативный шрифт, и браузер
+       берёт из него любую жирность от 400 до 900. */
+    font-weight: 400 900;
+    font-style: normal;
+    font-display: swap;
+    src: url('./fonts/montserrat-var.woff2') format('woff2-variations'),
+         url('./fonts/montserrat-var.woff2') format('woff2');
+    /* Какие символы умеет файл. Без этого браузер качает шрифт даже на
+       странице, где ни одного подходящего символа нет — так и выходило
+       на /ge/: все пять файлов Montserrat скачивались впустую. */
+    unicode-range: U+0020-007E, U+00A0-00FF, U+0400-045F, U+0490-0491,
+                   U+2010-2027, U+20A0-20BF, U+2116;
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   ГРУЗИНСКИЙ: Noto Sans Georgian
+
+   В Montserrat грузинских глифов нет вообще (0 из 43) — проверено по
+   таблице cmap. На /ge/ все пять файлов качались впустую, а текст всё
+   равно рисовался системным шрифтом: тонким, без поддержки жирности,
+   из-за чего заголовки там не выделялись.
+
+   unicode-range ограничивает загрузку грузинским блоком, поэтому на
+   русских и английских страницах эти файлы не скачиваются вовсе. */
+
+/* ⚠️ Порядок объявлений важен. Грузинские @font-face идут ПЕРЕД Montserrat
+   в списке font-family у body (см. --font-main ниже), иначе вариативный
+   Montserrat с диапазоном 400-900 перекрывает их по весу: браузер считает,
+   что подходящее начертание уже есть, bold и black не скачивает и рисует
+   синтетическую жирность. Проверено — 700 и 900 выглядели одинаково. */
+
+@font-face {
+    font-family: 'NotoGeo';
     font-weight: 400;
     font-style: normal;
     font-display: swap;
-    src: url('./fonts/montserrat-regular.woff2') format('woff2');
+    src: url('./fonts/notosansgeorgian.woff2') format('woff2');
+    unicode-range: U+10A0-10FF, U+1C90-1CBF;
 }
 
 @font-face {
-    font-family: 'Montserrat';
-    font-weight: 500;
+    font-family: 'NotoGeo';
+    font-weight: 500 700;
     font-style: normal;
     font-display: swap;
-    src: url('./fonts/montserrat-medium.woff2') format('woff2');
+    src: url('./fonts/notosansgeorgian-bold.woff2') format('woff2');
+    unicode-range: U+10A0-10FF, U+1C90-1CBF;
 }
 
 @font-face {
-    font-family: 'Montserrat';
-    font-weight: 600;
+    font-family: 'NotoGeo';
+    font-weight: 800 900;
     font-style: normal;
     font-display: swap;
-    src: url('./fonts/montserrat-semibold.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: 'Montserrat';
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
-    src: url('./fonts/montserrat-bold.woff2') format('woff2');
-}
-
-/* Black (900) — используется заголовком-логотипом в шапке (.logo-title).
-   Без этого объявления браузер подставлял ближайшее доступное снизу начертание,
-   то есть Bold 700: синтетического утолщения он не делает, когда жирное уже есть.
-   Набор символов тот же, что у остальных файлов (латиница + кириллица). */
-@font-face {
-    font-family: 'Montserrat';
-    font-weight: 900;
-    font-style: normal;
-    font-display: swap;
-    src: url('./fonts/montserrat-black.woff2') format('woff2');
+    src: url('./fonts/notosansgeorgian-black.woff2') format('woff2');
+    unicode-range: U+10A0-10FF, U+1C90-1CBF;
 }
 
 /* ============================================
@@ -69,7 +95,7 @@
 }
 
 body {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     background: var(--dark-concrete);
     color: var(--white);
     overflow-x: hidden;
@@ -279,7 +305,7 @@ header .online-counter {
 }
 
 .logo-title {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 2.2rem;
     font-weight: 900;
     letter-spacing: 3px;
@@ -323,7 +349,7 @@ header .online-counter {
 }
 
 .subtitle {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     color: var(--safety-green);
     font-size: 1.1rem;
     font-weight: 500;
@@ -422,7 +448,7 @@ header .online-counter {
 }
 
 .online-text {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     color: var(--white);
     font-size: 0.95rem;
     font-weight: 500;
@@ -474,7 +500,7 @@ header .online-counter {
     border: 2px solid var(--safety-green);
     backdrop-filter: blur(10px);
     box-shadow: 0 4px 15px rgba(6, 255, 165, 0.3);
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     color: #fff;
     font-size: 0.95rem;
     font-weight: 500;
@@ -540,7 +566,7 @@ header .online-counter {
 
 .hero h1,
 .hero-title {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: clamp(2rem, 4.1vw, 4rem);
     line-height: 1.2;
     margin-bottom: 1.5rem;
@@ -558,7 +584,7 @@ header .online-counter {
 }
 
 .hero-subtitle {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: clamp(1rem, 2vw, 4rem);
     font-weight: 400;
     max-width: 900px;
@@ -592,7 +618,7 @@ header .online-counter {
 /* Цифры стали подписью к кнопке, а не самостоятельным блоком:
    они объясняют, почему стоит жать, но не перетягивают взгляд на себя */
 .stat-number {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 2rem;
     color: var(--safety-green);
     line-height: 1;
@@ -600,7 +626,7 @@ header .online-counter {
 }
 
 .stat-label {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 0.75rem;
     font-weight: 700;
     color: #999;
@@ -618,7 +644,7 @@ header .online-counter {
 }
 
 .services-heading {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: clamp(2rem, 3.5vw, 3rem);
     font-weight: 900;
     text-align: center;
@@ -627,7 +653,7 @@ header .online-counter {
 }
 
 .services-subtitle {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: clamp(0.9rem, 1.2vw, 1.1rem);
     font-weight: 500;
     text-align: center;
@@ -718,7 +744,7 @@ header .online-counter {
 }
 
 .service-card-title {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 1.3rem;
     font-weight: 700;
     color: var(--white);
@@ -726,7 +752,7 @@ header .online-counter {
 }
 
 .service-card-desc {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 0.9rem;
     font-weight: 400;
     color: #aaa;
@@ -737,7 +763,7 @@ header .online-counter {
 
 .service-card-link {
     display: inline-block;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--construction-yellow);
@@ -919,7 +945,7 @@ header .online-counter {
 }
 
 .section-title {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 2.5rem;
     font-weight: 500;
     margin-bottom: 1rem;
@@ -928,7 +954,7 @@ header .online-counter {
 }
 
 .section-tagline {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 1rem;
     font-weight: 600;
     margin-bottom: 2rem;
@@ -944,7 +970,7 @@ header .online-counter {
 }
 
 .benefits-list li {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     padding: 0.8rem 0;
     border-bottom: 1px solid var(--steel-gray);
     font-size: 1rem;
@@ -985,7 +1011,7 @@ header .online-counter {
     width: fit-content;
     padding: 1.2rem 2.5rem;
     text-align: center;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 1rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -1169,7 +1195,7 @@ header .online-counter {
 }
 
 .section-heading {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: clamp(2.5rem, 4vw, 4rem);
     font-weight: 900;
     text-align: center;
@@ -1178,7 +1204,7 @@ header .online-counter {
 }
 
 .section-subtitle {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: clamp(1rem, 1.5vw, 1.3rem);
     font-weight: 500;
     text-align: center;
@@ -1238,7 +1264,7 @@ header .online-counter {
 }
 
 .step-number {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 4rem;
     font-weight: 900;
     color: rgba(253, 185, 19, 0.1);
@@ -1277,7 +1303,7 @@ header .online-counter {
 }
 
 .step-title {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--construction-yellow);
@@ -1286,7 +1312,7 @@ header .online-counter {
 }
 
 .step-description {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 1rem;
     font-weight: 400;
     color: #ccc;
@@ -1413,7 +1439,7 @@ header .online-counter {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 1.8rem;
     font-weight: 900;
     color: var(--dark-concrete);
@@ -1426,7 +1452,7 @@ header .online-counter {
 }
 
 .testimonial-name {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 1.2rem;
     font-weight: 700;
     color: var(--white);
@@ -1434,7 +1460,7 @@ header .online-counter {
 }
 
 .testimonial-profession {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 0.9rem;
     font-weight: 500;
     color: var(--safety-green);
@@ -1453,7 +1479,7 @@ header .online-counter {
 }
 
 .testimonial-text {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 1rem;
     font-weight: 400;
     color: #ddd;
@@ -1495,7 +1521,7 @@ header .online-counter {
 
 .stat-value {
     display: block;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 1.1rem;
     font-weight: 700;
     color: var(--construction-yellow);
@@ -1505,7 +1531,7 @@ header .online-counter {
 
 .stat-label {
     display: block;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 0.8rem;
     font-weight: 500;
     color: #999;
@@ -1586,7 +1612,7 @@ header .online-counter {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 1.5rem;
     font-weight: 900;
     color: var(--dark-concrete);
@@ -1596,7 +1622,7 @@ header .online-counter {
 
 .faq-text {
     flex: 1;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 1.1rem;
     font-weight: 600;
     color: var(--white);
@@ -1627,7 +1653,7 @@ header .online-counter {
 }
 
 .faq-answer p {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 1rem;
     font-weight: 400;
     color: #ccc;
@@ -1671,7 +1697,7 @@ header .online-counter {
 }
 
 .footer-cta-title {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size:4rem;
     font-weight: 900;
     margin-bottom: 2.5rem;
@@ -1681,7 +1707,7 @@ header .online-counter {
 }
 
 .footer-cta-text {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 2rem;
     font-weight: 500;
     color: #e0e0e0;
@@ -1708,7 +1734,7 @@ footer {
 }
 
 .footer-text {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     color: var(--safety-green);
     font-size: 1.1rem;
     font-weight: 400;
@@ -1731,7 +1757,7 @@ footer {
 }
 
 .footer-privacy {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     color: rgba(255, 255, 255, 0.6);
     font-size: 0.85rem;
     font-weight: 400;
@@ -2197,7 +2223,7 @@ footer {
     padding: 0.42rem 1rem;
     border-radius: 20px;
     cursor: pointer;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 0.9rem;
     font-weight: 600;
     transition: all 0.3s ease;
@@ -2290,7 +2316,7 @@ body.modal-open {
 }
 
 .modal-title {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 1.8rem;
     font-weight: 700;
     color: var(--construction-yellow);
@@ -2299,7 +2325,7 @@ body.modal-open {
 }
 
 .modal-subtitle {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 1rem;
     font-weight: 500;
     color: var(--safety-green);
@@ -2323,7 +2349,7 @@ body.modal-open {
     border-radius: 10px;
     background: rgba(0, 0, 0, 0.3);
     color: #fff;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 1rem;
     transition: all 0.3s ease;
     resize: none;
@@ -2361,7 +2387,7 @@ body.modal-open {
 }
 
 .contact-or-text {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--construction-yellow);
@@ -2440,7 +2466,7 @@ body.modal-open {
 }
 
 .thank-you-title {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 2.2rem;
     font-weight: 700;
     color: var(--construction-yellow);
@@ -2448,7 +2474,7 @@ body.modal-open {
 }
 
 .thank-you-text {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 1.1rem;
     font-weight: 400;
     color: #ddd;
@@ -2474,7 +2500,7 @@ body.modal-open {
 
 .badge-label {
     display: block;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 0.85rem;
     font-weight: 500;
     color: #999;
@@ -2485,7 +2511,7 @@ body.modal-open {
 
 .badge-value {
     display: block;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 1.4rem;
     font-weight: 700;
     color: var(--construction-yellow);
@@ -2503,7 +2529,7 @@ body.modal-open {
 
 .thank-you-privacy-item {
     display: block;   /* каждая гарантия — своей строкой, даже без flex */
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 0.95rem;
     font-weight: 500;
     color: rgba(255, 255, 255, 0.85);
@@ -2515,7 +2541,7 @@ body.modal-open {
     border: none;
     padding: 1rem 3rem;
     border-radius: 10px;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 1.1rem;
     font-weight: 700;
     cursor: pointer;
@@ -2620,7 +2646,7 @@ body.modal-open {
     gap: 0.8rem;
     cursor: pointer;
     user-select: none;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.9);
     margin-top: 0.5rem;
@@ -2648,7 +2674,7 @@ body.modal-open {
 }
 
 .consent-text {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.8);
     line-height: 1.4;
@@ -2660,7 +2686,7 @@ body.modal-open {
     border: none;
     padding: 1rem 2rem;
     border-radius: 10px;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 1.1rem;
     font-weight: 700;
     cursor: pointer;
@@ -3093,7 +3119,7 @@ body.modal-open {
 }
 
 .lead-photo-label {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 0.9rem;
     font-weight: 500;
     color: rgba(255, 255, 255, 0.85);
@@ -3118,7 +3144,7 @@ body.modal-open {
     border-radius: 8px;
     background: var(--construction-yellow);
     color: #1a1a1a;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-weight: 600;
     cursor: pointer;
 }
@@ -3178,7 +3204,7 @@ body.modal-open {
     border-radius: 10px;
     background: #229ED9;
     color: #fff !important;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-weight: 600;
     text-decoration: none;
     transition: background 0.3s ease, transform 0.2s ease;

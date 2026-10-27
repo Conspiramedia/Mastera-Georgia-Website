@@ -144,7 +144,13 @@ body {
         0% 0%,
         0% 0%,
         0% 0px;
-    animation: gradientDotsMove 30s linear infinite, hueCycle 6s linear infinite;
+    /* hue-rotate убран: он прокручивал цветовой круг каждые 6 секунд, и
+       цветные пятна фона просвечивали сквозь полупрозрачную шапку. Контраст
+       текста шапки — телефона, подписей переключателей — плавал вместе с
+       фазой анимации: на одном кадре отлив розовый, на другом зелёный.
+       Движение точек (gradientDotsMove) оставлено: оно не меняет цвета.
+       На производительность это не влияло — FPS с фоном и без одинаковый. */
+    animation: gradientDotsMove 30s linear infinite;
 }
 
 @keyframes gradientDotsMove {
@@ -160,22 +166,18 @@ body {
     }
 }
 
-@keyframes hueCycle {
-    0% {
-        filter: hue-rotate(0deg);
-    }
-    100% {
-        filter: hue-rotate(360deg);
-    }
-}
-
 /* ============================================
    HEADER
    ============================================ */
 header {
     position: relative;
     padding: 2rem 5%;
-    background: rgba(0, 0, 0, 0.35);
+    /* Было 0.35 — сквозь шапку просвечивали цветные пятна фона, и контраст
+       текста зависел от того, какое пятно оказалось под ним. В шапке лежит
+       телефон, то есть канал заявки: его читаемость не должна зависеть от
+       положения декоративного слоя. 0.65 гасит пятна, стеклянный эффект
+       (backdrop-filter ниже) при этом сохраняется. */
+    background: rgba(0, 0, 0, 0.65);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border-bottom: 4px solid var(--construction-yellow);

@@ -187,7 +187,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '37';
+const MASTERA_VERSION = '38';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Публичный username бота мастеров — для диплинка «завершить регистрацию».
@@ -2354,8 +2354,8 @@ function initWhatsAppButtonTracking() {
     // за бликом. Стартует с WhatsApp (передний слой — is-front).
     fab.innerHTML =
         '<span class="cf-morph">' +
-            '<span class="cf-layer cf-layer--wa is-front" aria-hidden="true"><img src="/image/whatsapp-icon.png" alt=""></span>' +
-            '<span class="cf-layer cf-layer--tg" aria-hidden="true"><img src="/image/telegram-icon.png" alt=""></span>' +
+            '<span class="cf-layer cf-layer--wa is-front" aria-hidden="true"><img src="/image/whatsapp-icon.webp" alt="" width="192" height="192" decoding="async"></span>' +
+            '<span class="cf-layer cf-layer--tg" aria-hidden="true"><img src="/image/telegram-icon.webp" alt="" width="192" height="192" decoding="async"></span>' +
             '<span class="cf-shine" aria-hidden="true"></span>' +
         '</span>';
 
@@ -2365,10 +2365,10 @@ function initWhatsAppButtonTracking() {
     menu.innerHTML =
         '<a class="contact-opt contact-opt--tg" href="' + tgHref + '" target="_blank" rel="noopener" ' +
         'aria-label="' + labels.tg + '" title="' + labels.tg + '">' +
-        '<img src="/image/telegram-icon.png" alt="Telegram" loading="lazy"></a>' +
+        '<img src="/image/telegram-icon.webp" alt="Telegram" width="192" height="192" loading="lazy" decoding="async"></a>' +
         '<a class="contact-opt contact-opt--wa" href="' + waHref + '" target="_blank" rel="noopener" ' +
         'aria-label="' + labels.wa + '" title="' + labels.wa + '">' +
-        '<img src="/image/whatsapp-icon.png" alt="WhatsApp" loading="lazy"></a>';
+        '<img src="/image/whatsapp-icon.webp" alt="WhatsApp" width="192" height="192" loading="lazy" decoding="async"></a>';
     document.body.appendChild(menu);
 
     // Ротация слоёв FAB: блик и смена иконки играют всегда, независимо от

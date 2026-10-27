@@ -22,7 +22,7 @@
   <meta property="og:url" content="https://mastera.ge/en/">
   <meta property="og:title" content="Handymen in Tbilisi — Find a Handyman in 60 Minutes">
   <meta property="og:description" content="Verified handymen in Tbilisi. Plumbing, electrical, repairs, furniture, movers. Leave a request.">
-  <meta property="og:image" content="https://mastera.ge/image/og-preview-en.jpg?v=37">
+  <meta property="og:image" content="https://mastera.ge/image/og-preview-en.jpg?v=38">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="en_US">
@@ -33,7 +33,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Handymen in Tbilisi — Find a Handyman in 60 Minutes">
   <meta name="twitter:description" content="Verified handymen in Tbilisi. Plumbing, electrical, repairs. Leave a request on the website.">
-  <meta name="twitter:image" content="https://mastera.ge/image/og-preview-en.jpg?v=37">
+  <meta name="twitter:image" content="https://mastera.ge/image/og-preview-en.jpg?v=38">
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/image/favicon.svg">
@@ -45,6 +45,11 @@
   <!-- Preload LCP-картинки (hero-фон) — ускоряет первую отрисовку -->
   <link rel="preload" as="image" href="/image/hero-bg.webp" fetchpriority="high">
 
+  <!-- Соединение со счётчиком заводится заранее: DNS, TCP и TLS к чужому
+       домену занимают время, и без preconnect они стартуют только в момент
+       запроса скрипта. -->
+  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com">
   <!-- Google Analytics (отложенная загрузка: не блокирует первую отрисовку) -->
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -86,7 +91,7 @@
       "name": "Masters Georgia",
       "description": "Handyman matching service in Tbilisi, Georgia. Plumbing, electrical, apartment repair, furniture assembly, movers.",
       "url": "https://mastera.ge/en/",
-      "image": "https://mastera.ge/image/og-preview-en.jpg?v=37",
+      "image": "https://mastera.ge/image/og-preview-en.jpg?v=38",
       "telephone": "+995557645196",
       "email": "info@mastera.ge",
       "priceRange": "₾₾",
@@ -161,11 +166,11 @@
   <meta name="ICBM" content="41.7151, 44.8271">
   <meta name="theme-color" content="#FDB913">
 
-  <link rel="stylesheet" href="/style.css?v=37">
+  <link rel="stylesheet" href="/style.css?v=38">
   <!-- service.css не нужен для первого экрана — грузим без блокировки рендера -->
-  <link rel="stylesheet" href="/service.css?v=37" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="/service.css?v=37"></noscript>
-  <script src="/script.js?v=37" defer></script>
+  <link rel="stylesheet" href="/service.css?v=38" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="/service.css?v=38"></noscript>
+  <script src="/script.js?v=38" defer></script>
 </head>
 
 <body>
@@ -665,7 +670,7 @@
 
   <!-- WhatsApp floating button -->
   <a id="scrollToTop" class="scroll-to-top whatsapp-fab" href="https://wa.me/995557645196" target="_blank" rel="noopener">
-    <img src="/image/whatsapp-icon.png" alt="WhatsApp" loading="lazy">
+    <img src="/image/whatsapp-icon.webp" alt="WhatsApp" width="192" height="192" loading="lazy" decoding="async">
   </a>
 
   <script>

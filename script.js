@@ -187,7 +187,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '44';
+const MASTERA_VERSION = '53';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Публичный username бота мастеров — для диплинка «завершить регистрацию».
@@ -217,6 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initClientLeadFormTracking();
     initClientPhotoUpload();
     initCityDropdown();
+    initLangDropdown();
     initClientDistrictOptions();
     initClientUrgentOption();
     initMasterLeadFormTracking();
@@ -1465,6 +1466,91 @@ function buildDistrictSelect(select, withHints) {
 //
 // Ширину плашки считаем в JS, а не в CSS: она должна совпадать с «Для мастеров»
 // над ней, а длина той надписи меняется при переключении языка (RUS/GEO/ENG).
+// Переключатель языка на телефоне: свёрнут до текущего языка, остальные
+// раскрываются по клику. Нужен, потому что на мобильном он становится
+// компактной кнопкой справа от логотипа (см. style.css, блок «ШАПКА НА
+// ТЕЛЕФОНАХ»), и его прежняя строка в шапке освобождается.
+//
+// Зеркалит initCityDropdown ниже, но с обратным условием по ширине:
+// у городов выпадающий список работает на ДЕСКТОПЕ, у языка — на МОБИЛЬНОМ.
+function initLangDropdown() {
+    const MOBILE = '(max-width: 768px)';
+    const header = document.querySelector('header');
+    const lang = header && header.querySelector('.language-switcher');
+    if (!lang) return;
+
+    // Кнопку-бургер создаём здесь, а не в разметке: иначе пришлось бы
+    // править 108 HTML-страниц. Сам список языков — существующий узел,
+    // он только меняет отображение, поэтому ссылки для краулера те же.
+    const btn = document.createElement('button');
+    btn.className = 'burger-btn';
+    btn.type = 'button';
+    btn.setAttribute('aria-label', 'Выбор языка');
+    btn.setAttribute('aria-expanded', 'false');
+    btn.innerHTML = '<span></span><span></span><span></span>';
+    header.appendChild(btn);
+
+    function setOpen(open) {
+        lang.classList.toggle('is-open', open);
+        btn.classList.toggle('is-open', open);
+        // Блокируем прокрутку страницы: меню привязано к шапке и при
+        // скролле уезжало бы вместе с ней, отрываясь от бургера.
+        document.body.classList.toggle('lang-menu-open', open);
+        btn.setAttribute('aria-expanded', String(open));
+    }
+
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setOpen(!lang.classList.contains('is-open'));
+    });
+
+    // Клик вне списка и Escape — закрываем
+    document.addEventListener('click', (e) => {
+        if (!lang.contains(e.target) && e.target !== btn) setOpen(false);
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') setOpen(false);
+    });
+
+    function apply() {
+        const mobile = window.matchMedia(MOBILE).matches;
+        btn.hidden = !mobile;
+        // На десктопе переключатель показан целиком — раскрытие ни к чему
+        if (!mobile) setOpen(false);
+    }
+
+    apply();
+    window.matchMedia(MOBILE).addEventListener('change', apply);
+}
+
+// «Для мастеров» уезжает из шапки в футер: на первом экране мобильного она
+// занимала строку в 52 px, а это служебная навигация, не оффер клиенту.
+//
+// Ссылку добавляем скриптом, а не в разметку 109 страниц. Совсем убрать её
+// с сайта нельзя: это единственная ссылка на /masters/, и страница стала бы
+// сиротой — осталась бы в sitemap, но без внутренних ссылок просела бы в
+// выдаче, а мастер не нашёл бы, где зарегистрироваться.
+// Строка «Для мастеров» для футера. Возвращает готовый узел, а вставляет
+// его initFooter — она пересобирает футер целиком, и ссылка, добавленная
+// отдельно, была бы затёрта.
+function buildMastersLink() {
+    const source = document.querySelector('header .audience-link');
+    if (!source) return null;
+
+    const line = document.createElement('span');
+    line.className = 'footer-masters-mobile';
+    line.appendChild(document.createTextNode('🔧 '));
+
+    const link = document.createElement('a');
+    link.className = 'footer-link footer-masters-link';
+    link.href = source.getAttribute('href');
+    // Подпись берём из самой кнопки — она уже переведена на язык страницы
+    link.textContent = (source.textContent || '').trim() || 'Для мастеров';
+    line.appendChild(link);
+
+    return line;
+}
+
 function initCityDropdown() {
     const DESKTOP = '(min-width: 769px)';
     const city = document.querySelector('.city-switcher');
@@ -2521,7 +2607,17 @@ function initFooter() {
         footer.appendChild(emailLine);
         appendBreak();
 
-        // 5. Copyright — всегда последним
+        // 5. «Для мастеров» — своей строкой под почтой.
+        // Кнопка убрана из шапки на телефоне (освобождала там 52 px), но
+        // совсем снимать ссылку нельзя: это единственный путь на /masters/
+        // со всего сайта, иначе страница осталась бы сиротой.
+        const mastersLink = buildMastersLink();
+        if (mastersLink) {
+            footer.appendChild(mastersLink);
+            appendBreak();
+        }
+
+        // 6. Copyright — всегда последним
         const copyrightLine = document.createElement('span');
         copyrightLine.className = 'footer-copyright-mobile';
         copyrightLine.appendChild(document.createTextNode('© 2026 '));

@@ -190,7 +190,6 @@ header .online-counter {
     align-items: center;
     margin: 0;
     /* Все 4 плашки шапки появляются единой волной вместе с логотипом (без задержки) */
-    animation: slideDown 0.8s ease-out backwards;
 }
 
 /* ── Десктоп: компактный блок в правом углу (Вариант 2). Логотип слева, справа
@@ -270,7 +269,6 @@ header .online-counter {
     align-items: center;
     justify-content: center;
     gap: 1.2rem;
-    animation: slideDown 0.8s ease-out;
 }
 
 
@@ -331,7 +329,6 @@ header .online-counter {
     font-weight: 500;
     margin-top: 0.5rem;
     letter-spacing: 2px;
-    animation: fadeIn 1s ease-out 0.3s backwards;
 }
 
 .header-phone {
@@ -392,7 +389,6 @@ header .online-counter {
     border-radius: 50px;
     border: 2px solid var(--safety-green);
     backdrop-filter: blur(10px);
-    animation: slideDown 0.8s ease-out 0.5s backwards;
     box-shadow: 0 4px 15px rgba(6, 255, 165, 0.3);
 }
 
@@ -477,7 +473,6 @@ header .online-counter {
     border-radius: 50px;
     border: 2px solid var(--safety-green);
     backdrop-filter: blur(10px);
-    animation: slideDown 0.8s ease-out 0.4s backwards;
     box-shadow: 0 4px 15px rgba(6, 255, 165, 0.3);
     font-family: 'Montserrat', sans-serif;
     color: #fff;
@@ -549,7 +544,6 @@ header .online-counter {
     font-size: clamp(2rem, 4.1vw, 4rem);
     line-height: 1.2;
     margin-bottom: 1.5rem;
-    animation: slideUp 0.8s ease-out 0.2s backwards;
     font-weight: 800;
     color: #d0d0d0;
     min-height: 2.6em;
@@ -563,24 +557,6 @@ header .online-counter {
     }
 }
 
-/* Курсор для эффекта печатной машинки */
-.typing-cursor {
-    display: inline-block;
-    width: 3px;
-    height: 1em;
-    background-color: #d0d0d0;
-    margin-left: 4px;
-    animation: blink 0.7s infinite;
-    vertical-align: text-bottom;
-    transform: scaleY(0.7);
-    transform-origin: center;
-}
-
-@keyframes blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
-}
-
 .hero-subtitle {
     font-family: 'Montserrat', sans-serif;
     font-size: clamp(1rem, 2vw, 4rem);
@@ -588,7 +564,6 @@ header .online-counter {
     max-width: 900px;
     margin: 0 auto 3rem;
     color: #ccc;
-    animation: fadeIn 1s ease-out 0.5s backwards;
     line-height: 1.8;
 }
 
@@ -608,7 +583,6 @@ header .online-counter {
     gap: 2.5rem;
     margin-bottom: 1.75rem;
     flex-wrap: wrap;
-    animation: fadeIn 1s ease-out 0.7s backwards;
 }
 
 .stat-item {
@@ -815,7 +789,6 @@ header .online-counter {
     position: relative;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
-    animation: scaleIn 0.6s ease-out backwards;
     display: flex;
     flex-direction: column;
     min-height: 700px;
@@ -1123,7 +1096,6 @@ header .online-counter {
        обёртки. С center она остаётся по размеру содержимого при любом
        исходе — поэтому правило нужно даже при рабочих префиксах. */
     align-items: center;
-    animation: fadeIn 1s ease-out 0.9s backwards;
 }
 
 /* Оформление один в один с .cta-footer: тот же оранжевый контур, та же
@@ -1233,7 +1205,6 @@ header .online-counter {
     overflow: hidden;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     border: 1px solid transparent;
-    animation: slideUp 0.6s ease-out backwards;
 }
 
 .step-card[data-step="1"] { animation-delay: 0.1s; border-color: var(--construction-yellow); }
@@ -1383,7 +1354,6 @@ header .online-counter {
     position: relative;
     overflow: hidden;
     transition: all 0.4s ease;
-    animation: scaleIn 0.6s ease-out backwards;
     display: flex;
     flex-direction: column;
 }
@@ -1566,7 +1536,6 @@ header .online-counter {
     overflow: hidden;
     border: 1px solid rgba(253, 185, 19, 0.3);
     transition: all 0.3s ease;
-    animation: slideUp 0.5s ease-out backwards;
 }
 
 .faq-item:nth-child(1) { animation-delay: 0.1s; }
@@ -1782,16 +1751,13 @@ footer {
 /* ============================================
    АНИМАЦИИ
    ============================================ */
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+/* Анимации появления контента (slideDown/scaleIn и вызовы slideUp/fadeIn
+   с fill-mode backwards) убраны: они держали шапку, H1, цифры и кнопку
+   заказа на opacity:0 до 1.9 секунды. Пока элемент прозрачен, он не
+   засчитывается в LCP, а если браузер не рисует кадры (фоновая вкладка,
+   рендер поисковика) — не появляется вовсе.
+   slideUp и fadeIn ниже оставлены: их используют модалки, где анимация
+   запускается по действию пользователя и ничего не прячет при загрузке. */
 
 @keyframes slideUp {
     from {
@@ -1810,17 +1776,6 @@ footer {
     }
     to {
         opacity: 1;
-    }
-}
-
-@keyframes scaleIn {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
     }
 }
 

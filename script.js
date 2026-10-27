@@ -187,7 +187,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '31';
+const MASTERA_VERSION = '36';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Публичный username бота мастеров — для диплинка «завершить регистрацию».
@@ -208,13 +208,10 @@ function t(key) {
 
 document.addEventListener('DOMContentLoaded', () => {
     initStatsAnimation();
-    initScrollAnimation();
     initSmoothScroll();
     initButtonHoverEffects();
     initOnlineCounter();
     initLanguageSwitcher();
-    initTypingEffect();
-    initServiceTypingEffect();
     initModalForms();
     initScrollToTop();
     initClientLeadFormTracking();
@@ -302,31 +299,12 @@ function animateCounter(element, target, duration, suffix, start) {
 // 2. АНИМАЦИЯ ПОЯВЛЕНИЯ ПРИ СКРОЛЛЕ
 // ============================================
 
-function initScrollAnimation() {
-    const elementsToAnimate = document.querySelectorAll('.section-card');
-
-    if (!window.IntersectionObserver) {
-        elementsToAnimate.forEach(el => el.style.opacity = 1);
-        return;
-    }
-
-    const scrollObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && !entry.target.dataset.scrollAnimated) {
-                entry.target.dataset.scrollAnimated = 'true';
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, { threshold: 0.1 });
-
-    elementsToAnimate.forEach(card => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(30px)';
-        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        scrollObserver.observe(card);
-    });
-}
+// Появление карточек по скроллу убрано вместе с CSS-анимациями появления.
+// Функция ставила .section-card в opacity:0 и возвращала видимость только
+// когда карточка попадала во вьюпорт. Пока элемент прозрачен, он не
+// засчитывается в LCP, а в среде без отрисовки кадров (фоновая вкладка,
+// рендер поисковика) IntersectionObserver мог не сработать вовсе — и
+// карточки услуг оставались невидимыми. Контент показывается сразу.
 
 // ============================================
 // 3. ПЛАВНАЯ ПРОКРУТКА
@@ -516,14 +494,9 @@ function setLanguage(lang) {
 
     // Переводим все элементы с data-атрибутами
     document.querySelectorAll('[data-ru], [data-ka], [data-en]').forEach(element => {
-        if (element.classList.contains('hero-title')) {
-            const cursor = element.querySelector('.typing-cursor');
-            if (cursor) cursor.remove();
-            const text = element.dataset[lang];
-            if (text) element.textContent = text;
-            return;
-        }
-
+        // Отдельная ветка для .hero-title убрана вместе с эффектом печатной
+        // машинки: она существовала только чтобы снять курсор перед переводом.
+        // Сам перевод делает общий код ниже — он же обрабатывает hero-title.
         const text = element.dataset[lang];
         if (text) {
             if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
@@ -2469,112 +2442,6 @@ function initWhatsAppButtonTracking() {
     bindOption('.contact-opt--tg', 'telegram', tgHref);
 }
 
-// ============================================
-// 15. ЭФФЕКТ ПЕЧАТНОЙ МАШИНКИ ДЛЯ H1
-// ============================================
-
-function initTypingEffect() {
-    const titleElement = document.querySelector('.hero-title');
-    if (!titleElement) return;
-
-    const isMastersPage = window.location.pathname.includes('/masters/');
-
-    // Название города для КЛИЕНТСКИХ страниц — по городу страницы.
-    // Берём его из botCityFromUrl(): она определяет город по району лендинга,
-    // а не по подстроке «batumi» в адресе. У районов novy-bulvar,
-    // khimshiashvili и boni-gorodok названия города в slug нет, и проверка
-    // подстрокой показывала бы на них «Тбилиси».
-    const cityCanon = (typeof botCityFromUrl === 'function') ? botCityFromUrl() : 'Тбилиси';
-    const CITY_LABEL = {
-        ru: { 'Тбилиси': 'Тбилиси', 'Батуми': 'Батуми' },
-        en: { 'Тбилиси': 'Tbilisi',  'Батуми': 'Batumi' },
-        // грузинский: послеложная форма «в городе» — თბილისში / ბათუმში
-        ka: { 'Тбилиси': 'თბილისში', 'Батуми': 'ბათუმში' }
-    };
-    const cityLbl = (CITY_LABEL[currentLang] || CITY_LABEL.ru)[cityCanon]
-                 || CITY_LABEL.ru[cityCanon] || cityCanon;
-
-    // На страницах «Для мастеров» город НЕ показываем: партнёрское предложение
-    // действует по всей стране, а не в одном городе (так же в Сербии, где на
-    // /masters/ стоит «Сербия»).
-    const textParts = {
-        ru: {
-            start:   'Сервис ',
-            option1: 'поиска мастеров ' + cityLbl,
-            option2: 'подбора мастеров ' + cityLbl
-        },
-        en: {
-            start:   'Master ',
-            option1: 'search service ' + cityLbl,
-            option2: 'matching service ' + cityLbl
-        },
-        ka: {
-            start:   'სერვისი ',
-            option1: 'ძიების ' + cityLbl,
-            option2: 'შერჩევის ' + cityLbl
-        },
-        ru_masters: {
-            start:   'Сервис ',
-            option1: 'поиска заказов Грузия',
-            option2: 'подбора заказов Грузия'
-        },
-        en_masters: {
-            start:   'Order ',
-            option1: 'search service Georgia',
-            option2: 'matching service Georgia'
-        },
-        ka_masters: {
-            start:   'შეკვეთების ',
-            option1: 'ძიების სერვისი საქართველოში',
-            option2: 'შერჩევის სერვისი საქართველოში'
-        }
-    };
-
-    const langKey = isMastersPage ? currentLang + '_masters' : currentLang;
-    const raw = textParts[langKey] || textParts[currentLang] || textParts.ru;
-
-    // Подмена города больше не нужна: название подставляется прямо в тексты
-    // выше через cityLbl, а на страницах мастеров города нет вовсе.
-    const parts = raw;
-
-    const typeSpeed  = 180;
-    const deleteSpeed = 50;
-    const pauseTime  = 1000;
-
-    const cursor = document.createElement('span');
-    cursor.className = 'typing-cursor';
-    titleElement.innerHTML = '';
-    titleElement.appendChild(cursor);
-
-    const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-    async function typeText(text) {
-        for (let i = 0; i < text.length; i++) {
-            titleElement.insertBefore(document.createTextNode(text[i]), cursor);
-            await wait(typeSpeed);
-        }
-    }
-
-    async function deleteText(count) {
-        for (let i = 0; i < count; i++) {
-            if (titleElement.childNodes.length > 1) {
-                titleElement.removeChild(titleElement.childNodes[titleElement.childNodes.length - 2]);
-            }
-            await wait(deleteSpeed);
-        }
-    }
-
-    async function runAnimation() {
-        await typeText(parts.start + parts.option1);
-        await wait(pauseTime);
-        await deleteText(parts.option1.length);
-        await typeText(parts.option2);
-        await wait(1000);
-        cursor.remove();
-    }
-
-    setTimeout(runAnimation, 500);
-}
 
 // ============================================
 // АКТУАЛЬНЫЙ EMAIL И МОБИЛЬНЫЙ ФУТЕР
@@ -2670,46 +2537,3 @@ function initFooter() {
 }
 
 document.addEventListener('DOMContentLoaded', initFooter);
-
-// ============================================
-// ЭФФЕКТ ПЕЧАТНОЙ МАШИНКИ ДЛЯ H1 НА СТРАНИЦАХ СЕРВИСА
-// ============================================
-
-function initServiceTypingEffect() {
-    const titleElement = document.querySelector('.service-title');
-    if (!titleElement) return;
-
-    const html = titleElement.innerHTML;
-    const parts = html.split(/<br\s*\/?>/i);
-    const line1 = parts[0] ? parts[0].trim() : '';
-    const line2 = parts[1] ? parts[1].trim() : '';
-
-    const typeSpeed = 180;
-
-    const cursor = document.createElement('span');
-    cursor.className = 'typing-cursor';
-    titleElement.innerHTML = '';
-    titleElement.appendChild(cursor);
-
-    const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-    async function typeText(text) {
-        for (let i = 0; i < text.length; i++) {
-            titleElement.insertBefore(document.createTextNode(text[i]), cursor);
-            await wait(typeSpeed);
-        }
-    }
-
-    async function runAnimation() {
-        await typeText(line1);
-        if (line2) {
-            const br = document.createElement('br');
-            titleElement.insertBefore(br, cursor);
-            await typeText(line2);
-        }
-        await wait(400);
-        cursor.remove();
-    }
-
-    setTimeout(runAnimation, 500);
-}

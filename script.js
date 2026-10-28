@@ -187,7 +187,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '72';
+const MASTERA_VERSION = '104';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Публичный username бота мастеров — для диплинка «завершить регистрацию».
@@ -1524,7 +1524,6 @@ const BURGER_SERVICES = [
 // править 108 HTML-страниц. Переключатель языка — существующий узел,
 // он только переезжает в панель, поэтому ссылки для краулера те же.
 function initBurgerMenu() {
-    const MOBILE = '(max-width: 768px)';
     const header = document.querySelector('header');
     if (!header) return;
 
@@ -1647,10 +1646,14 @@ function initBurgerMenu() {
     document.body.appendChild(overlay);
     document.body.appendChild(panel);
 
-    // Куда вернуть переключатель языка при переходе на десктоп
-    const langHome = lang ? { parent: lang.parentElement, next: lang.nextElementSibling } : null;
-
     function setOpen(open) {
+        // Ширину полосы прокрутки замеряем ДО блокировки: CSS возвращает её
+        // отступом, иначе страница расширяется на освободившееся место и
+        // весь контент дёргается вправо в момент выезда меню.
+        if (open) {
+            const w = window.innerWidth - document.documentElement.clientWidth;
+            document.documentElement.style.setProperty('--scrollbar-w', w + 'px');
+        }
         panel.classList.toggle('is-open', open);
         overlay.classList.toggle('is-open', open);
         btn.classList.toggle('is-open', open);
@@ -1658,32 +1661,28 @@ function initBurgerMenu() {
         btn.setAttribute('aria-expanded', String(open));
     }
 
+    // Меню одно на все ширины. Прежде оно собиралось только на телефоне, а
+    // на десктопе пряталось и возвращало переключатель языка в шапку —
+    // там были свои языки в ряд и город выпадающим списком. Теперь
+    // устройство навигации общее, и развилка по ширине не нужна.
     function apply() {
-        const mobile = window.matchMedia(MOBILE).matches;
-        if (mobile) {
-            // Собираем панель заново в нужном порядке: строка «Меню»,
-            // затем языки, услуги и кнопка. Порядок задаём каждый раз,
-            // а не только при первом вызове: appendChild переносит узел
-            // в конец, и после возврата языка из шапки он оказывался
-            // под кнопкой заявки.
-            panel.replaceChildren();
-            body.replaceChildren();
-            panel.appendChild(head);
-            if (lang) body.appendChild(lang);
-            body.appendChild(links);
-            body.appendChild(extra);
-            body.appendChild(cta);
-            panel.appendChild(body);
-        } else if (langHome) {
-            // Возвращаем переключатель в шапку на исходное место
-            const { parent, next } = langHome;
-            if (next && next.parentElement === parent) parent.insertBefore(lang, next);
-            else parent.appendChild(lang);
-            setOpen(false);
-        }
-        btn.hidden = !mobile;
-        panel.hidden = !mobile;
-        overlay.hidden = !mobile;
+        // Собираем панель заново в нужном порядке: строка «Меню»,
+        // затем языки, услуги и кнопка. Порядок задаём каждый раз,
+        // а не только при первом вызове: appendChild переносит узел
+        // в конец, и после возврата языка из шапки он оказывался
+        // под кнопкой заявки.
+        panel.replaceChildren();
+        body.replaceChildren();
+        panel.appendChild(head);
+        if (lang) body.appendChild(lang);
+        body.appendChild(links);
+        body.appendChild(extra);
+        body.appendChild(cta);
+        panel.appendChild(body);
+
+        btn.hidden = false;
+        panel.hidden = false;
+        overlay.hidden = false;
     }
 
     btn.addEventListener('click', (e) => {
@@ -1707,7 +1706,6 @@ function initBurgerMenu() {
     });
 
     apply();
-    window.matchMedia(MOBILE).addEventListener('change', apply);
 }
 
 function initCityDropdown() {
@@ -1715,44 +1713,23 @@ function initCityDropdown() {
     const city = document.querySelector('.city-switcher');
     if (!city) return;
 
-    // Нумеруем пункты выпадающей части: CSS по --i ставит их друг под другом.
-    // Активный город в список не входит, поэтому считаем только остальные —
-    // иначе первый пункт уехал бы на место второго.
-    city.querySelectorAll('.city-btn:not(.active)').forEach((btn, i) => {
-        btn.style.setProperty('--i', i);
-    });
+    // ⚠️ Раскрытие по клику убрано вместе с выпадающим списком: на десктопе
+    // теперь две кнопки городов в ряд, как на телефоне. Прежний обработчик
+    // звал preventDefault() на клике по плашке — с видимыми кнопками это
+    // глушило бы переход по ссылке активного города.
+    //
+    // Функция оставлена ради синхронизации ширины ниже: плашка города
+    // равняется по счётчику онлайна, и считать это в CSS нечем.
 
-    // Раскрытие по клику
-    city.addEventListener('click', (e) => {
-        if (!window.matchMedia(DESKTOP).matches) return;
-        // Клик по пункту списка — это переход по ссылке, не мешаем
-        if (e.target.closest('.city-btn:not(.active)')) return;
-        e.preventDefault();
-        city.classList.toggle('is-open');
-    });
-
-    // Клик вне плашки и Escape — закрываем
-    document.addEventListener('click', (e) => {
-        if (!city.contains(e.target)) city.classList.remove('is-open');
-    });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') city.classList.remove('is-open');
-    });
-
-    // Плашка-ориентир, по ширине которой равняем переключатель города.
-    // На главных и хабах это «Для мастеров» (стоит прямо над городом), а на
-    // сервисных и районных лендингах её в шапке нет — там равняемся на счётчик
-    // онлайна. Без запасного варианта --city-switcher-w не задавалась вовсе, и
-    // выпадающий список получал ширину по содержимому, не совпадающую с плашкой.
-    const masters = document.querySelector('.audience-link')
-                 || document.querySelector('.online-counter');
-
-    // Вторая пара: языковой переключатель равняется по счётчику онлайна, чтобы
-    // правые края обеих строк шапки сходились в одну вертикаль (как в Сербии).
-    // Радужной рамке (.language-switcher::before) это не вредит: она задана
-    // через inset: -2px от самого элемента и растягивается вместе с ним.
-    const lang = document.querySelector('.language-switcher');
-    const counter = document.querySelector('.online-counter');
+    // Плашка-ориентир, по ширине которой равняем переключатель города, —
+    // счётчик онлайна: он стоит прямо над городом и остался в шапке
+    // единственным соседом.
+    //
+    // ⚠️ Раньше ориентиром была «Для мастеров». Она уехала в бургер-меню и
+    // скрыта через display:none, то есть её offsetWidth теперь 0 — ширина
+    // считалась бы по содержимому самого города, и правые края двух строк
+    // шапки не сходились бы (234 px против 306 px у счётчика).
+    const masters = document.querySelector('.online-counter');
 
     function syncWidth() {
         const root = document.documentElement.style;
@@ -1760,23 +1737,17 @@ function initCityDropdown() {
         if (!window.matchMedia(DESKTOP).matches) {
             // На мобильном ширины не навязываем — плашки тянутся сами
             root.removeProperty('--city-switcher-w');
-            root.removeProperty('--lang-switcher-w');
             return;
         }
 
-        // Снимаем прежние значения, чтобы замерить естественную ширину
+        // Снимаем прежнее значение, чтобы замерить естественную ширину
         root.removeProperty('--city-switcher-w');
-        root.removeProperty('--lang-switcher-w');
 
         // Округляем вверх: дробная ширина (например 174.6px) даёт субпиксельный
         // сдвиг, и рамка выпадающего списка не сходится с рамкой плашки ровно.
         if (masters) {
             const need = Math.ceil(Math.max(masters.offsetWidth, city.scrollWidth));
             root.setProperty('--city-switcher-w', need + 'px');
-        }
-        if (counter && lang) {
-            const need = Math.ceil(Math.max(counter.offsetWidth, lang.scrollWidth));
-            root.setProperty('--lang-switcher-w', need + 'px');
         }
     }
 
@@ -2691,6 +2662,32 @@ function initWhatsAppButtonTracking() {
 // ============================================
 // АКТУАЛЬНЫЙ EMAIL И МОБИЛЬНЫЙ ФУТЕР
 // ============================================
+// Ссылка «Для мастеров» для футера на телефоне. Кнопка убрана из шапки
+// (освобождала там 52 px), но совсем снимать ссылку нельзя: это
+// единственный путь на /masters/ со всего сайта.
+//
+// ⚠️ Функция была потеряна при переделке бургер-меню (7a5e932) — остался
+// только вызов в initFooter. Падение ReferenceError рвало перестройку
+// футера целиком, на шаге 5 из 6: пропадали и сама ссылка, и строка
+// копирайта после неё. Ошибка тихая — консоль на телефоне никто не видит.
+function buildMastersLink() {
+    const source = document.querySelector('header .audience-link');
+    if (!source) return null;
+
+    const line = document.createElement('span');
+    line.className = 'footer-masters-mobile';
+    line.appendChild(document.createTextNode('🔧 '));
+
+    const link = document.createElement('a');
+    link.className = 'footer-link footer-masters-link';
+    link.href = source.getAttribute('href');
+    // Подпись берём из самой кнопки — она уже переведена на язык страницы
+    link.textContent = (source.textContent || '').trim() || 'Для мастеров';
+    line.appendChild(link);
+
+    return line;
+}
+
 function initFooter() {
     document.querySelectorAll('.footer-text').forEach((footer) => {
         // Десктоп не трогаем вообще.
@@ -2704,14 +2701,19 @@ function initFooter() {
         const brand = footer.querySelector('strong');
         const oldCopyright = footer.querySelector('.footer-copyright-mobile');
 
-        // Текст после названия бренда содержит описание сервиса.
-        // Берём его из исходной разметки до очистки футера.
+        // Описание сервиса — первая строка футера, до первого <br>.
+        //
+        // ⚠️ Раньше бралось из текстового узла ПОСЛЕ <strong>: копирайт
+        // стоял первой строкой, а описание шло за ним через «•». Теперь
+        // порядок обратный — описание сверху, копирайт внизу, — и прежний
+        // поиск возвращал пустую строку, то есть на телефоне первая
+        // строка футера просто исчезала.
         let urgentText = '';
-        if (brand && brand.nextSibling && brand.nextSibling.nodeType === Node.TEXT_NODE) {
-            urgentText = brand.nextSibling.nodeValue
-                .replace(/^\s*•\s*/, '')
-                .trim();
+        for (const node of footer.childNodes) {
+            if (node.nodeName === 'BR') break;
+            if (node.nodeType === Node.TEXT_NODE) urgentText += node.nodeValue;
         }
+        urgentText = urgentText.replace(/^\s*•\s*/, '').trim();
 
         // Если футер уже был обработан старой версией скрипта, восстанавливаем
         // почтовую ссылку из уже созданного контейнера.

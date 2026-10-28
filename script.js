@@ -187,7 +187,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '67';
+const MASTERA_VERSION = '68';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Публичный username бота мастеров — для диплинка «завершить регистрацию».
@@ -1496,6 +1496,12 @@ const BURGER_ICONS = {
     'klining':            '<path d="M12 2s5 6.5 5 11a5 5 0 0 1-10 0c0-4.5 5-11 5-11z"/>',
     'gruzchiki':          '<rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>',
     'remont-kompyuterov': '<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/>',
+
+    // Служебные пункты меню. «Для мастеров» — та же иконка, что у ссылки
+    // в шапке: человек узнаёт её, уйдя из шапки в меню.
+    'home':     '<path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V9.5z"/>',
+    'masters':  '<polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/><path d="M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>',
+    'facebook': '<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>',
 };
 
 const BURGER_SERVICES = [
@@ -1568,15 +1574,15 @@ function initBurgerMenu() {
     const citySlug = city === 'Батуми' ? 'batumi' : 'tbilisi';
     const langDir = pageLang === 'ka' ? 'ge' : pageLang;
 
-    const links = document.createElement('div');
-    links.className = 'burger-links';
-    BURGER_SERVICES.forEach((svc) => {
-        const href = `/${langDir}/${citySlug}/${svc.slug}-${citySlug}/`;
+    // Пункт меню: иконка + подпись. Общая сборка для услуг и служебных
+    // ссылок — иначе подсветка текущей страницы и разметка иконки
+    // разъехались бы между двумя группами при первой же правке.
+    function makeLink(href, text, iconKey, external) {
         const a = document.createElement('a');
         a.href = href;
 
-        // Иконка + подпись. Иконка декоративная: та же мысль уже сказана
-        // текстом рядом, поэтому aria-hidden — скринридер не читает её дважды.
+        // Иконка декоративная: та же мысль уже сказана текстом рядом,
+        // поэтому aria-hidden — скринридер не читает её дважды.
         const ico = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         ico.setAttribute('viewBox', '0 0 24 24');
         ico.setAttribute('fill', 'none');
@@ -1585,15 +1591,41 @@ function initBurgerMenu() {
         ico.setAttribute('stroke-linecap', 'round');
         ico.setAttribute('stroke-linejoin', 'round');
         ico.setAttribute('aria-hidden', 'true');
-        ico.innerHTML = BURGER_ICONS[svc.slug] || '';
+        ico.innerHTML = BURGER_ICONS[iconKey] || '';
         a.appendChild(ico);
 
-        a.appendChild(document.createTextNode(svc[pageLang] || svc.ru));
+        a.appendChild(document.createTextNode(text));
 
+        if (external) {
+            a.target = '_blank';
+            a.rel = 'noopener';
+        }
         // Текущая страница подсвечивается — человек видит, где он
         if (window.location.pathname === href) a.classList.add('is-current');
-        links.appendChild(a);
+        return a;
+    }
+
+    const links = document.createElement('div');
+    links.className = 'burger-links';
+
+    // Главная — первым пунктом: с лендинга услуги вернуться было некуда,
+    // кроме логотипа, и это не все замечают.
+    links.appendChild(makeLink(`/${langDir}/`,
+        { ru: 'Главная', ka: 'მთავარი', en: 'Home' }[pageLang] || 'Главная', 'home'));
+
+    BURGER_SERVICES.forEach((svc) => {
+        const href = `/${langDir}/${citySlug}/${svc.slug}-${citySlug}/`;
+        links.appendChild(makeLink(href, svc[pageLang] || svc.ru, svc.slug));
     });
+
+    // Служебные ссылки — отдельной группой после услуг, чтобы не
+    // путались со списком категорий. Подписи те же, что в шапке.
+    const extra = document.createElement('div');
+    extra.className = 'burger-links burger-links-extra';
+    extra.appendChild(makeLink(`/${langDir}/masters/`,
+        { ru: 'Для мастеров', ka: 'ოსტატებისთვის', en: 'For masters' }[pageLang] || 'Для мастеров',
+        'masters'));
+    extra.appendChild(makeLink(`/${langDir}/fb/`, 'Facebook', 'facebook', true));
 
     const cta = document.createElement('button');
     cta.className = 'burger-cta';
@@ -1633,6 +1665,7 @@ function initBurgerMenu() {
             panel.appendChild(head);
             if (lang) body.appendChild(lang);
             body.appendChild(links);
+            body.appendChild(extra);
             body.appendChild(cta);
             panel.appendChild(body);
         } else if (langHome) {

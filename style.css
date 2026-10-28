@@ -3722,6 +3722,13 @@ body.modal-open {
         transition: color 0.2s ease;
     }
 
+    /* Служебные ссылки отделены линией: иначе «Для мастеров» читался бы
+       как десятая услуга. Отступ сверху — чтобы линия не липла к списку. */
+    .burger-links-extra {
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+    }
+
     .burger-links a:hover,
     .burger-links a:active {
         background: rgba(255, 255, 255, 0.06);

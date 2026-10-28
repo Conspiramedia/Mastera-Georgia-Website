@@ -349,9 +349,15 @@
 /* Кнопка города */
 .city-btn {
   background: transparent;
-  border: 1px solid rgba(253, 185, 19, 0.3);
+  /* Рамка 2px, а не 1px: радиус здесь 20px против 8px у кнопки языка, и на
+     таком скруглении тонкая линия размывается сглаживанием — выглядела
+     заметно бледнее соседнего переключателя при равной толщине. */
+  border: 2px solid rgba(253, 185, 19, 0.3);
   color: rgba(255, 255, 255, 0.65);
-  padding: 0.45rem 0.9rem;
+  /* Отступ уменьшен на 1px против прежних 0.45rem: рамка выросла с 1px до
+     2px, и кнопка стала 39px против 38px у переключателя языка — рядом это
+     было видно. Теперь обе снова 38px. */
+  padding: 0.39rem 0.9rem;
   border-radius: 20px;
   cursor: pointer;
   font-family: 'NotoGeo', 'Montserrat', sans-serif;
@@ -362,17 +368,26 @@
   white-space: nowrap;
 }
 
-.city-btn:hover {
+/* Подсветка при наведении — только у НЕактивной кнопки: у активной
+   фон намеренно прозрачный, и общий :hover затирал бы его серым. */
+.city-btn:not(.active):hover {
   color: rgba(255, 255, 255, 0.95);
   background: rgba(255, 255, 255, 0.08);
 }
 
-/* Активный город */
+/* Активный город — «обведённая» кнопка, как активный язык:
+   фон остаётся тёмным, жёлтым горят только рамка и подпись.
+   Залитая кнопка (сначала градиент, потом плоский цвет) перетягивала
+   внимание с заголовка страницы — а город здесь не главное действие.
+
+   ⚠️ border, а не border-color: у неактивной кнопки рамка 1px, и без
+   полной записи ширина осталась бы от неё — рамка активного города
+   выглядела бы тоньше соседней. */
 .city-btn.active {
-  background: linear-gradient(135deg, var(--construction-yellow), var(--construction-orange));
-  color: var(--dark-concrete);
-  border: none;
-  box-shadow: 0 4px 15px rgba(253, 185, 19, 0.4);
+  background: transparent;
+  color: var(--construction-yellow);
+  border: 2px solid var(--construction-yellow);
+  box-shadow: none;
 }
 
 @media (max-width: 600px) {

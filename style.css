@@ -1440,7 +1440,7 @@ header .online-counter {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--construction-yellow), var(--construction-orange));
+    background: var(--construction-yellow);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1613,7 +1613,7 @@ header .online-counter {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--construction-yellow), var(--construction-orange));
+    background: var(--construction-yellow);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2244,7 +2244,7 @@ footer {
 }
 
 .lang-btn.active {
-    background: linear-gradient(135deg, var(--construction-yellow), var(--construction-orange));
+    background: var(--construction-yellow);
     color: var(--dark-concrete);
     border: none;
     outline: none;
@@ -2568,7 +2568,7 @@ body.modal-open {
 }
 
 .thank-you-master-btn {
-    background: linear-gradient(135deg, var(--construction-yellow), var(--construction-orange));
+    background: var(--construction-yellow);
     display: block;          /* Заставляет элемент занимать всю строку */
     width: 100%;             /* Растягивает на всю ширину контейнера (удобно для мобильных) */
     margin-top: 1.5rem;      /* Отступ сверху от блока "Время обработки" */
@@ -2686,7 +2686,7 @@ body.modal-open {
 }
 
 .submit-btn {
-    background: linear-gradient(135deg, var(--construction-yellow), var(--construction-orange));
+    background: var(--construction-yellow);
     color: var(--dark-concrete);
     border: none;
     padding: 1rem 2rem;
@@ -3484,47 +3484,51 @@ body.modal-open {
         padding: 0.85rem 2.5rem;
     }
 }
+
 /* ============================================================================
-   ШАПКА НА ТЕЛЕФОНАХ: ЯЗЫК — КОМПАКТНОЙ КНОПКОЙ, «ДЛЯ МАСТЕРОВ» — В ФУТЕР
+   БУРГЕР-МЕНЮ НА ТЕЛЕФОНАХ (<769px)
    ============================================================================
 
    Шапка занимала 431 px — 53% экрана 812 px, и H1 лендинга начинался на
    471 px, ниже сгиба: человек, пришедший по запросу «сантехник Тбилиси»,
    первым экраном видел только служебную навигацию.
 
-   Четыре плашки шли отдельными строками по 52 px. Две из них уходят:
-     • «Для мастеров» — в футер (ссылку переносит скрипт, см. initMastersLink);
-     • переключатель языка — в компактную кнопку справа от логотипа,
-       остальные языки раскрываются по клику.
+   Четыре плашки шли отдельными строками по 52 px. Две из них убраны:
+   переключатель языка переезжает в меню, «Для мастеров» — в футер
+   (вместе с ней уходит и вращающаяся стрелка spin-slow).
 
-   В шапке остаются выбор города (ключевая навигация сервиса двух городов)
-   и счётчик онлайна (элемент доверия, показывает, что сервис живой).
+   Устройство повторяет меню соседнего проекта Auto RS: панель на всю
+   высоту экрана, ширина 80% (max 320px), со своей строкой «Меню +
+   крестик» наверху. Видимый край затемнения слева — подсказка, что под
+   меню осталась страница и её можно вернуть касанием.
 
-   Разметку 108 страниц править не потребовалось: меняется только
-   отображение существующих узлов. */
+   ⚠️ Панель перекрывает шапку сайта ЦЕЛИКОМ. Прежняя версия выезжала
+   под строкой логотипа, и при выезде сквозь неё просвечивали плашки
+   городов и анимированный фон — выглядело грязно.
+
+   Разметку 108 страниц править не потребовалось: кнопка и панель
+   создаются скриптом, пункты — существующие узлы либо ссылки,
+   собранные из слагов текущего города. */
 @media (max-width: 768px) {
     header {
-        /* Якорь для кнопки языка */
         position: relative;
     }
 
-    /* «Для мастеров» уезжает в футер — в шапке его больше нет.
-       Вместе с ним уходит и вращающаяся стрелка (spin-slow). */
+    /* «Для мастеров» уезжает в футер */
     header .audience-link {
         display: none;
     }
 
-    /* ── Бургер ───────────────────────────────────────────────────────
-       Три полоски справа от логотипа. Без рамки и фона: ширина 24 px,
-       поэтому название трогать не нужно — хватает штатного отступа. */
+    /* ── Кнопка ───────────────────────────────────────────────────────
+       Три полоски справа от логотипа, на уровне названия. Без рамки и
+       фона: ширина 24 px, поэтому кегль названия трогать не нужно. */
     .burger-btn {
         position: absolute;
         top: 19px;
         right: 4%;
         z-index: 30;
         width: 44px;              /* минимальная область нажатия */
-        height: 24px;             /* ровно высота строки названия, поэтому
-                                     их центры совпадают без сдвига */
+        height: 24px;             /* ровно высота строки названия */
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -3542,89 +3546,230 @@ body.modal-open {
         height: 2px;
         background: var(--construction-yellow);
         border-radius: 2px;
-        transition: transform 0.28s ease, opacity 0.2s ease;
     }
 
-    /* Раскрыто — полоски складываются в крестик */
-    .burger-btn.is-open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .burger-btn.is-open span:nth-child(2) { opacity: 0; }
-    .burger-btn.is-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-    /* ── Список языков ────────────────────────────────────────────────
-       Простой список на тёмной подложке. Радужная рамка (::before),
-       жёлтая заливка активного пункта и овальные кнопки убраны: в меню
-       из трёх строк они читались как мешанина, а не как список.
-       Абсолютный, поэтому не меняет высоту шапки. Раскрытием управляет
-       класс .is-open, который ставит script.js. */
-    header .language-switcher {
-        position: absolute;
-        top: calc(19px + 24px + 0.6rem);
-        right: 4%;
-        z-index: 29;
-        width: auto;
-        min-width: 8rem;
-        /* ⚠️ Снимаем фиксированные 52px: их задаёт правило
-           «header .city-switcher, .language-switcher… { height: 52px }»
-           для плашек шапки, и список схлопывался до одной строки —
-           был виден только первый пункт. */
-        height: auto;
-        flex-direction: column;
-        gap: 0;
-        padding: 0.35rem 0;
-        background: rgba(18, 18, 18, 0.97);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
-        backdrop-filter: none;
+    /* ── Затемнение ───────────────────────────────────────────────── */
+    .burger-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 2000;
+        display: block;
+        background: rgba(0, 0, 0, 0.4);
         opacity: 0;
         visibility: hidden;
-        transform: translateY(-8px);
-        transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s;
+        transition: opacity 0.3s ease, visibility 0.3s;
     }
 
-    /* Радужная анимированная рамка — её рисует ::before */
-    header .language-switcher::before {
-        display: none;
-    }
-
-    header .language-switcher.is-open {
+    .burger-overlay.is-open {
         opacity: 1;
         visibility: visible;
-        transform: translateY(0);
     }
 
-    /* Пункты: ровные строки без рамок, фона и скруглений */
-    header .language-switcher .lang-btn,
-    header .language-switcher .lang-btn.active {
-        width: 100%;
+    /* ── Панель ────────────────────────────────────────────────────────
+       z-index выше шапки сайта (10) и её плашек: перекрывает всё.
+       Анимируем right, а не transform: так панель не создаёт лишнего
+       контекста наложения. */
+    .burger-panel {
+        position: fixed;
+        top: 0;
+        right: -100vw;
+        bottom: 0;
+        width: 80%;
+        max-width: 320px;
+        z-index: 2001;
+        display: flex;
+        flex-direction: column;
+        background: var(--dark-concrete);
+        border-left: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: -20px 0 40px rgba(0, 0, 0, 0.5);
+        transition: right 0.3s ease;
+    }
+
+    .burger-panel.is-open {
+        right: 0;
+    }
+
+    /* Строка «Меню + крестик» — как в эталоне: фиксированная высота,
+       тонкая линия снизу, остальное содержимое прокручивается под ней. */
+    .burger-head {
+        display: flex;
+        flex: 0 0 auto;
+        align-items: center;
+        justify-content: space-between;
+        height: 56px;
+        padding: 0 1.25rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .burger-head-title {
+        font-family: 'NotoGeo', 'Montserrat', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--construction-yellow);
+        letter-spacing: 0.5px;
+    }
+
+    .burger-close {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;              /* минимальная область нажатия */
+        height: 44px;
+        margin-right: -0.6rem;    /* крестик вплотную к краю, область шире */
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        position: relative;
+    }
+
+    /* Крестик — две линии, тем же жёлтым, что и полоски бургера */
+    .burger-close::before,
+    .burger-close::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 2px;
+        background: var(--construction-yellow);
+        border-radius: 2px;
+    }
+
+    .burger-close::before { transform: rotate(45deg); }
+    .burger-close::after  { transform: rotate(-45deg); }
+
+    /* Содержимое прокручивается само: девять услуг плюс языки и кнопка
+       не помещаются на низком экране в альбомной ориентации. */
+    .burger-body {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        padding: 1rem 0 1.25rem;
+    }
+
+    /* ── Языки — одной строкой, первым блоком ─────────────────────── */
+    .burger-body .language-switcher {
+        /* ⚠️ Сбрасываем order: прежнее мобильное правило шапки
+           «.language-switcher { order: 3 }» уводило языки в конец. */
+        order: 0;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 0.4rem;
+        width: auto;
+        height: auto;
+        margin: 0 1.25rem 1rem;
+        padding: 0;
         background: none;
         border: none;
         border-radius: 0;
         box-shadow: none;
-        text-align: left;
-        padding: 0.65rem 1.1rem;
-        font-size: 0.85rem;
-        font-weight: 500;
-        color: rgba(255, 255, 255, 0.75);
+        backdrop-filter: none;
     }
 
-    /* Текущий язык — только цветом, без заливки */
-    header .language-switcher .lang-btn.active {
+    /* Радужная анимированная рамка (::before) в списке ни к чему */
+    .burger-body .language-switcher::before {
+        display: none;
+    }
+
+    .burger-body .lang-btn {
+        flex: 1 1 auto;
+        padding: 0.5rem 0;
+        font-size: 0.8rem;
+        text-align: center;
+        background: none;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
+        box-shadow: none;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .burger-body .lang-btn.active {
+        background: none;
+        border-color: var(--construction-yellow);
         color: var(--construction-yellow);
         font-weight: 700;
     }
 
-    /* Пока список языков раскрыт, страница под ним не прокручивается:
-       меню привязано к шапке, и при скролле уезжало бы вместе с ней,
-       отрываясь от бургера. */
-    /* ⚠️ Нужен и html, и body: прокручивается корневой элемент, и
+    /* ── Ссылки на услуги ──────────────────────────────────────────────
+       Линий между пунктами нет: список из девяти строк, расчерченный
+       на части, читался бы как таблица, а не как навигация. */
+    .burger-links {
+        display: flex;
+        flex-direction: column;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 0.5rem;
+    }
+
+    .burger-links a {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1.25rem;
+        font-size: 0.92rem;
+        color: rgba(255, 255, 255, 0.85);
+        text-decoration: none;
+        transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    /* Иконки пунктов — те же, что на карточках услуг.
+       Серые, а не жёлтые: девять жёлтых значков в столбик перетягивали бы
+       внимание с активного пункта и кнопки заявки — единственных мест, где
+       жёлтый что-то значит. Оттенок взят у рамки кнопок языка. */
+    .burger-links a svg {
+        flex: 0 0 auto;           /* не сжимается, когда подпись в две строки */
+        width: 20px;
+        height: 20px;
+        color: rgba(255, 255, 255, 0.45);
+        transition: color 0.2s ease;
+    }
+
+    .burger-links a:hover,
+    .burger-links a:active {
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff;
+    }
+
+    .burger-links a:hover svg,
+    .burger-links a:active svg {
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    /* Текущая страница — тем же жёлтым, что и активный язык */
+    .burger-links a.is-current {
+        color: var(--construction-yellow);
+        font-weight: 600;
+    }
+
+    /* Иконка активного пункта жёлтая: цвет здесь уже что-то значит —
+       это единственный пункт, выделенный из девяти. */
+    .burger-links a.is-current svg {
+        color: var(--construction-yellow);
+    }
+
+    /* ── Кнопка заявки — внизу ─────────────────────────────────────── */
+    .burger-cta {
+        display: block;
+        width: calc(100% - 2.5rem);
+        margin: 1.25rem 1.25rem 0;
+        padding: 0.85rem 1rem;
+        background: var(--construction-yellow);
+        border: none;
+        border-radius: 10px;
+        color: var(--dark-concrete);
+        font-family: 'NotoGeo', 'Montserrat', sans-serif;
+        font-size: 0.92rem;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    /* Пока меню раскрыто, страница под ним не прокручивается.
+       ⚠️ Нужен и html, и body: прокручивается корневой элемент, и
        overflow:hidden на одном body страницу не останавливал. */
-    html:has(body.lang-menu-open),
-    body.lang-menu-open {
+    html:has(body.burger-open),
+    body.burger-open {
         overflow: hidden;
     }
 
-    /* Логотипу оставляем место под бургер. Кегль названия не трогаем:
+    /* Логотипу оставляем место под кнопку. Кегль названия не трогаем:
        бургер шириной 24 px, и 3.5rem хватает без уменьшения текста. */
     .logo-title {
         padding-right: 3.5rem;

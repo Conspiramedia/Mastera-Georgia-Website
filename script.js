@@ -187,7 +187,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '53';
+const MASTERA_VERSION = '66';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Публичный username бота мастеров — для диплинка «завершить регистрацию».
@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initClientLeadFormTracking();
     initClientPhotoUpload();
     initCityDropdown();
-    initLangDropdown();
+    initBurgerMenu();
     initClientDistrictOptions();
     initClientUrgentOption();
     initMasterLeadFormTracking();
@@ -1473,82 +1473,202 @@ function buildDistrictSelect(select, withHints) {
 //
 // Зеркалит initCityDropdown ниже, но с обратным условием по ширине:
 // у городов выпадающий список работает на ДЕСКТОПЕ, у языка — на МОБИЛЬНОМ.
-function initLangDropdown() {
+// Услуги для бургер-меню. Слаг собирается из основы и суффикса города:
+// santehnik-tbilisi / santehnik-batumi — схема одинакова для всех девяти
+// категорий, поэтому отдельная таблица адресов не нужна.
+//
+// Подписи короткие, как в меню, а не как в заголовках лендингов:
+// «Сантехник», а не «Сантехник в Тбилиси» — город уже выбран выше.
+// Иконки пунктов меню — те же, что на карточках услуг главной страницы
+// (ru/index.html, блок .service-card-icon). Намеренно дублируем разметку,
+// а не ссылаемся на карточки: лендинга услуг на 99 страницах из 108 нет,
+// и брать иконку со страницы было бы неоткуда.
+//
+// Цвет задаётся в CSS через currentColor, здесь его нет — иначе пункт
+// меню и его иконка разъехались бы по цвету при правке темы.
+const BURGER_ICONS = {
+    'master-na-chas':     '<path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>',
+    'santehnik':          '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>',
+    'elektrik':           '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
+    'bytovoy-remont':     '<path d="M15 12l-8.5 8.5a2.12 2.12 0 0 1-3-3L12 9"/><path d="M17.64 15 22 10.64"/><path d="m20.91 11.7-1.25-1.25c-.6-.6-.93-1.4-.93-2.25v-.86L16.01 4.6a5.56 5.56 0 0 0-3.94-1.64H9l.92.82A6.18 6.18 0 0 1 12 8.4v1.56l2 2h.86c.85 0 1.65.34 2.25.93l1.25 1.25"/>',
+    'sborka-mebeli':      '<line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>',
+    'naveska-montazh':    '<rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>',
+    'klining':            '<path d="M12 2s5 6.5 5 11a5 5 0 0 1-10 0c0-4.5 5-11 5-11z"/>',
+    'gruzchiki':          '<rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>',
+    'remont-kompyuterov': '<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/>',
+};
+
+const BURGER_SERVICES = [
+    { slug: 'master-na-chas',    ru: 'Мастер на час',      ka: 'ოსტატი საათით',       en: 'Handyman' },
+    { slug: 'santehnik',         ru: 'Сантехник',          ka: 'სანტექნიკოსი',        en: 'Plumber' },
+    { slug: 'elektrik',          ru: 'Электрик',           ka: 'ელექტრიკოსი',         en: 'Electrician' },
+    { slug: 'bytovoy-remont',    ru: 'Бытовой ремонт',     ka: 'საყოფაცხოვრებო რემონტი', en: 'Home repair' },
+    { slug: 'sborka-mebeli',     ru: 'Сборка мебели',      ka: 'ავეჯის აწყობა',       en: 'Furniture assembly' },
+    { slug: 'naveska-montazh',   ru: 'Навеска и монтаж',   ka: 'დამაგრება და მონტაჟი', en: 'Mounting' },
+    { slug: 'klining',           ru: 'Клининг',            ka: 'დასუფთავება',         en: 'Cleaning' },
+    { slug: 'gruzchiki',         ru: 'Грузчики',           ka: 'მტვირთავები',         en: 'Movers' },
+    { slug: 'remont-kompyuterov', ru: 'Ремонт компьютеров', ka: 'კომპიუტერის შეკეთება', en: 'Computer repair' },
+];
+
+// Бургер-меню на телефоне: выезжает справа, как в соседнем проекте Auto RS.
+// Сверху языки одной строкой, ниже девять услуг текущего города, внизу
+// кнопка заявки. Шапка остаётся НАД панелью — логотип и крестик видны.
+//
+// Кнопка и панель создаются здесь, а не в разметке: иначе пришлось бы
+// править 108 HTML-страниц. Переключатель языка — существующий узел,
+// он только переезжает в панель, поэтому ссылки для краулера те же.
+function initBurgerMenu() {
     const MOBILE = '(max-width: 768px)';
     const header = document.querySelector('header');
-    const lang = header && header.querySelector('.language-switcher');
-    if (!lang) return;
+    if (!header) return;
 
-    // Кнопку-бургер создаём здесь, а не в разметке: иначе пришлось бы
-    // править 108 HTML-страниц. Сам список языков — существующий узел,
-    // он только меняет отображение, поэтому ссылки для краулера те же.
+    const lang = header.querySelector('.language-switcher');
+
     const btn = document.createElement('button');
     btn.className = 'burger-btn';
     btn.type = 'button';
-    btn.setAttribute('aria-label', 'Выбор языка');
+    btn.setAttribute('aria-label', 'Меню');
     btn.setAttribute('aria-expanded', 'false');
     btn.innerHTML = '<span></span><span></span><span></span>';
+
+    const overlay = document.createElement('div');
+    overlay.className = 'burger-overlay';
+
+    const panel = document.createElement('nav');
+    panel.className = 'burger-panel';
+    panel.setAttribute('aria-label', 'Меню');
+
+    // Своя строка «Меню + крестик» внутри панели — как в эталоне
+    // (Auto RS, components/HeaderMenu.tsx). Панель перекрывает шапку
+    // сайта целиком, поэтому её логотип и бургер под меню не видны,
+    // и закрывать меню нечем без собственной кнопки.
+    const head = document.createElement('div');
+    head.className = 'burger-head';
+
+    const headTitle = document.createElement('span');
+    headTitle.className = 'burger-head-title';
+
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'burger-close';
+    closeBtn.type = 'button';
+
+    head.appendChild(headTitle);
+    head.appendChild(closeBtn);
+
+    // Содержимое ниже строки — прокручивается отдельно от неё
+    const body = document.createElement('div');
+    body.className = 'burger-body';
+
+    // Язык страницы: на лендингах его задаёт window.__FORCE_LANG__
+    const pageLang = window.__FORCE_LANG__ || 'ru';
+    // Город берём у botCityFromUrl: она определяет его по району лендинга,
+    // а не по подстроке «batumi» в адресе — у районов novy-bulvar,
+    // khimshiashvili и boni-gorodok названия города в слаге нет.
+    const city = (typeof botCityFromUrl === 'function' ? botCityFromUrl() : 'Тбилиси');
+    const citySlug = city === 'Батуми' ? 'batumi' : 'tbilisi';
+    const langDir = pageLang === 'ka' ? 'ge' : pageLang;
+
+    const links = document.createElement('div');
+    links.className = 'burger-links';
+    BURGER_SERVICES.forEach((svc) => {
+        const href = `/${langDir}/${citySlug}/${svc.slug}-${citySlug}/`;
+        const a = document.createElement('a');
+        a.href = href;
+
+        // Иконка + подпись. Иконка декоративная: та же мысль уже сказана
+        // текстом рядом, поэтому aria-hidden — скринридер не читает её дважды.
+        const ico = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        ico.setAttribute('viewBox', '0 0 24 24');
+        ico.setAttribute('fill', 'none');
+        ico.setAttribute('stroke', 'currentColor');
+        ico.setAttribute('stroke-width', '2');
+        ico.setAttribute('stroke-linecap', 'round');
+        ico.setAttribute('stroke-linejoin', 'round');
+        ico.setAttribute('aria-hidden', 'true');
+        ico.innerHTML = BURGER_ICONS[svc.slug] || '';
+        a.appendChild(ico);
+
+        a.appendChild(document.createTextNode(svc[pageLang] || svc.ru));
+
+        // Текущая страница подсвечивается — человек видит, где он
+        if (window.location.pathname === href) a.classList.add('is-current');
+        links.appendChild(a);
+    });
+
+    const cta = document.createElement('button');
+    cta.className = 'burger-cta';
+    cta.type = 'button';
+    cta.textContent = { ru: 'Заказать услугу', ka: 'შეუკვეთეთ მომსახურება', en: 'Order a service' }[pageLang]
+                   || 'Заказать услугу';
+
+    headTitle.textContent = { ru: 'Меню', ka: 'მენიუ', en: 'Menu' }[pageLang] || 'Меню';
+    closeBtn.setAttribute('aria-label',
+        { ru: 'Закрыть меню', ka: 'მენიუს დახურვა', en: 'Close menu' }[pageLang] || 'Закрыть меню');
+
     header.appendChild(btn);
+    document.body.appendChild(overlay);
+    document.body.appendChild(panel);
+
+    // Куда вернуть переключатель языка при переходе на десктоп
+    const langHome = lang ? { parent: lang.parentElement, next: lang.nextElementSibling } : null;
 
     function setOpen(open) {
-        lang.classList.toggle('is-open', open);
+        panel.classList.toggle('is-open', open);
+        overlay.classList.toggle('is-open', open);
         btn.classList.toggle('is-open', open);
-        // Блокируем прокрутку страницы: меню привязано к шапке и при
-        // скролле уезжало бы вместе с ней, отрываясь от бургера.
-        document.body.classList.toggle('lang-menu-open', open);
+        document.body.classList.toggle('burger-open', open);
         btn.setAttribute('aria-expanded', String(open));
+    }
+
+    function apply() {
+        const mobile = window.matchMedia(MOBILE).matches;
+        if (mobile) {
+            // Собираем панель заново в нужном порядке: строка «Меню»,
+            // затем языки, услуги и кнопка. Порядок задаём каждый раз,
+            // а не только при первом вызове: appendChild переносит узел
+            // в конец, и после возврата языка из шапки он оказывался
+            // под кнопкой заявки.
+            panel.replaceChildren();
+            body.replaceChildren();
+            panel.appendChild(head);
+            if (lang) body.appendChild(lang);
+            body.appendChild(links);
+            body.appendChild(cta);
+            panel.appendChild(body);
+        } else if (langHome) {
+            // Возвращаем переключатель в шапку на исходное место
+            const { parent, next } = langHome;
+            if (next && next.parentElement === parent) parent.insertBefore(lang, next);
+            else parent.appendChild(lang);
+            setOpen(false);
+        }
+        btn.hidden = !mobile;
+        panel.hidden = !mobile;
+        overlay.hidden = !mobile;
     }
 
     btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        setOpen(!lang.classList.contains('is-open'));
+        setOpen(!panel.classList.contains('is-open'));
     });
 
-    // Клик вне списка и Escape — закрываем
-    document.addEventListener('click', (e) => {
-        if (!lang.contains(e.target) && e.target !== btn) setOpen(false);
+    // Клик по затемнению, по крестику, по ссылке внутри меню и Escape
+    overlay.addEventListener('click', () => setOpen(false));
+    closeBtn.addEventListener('click', () => setOpen(false));
+    panel.addEventListener('click', (e) => {
+        if (e.target.closest('a')) setOpen(false);
     });
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') setOpen(false);
     });
 
-    function apply() {
-        const mobile = window.matchMedia(MOBILE).matches;
-        btn.hidden = !mobile;
-        // На десктопе переключатель показан целиком — раскрытие ни к чему
-        if (!mobile) setOpen(false);
-    }
+    cta.addEventListener('click', () => {
+        setOpen(false);
+        if (typeof openClientLeadForm === 'function') openClientLeadForm();
+    });
 
     apply();
     window.matchMedia(MOBILE).addEventListener('change', apply);
-}
-
-// «Для мастеров» уезжает из шапки в футер: на первом экране мобильного она
-// занимала строку в 52 px, а это служебная навигация, не оффер клиенту.
-//
-// Ссылку добавляем скриптом, а не в разметку 109 страниц. Совсем убрать её
-// с сайта нельзя: это единственная ссылка на /masters/, и страница стала бы
-// сиротой — осталась бы в sitemap, но без внутренних ссылок просела бы в
-// выдаче, а мастер не нашёл бы, где зарегистрироваться.
-// Строка «Для мастеров» для футера. Возвращает готовый узел, а вставляет
-// его initFooter — она пересобирает футер целиком, и ссылка, добавленная
-// отдельно, была бы затёрта.
-function buildMastersLink() {
-    const source = document.querySelector('header .audience-link');
-    if (!source) return null;
-
-    const line = document.createElement('span');
-    line.className = 'footer-masters-mobile';
-    line.appendChild(document.createTextNode('🔧 '));
-
-    const link = document.createElement('a');
-    link.className = 'footer-link footer-masters-link';
-    link.href = source.getAttribute('href');
-    // Подпись берём из самой кнопки — она уже переведена на язык страницы
-    link.textContent = (source.textContent || '').trim() || 'Для мастеров';
-    line.appendChild(link);
-
-    return line;
 }
 
 function initCityDropdown() {

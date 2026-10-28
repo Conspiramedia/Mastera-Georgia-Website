@@ -187,7 +187,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '104';
+const MASTERA_VERSION = '105';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Публичный username бота мастеров — для диплинка «завершить регистрацию».
@@ -2700,6 +2700,9 @@ function initFooter() {
         const facebook = footer.querySelector('a[href*="facebook.com"]');
         const brand = footer.querySelector('strong');
         const oldCopyright = footer.querySelector('.footer-copyright-mobile');
+        // Ссылка «Для мастеров» теперь стоит в разметке — забираем её
+        // до очистки футера, чтобы переиспользовать, а не строить вторую.
+        const mastersInMarkup = footer.querySelector('a[href*="/masters/"], a.footer-masters-link');
 
         // Описание сервиса — первая строка футера, до первого <br>.
         //
@@ -2769,12 +2772,25 @@ function initFooter() {
         appendBreak();
 
         // 5. «Для мастеров» — своей строкой под почтой.
-        // Кнопка убрана из шапки на телефоне (освобождала там 52 px), но
-        // совсем снимать ссылку нельзя: это единственный путь на /masters/
-        // со всего сайта, иначе страница осталась бы сиротой.
-        const mastersLink = buildMastersLink();
-        if (mastersLink) {
-            footer.appendChild(mastersLink);
+        // Кнопка убрана из шапки (освобождала там 52 px), но совсем
+        // снимать ссылку нельзя: это единственный путь на /masters/ со
+        // всего сайта, иначе страница осталась бы сиротой.
+        //
+        // ⚠️ Берём узел из разметки, если он там есть: иначе на телефоне
+        // появлялись бы ДВЕ ссылки — своя из HTML и построенная скриптом.
+        // buildMastersLink остаётся запасным путём для страниц, куда
+        // ссылку в разметку ещё не внесли.
+        let mastersLine = null;
+        if (mastersInMarkup) {
+            mastersLine = document.createElement('span');
+            mastersLine.className = 'footer-masters-mobile';
+            mastersLine.appendChild(document.createTextNode('🔧 '));
+            mastersLine.appendChild(mastersInMarkup);
+        } else {
+            mastersLine = buildMastersLink();
+        }
+        if (mastersLine) {
+            footer.appendChild(mastersLine);
             appendBreak();
         }
 

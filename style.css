@@ -1698,8 +1698,11 @@ header .online-counter {
     padding: 16rem 5%;
     position: relative;
     z-index: 1;
+    /* Затемнение ровное, как у шапки (rgba(0,0,0,0.65)), а не градиентом
+       сверху вниз: при градиенте низ блока глуше верха, и рядом с плотной
+       шапкой футер читался как полупрозрачный. */
     background:
-        linear-gradient(rgba(10, 10, 10, 0.8), rgba(10, 10, 10, 0.9)),
+        linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)),
         url('../image/footer-cta-bg.webp') center center / 50% no-repeat;
     background-color: #1a1a1a;
 }
@@ -1731,7 +1734,10 @@ header .online-counter {
    FOOTER
    ============================================ */
 footer {
-    background: rgba(0, 0, 0, 0.35);
+    /* Та же плотность, что у шапки (0.65), а не 0.35: сквозь прежнюю
+       плёнку просвечивал фон страницы, и футер отдавал фиолетово-бордовым
+       вместо чёрного — рядом с плотной шапкой это бросалось в глаза. */
+    background: rgba(0, 0, 0, 0.65);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     padding: 2rem 5%;
@@ -2027,10 +2033,13 @@ footer {
     }
 
     .footer-cta {
-        padding: 8rem 4%;
+        /* Отступ сверху меньше (было 8rem): текст начинался на уровне
+           лица мастера и перекрывал его. Снизу оставляем прежний запас —
+           там кнопка заявки. */
+        padding: 3rem 4% 8rem;
         background:
-            linear-gradient(rgba(10, 10, 10, 0.7), rgba(10, 10, 10, 0.8)),
-            url('../image/footer-cta-bg.webp') center/cover no-repeat;
+            linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)),
+            url('../image/footer-cta-bg.webp') center / cover no-repeat;
         background-color: #1a1a1a;
     }
 

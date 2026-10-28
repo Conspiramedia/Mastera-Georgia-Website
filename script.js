@@ -187,7 +187,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '68';
+const MASTERA_VERSION = '72';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Публичный username бота мастеров — для диплинка «завершить регистрацию».
@@ -1610,7 +1610,13 @@ function initBurgerMenu() {
 
     // Главная — первым пунктом: с лендинга услуги вернуться было некуда,
     // кроме логотипа, и это не все замечают.
-    links.appendChild(makeLink(`/${langDir}/`,
+    //
+    // ⚠️ Главная СВОЯ у каждого города: у Батуми это /<lang>/batumi/, а не
+    // /<lang>/. Жёсткая ссылка на /<lang>/ уводила человека из Батуми в
+    // Тбилиси, и пункт не подсвечивался на батумском хабе — он просто не
+    // совпадал с адресом страницы. Тот же адрес, что у кнопки города.
+    const homeHref = citySlug === 'batumi' ? `/${langDir}/batumi/` : `/${langDir}/`;
+    links.appendChild(makeLink(homeHref,
         { ru: 'Главная', ka: 'მთავარი', en: 'Home' }[pageLang] || 'Главная', 'home'));
 
     BURGER_SERVICES.forEach((svc) => {

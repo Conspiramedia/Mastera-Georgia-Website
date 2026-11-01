@@ -31,7 +31,7 @@
     background-position: center center;
     background-size: 50%;
     background-repeat: no-repeat;
-    opacity: 0.2;
+    opacity: 0.27;
     /* Маска повторяет размер и положение САМОЙ картинки, а не блока.
        Так растушёвка всегда ложится по краям кадра, сколько бы места
        блок ни занимал. Прежние проценты считались от высоты блока, и
@@ -245,9 +245,33 @@
     }
 }
 
+/* Блок «Подберём лучшего мастера» на главных: контейнер уже ограничен
+   инлайновым max-width: 1100px (как у районов), но у .sections-container
+   есть ещё padding: 0 5%, и рамка карточки внутри оказывалась уже районов
+   на 2×5% ширины экрана.
+   Снимаем боковой паддинг ТОЛЬКО у ограниченных контейнеров: без инлайна
+   .sections-container тянется во всю ширину, и там эти 5% работают как
+   поля страницы — трогать их нельзя (таких блоков на сайте большинство).
+   ⚠️ Только от 769px: на телефоне эти 5% — единственное, что отделяет
+   рамку карточки от края экрана, и без них она прилипает к краям. */
+@media (min-width: 769px) {
+  .sections-container[style*="max-width: 1100px"] {
+      padding-left: 0;
+      padding-right: 0;
+  }
+}
+
 /* Районы */
+/* Рамка блока выровнена по сетке карточек «Другие услуги» (.services-grid,
+   max-width: 1100px) — это ближайшая секция сверху, и расхождение рамок
+   видно глазом.
+   ⚠️ Ширину задаём РАМКЕ, то есть самому .districts, а не внутренней
+   сетке: padding блока добавляется к его содержимому, поэтому «подогнать
+   .districts-grid» — не то же самое, что подогнать рамку.
+   ⚠️ На странице у .districts висел инлайновый max-width: 950px, который
+   перебивал любое правило отсюда; он снят из разметки. */
 .districts {
-    max-width: 900px;
+    max-width: 1100px;
     margin: 0 auto 4rem;
     padding: 2.5rem 2rem;
     text-align: center;
@@ -260,109 +284,192 @@
     z-index: 1;
 }
 
+/* Заголовок белый, а не жёлтый: жёлтым на блоке были и заголовок, и
+   рамка, и бордюры всех плиток — акцент переставал быть акцентом.
+   Жёлтый оставлен только районам, чтобы глаз сразу видел, где ссылки. */
 .districts h2 {
     font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: clamp(1.4rem, 2.5vw, 1.8rem);
     font-weight: 700;
-    color: var(--construction-yellow);
+    color: #fff;
     margin-bottom: 0.3rem;
 }
 
 /* ============================================
-РАЙОНЫ ТБИЛИСИ — GRID-СЕТКА
+РАЙОНЫ — СЕТКА КАРТОЧЕК
 ============================================ */
+/* 5 колонок — единственное деление, при котором 10 районов Тбилиси
+   дают ровные ряды (5+5): при 4 остаётся обрубок 4+4+2, при 3 — 3+3+3+1.
+   У Батуми 5 районов, то есть ровно один ряд.
+   Подписи местностей сокращены до двух: в узкую колонку три не влезают
+   и разворачивают карточки на разную высоту. */
 .districts-grid {
   display: grid;
-  /* 5 колонок = ровно 2 ряда для 10 районов */
-  grid-template-columns: repeat(5, 1fr); 
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 12px;
   margin-top: 2rem;
-  max-width: 900px;
   margin-left: auto;
   margin-right: auto;
-  justify-items: center;
-  align-items: center;
+  align-items: stretch;
 }
 
-.district-tag {
-  width: 100%;
-  min-height: 48px;
-  padding: 12px 30px;
-  background: rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border: 1px solid rgba(253, 185, 19, 0.3);
-  border-radius: 50px;
-  color: #ccc;
-  text-decoration: none;
-  font-size: 0.95rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
+.district-card {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-  text-align: center;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  background: transparent;
+  border: 1px solid rgba(253, 185, 19, 0.3);
+  border-radius: 10px;
+  color: #e8e8e8;
+  text-decoration: none;
+  text-align: left;
+  cursor: pointer;
   box-sizing: border-box;
-  white-space: nowrap;
+  transition: border-color 0.25s ease, background 0.25s ease,
+              transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.district-tag:hover {
-  background: rgba(0, 0, 0, 0.5);
-  border-color: var(--construction-yellow);
+/* Пин не сжимается рядом с длинной подписью. */
+.district-card-pin {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 1px;
   color: var(--construction-yellow);
+}
+
+.district-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.district-card-name {
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.25;
+}
+
+/* Местности — вспомогательная строка: мельче и приглушённее названия,
+   иначе карточка читается как два равных заголовка.
+   Размер подобран так, чтобы подпись влезала в ОДНУ строку при пяти
+   колонках: перенос у части карточек делает ряды разной высоты. */
+.district-card-hint {
+  font-size: 0.72rem;
+  color: #9a9a9a;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.district-card:hover {
+  background: rgba(253, 185, 19, 0.1);
+  border-color: var(--construction-yellow);
   transform: translateY(-3px);
   box-shadow: 0 10px 25px rgba(253, 185, 19, 0.2);
+}
+
+.district-card:hover .district-card-name {
+  color: var(--construction-yellow);
+}
+
+/* Текущий район на его же странице: подсвечен, но не кликабельно-зовущий. */
+.district-card[aria-current="page"] {
+  background: rgba(253, 185, 19, 0.12);
+  border-color: var(--construction-yellow);
+}
+
+.district-card[aria-current="page"] .district-card-name {
+  color: var(--construction-yellow);
 }
 
 /* ============================================
 АДАПТИВ
 ============================================ */
-/* Планшет: 3 колонки */
-@media (max-width: 1024px) {
+/* Ноутбук: 5 колонок становятся слишком узкими для названия с подписью. */
+@media (max-width: 1100px) {
   .districts-grid {
-    grid-template-columns: repeat(3, 1fr);
-    max-width: 100%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
-/* Мобильный: 1 колонка */
-@media (max-width: 768px) {
-  .districts {
-    padding: 1.5rem 1rem;
-    max-width: 100%;
-    border: none;
-    background: transparent;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
+/* Планшет: две колонки. */
+@media (max-width: 860px) {
+  .districts-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+
+/* Мобильный: ДВЕ колонки, а не одна.
+   Подписи короткие (самая длинная — «Понтичала, Аэропорт», ~130px), и в
+   одну колонку блок растягивался на 900+ px: простыня выше экрана, район
+   приходилось искать прокруткой. В две колонки он вдвое короче и виден
+   почти целиком.
+   ⚠️ Рамку и фон блока здесь больше НЕ снимаем. Раньше снимали, и на
+   телефоне от секции оставались голые прямоугольники без контейнера —
+   именно это выглядело уныло. */
+@media (max-width: 768px) {
+  /* Рамка — по рамкам соседних блоков: .service-card сверху и
+     .section-card снизу отступают от краёв экрана на 5% (на 375px это
+     19px), а .districts шёл во всю ширину и выпирал за них.
+     Отступ задаём margin'ом, а не padding'ом: padding ушёл бы внутрь
+     рамки и сузил карточки, а двигать надо саму рамку. */
+  .districts {
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 1.5rem 0.75rem;
+    max-width: none;
+    width: auto;
+  }
+  .districts-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    max-width: 100%;
+  }
+  /* Ужимаем всё, что съедает ширину: в колонке ~165px текст борется за
+     каждый пиксель с паддингами, пином и зазором между ними. */
+  .district-card {
+    padding: 10px;
+    gap: 7px;
+    border-radius: 8px;
+  }
+  .district-card-pin {
+    width: 15px;
+    height: 15px;
+  }
+  .district-card-name {
+    font-size: 0.88rem;
+  }
+  /* В две колонки подпись в одну строку не помещается: у Батуми это
+     «Приморский бульвар, Пьяцца» — 171px против 135 доступных. Режем
+     многоточием только со второй строки, а не с первой: сокращать текст
+     до одной местности значило бы потерять половину смысла подписи.
+     Высоту ряда грид выравнивает сам, поэтому сетка не разъезжается. */
+  .district-card-hint {
+    font-size: 0.68rem;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+}
+
+/* Узкие телефоны: двум колонкам уже не хватает места под подпись. */
+@media (max-width: 360px) {
   .districts-grid {
     grid-template-columns: 1fr;
-    gap: 10px;
-    max-width: 100%;
   }
-  .district-tag {
-    width: 100%;
-    padding: 14px 20px;
-    font-size: 1rem;
-    min-height: 52px;
-    border: 1px solid rgba(253, 185, 19, 0.3);
-    color: rgba(255, 255, 255, 0.85);
-  }
+}
 
-/* Очень маленькие экраны */
-@media (max-width: 480px) {
-  .districts-grid {
-    max-width: 100%;
-    padding: 0 1rem;
-  }
-  .district-tag {
-    border-radius: 5px;
-  }
-}
-}
+/* ⚠️ Здесь был @media (max-width: 480px) с border-radius: 5px, и стоял он
+   ВНУТРИ блока 768px — скобка закрывалась не на месте. Браузеры понимают
+   вложенные медиа-запросы, поэтому правило срабатывало и превращало
+   задуманные таблетки в прямоугольники. Блок удалён: ширину и отступы на
+   узких экранах задаёт медиа-запрос 360px выше. */
 
 /* ⚠️ Здесь было `@media (max-width: 968px) { .footer-cta { background:
    transparent } }` — «убрать фон футера на мобильных, только на

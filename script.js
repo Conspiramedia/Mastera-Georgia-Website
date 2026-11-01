@@ -187,7 +187,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '136';
+const MASTERA_VERSION = '143';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Публичный username бота мастеров — для диплинка «завершить регистрацию».
@@ -214,6 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initLanguageSwitcher();
     initModalForms();
     initScrollToTop();
+    initBackToTop();
     initClientLeadFormTracking();
     initClientPhotoUpload();
     initCityDropdown();
@@ -2472,6 +2473,43 @@ function initScrollToTop() {
     // при любом его срабатывании toggle снял бы класс у самого верха
     // страницы, и кнопка моргала бы при возврате наверх.
     scrollButton.classList.add('visible');
+}
+
+// Кнопка «наверх». В отличие от WhatsApp показывается не сразу, а после
+// прокрутки примерно на экран: на первом экране возвращаться некуда.
+//
+// Порог считается от высоты окна, а не фиксированным числом пикселей:
+// на телефоне 300 px — это треть экрана, кнопка выскакивала бы почти
+// сразу, а на десктопе 300 px проходят незаметно.
+function initBackToTop() {
+    const btn = document.getElementById('backToTop');
+    if (!btn) return;
+
+    const threshold = () => Math.max(400, window.innerHeight * 0.8);
+
+    // Состояние меняем только когда оно действительно изменилось: иначе
+    // classList дёргается на каждом кадре прокрутки.
+    let shown = false;
+    const sync = () => {
+        const need = window.pageYOffset > threshold();
+        if (need !== shown) {
+            shown = need;
+            btn.classList.toggle('visible', need);
+        }
+    };
+
+    // passive: слушатель ничего не отменяет, и браузер не ждёт его
+    // завершения, чтобы продолжить прокрутку.
+    window.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('resize', sync, { passive: true });
+    sync();
+
+    btn.addEventListener('click', () => {
+        // Уважаем системную настройку «уменьшить движение»: для тех, кому
+        // анимации противопоказаны, прыжок наверх делается мгновенно.
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+    });
 }
 
 // ============================================

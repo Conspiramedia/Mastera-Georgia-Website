@@ -2209,7 +2209,11 @@ footer {
        чертой, и кадр не должен доходить до неё заметным краем. */
     .footer-cta::before {
         background-size: cover;
-        opacity: 0.18;
+        /* Светлее десктопных 0.22: на телефоне кадр растянут в cover и
+           обрезан, мастера видно хуже — при 0.18 он лишь угадывался.
+           Выше поднимать нельзя: под фото идёт заголовок, и контраст
+           белого текста начинает падать. */
+        opacity: 0.3;
         /* На телефоне кадр закрывает блок целиком (cover), боковых
            краёв нет — они уходят за экран. Гасим только верх и низ,
            линейным градиентом по высоте БЛОКА: здесь кадр и блок
@@ -2972,6 +2976,73 @@ body.modal-open {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
+}
+
+/* ============================================
+   КНОПКА «НАВЕРХ»
+   ============================================ */
+
+/* Слева внизу, напротив WhatsApp: правый угол занят главным каналом
+   связи, и ставить рядом вторую круглую кнопку — значит попадать не
+   туда, особенно пальцем на телефоне.
+
+   В отличие от WhatsApp эта кнопка появляется ТОЛЬКО после прокрутки
+   примерно на экран: на первом экране возвращаться некуда, а кнопка
+   закрывала бы контент. Класс .visible вешает скрипт. */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    width: 50px;
+    height: 50px;
+    /* Обводка жёлтая, заливка тёмная, стрелка белая — так кнопка
+       читается как элемент интерфейса, а не как главное действие
+       страницы: сплошной жёлтый спорил по весу с кнопками заявки. */
+    border: 2px solid var(--construction-yellow);
+    border-radius: 50%;
+    background: var(--dark-concrete);
+    color: var(--white);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Стартовое состояние — спрятана. Значения именно в CSS, а не в JS:
+       скрипт подключён с defer, иначе кнопка мелькнула бы на первых
+       кадрах до того, как он успеет её скрыть. */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(12px);
+    transition: opacity 0.3s ease, visibility 0.3s ease,
+                transform 0.3s ease, background-color 0.2s ease;
+    z-index: 10000;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.back-to-top:hover {
+    /* На наведении подсвечиваем саму обводку, а не заливаем кнопку:
+       заливка жёлтым вернула бы ту же конкуренцию с кнопками заявки. */
+    border-color: #ffc93c;
+    background: #1a1a1a;
+}
+
+.back-to-top:active {
+    transform: translateY(1px);
+}
+
+/* Стрелка нарисована SVG, а не символом шрифта: глиф ↑ в разных
+   системах рисуется по-разному и у грузинского NotoGeo может
+   отсутствовать вовсе. */
+.back-to-top svg {
+    display: block;
 }
 
 .scroll-to-top.whatsapp-fab {

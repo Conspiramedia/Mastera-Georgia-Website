@@ -187,7 +187,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '133';
+const MASTERA_VERSION = '136';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Публичный username бота мастеров — для диплинка «завершить регистрацию».
@@ -1678,13 +1678,11 @@ function initBurgerMenu() {
     document.body.appendChild(panel);
 
     function setOpen(open) {
-        // Ширину полосы прокрутки замеряем ДО блокировки: CSS возвращает её
-        // отступом, иначе страница расширяется на освободившееся место и
-        // весь контент дёргается вправо в момент выезда меню.
-        if (open) {
-            const w = window.innerWidth - document.documentElement.clientWidth;
-            document.documentElement.style.setProperty('--scrollbar-w', w + 'px');
-        }
+        // Замер ширины полосы прокрутки здесь больше не нужен: место под
+        // неё зарезервировано постоянно (scrollbar-gutter на html), поэтому
+        // блокировка прокрутки ширину страницы не меняет и контент не
+        // дёргается. Прежний расчёт отступа промахивался на доли пикселя
+        // при дробном масштабе — подробности в комментарии у html в CSS.
         panel.classList.toggle('is-open', open);
         overlay.classList.toggle('is-open', open);
         btn.classList.toggle('is-open', open);

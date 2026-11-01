@@ -338,9 +338,15 @@ header .online-counter {
 }
 
 /* Наведение: лёгкое свечение вместо подчёркивания — как у остальных ссылок шапки. */
-.logo-title-link:hover {
-    text-shadow: 0 0 12px rgba(253, 185, 19, 0.55);
+/* Только для мыши: на тач-экране :hover залипает после тапа
+   и элемент остаётся перекрашенным, пока не коснёшься другого. */
+@media (hover: hover) and (pointer: fine) {
+
+  .logo-title-link:hover {
+      text-shadow: 0 0 12px rgba(253, 185, 19, 0.55);
+  }
 }
+
 
 /* Доступность: видимая рамка только при переходе с клавиатуры (Tab), не по клику мышью. */
 .logo-title-link:focus-visible {
@@ -378,10 +384,16 @@ header .online-counter {
     color: var(--safety-green);
 }
 
-.header-phone-link:hover {
-    color: var(--construction-yellow);
-    text-shadow: 0 0 10px rgba(253, 185, 19, 0.5);
+/* Только для мыши: на тач-экране :hover залипает после тапа
+   и элемент остаётся перекрашенным, пока не коснёшься другого. */
+@media (hover: hover) and (pointer: fine) {
+
+  .header-phone-link:hover {
+      color: var(--construction-yellow);
+      text-shadow: 0 0 10px rgba(253, 185, 19, 0.5);
+  }
 }
+
 
 .header-support {
     margin-top: 0.2rem;
@@ -399,10 +411,16 @@ header .online-counter {
     color: var(--construction-yellow);
 }
 
-.header-support-link:hover {
-    color: var(--construction-orange);
-    text-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+/* Только для мыши: на тач-экране :hover залипает после тапа
+   и элемент остаётся перекрашенным, пока не коснёшься другого. */
+@media (hover: hover) and (pointer: fine) {
+
+  .header-support-link:hover {
+      color: var(--construction-orange);
+      text-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+  }
 }
+
 
 /* ============================================
    СЧЕТЧИК ОНЛАЙН МАСТЕРОВ
@@ -1903,9 +1921,15 @@ footer {
     margin-top: 0.25rem;
 }
 
-.footer-link:hover {
-    color: var(--construction-orange);
+/* Только для мыши: на тач-экране :hover залипает после тапа
+   и элемент остаётся перекрашенным, пока не коснёшься другого. */
+@media (hover: hover) and (pointer: fine) {
+
+  .footer-link:hover {
+      color: var(--construction-orange);
+  }
 }
+
 
 .footer-privacy {
     font-family: 'NotoGeo', 'Montserrat', sans-serif;
@@ -2439,10 +2463,16 @@ footer {
     text-decoration: none;
 }
 
-.lang-btn:hover {
-    color: rgba(255, 255, 255, 0.9);
-    background: rgba(255, 255, 255, 0.1);
+/* Только для мыши: на тач-экране :hover залипает после тапа
+   и элемент остаётся перекрашенным, пока не коснёшься другого. */
+@media (hover: hover) and (pointer: fine) {
+
+  .lang-btn:hover {
+      color: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.1);
+  }
 }
+
 
 .lang-btn.active {
     background: var(--construction-yellow);
@@ -2515,11 +2545,17 @@ body.modal-open {
     border-radius: 50%;
 }
 
-.modal-close:hover {
-    color: var(--construction-yellow);
-    background: rgba(255, 255, 255, 0.1);
-    transform: rotate(90deg);
+/* Только для мыши: на тач-экране :hover залипает после тапа
+   и элемент остаётся перекрашенным, пока не коснёшься другого. */
+@media (hover: hover) and (pointer: fine) {
+
+  .modal-close:hover {
+      color: var(--construction-yellow);
+      background: rgba(255, 255, 255, 0.1);
+      transform: rotate(90deg);
+  }
 }
+
 
 .modal-title {
     font-family: 'NotoGeo', 'Montserrat', sans-serif;
@@ -2698,11 +2734,17 @@ body.modal-open {
     transition: all 0.3s ease;
 }
 
-.thank-you-badge:hover {
-    background: rgba(253, 185, 19, 0.15);
-    border-color: var(--construction-yellow);
-    transform: translateY(-2px);
+/* Только для мыши: на тач-экране :hover залипает после тапа
+   и элемент остаётся перекрашенным, пока не коснёшься другого. */
+@media (hover: hover) and (pointer: fine) {
+
+  .thank-you-badge:hover {
+      background: rgba(253, 185, 19, 0.15);
+      border-color: var(--construction-yellow);
+      transform: translateY(-2px);
+  }
 }
+
 
 .badge-label {
     display: block;
@@ -2759,10 +2801,16 @@ body.modal-open {
     margin-top: 1.5rem;
 }
 
-.thank-you-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 40px rgba(6, 255, 165, 0.5);
+/* Только для мыши: на тач-экране :hover залипает после тапа
+   и элемент остаётся перекрашенным, пока не коснёшься другого. */
+@media (hover: hover) and (pointer: fine) {
+
+  .thank-you-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(6, 255, 165, 0.5);
+  }
 }
+
 
 .thank-you-btn:active {
     transform: translateY(0);
@@ -2775,9 +2823,15 @@ body.modal-open {
     margin-top: 1.5rem;      /* Отступ сверху от блока "Время обработки" */
 }
 
-.thank-you-master-btn:hover {
-    box-shadow: 0 15px 40px rgba(253, 185, 19, 0.5);
+/* Только для мыши: на тач-экране :hover залипает после тапа
+   и элемент остаётся перекрашенным, пока не коснёшься другого. */
+@media (hover: hover) and (pointer: fine) {
+
+  .thank-you-master-btn:hover {
+      box-shadow: 0 15px 40px rgba(253, 185, 19, 0.5);
+  }
 }
+
 
 /* Красная рамка «заполнено неверно» — только для полей ВВОДА.
    :not(:placeholder-shown) означает «человек уже что-то напечатал»: пустое поле
@@ -2902,10 +2956,16 @@ body.modal-open {
     letter-spacing: 1px;
 }
 
-.submit-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(253, 185, 19, 0.5);
+/* Только для мыши: на тач-экране :hover залипает после тапа
+   и элемент остаётся перекрашенным, пока не коснёшься другого. */
+@media (hover: hover) and (pointer: fine) {
+
+  .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(253, 185, 19, 0.5);
+  }
 }
+
 
 .submit-btn:disabled {
     opacity: 0.5;
@@ -2933,9 +2993,15 @@ body.modal-open {
     border-radius: 10px;
 }
 
-.modal-content::-webkit-scrollbar-thumb:hover {
-    background: var(--construction-orange);
+/* Только для мыши: на тач-экране :hover залипает после тапа
+   и элемент остаётся перекрашенным, пока не коснёшься другого. */
+@media (hover: hover) and (pointer: fine) {
+
+  .modal-content::-webkit-scrollbar-thumb:hover {
+      background: var(--construction-orange);
+  }
 }
+
 
 /* ============================================
    КНОПКА "ВВЕРХ"
@@ -3031,12 +3097,18 @@ body.modal-open {
     transform: translateY(0);
 }
 
-.back-to-top:hover {
-    /* На наведении подсвечиваем саму обводку, а не заливаем кнопку:
-       заливка жёлтым вернула бы ту же конкуренцию с кнопками заявки. */
-    border-color: #ffc93c;
-    background: #1a1a1a;
+/* Только для мыши: на тач-экране :hover залипает после тапа
+   и элемент остаётся перекрашенным, пока не коснёшься другого. */
+@media (hover: hover) and (pointer: fine) {
+
+  .back-to-top:hover {
+      /* На наведении подсвечиваем саму обводку, а не заливаем кнопку:
+         заливка жёлтым вернула бы ту же конкуренцию с кнопками заявки. */
+      border-color: #ffc93c;
+      background: #1a1a1a;
+  }
 }
+
 
 .back-to-top:active {
     transform: translateY(1px);
@@ -3065,9 +3137,15 @@ body.modal-open {
 
 /* На наведении прыжок убираем: курсор уже на кнопке, подсказка
    отработала, и продолжать дёргать стрелку незачем. */
-.back-to-top:hover svg {
-    animation: none;
+/* Только для мыши: на тач-экране :hover залипает после тапа
+   и элемент остаётся перекрашенным, пока не коснёшься другого. */
+@media (hover: hover) and (pointer: fine) {
+
+  .back-to-top:hover svg {
+      animation: none;
+  }
 }
+
 
 /* ⚠️ Системная настройка «уменьшить движение» — для людей, которым от
    анимаций физически плохо (вестибулярные расстройства). Для них
@@ -3110,10 +3188,16 @@ body.modal-open {
     transition: transform 0.2s;
 }
 
-.scroll-to-top.whatsapp-fab:hover {
-    transform: scale(1.1) !important;
-    animation-play-state: paused; /* Останавливаем вращение при наведении */
+/* Только для мыши: на тач-экране :hover залипает после тапа
+   и элемент остаётся перекрашенным, пока не коснёшься другого. */
+@media (hover: hover) and (pointer: fine) {
+
+  .scroll-to-top.whatsapp-fab:hover {
+      transform: scale(1.1) !important;
+      animation-play-state: paused; /* Останавливаем вращение при наведении */
+  }
 }
+
 
 .scroll-to-top.whatsapp-fab img {
     width: 100%;
@@ -3287,10 +3371,16 @@ body.modal-open {
 .contact-opt--wa img { transform: scale(1.7); }    /* зелёный круг ~60% кадра */
 .contact-opt--tg img { transform: scale(1.32); }   /* голубой круг ~76% кадра */
 
-.contact-opt:hover {
-    transform: scale(1.08);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+/* Только для мыши: на тач-экране :hover залипает после тапа
+   и элемент остаётся перекрашенным, пока не коснёшься другого. */
+@media (hover: hover) and (pointer: fine) {
+
+  .contact-opt:hover {
+      transform: scale(1.08);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+  }
 }
+
 
 .contact-opt:active {
     transform: scale(0.95);
@@ -3470,9 +3560,15 @@ body.modal-open {
     cursor: pointer;
 }
 
-.lead-photo-btn:hover {
-    filter: brightness(0.95);
+/* Только для мыши: на тач-экране :hover залипает после тапа
+   и элемент остаётся перекрашенным, пока не коснёшься другого. */
+@media (hover: hover) and (pointer: fine) {
+
+  .lead-photo-btn:hover {
+      filter: brightness(0.95);
+  }
 }
+
 
 .lead-photo-previews {
     display: flex;
@@ -3513,9 +3609,15 @@ body.modal-open {
     justify-content: center;
 }
 
-.lead-photo-remove:hover {
-    background: #e53935;
+/* Только для мыши: на тач-экране :hover залипает после тапа
+   и элемент остаётся перекрашенным, пока не коснёшься другого. */
+@media (hover: hover) and (pointer: fine) {
+
+  .lead-photo-remove:hover {
+      background: #e53935;
+  }
 }
+
 
 /* Кнопка-диплинк «Завершить регистрацию в Telegram» в модалке благодарности мастеру */
 .master-tg-finish-btn {
@@ -4140,13 +4242,14 @@ header {
         padding-top: 0.5rem;
     }
 
-    .burger-links a:hover,
+    /* Только :active (подсветка в момент нажатия). :hover убран:
+       блок мобильный, курсора нет, а после тапа он залипал и пункт
+       оставался подсвеченным до касания другого места. */
     .burger-links a:active {
         background: rgba(255, 255, 255, 0.06);
         color: #fff;
     }
 
-    .burger-links a:hover svg,
     .burger-links a:active svg {
         color: rgba(255, 255, 255, 0.8);
     }

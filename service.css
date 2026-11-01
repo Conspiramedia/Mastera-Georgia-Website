@@ -366,16 +366,28 @@
   text-overflow: ellipsis;
 }
 
-.district-card:hover {
-  background: rgba(253, 185, 19, 0.1);
-  border-color: var(--construction-yellow);
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(253, 185, 19, 0.2);
+/* Только для мыши: на тач-экране :hover залипает после тапа
+   и элемент остаётся перекрашенным, пока не коснёшься другого. */
+@media (hover: hover) and (pointer: fine) {
+
+  .district-card:hover {
+    background: rgba(253, 185, 19, 0.1);
+    border-color: var(--construction-yellow);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(253, 185, 19, 0.2);
+  }
 }
 
-.district-card:hover .district-card-name {
-  color: var(--construction-yellow);
+
+/* Только для мыши: на тач-экране :hover залипает после тапа
+   и элемент остаётся перекрашенным, пока не коснёшься другого. */
+@media (hover: hover) and (pointer: fine) {
+
+  .district-card:hover .district-card-name {
+    color: var(--construction-yellow);
+  }
 }
+
 
 /* Текущий район на его же странице: подсвечен, но не кликабельно-зовущий. */
 .district-card[aria-current="page"] {
@@ -564,10 +576,16 @@
 
 /* Подсветка при наведении — только у НЕактивной кнопки: у активной
    фон намеренно прозрачный, и общий :hover затирал бы его серым. */
-.city-btn:not(.active):hover {
-  color: rgba(255, 255, 255, 0.95);
-  background: rgba(255, 255, 255, 0.08);
+/* Только для мыши: на тач-экране :hover залипает после тапа
+   и элемент остаётся перекрашенным, пока не коснёшься другого. */
+@media (hover: hover) and (pointer: fine) {
+
+  .city-btn:not(.active):hover {
+    color: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.08);
+  }
 }
+
 
 /* Активный город — «обведённая» кнопка, как активный язык:
    фон остаётся тёмным, жёлтым горят только рамка и подпись.

@@ -12,10 +12,19 @@ const i18n = {
         phoneInvalid:        'Пожалуйста, введите корректный грузинский номер телефона в формате: +995XXXXXXXXX (9 цифр после +995)',
         nameInvalid:         'Пожалуйста, введите имя буквами — без цифр и символов (минимум 2 буквы)',
         phoneOperator:       'Пожалуйста, введите корректный код оператора. Номер должен начинаться с +995 и далее 55, 56, 57, 58, 59, 51-54, 68, 70-79, 90-99',
+        // Иностранный номер: проверяем только правдоподобность длины (E.164).
+        // Код страны не навязываем — у приезжих клиентов номер домашней страны.
+        phoneForeignInvalid: 'Проверьте номер телефона: укажите его с кодом страны, например +7 916 123 45 67',
         telegramInvalid:     'Пожалуйста, введите корректный Telegram username (например: @username) или номер телефона',
         contactRequired:     'Пожалуйста, заполните хотя бы один из контактов: Telegram или WhatsApp',
         telegramRequiredMaster: 'Пожалуйста, укажите Telegram — верификация мастера проходит в Telegram-боте',
         submitError:         'Ошибка при отправке. Попробуйте ещё раз.',
+        // Причины отказа бота, понятные человеку. Во всех случаях заявка уже
+        // продублирована на почту, поэтому про потерю не говорим.
+        submitContactInText: 'Уберите телефон и ссылки из описания задачи — контакты вы уже указали в полях выше. Заявка принята, мы свяжемся с вами.',
+        submitTooMany:       'Вы отправили несколько заявок подряд. Заявка уже у нас — мы свяжемся с вами в ближайшее время.',
+        submitTooLong:       'Описание слишком длинное — опишите задачу короче, остальное расскажете мастеру.',
+        submitProfanity:     'Пожалуйста, перефразируйте описание задачи.',
         // Надпись на кнопке, пока заявка уходит. Отправка с фото занимает
         // 4–10 секунд, и без обратной связи человек жал кнопку повторно,
         // думая, что промахнулся.
@@ -87,10 +96,15 @@ const i18n = {
         phoneInvalid:        'გთხოვთ, შეიყვანოთ სწორი ქართული ტელეფონის ნომერი ფორმატში: +995XXXXXXXXX (9 ციფრი +995-ის შემდეგ)',
         nameInvalid:         'გთხოვთ, შეიყვანოთ სახელი მხოლოდ ასოებით — ციფრებისა და სიმბოლოების გარეშე (მინიმუმ 2 ასო)',
         phoneOperator:       'გთხოვთ, შეიყვანოთ სწორი ოპერატორის კოდი. ნომერი უნდა იწყებოდეს +995-ით და შემდეგ 55, 56, 57, 58, 59, 51-54, 68, 70-79, 90-99',
+        phoneForeignInvalid: 'შეამოწმეთ ტელეფონის ნომერი: მიუთითეთ ქვეყნის კოდით, მაგალითად +7 916 123 45 67',
         telegramInvalid:     'გთხოვთ, შეიყვანოთ სწორი Telegram მომხმარებლის სახელი (მაგ: @username) ან ტელეფონის ნომერი',
         contactRequired:     'გთხოვთ, შეავსოთ ერთ-ერთი საკონტაქტო ველი: Telegram ან WhatsApp',
         telegramRequiredMaster: 'გთხოვთ, მიუთითოთ Telegram — ხელოსნის ვერიფიკაცია მიმდინარეობს Telegram-ბოტში',
         submitError:         'გაგზავნისას მოხდა შეცდომა. სცადეთ კიდევ ერთხელ.',
+        submitContactInText: 'წაშალეთ ტელეფონი და ბმულები დავალების აღწერიდან — კონტაქტები უკვე მიუთითეთ ზემოთ. განაცხადი მიღებულია, დაგიკავშირდებით.',
+        submitTooMany:       'თქვენ რამდენიმე განაცხადი გააგზავნეთ ზედიზედ. განაცხადი უკვე მიღებულია — მალე დაგიკავშირდებით.',
+        submitTooLong:       'აღწერა ძალიან გრძელია — აღწერეთ მოკლედ, დანარჩენს ხელოსანს უამბობთ.',
+        submitProfanity:     'გთხოვთ, გადააფორმულიროთ დავალების აღწერა.',
         submitSending:       'იგზავნება…',
         photoLabel:          '📷 პრობლემის ფოტო (სურვილისამებრ, 3-მდე)',
         photoAdd:            'ფოტოს მიმაგრება',
@@ -136,10 +150,15 @@ const i18n = {
         phoneInvalid:        'Please enter a valid Georgian phone number in the format: +995XXXXXXXXX (9 digits after +995)',
         nameInvalid:         'Please enter your name using letters only — no digits or symbols (at least 2 letters)',
         phoneOperator:       'Please enter a valid operator code. The number must start with +995 followed by 55, 56, 57, 58, 59, 51-54, 68, 70-79, 90-99',
+        phoneForeignInvalid: 'Please check the phone number: include the country code, for example +7 916 123 45 67',
         telegramInvalid:     'Please enter a valid Telegram username (e.g. @username) or phone number',
         contactRequired:     'Please fill in at least one contact field: Telegram or WhatsApp',
         telegramRequiredMaster: 'Please provide your Telegram — master verification is done in the Telegram bot',
         submitError:         'An error occurred while submitting. Please try again.',
+        submitContactInText: 'Please remove phone numbers and links from the task description — you have already provided your contacts above. The request has been received, we will get in touch.',
+        submitTooMany:       'You have sent several requests in a row. We already have your request and will contact you shortly.',
+        submitTooLong:       'The description is too long — keep it short, you can tell the rest to the specialist.',
+        submitProfanity:     'Please rephrase the task description.',
         submitSending:       'Sending…',
         photoLabel:          '📷 Photo of the problem (optional, up to 3)',
         photoAdd:            'Attach photo',
@@ -187,7 +206,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '166';
+const MASTERA_VERSION = '168';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Публичный username бота мастеров — для диплинка «завершить регистрацию».
@@ -595,8 +614,23 @@ const PHONE_SUBSCRIBER_DIGITS = 9;
 // не считался кодом, и к нему спереди дописывалось «995»: «+995» → Backspace →
 // «+99599». Префикс размножался, и очистить поле было невозможно.
 function formatGeorgianPhone(raw) {
+    const src = (raw || '').trimStart();
     let digits = (raw || '').replace(/\D/g, '');
     if (!digits) return '';
+
+    // Иностранный номер НЕ переделываем в грузинский. Клиент ставит «+» и свой
+    // код страны («+7 916 …»), а прежняя маска сносила его и склеивала
+    // «995» + цифры: российский +79161234567 превращался в +995 791 612 345 —
+    // существующий по виду, но чужой номер. Заявка уходила мастеру с ним, и
+    // дозвониться было нельзя. Клиентка из Тбилиси (01.11.2026) не смогла
+    // оставить заявку именно поэтому.
+    //
+    // Признак «номер не грузинский» — явный «+» с кодом, отличным от 995.
+    // Без «+» поведение прежнее: короткий местный набор («555123456») по-прежнему
+    // получает код страны сам.
+    if (src.startsWith('+') && !digits.startsWith('995')) {
+        return '+' + digits.substring(0, 15);
+    }
 
     if (digits === '9' || digits === '99') {
         digits = '995';
@@ -636,7 +670,14 @@ function normalizeWhatsappPhone(value) {
 
 function normalizeGeorgianPhone(value) {
     const digits = (value || '').replace(/\D/g, '');
-    return digits ? '+' + digits.substring(0, 3 + PHONE_SUBSCRIBER_DIGITS) : '';
+    if (!digits) return '';
+    // Обрезка «код страны + 9 цифр» верна только для Грузии. Для иностранного
+    // номера она калечила контакт: немецкий «+49 151 23456789» (13 цифр)
+    // обрезался до «+49 151 2345 6» — по такому номеру не дозвониться.
+    // Для не-грузинских держим общий потолок E.164 (15 цифр), как в
+    // normalizeWhatsappPhone и normalize_whatsapp бота.
+    const limit = digits.startsWith('995') ? 3 + PHONE_SUBSCRIBER_DIGITS : 15;
+    return '+' + digits.substring(0, limit);
 }
 
 // Форматирование телефонных номеров
@@ -654,7 +695,13 @@ function initPhoneFormatting() {
     const PHONE_PATTERN_ATTR = '\\+995 ?[0-9]{3} ?[0-9]{3} ?[0-9]{3}';
 
     phoneInputs.forEach(input => {
-        input.setAttribute('pattern', PHONE_PATTERN_ATTR);
+        // Жёсткий pattern вешаем ТОЛЬКО на анкету мастера: мастер работает в
+        // Грузии, его рабочий номер местный. В клиентской форме (#leadPhone)
+        // номер необязателен и может быть любой страны — нативная проверка
+        // браузера там блокировала бы отправку у приезжего клиента ещё до
+        // нашей валидации, без внятного объяснения.
+        const isClientLead = input.id === 'leadPhone';
+        if (!isClientLead) input.setAttribute('pattern', PHONE_PATTERN_ATTR);
 
         function clampCaret() {
             if (!input.value.startsWith('+995')) return;
@@ -668,6 +715,8 @@ function initPhoneFormatting() {
         input.addEventListener('input', (e) => {
             const el = e.target;
             el.value = formatGeorgianPhone(el.value);
+            // Каретку к хвосту двигаем только когда номер реально грузинский:
+            // у иностранного «+995» в начале нет, и прыжок курсора сбивал ввод.
             if (el.value.startsWith('+995') && el.selectionStart < PREFIX_LEN) {
                 el.setSelectionRange(el.value.length, el.value.length);
             }
@@ -691,7 +740,11 @@ function initPhoneFormatting() {
         input.addEventListener('keyup', clampCaret);
 
         input.addEventListener('focus', (e) => {
-            if (e.target.value === '') e.target.value = '+995';
+            // В клиентской форме префикс НЕ подставляем: номер необязателен и
+            // может быть иностранным. Автоподстановка «+995» заставляла клиента
+            // с чужим номером сначала стирать префикс, а оставленный в поле
+            // «+995» выглядел как начатый ввод.
+            if (!isClientLead && e.target.value === '') e.target.value = '+995';
             requestAnimationFrame(() => {
                 if (e.target.value.startsWith('+995') && e.target.selectionStart < PREFIX_LEN) {
                     e.target.setSelectionRange(e.target.value.length, e.target.value.length);
@@ -770,8 +823,37 @@ function initNamePatternAttr() {
 function validatePhone(phoneInput) {
     if (!phoneInput) return true;
     const digits = phoneInput.value.replace(/\D/g, '');
-    const val = '+' + digits;
 
+    // Послабления ниже — ТОЛЬКО для клиентской заявки (#leadPhone). Мастер
+    // работает в Грузии, его рабочий номер местный и обязателен, поэтому для
+    // анкеты мастера правила остаются прежними: +995 и код оператора.
+    const isClientLead = phoneInput.id === 'leadPhone';
+
+    // Пустой телефон — это НЕ ошибка. Обязателен контакт, а не конкретно номер:
+    // форма требует Telegram или WhatsApp (contactRequired), и именно по ним
+    // сервис связывается с клиентом. Прежде validatePhone вызывался всегда и на
+    // пустом поле собирал «+», который не проходил PHONE_PATTERN, — человек
+    // получал «введите корректный грузинский номер» и не мог отправить заявку
+    // вообще, даже заполнив Telegram.
+    if (!digits && isClientLead) return true;
+
+    // Иностранный номер принимаем как есть. Клиенты сервиса — часто приезжие,
+    // и у них российский/украинский/европейский номер, на который привязан
+    // мессенджер. Требовать +995 значило отказывать им в заявке: клиентка
+    // 01.11.2026 из-за этого ушла писать в Telegram вручную.
+    // Проверяем лишь правдоподобность длины по E.164 (10–15 цифр),
+    // как это делает normalize_whatsapp в боте.
+    const isGeorgian = digits.startsWith('995');
+    if (!isGeorgian && isClientLead) {
+        if (digits.length < 10 || digits.length > 15) {
+            alert(t('phoneForeignInvalid'));
+            phoneInput.focus();
+            return false;
+        }
+        return true;
+    }
+
+    const val = '+' + digits;
     if (!PHONE_PATTERN.test(val)) {
         alert(t('phoneInvalid'));
         phoneInput.focus();
@@ -1088,11 +1170,35 @@ async function postBotJson(url, payload, timeoutMs = 12000) {
         try { data = text ? JSON.parse(text) : null; } catch (e) {}
         if (!response.ok || !data || data.ok !== true) {
             const reason = data && data.error ? data.error : ('HTTP ' + response.status);
-            throw new Error('Bot rejected lead: ' + reason);
+            const err = new Error('Bot rejected lead: ' + reason);
+            // Код причины нужен форме, чтобы объяснить человеку, ЧТО не так.
+            // Без него любой отказ выглядел одинаково — «Ошибка при отправке.
+            // Попробуйте ещё раз», — и совет «попробуйте ещё раз» был вредным:
+            // повтор того же текста отвергался снова.
+            err.botError = reason;
+            throw err;
         }
         return data;
     } finally {
         if (timer) clearTimeout(timer);
+    }
+}
+
+// Переводит код отказа бота в понятную человеку фразу.
+//
+// Коды приходят из handle_site_request (main.py). Общий текст оставляем только
+// для неизвестных причин: раньше ЛЮБОЙ отказ показывался как «Ошибка при
+// отправке. Попробуйте ещё раз», и человек либо повторял тот же текст (и снова
+// получал отказ), либо уходил. Во всех случаях заявка уже продублирована на
+// почту, поэтому сообщения не обещают потерю.
+function botErrorMessage(code) {
+    switch (code) {
+        case 'address_in_text':  return t('addressInDescription');
+        case 'contact_in_text':  return t('submitContactInText');
+        case 'too many requests': return t('submitTooMany');
+        case 'too_long':         return t('submitTooLong');
+        case 'profanity':        return t('submitProfanity');
+        default:                 return t('submitError');
     }
 }
 
@@ -1988,9 +2094,38 @@ function initClientUrgentOption() {
     else form.appendChild(label);
 }
 
+// Живая подсказка под описанием: предупреждает об адресе ПО ХОДУ ввода.
+//
+// Раньше про адрес человек узнавал только после нажатия «Отправить» — модальным
+// alert, поверх уже написанного текста. Клиентка 01.11.2026 прошла через это,
+// стёрла адрес и всё равно не смогла отправить заявку (телефон требовал +995),
+// после чего ушла в Telegram. Подсказка на месте дешевле любого alert: человек
+// видит её, пока пишет, и правит текст сразу.
+function initAddressHint(leadForm) {
+    const ta = leadForm.querySelector('textarea[name="message"]');
+    if (!ta) return;
+
+    const hint = document.createElement('p');
+    hint.className = 'field-hint field-hint--warn';
+    hint.setAttribute('role', 'status');          // скринридер объявит появление
+    hint.hidden = true;
+    hint.textContent = t('addressInDescription');
+    ta.insertAdjacentElement('afterend', hint);
+
+    let shown = false;
+    ta.addEventListener('input', () => {
+        const bad = containsAddress(ta.value);
+        if (bad === shown) return;                 // перерисовываем только на смене состояния
+        shown = bad;
+        hint.hidden = !bad;
+    });
+}
+
 function initClientLeadFormTracking() {
     const leadForm = document.getElementById('clientLeadForm');
     if (!leadForm) return;
+
+    initAddressHint(leadForm);
 
     let isSubmitting = false;
     let pendingIdempotencyKey = null;
@@ -2020,21 +2155,27 @@ function initClientLeadFormTracking() {
             pendingIdempotencyKey = generateSiteIdempotencyKey('client');
         }
 
+        // 📧 Formspree — ДУБЛЬ заявки на почту, страховка на случай сбоя бота.
+        //
+        // ⚠️ Отправляем ДО ожидания ответа бота и независимо от него. Раньше
+        // этот вызов стоял ПОСЛЕ `await sendLeadToBot`, то есть выполнялся
+        // только при успехе: любой отказ бота (модерация, rate-limit, таймаут)
+        // уносил лид целиком — человек видел «Ошибка при отправке», а на почту
+        // не приходило ничего. Именно так 01.11.2026 потерялась заявка, и
+        // клиентка пошла писать в Telegram вручную.
+        // Страховка обязана срабатывать именно тогда, когда основной канал
+        // отказал, — иначе это не страховка.
+        // Ответа не ждём: клиенту он не нужен и добавил бы секунды к паузе.
+        fetch('https://formspree.io/f/xpqjbpyk', {
+            method: 'POST',
+            body: formData,
+            headers: { 'Accept': 'application/json' }
+        }).catch((err) => console.error('Formspree (дубль заявки):', err));
+
         try {
             // Telegram Bot — операционный канал. Успех формы показываем только
             // после подтверждённого принятия заявки ботом.
             await sendLeadToBot(formData, pendingIdempotencyKey);
-
-            // 📧 Formspree — ДУБЛЬ заявки на почту, страховка на случай сбоя
-            // бота. Его ответа НЕ ждём: клиенту он не нужен, а ожидание
-            // добавляло к паузе ещё несколько секунд. Ошибку только логируем —
-            // заявка уже принята ботом, и показывать из-за почты «не удалось
-            // отправить» было бы прямой ложью.
-            fetch('https://formspree.io/f/xpqjbpyk', {
-                method: 'POST',
-                body: formData,
-                headers: { 'Accept': 'application/json' }
-            }).catch((err) => console.error('Formspree (дубль заявки):', err));
 
             if (typeof gtag === 'function') {
                 gtag('event', 'generate_lead_client', {
@@ -2054,7 +2195,11 @@ function initClientLeadFormTracking() {
 
         } catch (error) {
             console.error(error);
-            alert(t('submitError'));
+            // Показываем ПРИЧИНУ, а не общее «попробуйте ещё раз»: повтор того
+            // же текста отвергается снова, и человек уходит ни с чем.
+            // Заявка при этом уже ушла на почту (Formspree выше) — поэтому
+            // говорим, что с клиентом свяжутся, и не пугаем потерей заявки.
+            alert(botErrorMessage(error && error.botError));
             isSubmitting = false;
         } finally {
             // Кнопку возвращаем в исходный вид ВСЕГДА — и после успеха тоже.

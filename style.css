@@ -2628,6 +2628,25 @@ body.modal-open {
     border-color: rgba(6, 255, 165, 0.5);
 }
 
+/* Подсказка под полем формы. Появляется по ходу ввода (адрес в описании),
+   чтобы человек правил текст сразу, а не узнавал о проблеме из alert после
+   нажатия «Отправить». Жёлтая, а не красная: это предупреждение, не ошибка. */
+.field-hint {
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    margin: 0.4rem 0 0;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.field-hint--warn {
+    color: var(--construction-yellow);
+}
+
+.field-hint[hidden] {
+    display: none;
+}
+
 .contact-or-text {
     font-family: 'NotoGeo', 'Montserrat', sans-serif;
     font-size: 0.9rem;

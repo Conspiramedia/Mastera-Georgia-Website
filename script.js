@@ -187,7 +187,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '111';
+const MASTERA_VERSION = '133';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Публичный username бота мастеров — для диплинка «завершить регистрацию».
@@ -1534,7 +1534,23 @@ function initBurgerMenu() {
     btn.type = 'button';
     btn.setAttribute('aria-label', 'Меню');
     btn.setAttribute('aria-expanded', 'false');
-    btn.innerHTML = '<span></span><span></span><span></span>';
+    // Три полоски + круг с языками справа. Круг — не отдельная кнопка, а
+    // часть этой же: нажатие в любом месте открывает одно и то же меню,
+    // где язык и переключается. Он нужен только как подсказка «здесь
+    // меняется язык» — прежде бургер ничего про языки не говорил, и
+    // люди уходили со страницы, не найдя переключатель.
+    //
+    // Полоски разной длины (длинная — короткая — длинная) освобождают
+    // место под круг посередине: тот наезжает на габарит бургера, но до
+    // самих полосок не достаёт. Классы, а не nth-child: порядок полосок
+    // в разметке потом не перепутать молча.
+    btn.innerHTML =
+        '<span class="burger-bars">'
+      +   '<span class="burger-bar burger-bar-top"></span>'
+      +   '<span class="burger-bar burger-bar-mid"></span>'
+      +   '<span class="burger-bar burger-bar-bot"></span>'
+      + '</span>'
+      + '<span class="burger-lang-badge" aria-hidden="true"></span>';
 
     const overlay = document.createElement('div');
     overlay.className = 'burger-overlay';
@@ -1639,6 +1655,21 @@ function initBurgerMenu() {
                    || 'Заказать услугу';
 
     headTitle.textContent = { ru: 'Меню', ka: 'მენიუ', en: 'Menu' }[pageLang] || 'Меню';
+
+    // В круге — код языка ТЕКУЩЕЙ страницы: человек видит, на каком языке
+    // он сейчас, и понимает, что это переключатель. Грузинский помечен
+    // как GE, а не KA: так же подписан раздел сайта (/ge/) и кнопка в
+    // шапке (GEO), хотя внутри кода язык зовётся ka.
+    const langBadge = btn.querySelector('.burger-lang-badge');
+    if (langBadge) {
+        langBadge.textContent = { ru: 'RU', ka: 'GE', en: 'EN' }[pageLang] || 'RU';
+    }
+    // Кнопка одна, поэтому и подпись для скринридера одна — она называет
+    // оба назначения сразу, иначе круг для незрячего просто исчезает
+    // (сам он aria-hidden, чтобы код языка не читался отдельной строкой).
+    btn.setAttribute('aria-label',
+        { ru: 'Меню и выбор языка', ka: 'მენიუ და ენის არჩევა', en: 'Menu and language' }[pageLang]
+        || 'Меню и выбор языка');
     closeBtn.setAttribute('aria-label',
         { ru: 'Закрыть меню', ka: 'მენიუს დახურვა', en: 'Close menu' }[pageLang] || 'Закрыть меню');
 

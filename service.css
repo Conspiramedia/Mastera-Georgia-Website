@@ -14,13 +14,57 @@
     align-items: center;
     justify-content: flex-start;
     padding-top: 1.8rem;
+    /* Фон тот же, что у всей страницы; фотография — отдельным слоем
+       в ::before с растушёвкой по краям, как у .hero на главных
+       (см. style.css). Иначе прямоугольник кадра виден вертикальными
+       границами: края файла не совпадают с фоном. */
     background-color: var(--dark-concrete);
-    background-image:
-        linear-gradient(rgba(10, 10, 10, 0.8), rgba(10, 10, 10, 0.9)),
-        url('/image/hero-bg.webp');
-    background-position: 0 0, center center;
-    background-size: 100% 100%, 50%;
+}
+
+.service-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: url('/image/hero-bg.webp');
+    background-position: center center;
+    background-size: 50%;
     background-repeat: no-repeat;
+    opacity: 0.2;
+    /* Маска повторяет размер и положение САМОЙ картинки, а не блока.
+       Так растушёвка всегда ложится по краям кадра, сколько бы места
+       блок ни занимал. Прежние проценты считались от высоты блока, и
+       на лендингах (.service-hero, min-height 770 px) кадр при
+       background-size 50% оказывался меньше блока: градиент уходил
+       мимо краёв, а сами края оставались резкими — прямоугольник
+       фотографии было видно.
+       mask-size/position ОБЯЗАНЫ совпадать с background-size/position
+       выше: разойдутся — маска снова промахнётся мимо кадра.
+
+       ⚠️ Гасим ТОЛЬКО кромку, а не кадр целиком. Радиальный градиент
+       для этого не годится: он меряет радиус от центра, и к углам
+       (50 %·√2 ≈ 70.7 %) приходит прозрачным задолго до краёв — чтобы
+       спрятать углы, приходится стирать и середину, картинка пропадает.
+       Поэтому две линейные маски — по горизонтали и по вертикали —
+       пересекаются (mask-composite: intersect): каждая держит середину
+       целиком непрозрачной и уводит в прозрачность только крайние 12 %
+       своей оси. Видимой остаётся вся сердцевина кадра, а стыка с фоном
+       нет ни по бокам, ни сверху-снизу, ни в углах. */
+    -webkit-mask-image:
+        linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%),
+        linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
+    mask-image:
+        linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%),
+        linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+    -webkit-mask-size: 50%, 50%;
+    mask-size: 50%, 50%;
+    -webkit-mask-position: center center, center center;
+    mask-position: center center, center center;
+    -webkit-mask-repeat: no-repeat, no-repeat;
+    mask-repeat: no-repeat, no-repeat;
 }
 
 @media (max-width: 768px) {
@@ -28,12 +72,28 @@
         padding: 2.5rem 4% 3rem;
         min-height: 0;
         background-color: var(--dark-concrete);
-        background-image:
-            linear-gradient(rgba(10, 10, 10, 0.65), rgba(10, 10, 10, 0.75)),
-            url('/image/hero-bg.webp');
-        background-position: 0 0, center center;
-        background-size: 100% 100%, cover;
-        background-repeat: no-repeat;
+    }
+
+    /* На телефоне кадр закрывает блок целиком, боковых краёв нет —
+       гасим только верх и низ. */
+    .service-hero::before {
+        background-size: cover;
+        opacity: 0.28;
+        /* На телефоне кадр закрывает блок целиком (cover), боковых
+           краёв нет — они уходят за экран. Гасим только верх и низ,
+           линейным градиентом по высоте БЛОКА: здесь кадр и блок
+           совпадают, поэтому пересчитывать под картинку нечего.
+           ⚠️ mask-size обязателен: без него правило унаследует
+           «50%» из десктопного блока, и маска сожмётся в середину
+           экрана вместо того, чтобы накрыть весь кадр. */
+        -webkit-mask-size: 100% 100%;
+        mask-size: 100% 100%;
+        -webkit-mask-position: center center;
+        mask-position: center center;
+        -webkit-mask-image:
+            linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
+        mask-image:
+            linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
     }
 }
 

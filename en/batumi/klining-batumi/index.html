@@ -37,6 +37,11 @@
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#FDB913">
 
+  <!-- Preload LCP-картинки (hero-фон): фон первого экрана объявлен в CSS,
+       и без preload браузер узнаёт о нём только после разбора style.css и
+       service.css — картинка стартует почти на секунду позже и тянет LCP. -->
+  <link rel="preload" as="image" href="/image/hero-bg.webp" fetchpriority="high">
+
   <!-- Шрифт в критическом пути: без preload браузер узнаёт о нём
        только после разбора style.css и начинает качать позже. -->
   <link rel="preload" href="/fonts/montserrat-var.woff2" as="font"

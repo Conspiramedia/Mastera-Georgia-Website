@@ -745,30 +745,119 @@ header .online-counter {
     margin: 0 auto;
 }
 
-/* Строка «та же услуга в другом городе» под сеткой услуг.
-   Намеренно не карточка: карточки в сетке — это услуги, и город среди
-   них читался бы как ещё одна услуга. Обычная строка текста со ссылкой
-   отделяет смысл «другой город» от смысла «другая работа». */
+/* Переход в другой город под сеткой услуг.
+   Оформлен карточкой-пилюлей, а не строкой текста: строка читалась как
+   сноска и терялась между сеткой и футером. Геометрия взята у
+   .district-card (та же задача — «поехать в другое место»), а скруглённая
+   форма и обводка — у .audience-link, чтобы блок не выглядел пришлым. */
 .other-city-link {
-    max-width: 1100px;
-    margin: 2rem auto 0;
-    font-family: 'NotoGeo', 'Montserrat', sans-serif;
-    font-size: clamp(0.9rem, 1.1vw, 1.05rem);
-    color: rgba(255, 255, 255, 0.65);
+    display: flex;
+    justify-content: center;
+    margin: 3rem auto 0;
 }
 
-.other-city-link a {
-    color: var(--construction-yellow);
+.other-city-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 24px;
+    /* Подложка чуть светлее фона секции — карточка отделяется от него,
+       но не спорит с карточками услуг выше, у которых фон плотнее. */
+    background: rgba(253, 185, 19, 0.06);
+    border: 1px solid rgba(253, 185, 19, 0.3);
+    border-radius: 50px;
     text-decoration: none;
-    border-bottom: 1px solid rgba(253, 185, 19, 0.4);
-    transition: border-color 0.3s ease;
+    text-align: left;
+    transition: border-color 0.25s ease, background 0.25s ease,
+                transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-/* Подчёркивание набирает плотность только там, где есть курсор: на
-   тач-устройствах :hover залипает после тапа (см. правку от 02.11). */
-@media (hover: hover) {
-    .other-city-link a:hover {
-        border-bottom-color: var(--construction-yellow);
+/* Иконка города не сжимается рядом с длинной подписью. */
+.other-city-icon {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    color: var(--construction-yellow);
+}
+
+.other-city-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+/* Надстрочная подпись: объясняет, что это переход в другой город, а не
+   ещё одна услуга. Мельче и приглушённее названия — иначе карточка
+   читается как два равных заголовка (тот же приём, что в .district-card). */
+.other-city-label {
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #9a9a9a;
+    line-height: 1.3;
+}
+
+.other-city-name {
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.3;
+    transition: color 0.25s ease;
+}
+
+/* Стрелка — та же подсказка «ведёт дальше», что у карточек услуг. */
+.other-city-arrow {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: var(--construction-yellow);
+    transition: transform 0.25s ease;
+}
+
+/* Только для мыши: на тач-экране :hover залипает после тапа
+   и элемент остаётся перекрашенным, пока не коснёшься другого. */
+@media (hover: hover) and (pointer: fine) {
+    .other-city-card:hover {
+        background: rgba(253, 185, 19, 0.1);
+        border-color: var(--construction-yellow);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(253, 185, 19, 0.2);
+    }
+
+    .other-city-card:hover .other-city-name {
+        color: var(--construction-yellow);
+    }
+
+    .other-city-card:hover .other-city-arrow {
+        transform: translateX(4px);
+    }
+}
+
+/* На узком экране карточка занимает всю ширину и перестаёт быть пилюлей:
+   длинное название услуги («Ремонт компьютеров Батуми») в 50px-скруглении
+   переносится на две строки и форма ломается.
+   Иконка и стрелка прижимаются к первой строке, а не центрируются по всей
+   высоте: при переносе названия они оказывались на уровне межстрочья и
+   выглядели оторванными от текста. */
+@media (max-width: 480px) {
+    .other-city-card {
+        width: 100%;
+        border-radius: 14px;
+        padding: 14px 18px;
+        align-items: flex-start;
+    }
+
+    .other-city-icon,
+    .other-city-arrow {
+        margin-top: 2px;
+    }
+
+    .other-city-arrow {
+        margin-left: auto;
     }
 }
 

@@ -765,7 +765,7 @@ header .online-counter {
        .district-card. С жёлтой подложкой блок читался как ещё одна
        кнопка и спорил с CTA, стоящей выше. */
     background: transparent;
-    border: 1px solid rgba(253, 185, 19, 0.3);
+    border: 1px solid var(--construction-yellow);
     border-radius: 50px;
     text-decoration: none;
     text-align: left;
@@ -1700,7 +1700,7 @@ header .online-counter {
     min-width: 140px;
     padding: 1rem;
     background: rgba(253, 185, 19, 0.1);
-    border: 1px solid rgba(253, 185, 19, 0.3);
+    border: 1px solid var(--construction-yellow);
     border-radius: 8px;
     text-align: center;
     transition: all 0.3s ease;
@@ -1759,7 +1759,7 @@ header .online-counter {
     border-radius: 12px;
     margin-bottom: 1rem;
     overflow: hidden;
-    border: 1px solid rgba(253, 185, 19, 0.3);
+    border: 1px solid var(--construction-yellow);
     transition: all 0.3s ease;
 }
 

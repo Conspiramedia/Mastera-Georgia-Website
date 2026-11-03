@@ -194,7 +194,7 @@
     position: relative;
     z-index: 1;
     border-radius: 8px;
-    border: 1px solid #FDB913;
+    border: 1px solid var(--construction-yellow);
     background: rgba(0, 0, 0, 0.35);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -278,7 +278,7 @@
     background: rgba(0, 0, 0, 0.35);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    border: 1px solid #FDB913;
+    border: 1px solid var(--construction-yellow);
     border-radius: 12px;
     position: relative;
     z-index: 1;
@@ -303,14 +303,17 @@
    Секция рендерилась голой — текст прижимался к левому краю окна без
    отступов и контейнера, на всю его ширину, поперёк остальной вёрстки.
    Геометрия взята у .districts — соседней секции того же назначения. */
+/* Верхний отступ обязателен: выше стоит .steps-button, у которой есть
+   margin-top, но нет отступа снизу — без него кнопка «Оставить заявку»
+   упиралась в рамку блока вплотную (замерено: зазор 0 px). */
 .local-content {
   max-width: 1100px;
-  margin: 0 auto 4rem;
+  margin: 3rem auto 4rem;
   padding: 2.5rem 2rem;
   background: rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(253, 185, 19, 0.3);
+  border: 1px solid var(--construction-yellow);
   border-radius: 12px;
   position: relative;
   z-index: 1;
@@ -348,7 +351,7 @@
   .local-content {
     width: auto;
     max-width: none;
-    margin: 0 5% 3rem;
+    margin: 2.5rem 5% 3rem;
     padding: 1.8rem 1.3rem;
   }
 
@@ -381,7 +384,7 @@
   gap: 10px;
   padding: 14px 16px;
   background: transparent;
-  border: 1px solid rgba(253, 185, 19, 0.3);
+  border: 1px solid var(--construction-yellow);
   border-radius: 10px;
   color: #e8e8e8;
   text-decoration: none;

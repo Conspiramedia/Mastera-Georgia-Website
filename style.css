@@ -745,6 +745,33 @@ header .online-counter {
     margin: 0 auto;
 }
 
+/* Строка «та же услуга в другом городе» под сеткой услуг.
+   Намеренно не карточка: карточки в сетке — это услуги, и город среди
+   них читался бы как ещё одна услуга. Обычная строка текста со ссылкой
+   отделяет смысл «другой город» от смысла «другая работа». */
+.other-city-link {
+    max-width: 1100px;
+    margin: 2rem auto 0;
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
+    font-size: clamp(0.9rem, 1.1vw, 1.05rem);
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.other-city-link a {
+    color: var(--construction-yellow);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(253, 185, 19, 0.4);
+    transition: border-color 0.3s ease;
+}
+
+/* Подчёркивание набирает плотность только там, где есть курсор: на
+   тач-устройствах :hover залипает после тапа (см. правку от 02.11). */
+@media (hover: hover) {
+    .other-city-link a:hover {
+        border-bottom-color: var(--construction-yellow);
+    }
+}
+
 .service-card {
     background: rgba(0, 0, 0, 0.35);
     backdrop-filter: blur(8px);

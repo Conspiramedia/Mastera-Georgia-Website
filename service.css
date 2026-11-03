@@ -296,6 +296,68 @@
 }
 
 /* ============================================
+ЛОКАЛЬНЫЙ ТЕКСТ УСЛУГИ (страницы Батуми)
+============================================ */
+/* Блок добавили SEO-правкой 03.10.2026 (коммит 954a00ea), а стилей к нему
+   не написали: ни одного правила на .local-content не существовало.
+   Секция рендерилась голой — текст прижимался к левому краю окна без
+   отступов и контейнера, на всю его ширину, поперёк остальной вёрстки.
+   Геометрия взята у .districts — соседней секции того же назначения. */
+.local-content {
+  max-width: 1100px;
+  margin: 0 auto 4rem;
+  padding: 2.5rem 2rem;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(253, 185, 19, 0.3);
+  border-radius: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Заголовок по центру, текст — влево: это абзацы на две-три строки,
+   выключка по центру делает их рваными и плохо читаемыми. */
+.local-content h2 {
+  font-family: 'NotoGeo', 'Montserrat', sans-serif;
+  font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  margin: 0 0 1.2rem;
+}
+
+.local-content p {
+  font-family: 'NotoGeo', 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #ccc;
+  line-height: 1.7;
+  margin: 0 0 1rem;
+}
+
+.local-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* На узком экране рамка должна отступать от краёв экрана, иначе она
+   упирается в них и блок выглядит обрезанным. Схема та же, что у
+   .districts: боковые поля в процентах вместо auto-центровки, потому что
+   max-width: 1100px на 375px не ограничивает ничего и margin: auto даёт 0. */
+@media (max-width: 768px) {
+  .local-content {
+    width: auto;
+    max-width: none;
+    margin: 0 5% 3rem;
+    padding: 1.8rem 1.3rem;
+  }
+
+  .local-content p {
+    font-size: 0.95rem;
+  }
+}
+
+/* ============================================
 РАЙОНЫ — СЕТКА КАРТОЧЕК
 ============================================ */
 /* 5 колонок — единственное деление, при котором 10 районов Тбилиси

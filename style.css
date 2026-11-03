@@ -761,9 +761,10 @@ header .online-counter {
     align-items: center;
     gap: 14px;
     padding: 14px 24px;
-    /* Подложка чуть светлее фона секции — карточка отделяется от него,
-       но не спорит с карточками услуг выше, у которых фон плотнее. */
-    background: rgba(253, 185, 19, 0.06);
+    /* Фона нет: сквозь карточку виден общий фон страницы, как у
+       .district-card. С жёлтой подложкой блок читался как ещё одна
+       кнопка и спорил с CTA, стоящей выше. */
+    background: transparent;
     border: 1px solid rgba(253, 185, 19, 0.3);
     border-radius: 50px;
     text-decoration: none;

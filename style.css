@@ -4207,7 +4207,11 @@ header {
         color: var(--white);
         font-family: 'NotoGeo', 'Montserrat', sans-serif;
         font-size: var(--burger-badge-size);
-        font-weight: 900;
+        /* 600, а не 900: на кегле 1rem внутри капсулы очень жирное
+           начертание выглядело тяжело и спорило с названием сайта.
+           Оба шрифта семейства покрывают это значение — Montserrat
+           вариативный (400–900), у NotoGeo есть файл 500–700. */
+        font-weight: 600;
         letter-spacing: 0.5px;
         line-height: 1;
         /* Код языка — не текст для выделения: долгое нажатие по кнопке

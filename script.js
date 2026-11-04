@@ -206,7 +206,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '189';
+const MASTERA_VERSION = '190';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Публичный username бота мастеров — для диплинка «завершить регистрацию».
@@ -1621,6 +1621,12 @@ const BURGER_ICONS = {
     'gruzchiki':          '<rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>',
     'remont-kompyuterov': '<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/>',
 
+    // Узкие услуги. Контуры взяты с карточек на самих лендингах,
+    // чтобы в меню и на странице стояла одна и та же иконка.
+    'konditsionery':      '<path d="M9.59 4.59A2 2 0 1 1 11 8H2"/><path d="M12.59 19.41A2 2 0 1 0 14 16H2"/><path d="M17.73 7.73A2.5 2.5 0 1 1 19.5 12H2"/>',
+    'stiralnye-mashiny':  '<rect x="3" y="2" width="18" height="20" rx="2"/><circle cx="12" cy="13" r="5"/><circle cx="12" cy="13" r="1.5"/><line x1="7" y1="5.5" x2="7.01" y2="5.5"/><line x1="11" y1="5.5" x2="11.01" y2="5.5"/>',
+    'dveri-zamki':        '<path d="M3 21h18"/><path d="M5 21V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v17"/><circle cx="15" cy="12" r="1"/>',
+
     // Служебные пункты меню. «Для мастеров» — та же иконка, что у ссылки
     // в шапке: человек узнаёт её, уйдя из шапки в меню.
     'home':     '<path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V9.5z"/>',
@@ -1638,6 +1644,12 @@ const BURGER_SERVICES = [
     { slug: 'klining',           ru: 'Клининг',            ka: 'დასუფთავება',         en: 'Cleaning' },
     { slug: 'gruzchiki',         ru: 'Грузчики',           ka: 'მტვირთავები',         en: 'Movers' },
     { slug: 'remont-kompyuterov', ru: 'Ремонт компьютеров', ka: 'კომპიუტერის შეკეთება', en: 'Computer repair' },
+    // ⚠️ Узкие услуги лежат по пути БЕЗ суффикса города
+    // (/ru/tbilisi/konditsionery/, а не konditsionery-tbilisi), поэтому
+    // помечены flat: ссылка для них собирается без «-<город>».
+    { slug: 'konditsionery',     ru: 'Кондиционеры',       ka: 'კონდიციონერები',      en: 'Air conditioners', flat: true },
+    { slug: 'stiralnye-mashiny', ru: 'Стиральные машины',  ka: 'სარეცხი მანქანები',   en: 'Washing machines', flat: true },
+    { slug: 'dveri-zamki',       ru: 'Двери и замки',      ka: 'კარები და საკეტები',  en: 'Doors and locks',  flat: true },
 ];
 
 // Бургер-меню на телефоне: выезжает справа, как в соседнем проекте Auto RS.
@@ -1704,6 +1716,15 @@ function initBurgerMenu() {
     const body = document.createElement('div');
     body.className = 'burger-body';
 
+    // Своя полоса прокрутки. Системная на телефоне оверлейная: всплывает
+    // на время движения пальца и тут же гаснет, а ::-webkit-scrollbar
+    // мобильный Safari не рендерит вообще — подробности в CSS у
+    // .burger-scroll. Пока список не тронули, ничто не подсказывало,
+    // что под кнопкой «Оставить заявку» есть ещё пункты.
+    const scrollbar = document.createElement('div');
+    scrollbar.className = 'burger-scroll';
+    scrollbar.hidden = true;
+
     // Язык страницы: на лендингах его задаёт window.__FORCE_LANG__
     const pageLang = window.__FORCE_LANG__ || 'ru';
     // Город берём у botCityFromUrl: она определяет его по району лендинга,
@@ -1759,7 +1780,9 @@ function initBurgerMenu() {
         { ru: 'Главная', ka: 'მთავარი', en: 'Home' }[pageLang] || 'Главная', 'home'));
 
     BURGER_SERVICES.forEach((svc) => {
-        const href = `/${langDir}/${citySlug}/${svc.slug}-${citySlug}/`;
+        const href = svc.flat
+            ? `/${langDir}/${citySlug}/${svc.slug}/`
+            : `/${langDir}/${citySlug}/${svc.slug}-${citySlug}/`;
         links.appendChild(makeLink(href, svc[pageLang] || svc.ru, svc.slug));
     });
 
@@ -1801,6 +1824,35 @@ function initBurgerMenu() {
     document.body.appendChild(overlay);
     document.body.appendChild(panel);
 
+    // Пересчитывает размер и положение ползунка по фактической прокрутке.
+    // Зовётся при открытии и на каждом scroll: высоты до открытия панели
+    // нулевые (display управляется классом), поэтому считать заранее нельзя.
+    function updateBurgerScrollbar() {
+        const track = body.clientHeight;
+        const total = body.scrollHeight;
+
+        // Прокручивать нечего — полосы быть не должно: на широком экране
+        // или в альбомной ориентации список помещается целиком.
+        if (total <= track + 1) {
+            scrollbar.hidden = true;
+            return;
+        }
+        scrollbar.hidden = false;
+
+        // Минимум 32px: при длинном списке пропорциональный ползунок
+        // вырождается в точку и перестаёт читаться как полоса.
+        const h = Math.max(32, Math.round(track * track / total));
+        const maxTop = track - h;
+        const progress = body.scrollTop / (total - track);
+
+        scrollbar.style.height = h + 'px';
+        // Отсчёт от верха .burger-body, а не панели: над ним ещё строка «Меню».
+        scrollbar.style.top = (body.offsetTop + Math.round(progress * maxTop)) + 'px';
+    }
+
+    body.addEventListener('scroll', updateBurgerScrollbar, { passive: true });
+    window.addEventListener('resize', updateBurgerScrollbar);
+
     function setOpen(open) {
         // Замер ширины полосы прокрутки здесь больше не нужен: место под
         // неё зарезервировано постоянно (scrollbar-gutter на html), поэтому
@@ -1812,6 +1864,14 @@ function initBurgerMenu() {
         btn.classList.toggle('is-open', open);
         document.body.classList.toggle('burger-open', open);
         btn.setAttribute('aria-expanded', String(open));
+
+        if (open) {
+            // Строго ПОСЛЕ переключения классов: до него панель скрыта и
+            // scrollHeight/clientHeight равны нулю — ползунок посчитался бы
+            // в ноль и не появился.
+            body.scrollTop = 0;
+            updateBurgerScrollbar();
+        }
     }
 
     // Меню одно на все ширины. Прежде оно собиралось только на телефоне, а
@@ -1832,6 +1892,9 @@ function initBurgerMenu() {
         body.appendChild(extra);
         body.appendChild(cta);
         panel.appendChild(body);
+        // Полоса — сестра .burger-body, а не его потомок: внутри
+        // прокручиваемого блока она уехала бы вместе с содержимым.
+        panel.appendChild(scrollbar);
 
         btn.hidden = false;
         panel.hidden = false;

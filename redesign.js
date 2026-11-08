@@ -199,7 +199,24 @@
                         en: 'We reply within an hour. We will clarify the details, suggest a specialist and start only after the price is agreed.',
                         ge: 'ვუპასუხებთ ერთ საათში. დავაზუსტებთ დეტალებს, შემოგთავაზებთ ოსტატს და სამუშაოს დავიწყებთ მხოლოდ ფასის შეთანხმების შემდეგ.' },
         finalBtn:     { ru: 'Оставить заявку', en: 'Leave a request', ge: 'განაცხადის დატოვება' },
-        finalCall:    { ru: 'Позвонить', en: 'Call', ge: 'დარეკვა' }
+        finalCall:    { ru: 'Позвонить', en: 'Call', ge: 'დარეკვა' },
+
+        /* ── Подвал ──────────────────────────────────────────── */
+        ftAbout:     { ru: 'Mastera Georgia — сантехника, электрика, ремонт техники, мебель и небольшие домашние работы. Условия зависят от выбранной услуги и города.',
+                       en: 'Mastera Georgia — plumbing, electrics, appliance repair, furniture and small household jobs. Terms depend on the service and the city.',
+                       ge: 'Mastera Georgia — სანტექნიკა, ელექტრიკა, ტექნიკის შეკეთება, ავეჯი და მცირე საოჯახო სამუშაოები. პირობები დამოკიდებულია სერვისსა და ქალაქზე.' },
+        ftAllServices: { ru: 'Все услуги', en: 'All services', ge: 'ყველა სერვისი' },
+        ftHome:      { ru: 'Помощь по дому', en: 'Household help', ge: 'დახმარება სახლში' },
+        ftAppliance: { ru: 'Бытовая техника', en: 'Home appliances', ge: 'საყოფაცხოვრებო ტექნიკა' },
+        ftTech:      { ru: 'Уборка и переезд', en: 'Cleaning and moving', ge: 'დასუფთავება და გადაზიდვა' },
+        ftCityInfo:  { ru: 'Город и информация', en: 'City and information', ge: 'ქალაქი და ინფორმაცია' },
+        ftYourCity:  { ru: 'Ваш город', en: 'Your city', ge: 'თქვენი ქალაქი' },
+        ftSchedule:  { ru: 'Ежедневно, 09:00–21:00', en: 'Daily, 09:00–21:00', ge: 'ყოველდღე, 09:00–21:00' },
+        ftPrivacy:   { ru: 'Политика конфиденциальности', en: 'Privacy policy', ge: 'კონფიდენციალურობის პოლიტიკა' },
+        ftTerms:     { ru: 'Пользовательское соглашение', en: 'Terms of service', ge: 'მომხმარებლის შეთანხმება' },
+        ftForMasters:{ ru: 'Мастерам', en: 'For specialists', ge: 'ოსტატებს' },
+        ftDistricts: { ru: 'Районы обслуживания', en: 'Service districts', ge: 'მომსახურების რაიონები' },
+        ftRights:    { ru: 'Все права защищены', en: 'All rights reserved', ge: 'ყველა უფლება დაცულია' }
     };
 
     function t(key) { return T[key][LANG] || T[key].ru; }
@@ -678,6 +695,142 @@
         document.addEventListener('click', function (e) {
             if (!wrap.contains(e.target)) close();
         });
+    }
+
+    /* ── Подвал ──────────────────────────────────────────────
+       Собираем здесь по трём причинам: он одинаков на всех
+       страницах, в нём лежит список всех услуг (а он меняется),
+       и на страницах политики и соглашения подвала НЕ БЫЛО вовсе
+       — человек дочитывал документ и упирался в край страницы.
+
+       ⚠️ Услуги берём из SERVICES — того же справочника, что
+       строит меню шапки. Второй список разошёлся бы с первым при
+       первой же правке, и подвал увёл бы в 404. */
+
+    function buildFooter() {
+        var old = document.querySelector('.site-footer');
+        var city = currentCity();
+
+        // Ссылка на услугу в городе страницы: есть готовая
+        // страница — ведём на неё, нет — на форму заявки.
+        function svcLink(s) {
+            var slug = serviceSlug(s, city.slug);
+            var ready = READY_PAGES.indexOf(city.slug + '/' + slug) !== -1;
+            var href = ready
+                ? '/' + LANG + '/' + city.slug + '/' + slug + '/'
+                : '/' + LANG + '/#lead';
+            return '<li><a href="' + href + '">' +
+                   (s.name[LANG] || s.name.ru) + '</a></li>';
+        }
+
+        /* Услуги разложены по смыслу, а не подряд: двенадцать
+           пунктов одной колонкой читаются как свалка. Группы те
+           же, что у донора — техника, бытовые приборы, работы по
+           дому. Индексы — порядок в SERVICES. */
+        var GROUPS = [
+            // Работы по дому: мастер, сантехник, электрик, мебель,
+            // навеска, бытовой ремонт, двери и замки.
+            { key: 'ftHome',      idx: [0, 1, 2, 3, 5, 4, 11] },
+            // Техника: стиралки, кондиционеры, компьютеры.
+            { key: 'ftAppliance', idx: [10, 9, 6] },
+            // Прочие услуги по дому, не связанные с починкой.
+            { key: 'ftTech',      idx: [8, 7] }
+        ];
+
+        var cols = GROUPS.map(function (g) {
+            var items = g.idx.map(function (i) {
+                return SERVICES[i] ? svcLink(SERVICES[i]) : '';
+            }).join('');
+            return '<div class="site-footer__col">' +
+                   '<h5>' + t(g.key) + '</h5>' +
+                   '<ul>' + items + '</ul></div>';
+        }).join('');
+
+        // Второй город — ссылка на его главную.
+        var other = CITIES.filter(function (c) { return c.slug !== city.slug; })[0];
+        var otherHref = '/' + LANG + '/' +
+            (other.slug === CITIES[0].slug ? '' : other.slug + '/');
+
+        var tel = pageTel();
+        var telText = tel.replace('tel:', '')
+            .replace(/^(\+\d{3})(\d{3})(\d{3})(\d{3})$/, '$1 $2 $3 $4');
+
+        var f = document.createElement('footer');
+        f.className = 'site-footer';
+        f.innerHTML =
+            '<div class="container">' +
+              '<div class="site-footer__top">' +
+
+                '<div class="site-footer__brand">' +
+                  /* Знак и название — теми же классами, что в
+                     шапке: подвал и шапка показывают один логотип,
+                     и дублировать его стили незачем.
+                     ⚠️ .logo__sub здесь НЕ используем: он задуман
+                     под «СЕРВИС ДЛЯ ДОМА» — прописные с разрядкой,
+                     и часы работы в нём выглядели бы заголовком. */
+                  '<div class="logo site-footer__logo">' +
+                    '<span class="logo__mark">' + svg('tool') + '</span>' +
+                    '<span class="logo__text">' +
+                      '<span class="logo__name">Mastera Georgia</span>' +
+                    '</span>' +
+                  '</div>' +
+                  '<p class="site-footer__about">' + t('ftAbout') + '</p>' +
+                  '<ul class="site-footer__contacts">' +
+                    '<li><a href="' + tel + '">' + telText + '</a></li>' +
+                    '<li><a href="mailto:info@mastera.ge">info@mastera.ge</a></li>' +
+                    '<li class="site-footer__hours">' + t('ftSchedule') + '</li>' +
+                  '</ul>' +
+                '</div>' +
+
+                '<div class="site-footer__services">' +
+                  '<h4>' + t('ftAllServices') + '</h4>' +
+                  '<div class="site-footer__cols">' + cols + '</div>' +
+                '</div>' +
+
+                '<div class="site-footer__info">' +
+                  '<h4>' + t('ftCityInfo') + '</h4>' +
+                  /* Карточка города — кнопка выбора, как в шапке:
+                     подвал последнее, что видит человек, и смена
+                     города здесь экономит ему путь наверх. */
+                  '<button type="button" class="site-footer__city" data-open-city>' +
+                    '<span class="site-footer__city-icon">' + svg('pin') + '</span>' +
+                    '<span class="site-footer__city-body">' +
+                      '<span class="site-footer__city-label">' + t('ftYourCity') + '</span>' +
+                      '<strong>' + (city.name[LANG] || city.name.ru) + '</strong>' +
+                    '</span>' +
+                    '<svg class="site-footer__city-arrow" viewBox="0 0 24 24" fill="none" ' +
+                    'stroke="currentColor" stroke-width="2" stroke-linecap="round" ' +
+                    'stroke-linejoin="round" aria-hidden="true">' +
+                    '<line x1="5" y1="12" x2="19" y2="12"/>' +
+                    '<polyline points="12 5 19 12 12 19"/></svg>' +
+                  '</button>' +
+                  '<ul class="site-footer__links">' +
+                    '<li><a href="' + otherHref + '">' +
+                      (other.name[LANG] || other.name.ru) + '</a></li>' +
+                    '<li><a href="/' + LANG + '/#districts">' + t('ftDistricts') + '</a></li>' +
+                    '<li><a href="/' + LANG + '/masters/">' + t('ftForMasters') + '</a></li>' +
+                    '<li><a href="/' + LANG + '/privacy/">' + t('ftPrivacy') + '</a></li>' +
+                    '<li><a href="/' + LANG + '/terms/">' + t('ftTerms') + '</a></li>' +
+                  '</ul>' +
+                '</div>' +
+
+              '</div>' +
+
+              '<div class="site-footer__bottom">' +
+                '<span>© ' + new Date().getFullYear() +
+                  ' Mastera Georgia · ' + t('ftRights') + '</span>' +
+                '<span>' + CITIES.map(function (c) {
+                    return c.name[LANG] || c.name.ru;
+                }).join(' · ') + '</span>' +
+              '</div>' +
+            '</div>';
+
+        if (old) {
+            old.parentNode.replaceChild(f, old);
+        } else {
+            // Политика и соглашение: подвала в разметке нет.
+            document.body.appendChild(f);
+        }
     }
 
     /* ── Модальное окно заявки ───────────────────────────────
@@ -1669,6 +1822,10 @@
             centerTimer = setTimeout(centerDropdownPanels, 120);
         });
         buildPageCtas();
+        /* Подвал строим до окна заявки: оно ищет форму, а подвал
+           её не трогает — порядок тут только ради предсказуемости
+           разметки на момент остальных сборок. */
+        buildFooter();
         /* ⚠️ Окно заявки — только по load. Оно переносит в себя
            живую форму #clientLeadForm, а её достраивает script.js
            (районы, блок фото) и на неё же вешает отправку. Этот

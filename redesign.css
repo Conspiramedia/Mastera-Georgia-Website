@@ -314,8 +314,18 @@ p {
 }
 
 .logo__mark svg {
-    width: 23px;
-    height: 23px;
+    /* 28 из 42 px стороны (две трети) вместо прежних 23 (55%):
+       ключ читался мелким, особенно на телефоне и в закладках.
+
+       ⚠️ Размер самого квадрата НЕ меняем: 42 px заложены в
+       высоту шапки и в расчёт порога бургера (1360 px). Растёт
+       только рисунок внутри.
+
+       ⚠️ Больше не берём: у контура ключа stroke-width 2 при
+       24-й сетке, и на 30+ px линия начинает казаться тонкой
+       относительно пятна — знак теряет плотность. */
+    width: 28px;
+    height: 28px;
 }
 
 .logo__text {
@@ -2864,16 +2874,225 @@ select.form-control::-ms-expand {
     font-size: 0.9rem;
 }
 
-.site-footer__grid {
+/* ⚠️ Прежний .site-footer__grid убран: подвал собирает
+   redesign.js, и раскладка у него другая — три смысловые зоны
+   (бренд, все услуги, город и документы), а услуги внутри своей
+   зоны разложены ещё на три колонки по смыслу. Старое правило
+   на двенадцать пунктов не рассчитано: они уходили в одну
+   колонку длинным столбцом. */
+
+.site-footer__top {
     display: grid;
-    /* Четыре колонки, а не три: к макету добавлена колонка «Сервис»
-       со ссылками на второй город, /masters/ и /fb/. При трёх
-       колонках она уезжала во второй ряд, оставляя рядом две
-       пустые клетки. Первая колонка шире — в ней описание сервиса. */
-    grid-template-columns: 1.4fr 1fr 1fr 1fr;
-    gap: 2.5rem;
+    /* Услуги посередине и шире всех: там три колонки ссылок.
+       Крайние зоны уже — в них короткий текст и список. */
+    /* ⚠ Доля услуг подобрана по замеру, а не на глаз: самая
+       длинная подпись «Компьютерный мастер» требует 167px, три
+       такие колонки с зазорами — 565px. При 1fr 1.9fr 1fr зоне
+       доставалось 557px только на самом широком контейнере. */
+    grid-template-columns: 0.85fr 2.3fr 0.95fr;
+    gap: 2.6rem;
     padding-bottom: 32px;
     border-bottom: 1px solid var(--line-dark);
+}
+
+.site-footer__logo {
+    margin-bottom: 1.1rem;
+}
+
+/* Знак в подвале на тёмном фоне: тень от него не нужна — она
+   рассчитана на светлую подложку шапки и здесь только грязнит. */
+.site-footer__logo .logo__mark {
+    box-shadow: none;
+}
+
+.site-footer__logo .logo__name {
+    color: var(--white);
+}
+
+.site-footer__about {
+    margin: 0 0 1.2rem;
+    max-width: 34ch;
+    color: rgba(255, 255, 255, 0.62);
+    line-height: 1.65;
+}
+
+.site-footer__contacts {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.site-footer__contacts li {
+    margin-bottom: 0.5rem;
+}
+
+.site-footer__contacts a {
+    color: var(--white);
+    font-weight: 650;
+}
+
+.site-footer__hours {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Три колонки услуг. auto-fit нельзя: группы разной длины, и при
+   автоподборе «Техника и связь» из двух пунктов занимала бы
+   столько же, сколько «Помощь по дому» из семи. */
+.site-footer__cols {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem;
+}
+
+/* Заголовок группы — не такой, как заголовок зоны: зона набрана
+   прописными с разрядкой, группа обычным регистром. Иначе два
+   заголовка подряд читаются как один уровень. */
+.site-footer__col h5 {
+    margin: 0 0 0.9rem;
+    color: var(--white);
+    font-size: 0.92rem;
+    font-weight: 700;
+}
+
+/* Точка перед пунктом: двенадцать ссылок без маркеров сливаются
+   в сплошной текст. */
+.site-footer__col li {
+    position: relative;
+    padding-left: 14px;
+    margin-bottom: 0.55rem;
+    line-height: 1.45;
+}
+
+.site-footer__col li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.52em;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--blue-500);
+}
+
+/* Карточка выбора города. */
+.site-footer__city {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    margin-bottom: 1.4rem;
+    padding: 14px 16px;
+    border: 1px solid var(--line-dark);
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--white);
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.2s var(--ease), background-color 0.2s var(--ease);
+}
+
+.site-footer__city:hover {
+    border-color: var(--blue-500);
+    background: rgba(255, 255, 255, 0.09);
+}
+
+.site-footer__city-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    border-radius: 11px;
+    background: rgba(61, 139, 255, 0.16);
+    color: var(--blue-400);
+}
+
+.site-footer__city-icon svg {
+    width: 19px;
+    height: 19px;
+}
+
+.site-footer__city-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.site-footer__city-label {
+    font-size: 0.76rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.site-footer__city-body strong {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.site-footer__city-arrow {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    margin-left: auto;
+    color: var(--blue-400);
+    transition: transform 0.2s var(--ease);
+}
+
+.site-footer__city:hover .site-footer__city-arrow {
+    transform: translateX(3px);
+}
+
+.site-footer__links {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.site-footer__links li {
+    margin-bottom: 0.7rem;
+}
+
+/* ⚠ Порог 1180, а не 1080: при 1100px зоне услуг доставалось
+   429px — по 122px на колонку против нужных 167, и почти каждая
+   подпись переносилась. Рубеж считается от содержимого. */
+@media (max-width: 1180px) {
+    /* Зона услуг уходит под бренд и город: при трёх колонках
+       ссылок ей нужна вся ширина. */
+    .site-footer__top {
+        grid-template-columns: 1fr 1fr;
+        gap: 2.4rem;
+    }
+
+    .site-footer__services {
+        grid-column: 1 / -1;
+        order: 3;
+    }
+}
+
+@media (max-width: 760px) {
+    .site-footer__top {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    /* Колонки услуг в две: три на телефоне дают по одному слову
+       в строке, и названия переносятся по буквам. */
+    .site-footer__cols {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.4rem;
+    }
+
+    .site-footer__about {
+        max-width: none;
+    }
+}
+
+@media (max-width: 420px) {
+    .site-footer__cols {
+        grid-template-columns: 1fr;
+    }
 }
 
 .site-footer h4 {
@@ -2987,10 +3206,6 @@ select.form-control::-ms-expand {
     .steps-grid {
         grid-template-columns: repeat(2, 1fr);
     }
-
-    .site-footer__grid {
-        grid-template-columns: 1fr 1fr;
-    }
 }
 
 /* ============================================================
@@ -3060,11 +3275,6 @@ select.form-control::-ms-expand {
 
     .lead-form {
         padding: 22px;
-    }
-
-    .site-footer__grid {
-        grid-template-columns: 1fr;
-        gap: 1.8rem;
     }
 }
 
@@ -4538,19 +4748,21 @@ select.form-control::-ms-expand {
 /* ── Блок предварительной оценки ──────────────────────────── */
 
 .est-section {
-    /* Отступы с обеих сторон.
+    /* ⚠️ Сверху отступа НЕТ намеренно. Предыдущая секция (районы
+       или услуги) заканчивается своим padding-bottom в 104 px, и
+       собственные 104 px сверху складывались с ним: между сеткой
+       районов и карточкой зияло 208 px пустоты. Замерено.
 
-       ⚠️ Снизу он ОБЯЗАТЕЛЕН, хотя у следующей секции заявки свой
-       padding есть. Тот padding лежит ВНУТРИ её серого блока:
-       он отодвигает форму от края, но сам край остаётся вплотную
-       к карточке. Замер подтвердил зазор 0 px — карточка
-       упиралась в границу серого фона, и это читалось как
-       слипшиеся блоки.
+       Отступ блока от предыдущего задаёт она, а не мы: так работают
+       все секции страницы, и вмешиваться в эту схему нельзя —
+       иначе зазор зависел бы от того, что стоит выше.
 
-       Снизу меньше, чем сверху: карточка и форма заявки — шаги
-       одного действия, большой разрыв разбивал бы их на два
-       несвязанных экрана. */
-    padding-top: var(--section-pad);
+       Снизу отступ, наоборот, ОБЯЗАТЕЛЕН, хотя у следующей секции
+       заявки свой padding есть: тот лежит ВНУТРИ её серого блока и
+       отодвигает только форму, а край фона остаётся вплотную к
+       карточке (замер показывал 0 px). Берём чуть меньше полного:
+       карточка и форма — шаги одного действия. */
+    padding-top: 0;
     padding-bottom: calc(var(--section-pad) * 0.55);
 }
 

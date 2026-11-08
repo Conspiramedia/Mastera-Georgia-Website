@@ -105,21 +105,44 @@
           name: { ru: 'Двери и замки',      en: 'Doors and locks',         ge: 'კარები და საკეტები' } }
     ];
 
-    /* Страницы «мастер на час» по районам — отдельная ветка
-       адресов старого сайта: /<lang>/<city>/master-na-chas-<район>/.
-       Нужны для перелинковки и карты сайта; в выпадающем меню
-       услуг их не показываем — там 12 услуг, а не 17 районов. */
+    /* Районы выпадающего меню шапки: слаг справочника → слаг
+       страницы /<lang>/<city>/master-na-chas-<slug>/.
+
+       ⚠️ Карта нужна именно потому, что слаги НЕ совпадают: у
+       Тбилиси они отличаются регистром (Vake → vake), а у Батуми
+       расходятся совсем (OldBatumi → stary-batumi, NewBoulevard →
+       novy-bulvar, BatumiAirport → aeroport-batumi). Выводить адрес
+       из слага нельзя — треть ссылок ушла бы в 404.
+
+       ⚠️ НАЗВАНИЙ районов здесь нет намеренно: единый источник
+       подписей — CITIES в script.js (правило «один список районов»
+       в CLAUDE.md), оттуда же строятся <option> формы и
+       BOT_DISTRICT_MAP для бота. Второй список разошёлся бы с
+       первым при первой же правке. Порядок пунктов тоже берётся из
+       справочника, а не отсюда.
+
+       Добавляя район: запись в CITIES (script.js) и строка сюда —
+       в одном коммите, иначе район не появится в меню. */
     var DISTRICT_PAGES = {
-        tbilisi: ['vake', 'saburtalo', 'didube', 'chugureti', 'isani',
-                  'samgori', 'gldani', 'nadzaladevi', 'mtatsminda', 'krtsanisi'],
-        batumi: ['stary-batumi', 'novy-bulvar', 'khimshiashvili',
-                 'boni-gorodok', 'aeroport-batumi']
+        tbilisi: {
+            Vake: 'vake', Saburtalo: 'saburtalo', Didube: 'didube',
+            Chugureti: 'chugureti', Isani: 'isani', Samgori: 'samgori',
+            Gldani: 'gldani', Nadzaladevi: 'nadzaladevi',
+            Mtatsminda: 'mtatsminda', Krtsanisi: 'krtsanisi'
+        },
+        batumi: {
+            OldBatumi: 'stary-batumi', NewBoulevard: 'novy-bulvar',
+            Khimshiashvili: 'khimshiashvili', BoniGorodok: 'boni-gorodok',
+            BatumiAirport: 'aeroport-batumi'
+        }
     };
 
     // Подписи интерфейса.
     var T = {
         services:   { ru: 'Услуги',          en: 'Services',        ge: 'სერვისები' },
         allServices:{ ru: 'Все направления', en: 'All services',    ge: 'ყველა მიმართულება' },
+        districts:  { ru: 'Районы',          en: 'Districts',       ge: 'რაიონები' },
+        allDistricts: { ru: 'Все районы',    en: 'All districts',   ge: 'ყველა რაიონი' },
         geo:        { ru: 'География обслуживания', en: 'Service area', ge: 'მომსახურების გეოგრაფია' },
         chooseCity: { ru: 'Выберите город',  en: 'Choose a city',   ge: 'აირჩიეთ ქალაქი' },
         cityLead:   {
@@ -310,6 +333,143 @@
         // ⚠️ Закрытие с задержкой: между кнопкой и панелью есть
         // зазор 18 px, и без паузы меню захлопывается, пока курсор
         // идёт к нужной услуге.
+        function closeSoon() {
+            clearTimeout(timer);
+            timer = setTimeout(close, 180);
+        }
+
+        wrap.addEventListener('mouseenter', open);
+        wrap.addEventListener('mouseleave', closeSoon);
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            wrap.classList.contains('is-open') ? close() : open();
+        });
+        btn.addEventListener('focus', open);
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') close();
+        });
+        document.addEventListener('click', function (e) {
+            if (!wrap.contains(e.target)) close();
+        });
+    }
+
+    /* ── Выпадающий список районов ────────────────────────
+       Устроен так же, как список услуг: наведение на десктопе,
+       нажатие на тач-экране, та же панель и та же задержка
+       закрытия. Отличий два.
+
+       Первое — сетка на 5 колонок: 10 районов Тбилиси ложатся
+       ровно в две строки, 5 районов Батуми в одну. В трёх
+       колонках (как у услуг) выходило бы четыре строки с одинокой
+       записью в последней.
+
+       Второе — без иконок-плашек: у услуг иконка различает
+       сантехника и электрика, а 15 одинаковых булавок рядом
+       читались бы как шум и съедали бы ширину у названий.
+
+       ⚠️ Подписи берутся из window.MASTERA_CITIES — это CITIES из
+       script.js. Он подключён ПОСЛЕ redesign.js, оба с defer,
+       поэтому на момент init() справочника ещё нет: меню строится
+       по событию load (тот же приём, что у buildContactBar).
+       Без ожидания функция тихо вышла бы на первой же проверке. */
+
+    function buildDistrictsDropdown() {
+        var nav = document.querySelector('.site-nav');
+        if (!nav) return;
+
+        var link = nav.querySelector('a[href$="#districts"], a[href="#districts"]');
+        if (!link) return;
+
+        var city = currentCity().slug;
+        var pages = DISTRICT_PAGES[city];
+        if (!pages) return;
+
+        /* Справочник районов из script.js. Если его нет (скрипт не
+           загрузился, порядок подключения изменили) — выходим, и
+           пункт остаётся обычной ссылкой на блок районов страницы.
+           Это рабочее поведение, а не поломка. */
+        var book = window.MASTERA_CITIES;
+        if (!Array.isArray(book)) return;
+
+        /* Город сопоставляем по РУССКОМУ названию: в справочнике
+           script.js слага города нет вовсе (slug там у района), а
+           поле ru — каноническое имя для бота и стабильное. */
+        var RU_CITY = { tbilisi: 'Тбилиси', batumi: 'Батуми' };
+        var entry = null;
+        for (var i = 0; i < book.length; i++) {
+            if (book[i] && book[i].ru === RU_CITY[city]) {
+                entry = book[i];
+                break;
+            }
+        }
+        if (!entry || !Array.isArray(entry.districts)) return;
+
+        /* Берём только районы, у которых есть страница: запись без
+           страницы пропускаем молча — ссылка вела бы в 404, а это
+           хуже отсутствующего пункта. */
+        var items = entry.districts.filter(function (d) { return pages[d.slug]; });
+        if (!items.length) return;
+
+        var wrap = document.createElement('div');
+        wrap.className = 'nav-dropdown';
+
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'site-nav__link nav-dropdown__btn';
+        btn.setAttribute('aria-expanded', 'false');
+        btn.setAttribute('aria-haspopup', 'true');
+        btn.innerHTML = t('districts') +
+            '<svg class="nav-dropdown__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+            'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+            '<polyline points="6 9 12 15 18 9"/></svg>';
+
+        var panel = document.createElement('div');
+        panel.className = 'nav-dropdown__panel nav-dropdown__panel--districts';
+
+        var grid = document.createElement('div');
+        grid.className = 'nav-dropdown__grid nav-dropdown__grid--districts';
+
+        items.forEach(function (d) {
+            var a = document.createElement('a');
+            a.href = '/' + LANG + '/' + city + '/master-na-chas-' + pages[d.slug] + '/';
+            /* ⚠️ В справочнике script.js грузинский ключ — ka (код по
+               ISO), а в разметке и в LANG здесь — ge. Без перевода
+               ключа грузинские подписи молча падали бы в русский
+               фолбэк. */
+            var name = d[LANG === 'ge' ? 'ka' : LANG] || d.ru;
+            a.innerHTML = '<strong>' + name + '</strong>';
+            grid.appendChild(a);
+        });
+
+        var all = document.createElement('a');
+        all.className = 'nav-dropdown__all';
+        all.href = (link.getAttribute('href').indexOf('/') === 0 ? '/' + LANG + '/' : '') + '#districts';
+        all.innerHTML = '<span>' + t('allDistricts') + '</span>' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+            'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+            '<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+
+        panel.appendChild(grid);
+        panel.appendChild(all);
+        wrap.appendChild(btn);
+        wrap.appendChild(panel);
+        link.parentNode.replaceChild(wrap, link);
+
+        var timer = null;
+
+        function open() {
+            clearTimeout(timer);
+            wrap.classList.add('is-open');
+            btn.setAttribute('aria-expanded', 'true');
+        }
+
+        function close() {
+            wrap.classList.remove('is-open');
+            btn.setAttribute('aria-expanded', 'false');
+        }
+
+        /* Задержка та же, что у услуг: между кнопкой и панелью зазор
+           18 px, и без паузы меню захлопывается по пути к району. */
         function closeSoon() {
             clearTimeout(timer);
             timer = setTimeout(close, 180);
@@ -997,6 +1157,10 @@
         // значит остаться на телефоне без выбора языка вовсе: в
         // шапке он ниже 420 px скрыт.
         buildServicesDropdown();
+        /* ⚠️ По load, а не сразу: меню районов читает справочник
+           из script.js, а тот подключён ниже и на этот момент ещё
+           не выполнен. См. комментарий у самой функции. */
+        window.addEventListener('load', buildDistrictsDropdown, { once: true });
         buildCityModal();
         buildPhoneReveal();
         buildBurger();

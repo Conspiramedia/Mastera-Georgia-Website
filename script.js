@@ -31,7 +31,6 @@ const i18n = {
         // Быстрая форма первого экрана: человек оставляет только контакт.
         heroConsent:         'Пожалуйста, подтвердите согласие на обработку данных',
         heroContactEmpty:    'Пожалуйста, укажите номер WhatsApp',
-        heroSent:            'Заявка принята! Напишем вам в WhatsApp в течение часа в рабочее время.',
         photoLabel:          '📷 Фото проблемы (по желанию, до 3)',
         photoAdd:            'Прикрепить фото',
         photoTooMany:        'Можно прикрепить не более 3 фото',
@@ -66,6 +65,18 @@ const i18n = {
         // Бейдж в окне благодарности. До этого текст был зашит в HTML каждой
         // из 105 страниц и успел разъехаться: на лендингах «15–60 минут», на
         // главных «30–60». Теперь источник один — словарь, HTML не трогаем.
+        // Окно благодарности. Собирается в JS (см. buildThankYouModal):
+        // в разметке страниц его нет, поэтому до 08.11.2026 клиент
+        // основной формы не видел подтверждения вообще.
+        thanksTitle:               'Заявка принята!',
+        thanksText:                'Заявка уже у мастеров. Свяжемся с вами, чтобы уточнить детали и назвать цену.',
+        thanksTextHero:            'Мы получили ваш номер. Напишем в WhatsApp, уточним задачу и назовём цену.',
+        // Ночной вариант для быстрой формы: обещать WhatsApp «в течение часа»
+        // в 02:00 — значит не сдержать слово. Отдельный текст нужен потому,
+        // что общий ночной говорит «свяжемся», а здесь у нас только номер
+        // WhatsApp — человек ждал бы звонка.
+        thanksTextHeroNight:       'Мы получили ваш номер. Напишем в WhatsApp с {time} — или раньше, если мастер освободится ночью.',
+        thanksClose:               'Понятно',
         thanksBadgeLabel:          'Среднее время отклика',
         thanksBadgeValue:          '15–60 минут',
         // Ночной вариант. Показывается в «тихие часы» бота: обещать отклик за
@@ -97,7 +108,6 @@ const i18n = {
         submitSending:       'იგზავნება…',
         heroConsent:         'გთხოვთ, დაადასტუროთ თანხმობა მონაცემთა დამუშავებაზე',
         heroContactEmpty:    'გთხოვთ, მიუთითოთ WhatsApp-ის ნომერი',
-        heroSent:            'განაცხადი მიღებულია! მოგწერთ WhatsApp-ში ერთ საათში სამუშაო დროს.',
         photoLabel:          '📷 პრობლემის ფოტო (სურვილისამებრ, 3-მდე)',
         photoAdd:            'ფოტოს მიმაგრება',
         photoTooMany:        'შეგიძლიათ მიამაგროთ მაქსიმუმ 3 ფოტო',
@@ -118,6 +128,11 @@ const i18n = {
         a11yMessage:               'დავალების აღწერა',
         a11yPhotos:                'დავალების ფოტოები (3-მდე)',
         a11yDistrictOther:         'დააზუსტეთ რაიონი ან ორიენტირი',
+        thanksTitle:               'განაცხადი მიღებულია!',
+        thanksText:                'განაცხადი უკვე ხელოსნებთანაა. დაგიკავშირდებით დეტალების დასაზუსტებლად და ფასის დასახელებლად.',
+        thanksTextHero:            'მივიღეთ თქვენი ნომერი. მოგწერთ WhatsApp-ში, დავაზუსტებთ ამოცანას და დავასახელებთ ფასს.',
+        thanksTextHeroNight:       'მივიღეთ თქვენი ნომერი. მოგწერთ WhatsApp-ში {time}-დან — ან უფრო ადრე, თუ ხელოსანი ღამით გათავისუფლდება.',
+        thanksClose:               'გასაგებია',
         thanksBadgeLabel:          'პასუხის საშუალო დრო',
         thanksBadgeValue:          '15–60 წუთი',
         thanksBadgeLabelNight:     'პასუხის დრო',
@@ -140,7 +155,6 @@ const i18n = {
         submitSending:       'Sending…',
         heroConsent:         'Please confirm your consent to data processing',
         heroContactEmpty:    'Please enter your WhatsApp number',
-        heroSent:            'Request received! We will message you on WhatsApp within an hour during working hours.',
         photoLabel:          '📷 Photo of the problem (optional, up to 3)',
         photoAdd:            'Attach photo',
         photoTooMany:        'You can attach up to 3 photos',
@@ -161,6 +175,11 @@ const i18n = {
         a11yMessage:               'Task description',
         a11yPhotos:                'Task photos (up to 3)',
         a11yDistrictOther:         'Specify the district or a landmark',
+        thanksTitle:               'Request received!',
+        thanksText:                'Your request is already with our specialists. We will contact you to confirm the details and name the price.',
+        thanksTextHero:            'We have your number. We will message you on WhatsApp, confirm the task and name the price.',
+        thanksTextHeroNight:       'We have your number. We will message you on WhatsApp from {time} — or sooner, if a specialist is free tonight.',
+        thanksClose:               'Got it',
         thanksBadgeLabel:          'Average response time',
         thanksBadgeValue:          '15–60 minutes',
         thanksBadgeLabelNight:     'Response time',
@@ -174,7 +193,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '246';
+const MASTERA_VERSION = '253';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Личный чат владельца сервиса: сюда ведут кнопки «Написать в Telegram»
@@ -773,6 +792,19 @@ const CITIES = [
     { value: 'Тбилиси', ru: 'Тбилиси', en: 'Tbilisi', ka: 'თბილისი', districts: DISTRICTS },
     { value: 'Батуми',  ru: 'Батуми',  en: 'Batumi',  ka: 'ბათუმი',  districts: BATUMI_DISTRICTS }
 ];
+
+// ⚠️ Отдаём справочник наружу. script.js — не модуль и не IIFE, но
+// объявления на верхнем уровне сделаны через const: у таких привязок
+// область видимости — сам скрипт, и свойства window они НЕ создают
+// (в отличие от var). Без этой строки redesign.js видел бы
+// window.MASTERA_CITIES как undefined, молча не строил бы меню районов,
+// и пункт «Районы» остался бы обычной ссылкой — ошибка тихая.
+//
+// Передаём именно CITIES, а не два массива по отдельности: в нём уже
+// лежит связка «город → его районы», а меню шапки выбирает список по
+// городу страницы. Копии списка не делаем — единый источник районов
+// остаётся здесь (правило «один список районов» в CLAUDE.md).
+window.MASTERA_CITIES = CITIES;
 
 // Подписи служебных опций, которых нет в config.locations бота:
 //   Other — «мой район не в списке» (клиентская форма), уточняется текстом;
@@ -1408,7 +1440,7 @@ function initClientLeadFormTracking() {
             }
 
             closeClientLeadForm();
-            openThankYou();
+            openThankYou('lead');
             leadForm.reset();
             pendingIdempotencyKey = null;
             if (initClientPhotoUpload._reset) initClientPhotoUpload._reset(); // чистим превью фото
@@ -1586,7 +1618,7 @@ function initHeroQuickForm() {
                 });
             }
 
-            alert(t('heroSent'));
+            openThankYou('hero');
             form.reset();
             if (consent) consent.checked = false;
             idempotencyKey = null;
@@ -1772,31 +1804,89 @@ function quietHoursReplyTime() {
     return null;
 }
 
-// Заполняет окно благодарности: днём — обычный бейдж, ночью — честное
-// «свяжемся утром». Текст берётся из словаря i18n, а не из HTML страницы:
-// раньше он был зашит в каждую из 105 страниц и успел разъехаться
-// («15–60» на лендингах против «30–60» на главных).
+// Собирает окно благодарности и возвращает его. Окно создаётся в JS и
+// добавляется в <body> один раз за сессию.
 //
-// HTML при этом НЕ трогаем: зашитый текст остаётся запасным вариантом на
-// случай, если скрипт не отработает — пустое окно хуже неточной цифры.
-function applyThankYouBadge() {
+// ⚠️ Почему не в разметке: #thankYouModal не существует НИ НА ОДНОЙ
+// странице нового сайта. Основная форма при этом вызывала openThankYou(),
+// _modal() молча не находил элемент — и клиент, отправив заявку, не видел
+// никакого подтверждения: форма просто очищалась. Положить окно в разметку
+// 129 страниц значит снова развести текст по копиям (так уже разъехался
+// бейдж: «15–60» на лендингах против «30–60» на главных). Здесь он один.
+function buildThankYouModal() {
+    let modal = document.getElementById('thankYouModal');
+    if (modal) return modal;
+
+    modal = document.createElement('div');
+    modal.id = 'thankYouModal';
+    modal.className = 'ty-modal';
+    modal.style.display = 'none';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'thankYouTitle');
+
+    modal.innerHTML =
+        '<div class="ty-modal__window">' +
+            '<button type="button" class="ty-modal__close" aria-label="' +
+                t('thanksClose') + '">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+                'stroke-linecap="round" aria-hidden="true">' +
+                '<line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>' +
+            '</button>' +
+            '<div class="ty-modal__icon">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" ' +
+                'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+                '<polyline points="20 6 9 17 4 12"/></svg>' +
+            '</div>' +
+            '<h3 class="ty-modal__title" id="thankYouTitle"></h3>' +
+            '<p class="thank-you-text"></p>' +
+            '<div class="ty-modal__badge">' +
+                '<span class="badge-label"></span>' +
+                '<strong class="badge-value"></strong>' +
+            '</div>' +
+            '<button type="button" class="button button--primary ty-modal__ok"></button>' +
+        '</div>';
+
+    document.body.appendChild(modal);
+
+    // Закрытие: крестик, кнопка «Понятно» и клик по затемнению. Клик по
+    // самому окну закрывать не должен — проверяем, что цель именно фон.
+    modal.querySelector('.ty-modal__close').addEventListener('click', closeThankYou);
+    modal.querySelector('.ty-modal__ok').addEventListener('click', closeThankYou);
+    modal.addEventListener('click', function (e) {
+        if (e.target === modal) closeThankYou();
+    });
+
+    return modal;
+}
+
+// Заполняет окно благодарности: днём — обычный бейдж, ночью — честное
+// «свяжемся утром». Текст берётся из словаря i18n, а не из разметки.
+//
+// kind: 'lead' — основная форма (задача описана, район выбран),
+//       'hero' — быстрая форма первого экрана (есть только WhatsApp),
+// у них разный текст: в первом случае «свяжемся», во втором — «напишем
+// в WhatsApp», иначе клиент ждёт звонка, а мы пишем в мессенджер.
+function applyThankYouBadge(kind) {
     const modal = document.getElementById('thankYouModal');
     if (!modal) return;
+    const title = modal.querySelector('.ty-modal__title');
     const label = modal.querySelector('.badge-label');
     const value = modal.querySelector('.badge-value');
     const text  = modal.querySelector('.thank-you-text');
+    const ok    = modal.querySelector('.ty-modal__ok');
     if (!label || !value) return;
 
-    // Исходный дневной текст запоминаем при первом вызове: окно открывается
-    // много раз за сессию, и без этого ночная подмена стала бы постоянной.
-    if (text && !text.dataset.dayText) text.dataset.dayText = text.innerHTML;
+    if (title) title.textContent = t('thanksTitle');
+    if (ok) ok.textContent = t('thanksClose');
 
+    const dayText = kind === 'hero' ? t('thanksTextHero') : t('thanksText');
     const replyTime = quietHoursReplyTime();
 
     if (!replyTime) {
         label.textContent = t('thanksBadgeLabel');
         value.textContent = t('thanksBadgeValue');
-        if (text && text.dataset.dayText) text.innerHTML = text.dataset.dayText;
+        if (text) text.textContent = dayText;
         return;
     }
 
@@ -1804,6 +1894,14 @@ function applyThankYouBadge() {
     value.textContent = t('thanksBadgeValueNight').replace('{time}', replyTime);
 
     if (text) {
+        // У быстрой формы свой ночной текст: у нас от клиента только номер
+        // WhatsApp, и общее «свяжемся» заставило бы его ждать звонка.
+        // Галочки «срочно» в быстрой форме нет, поэтому ветку срочности
+        // она не проходит.
+        if (kind === 'hero') {
+            text.textContent = t('thanksTextHeroNight').replace('{time}', replyTime);
+            return;
+        }
         // Для срочной заявки «свяжемся утром» звучит как отказ — там свой текст.
         const urgent = !!(document.getElementById('leadUrgent') &&
                           document.getElementById('leadUrgent').checked);
@@ -1814,7 +1912,8 @@ function applyThankYouBadge() {
 }
 
 function closeClientLeadForm() { _modal('clientLeadFormModal',   'none'); }
-function openThankYou()        { applyThankYouBadge();
+function openThankYou(kind)    { buildThankYouModal();
+                                 applyThankYouBadge(kind);
                                  _modal('thankYouModal',          'flex'); }
 function closeThankYou()       { _modal('thankYouModal',          'none'); }
 

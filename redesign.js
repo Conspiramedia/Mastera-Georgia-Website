@@ -424,7 +424,7 @@
             '<polyline points="6 9 12 15 18 9"/></svg>';
 
         var panel = document.createElement('div');
-        panel.className = 'nav-dropdown__panel nav-dropdown__panel--districts';
+        panel.className = 'nav-dropdown__panel';
 
         var grid = document.createElement('div');
         grid.className = 'nav-dropdown__grid nav-dropdown__grid--districts';
@@ -488,6 +488,45 @@
         document.addEventListener('click', function (e) {
             if (!wrap.contains(e.target)) close();
         });
+    }
+
+    /* ── Центрирование выпадающих панелей по экрану ───────
+       Панели услуг и районов должны стоять ровно по середине
+       окна, а не под своей кнопкой: кнопки стоят в разных местах
+       шапки, и панель шириной 760 px, привязанная к краю кнопки,
+       упиралась в край экрана.
+
+       CSS сам этого не умеет. Панель позиционируется absolute от
+       своей кнопки (position: fixed не годится: у .site-header
+       есть backdrop-filter, а он делает шапку содержащим блоком
+       для fixed-потомков — см. комментарий в redesign.css).
+       Поэтому середину экрана добираем арифметикой: в CSS стоит
+       left: calc(50% - var(--nav-dd-shift)), а здесь мы считаем,
+       насколько центр кнопки отстоит от центра окна.
+
+       ⚠️ Величину нельзя посчитать один раз: она зависит от
+       ширины окна, от языка (длина слов двигает пункты меню) и от
+       появления полосы прокрутки. Пересчитываем на resize.
+
+       ⚠️ Читаем геометрию ДО записи стиля и пишем всем панелям
+       после замеров — иначе каждая запись заставляла бы браузер
+       пересчитывать раскладку перед следующим чтением. */
+
+    function centerDropdownPanels() {
+        var wraps = document.querySelectorAll('.nav-dropdown');
+        if (!wraps.length) return;
+
+        var screenCenter = document.documentElement.clientWidth / 2;
+        var shifts = [];
+
+        for (var i = 0; i < wraps.length; i++) {
+            var r = wraps[i].getBoundingClientRect();
+            shifts.push((r.left + r.width / 2) - screenCenter);
+        }
+
+        for (var j = 0; j < wraps.length; j++) {
+            wraps[j].style.setProperty('--nav-dd-shift', shifts[j].toFixed(2) + 'px');
+        }
     }
 
     /* ── Переключатель языка: три кнопки → одна ────────────
@@ -1160,7 +1199,25 @@
         /* ⚠️ По load, а не сразу: меню районов читает справочник
            из script.js, а тот подключён ниже и на этот момент ещё
            не выполнен. См. комментарий у самой функции. */
-        window.addEventListener('load', buildDistrictsDropdown, { once: true });
+        window.addEventListener('load', function () {
+            buildDistrictsDropdown();
+            // Центрируем ПОСЛЕ сборки обоих меню: до неё пункт
+            // «Районы» — обычная ссылка, и мерить нечего.
+            centerDropdownPanels();
+        }, { once: true });
+
+        // Сразу — чтобы панель услуг встала по центру, не дожидаясь
+        // картинок страницы: load может прийти заметно позже.
+        centerDropdownPanels();
+
+        /* Ширина окна меняет и место кнопки, и центр экрана.
+           Пересчёт отложен кадром: resize приходит пачками, а
+           считать раскладку на каждое событие незачем. */
+        var centerTimer = null;
+        window.addEventListener('resize', function () {
+            clearTimeout(centerTimer);
+            centerTimer = setTimeout(centerDropdownPanels, 120);
+        });
         buildCityModal();
         buildPhoneReveal();
         buildBurger();

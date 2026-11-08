@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="facebook-domain-verification" content="paqn1cfrcp9penysikx71x7w6w755f" />
+
+  <!-- Определяем язык и редиректим на нужную версию -->
+  <script>
+    (function() {
+      // Редирект /index.html → /
+      if (window.location.pathname.endsWith('/index.html')) {
+        window.location.replace('/');
+        return;
+      }
+      var lang = navigator.language || navigator.userLanguage || 'ru';
+      if (lang.startsWith('ka')) {
+        window.location.replace('/ge/');
+      } else if (lang.startsWith('en')) {
+        window.location.replace('/en/');
+      } else {
+        window.location.replace('/ru/');
+      }
+    })();
+  </script>
+
+  <!-- Корень — технический language-router, не индексируемый как отдельная страница -->
+  <meta name="robots" content="noindex, follow">
+
+  <title>Mastera.ge — Сервис подбора мастеров в Грузии</title>
+  <meta name="description" content="Mastera.ge — сервис подбора проверенных мастеров в Тбилиси и Батуми. Сантехника, электрика, ремонт, сборка мебели.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Mastera.ge — Сервис подбора мастеров в Грузии">
+  <meta property="og:description" content="Mastera.ge — сервис подбора проверенных мастеров в Тбилиси и Батуми. Сантехника, электрика, ремонт, сборка мебели.">
+  <meta property="og:image" content="https://mastera.ge/image/og-preview-ru.jpg?v=236">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:url" content="https://mastera.ge/">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Мастера Грузии — Сантехник, Электрик, Ремонт любой сложности">
+  <meta name="twitter:description" content="Сервис подбора мастеров в Тбилиси. Сантехника, электрика, мастер на все руки, мелкий ремонт. Отклик за 60 минут.">
+  <meta name="twitter:image" content="https://mastera.ge/image/og-preview-ru.jpg?v=236">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/image/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/image/favicon.ico">
+  <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#FDB913">
+
+  <!-- Apple PWA -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Мастера Грузии">
+  <link rel="apple-touch-icon" sizes="180x180" href="/image/apple-touch-icon.png">
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7SLML317LT"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-7SLML317LT');
+  </script>
+
+  <style>
+    body { margin: 0; background: #1a1a1a; color: #fff; font-family: sans-serif;
+           display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    .loader { text-align: center; }
+    .loader p { opacity: 0.6; font-size: 14px; margin-top: 12px; }
+    .spinner { width: 40px; height: 40px; border: 3px solid rgba(253,185,19,0.3);
+               border-top-color: #FDB913; border-radius: 50%;
+               animation: spin 0.8s linear infinite; margin: 0 auto; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .links { margin-top: 20px; display: flex; gap: 12px; justify-content: center; }
+    .links a { color: #FDB913; text-decoration: none; font-size: 13px;
+                border: 1px solid #FDB913; padding: 4px 12px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <div class="loader">
+    <div class="spinner"></div>
+    <p>Мастера Грузии / Masters Georgia / ოსტატები საქართველოში</p>
+    <div class="links">
+      <a href="/ru/">RUS</a>
+      <a href="/ge/">GEO</a>
+      <a href="/en/">ENG</a>
+    </div>
+  </div>
+
+  <!-- PWA (баннер установки + регистрация Service Worker) подключены на самих
+       языковых страницах /ru/, /ge/, /en/ — этот корневой index.html мгновенно
+       редиректит на язык и не успел бы ничего показать. -->
+<footer>
+  <p class="footer-text">
+    © 2026 <strong>Мастера Грузии</strong> • Срочный выезд в Тбилиси и Батуми<br>
+    📞 <a href="tel:+995557645196" class="footer-link">+995 557 645 196</a> • 
+    ✉️ <a href="mailto:info@mastera.ge" class="footer-link">info@mastera.ge</a><br>
+    💬 <a href="https://t.me/mastera_ru_bot" target="_blank" rel="noopener" class="footer-link">Telegram</a> 
+    📘 <a href="https://www.facebook.com/profile.php?id=61595113524507" target="_blank" rel="noopener" class="footer-link">Facebook</a>
+  </p>
+</footer>
+</body>
+</html>

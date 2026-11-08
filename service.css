@@ -1,0 +1,838 @@
+/* ============================================
+   СТИЛИ ДЛЯ СТРАНИЦ УСЛУГ
+   santehnik-tbilisi / elektrik-tbilisi / master-na-chas-tbilisi
+   ============================================ */
+
+.service-hero {
+    position: relative;
+    padding: 3rem 5% 8rem;
+    text-align: center;
+    z-index: 1;
+    min-height: 770px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 1.8rem;
+    /* Фон тот же, что у всей страницы; фотография — отдельным слоем
+       в ::before с растушёвкой по краям, как у .hero на главных
+       (см. style.css). Иначе прямоугольник кадра виден вертикальными
+       границами: края файла не совпадают с фоном. */
+    background-color: var(--dark-concrete);
+}
+
+.service-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: url('/image/hero-bg.webp');
+    background-position: center center;
+    background-size: 50%;
+    background-repeat: no-repeat;
+    opacity: 0.27;
+    /* Маска повторяет размер и положение САМОЙ картинки, а не блока.
+       Так растушёвка всегда ложится по краям кадра, сколько бы места
+       блок ни занимал. Прежние проценты считались от высоты блока, и
+       на лендингах (.service-hero, min-height 770 px) кадр при
+       background-size 50% оказывался меньше блока: градиент уходил
+       мимо краёв, а сами края оставались резкими — прямоугольник
+       фотографии было видно.
+       mask-size/position ОБЯЗАНЫ совпадать с background-size/position
+       выше: разойдутся — маска снова промахнётся мимо кадра.
+
+       ⚠️ Гасим ТОЛЬКО кромку, а не кадр целиком. Радиальный градиент
+       для этого не годится: он меряет радиус от центра, и к углам
+       (50 %·√2 ≈ 70.7 %) приходит прозрачным задолго до краёв — чтобы
+       спрятать углы, приходится стирать и середину, картинка пропадает.
+       Поэтому две линейные маски — по горизонтали и по вертикали —
+       пересекаются (mask-composite: intersect): каждая держит середину
+       целиком непрозрачной и уводит в прозрачность только крайние 12 %
+       своей оси. Видимой остаётся вся сердцевина кадра, а стыка с фоном
+       нет ни по бокам, ни сверху-снизу, ни в углах. */
+    -webkit-mask-image:
+        linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%),
+        linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
+    mask-image:
+        linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%),
+        linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+    -webkit-mask-size: 50%, 50%;
+    mask-size: 50%, 50%;
+    -webkit-mask-position: center center, center center;
+    mask-position: center center, center center;
+    -webkit-mask-repeat: no-repeat, no-repeat;
+    mask-repeat: no-repeat, no-repeat;
+}
+
+@media (max-width: 768px) {
+    .service-hero {
+        padding: 2.5rem 4% 3rem;
+        min-height: 0;
+        background-color: var(--dark-concrete);
+    }
+
+    /* На телефоне кадр закрывает блок целиком, боковых краёв нет —
+       гасим только верх и низ. */
+    .service-hero::before {
+        background-size: cover;
+        opacity: 0.28;
+        /* На телефоне кадр закрывает блок целиком (cover), боковых
+           краёв нет — они уходят за экран. Гасим только верх и низ,
+           линейным градиентом по высоте БЛОКА: здесь кадр и блок
+           совпадают, поэтому пересчитывать под картинку нечего.
+           ⚠️ mask-size обязателен: без него правило унаследует
+           «50%» из десктопного блока, и маска сожмётся в середину
+           экрана вместо того, чтобы накрыть весь кадр. */
+        -webkit-mask-size: 100% 100%;
+        mask-size: 100% 100%;
+        -webkit-mask-position: center center;
+        mask-position: center center;
+        -webkit-mask-image:
+            linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
+        mask-image:
+            linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
+    }
+}
+
+.service-hero h1 {
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
+    /* Эталон размеров H1 — .hero-title главных страниц (style.css).
+       Потолок был 6rem против 4rem у главных: на широком экране заголовок
+       лендинга вырастал больше эталонного. */
+    font-size: clamp(2rem, 4.1vw, 4rem);
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    font-weight: 800;
+    color: #d0d0d0;
+    min-height: 2.6em;
+}
+
+/* Ступени размера H1 — те же, что у .hero-title в style.css: там они стоят
+   в общих медиаблоках вёрстки, и лендинги их не получали. Из-за этого на
+   1024px заголовок лендинга был 42px против 56px на главной.
+   ⚠️ Блок стоит ПОСЛЕ базового правила: специфичность одинаковая
+   (.service-hero h1), и при равной силе побеждает то, что ниже в файле. */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .service-hero h1 {
+        font-size: 3.5rem;
+    }
+}
+
+@media (max-width: 968px) {
+    .service-hero h1 {
+        font-size: 3rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .service-hero h1 {
+        font-size: 2rem;
+        line-height: 1.3;
+        margin-bottom: 1rem;
+    }
+}
+
+/* Телефоны. Формула повторяет эталонную у главных — clamp(1.5rem,
+   1.2rem + 3vw, 4rem) — но со сдвигом базы на 0.2rem вниз: заголовки
+   лендингов длиннее, и при эталонных 30.5px «Сантехник Тбилиси» занимал
+   359px при доступных 345, ломался надвое, и весь заголовок уезжал в
+   четыре строки. Сдвиг базы (а не рост коэффициента vw) сохраняет наклон
+   эталона: разница остаётся ровно 3.2px на всех ширинах до 640px, тогда
+   как 7.4vw обгонял эталон и на 640px давал 47 против 38. */
+@media (max-width: 640px) {
+    .service-hero h1 {
+        font-size: clamp(1.3rem, 1rem + 3vw, 4rem);
+        font-weight: 900;
+    }
+}
+
+.service-hero .lead {
+    font-size: 1.1rem;
+    color: #FDB913;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.service-cta-top {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+/* Прайс-таблица */
+.price-icon {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(253, 185, 19, 0.15), rgba(253, 185, 19, 0.05));
+    border: 3px solid var(--construction-yellow);
+    box-shadow: 0 0 30px rgba(253, 185, 19, 0.3), inset 0 0 20px rgba(253, 185, 19, 0.1);
+    flex-shrink: 0;
+    animation: icon-pulse 3s ease-in-out infinite;
+}
+
+.price-icon svg {
+    width: 60px;
+    height: 60px;
+    color: white;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.price-table {
+    max-width: 700px;
+    margin: 3rem auto 3rem;
+    padding: 1.5rem; 
+    position: relative;
+    z-index: 1;
+    border-radius: 8px;
+    border: 1px solid var(--construction-yellow);
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.price-table h2 {
+    color: var(--construction-yellow);
+    font-size: 1.5rem;
+    margin-bottom: 1.2rem;
+    text-align: center;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.9rem 1.2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 0.95rem;
+}
+
+.price-row:last-child {
+    border-bottom: none;
+}
+
+.price-row:nth-child(odd) {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 6px;
+}
+
+.price-name {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.price-val {
+    color: #FDB913;
+    font-weight: 700;
+    white-space: nowrap;
+    margin-left: 1rem;
+}
+
+ @media (max-width: 768px) {
+  .price-table {
+    margin: 0 4% 3rem;
+    padding: 1.5rem 4%;
+    margin: 3rem 4% 3rem;
+    padding: 1.5rem 4%;
+    }
+}
+
+/* Блок «Подберём лучшего мастера» на главных: контейнер уже ограничен
+   инлайновым max-width: 1100px (как у районов), но у .sections-container
+   есть ещё padding: 0 5%, и рамка карточки внутри оказывалась уже районов
+   на 2×5% ширины экрана.
+   Снимаем боковой паддинг ТОЛЬКО у ограниченных контейнеров: без инлайна
+   .sections-container тянется во всю ширину, и там эти 5% работают как
+   поля страницы — трогать их нельзя (таких блоков на сайте большинство).
+   ⚠️ Только от 769px: на телефоне эти 5% — единственное, что отделяет
+   рамку карточки от края экрана, и без них она прилипает к краям. */
+@media (min-width: 769px) {
+  .sections-container[style*="max-width: 1100px"] {
+      padding-left: 0;
+      padding-right: 0;
+  }
+}
+
+/* Районы */
+/* Рамка блока выровнена по сетке карточек «Другие услуги» (.services-grid,
+   max-width: 1100px) — это ближайшая секция сверху, и расхождение рамок
+   видно глазом.
+   ⚠️ Ширину задаём РАМКЕ, то есть самому .districts, а не внутренней
+   сетке: padding блока добавляется к его содержимому, поэтому «подогнать
+   .districts-grid» — не то же самое, что подогнать рамку.
+   ⚠️ На странице у .districts висел инлайновый max-width: 950px, который
+   перебивал любое правило отсюда; он снят из разметки. */
+.districts {
+    max-width: 1100px;
+    margin: 0 auto 4rem;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--construction-yellow);
+    border-radius: 12px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Заголовок белый, а не жёлтый: жёлтым на блоке были и заголовок, и
+   рамка, и бордюры всех плиток — акцент переставал быть акцентом.
+   Жёлтый оставлен только районам, чтобы глаз сразу видел, где ссылки. */
+.districts h2 {
+    font-family: 'NotoGeo', 'Montserrat', sans-serif;
+    font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.3rem;
+}
+
+/* ============================================
+ЛОКАЛЬНЫЙ ТЕКСТ УСЛУГИ (страницы Батуми)
+============================================ */
+/* Блок добавили SEO-правкой 03.10.2026 (коммит 954a00ea), а стилей к нему
+   не написали: ни одного правила на .local-content не существовало.
+   Секция рендерилась голой — текст прижимался к левому краю окна без
+   отступов и контейнера, на всю его ширину, поперёк остальной вёрстки.
+   Геометрия взята у .districts — соседней секции того же назначения. */
+/* Верхний отступ обязателен: выше стоит .steps-button, у которой есть
+   margin-top, но нет отступа снизу — без него кнопка «Оставить заявку»
+   упиралась в рамку блока вплотную (замерено: зазор 0 px). */
+.local-content {
+  max-width: 1100px;
+  margin: 3rem auto 4rem;
+  padding: 2.5rem 2rem;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--construction-yellow);
+  border-radius: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Заголовок по центру, текст — влево: это абзацы на две-три строки,
+   выключка по центру делает их рваными и плохо читаемыми. */
+.local-content h2 {
+  font-family: 'NotoGeo', 'Montserrat', sans-serif;
+  font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  margin: 0 0 1.2rem;
+}
+
+.local-content p {
+  font-family: 'NotoGeo', 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #ccc;
+  line-height: 1.7;
+  margin: 0 0 1rem;
+}
+
+.local-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* На узком экране рамка должна отступать от краёв экрана, иначе она
+   упирается в них и блок выглядит обрезанным. Схема та же, что у
+   .districts: боковые поля в процентах вместо auto-центровки, потому что
+   max-width: 1100px на 375px не ограничивает ничего и margin: auto даёт 0. */
+@media (max-width: 768px) {
+  .local-content {
+    width: auto;
+    max-width: none;
+    margin: 2.5rem 5% 3rem;
+    padding: 1.8rem 1.3rem;
+  }
+
+  .local-content p {
+    font-size: 0.95rem;
+  }
+}
+
+/* ============================================
+РАЙОНЫ — СЕТКА КАРТОЧЕК
+============================================ */
+/* 5 колонок — единственное деление, при котором 10 районов Тбилиси
+   дают ровные ряды (5+5): при 4 остаётся обрубок 4+4+2, при 3 — 3+3+3+1.
+   У Батуми 5 районов, то есть ровно один ряд.
+   Подписи местностей сокращены до двух: в узкую колонку три не влезают
+   и разворачивают карточки на разную высоту. */
+.districts-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 2rem;
+  margin-left: auto;
+  margin-right: auto;
+  align-items: stretch;
+}
+
+.district-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  background: transparent;
+  border: 1px solid var(--construction-yellow);
+  border-radius: 10px;
+  color: #e8e8e8;
+  text-decoration: none;
+  text-align: left;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: border-color 0.25s ease, background 0.25s ease,
+              transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Пин не сжимается рядом с длинной подписью. */
+.district-card-pin {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--construction-yellow);
+}
+
+.district-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.district-card-name {
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.25;
+}
+
+/* Местности — вспомогательная строка: мельче и приглушённее названия,
+   иначе карточка читается как два равных заголовка.
+   Размер подобран так, чтобы подпись влезала в ОДНУ строку при пяти
+   колонках: перенос у части карточек делает ряды разной высоты. */
+.district-card-hint {
+  font-size: 0.72rem;
+  color: #9a9a9a;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Только для мыши: на тач-экране :hover залипает после тапа
+   и элемент остаётся перекрашенным, пока не коснёшься другого. */
+@media (hover: hover) and (pointer: fine) {
+
+  .district-card:hover {
+    background: rgba(253, 185, 19, 0.1);
+    border-color: var(--construction-yellow);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(253, 185, 19, 0.2);
+  }
+}
+
+
+/* Только для мыши: на тач-экране :hover залипает после тапа
+   и элемент остаётся перекрашенным, пока не коснёшься другого. */
+@media (hover: hover) and (pointer: fine) {
+
+  .district-card:hover .district-card-name {
+    color: var(--construction-yellow);
+  }
+}
+
+
+/* Текущий район на его же странице: подсвечен, но не кликабельно-зовущий. */
+.district-card[aria-current="page"] {
+  background: rgba(253, 185, 19, 0.12);
+  border-color: var(--construction-yellow);
+}
+
+.district-card[aria-current="page"] .district-card-name {
+  color: var(--construction-yellow);
+}
+
+/* ============================================
+МЕТРО РЯДОМ
+============================================ */
+/* Блок со станциями метро района. Геометрия унаследована от .districts
+   (он стоит прямо над ним), поэтому здесь только отличия: меньше отступ
+   сверху — два блока про географию читаются как одна группа. */
+.metro-block {
+  margin-top: 1.5rem;
+}
+
+.metro-heading {
+  font-family: 'NotoGeo', 'Montserrat', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--construction-yellow);
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+/* Сетка здесь НЕ наследуется от .districts-grid: там жёстко пять колонок
+   под десять районов Тбилиси, а станций бывает 2, 3 или 5. Два элемента
+   в пятиколоночной сетке прижимались влево, и справа зияли три пустые
+   колонки — блок выглядел обрезанным (Дидубе, Мтацминда, Самгори).
+   Поэтому флекс по центру: карточки занимают ровно столько места,
+   сколько их есть, и ряд всегда симметричен. */
+.metro-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Станции — не ссылки, а подписи: страниц под станции нет, и кликабельный
+   на вид элемент, который никуда не ведёт, раздражает сильнее, чем его
+   отсутствие. Поэтому в разметке <span>, а не <a>, и курсор не меняем. */
+.metro-grid .district-card {
+  cursor: default;
+  justify-content: center;
+  align-items: center;
+  /* Ширина одинаковая у всех, а не по содержимому: названия станций
+     разной длины («Делиси» против «Технический университет») давали
+     карточки от 150 до 300px, и ряд читался как сломанный.
+     190px — под самое длинное название в две строки.
+     ⚠️ min-width обязателен: у флекс-элемента он по умолчанию auto,
+     и длинное слово раздвигает карточку сверх flex-basis — «Государственный
+     университет» так получал 198px и выбивался из ряда. */
+  flex: 0 0 190px;
+  min-width: 0;
+  text-align: center;
+}
+
+.metro-grid .district-card-name {
+  font-size: 0.9rem;
+}
+
+/* Районы без метро (Ваке, Крцаниси): вместо пустого блока — строка текста.
+   Факт «метро нет» клиенту тоже нужен, он влияет на то, как мастер доедет. */
+.metro-none {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ============================================
+АДАПТИВ
+============================================ */
+/* Ноутбук: 5 колонок становятся слишком узкими для названия с подписью. */
+@media (max-width: 1100px) {
+  .districts-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Планшет: две колонки. */
+@media (max-width: 860px) {
+  .districts-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Батуми: пять районов в две колонки дают ряды 2+2+1, и последняя
+     карточка оставляет рядом с собой пустую половину. Растягиваем её
+     на обе колонки.
+     Условие :nth-child(5):last-child верно только при ровно пяти
+     карточках, поэтому Тбилиси (их десять, последний ряд полон)
+     правило не задевает — город в селекторе называть не нужно.
+     ⚠️ Распространяется и на мобильный блок ниже: он тоже внутри
+     860px и тоже двухколоночный. */
+  .district-card:nth-child(5):last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Мобильный: ДВЕ колонки, а не одна.
+   Подписи короткие (самая длинная — «Понтичала, Аэропорт», ~130px), и в
+   одну колонку блок растягивался на 900+ px: простыня выше экрана, район
+   приходилось искать прокруткой. В две колонки он вдвое короче и виден
+   почти целиком.
+   ⚠️ Рамку и фон блока здесь больше НЕ снимаем. Раньше снимали, и на
+   телефоне от секции оставались голые прямоугольники без контейнера —
+   именно это выглядело уныло. */
+@media (max-width: 768px) {
+  /* Рамка — по рамкам соседних блоков: .service-card сверху и
+     .section-card снизу отступают от краёв экрана на 5% (на 375px это
+     19px), а .districts шёл во всю ширину и выпирал за них.
+     Отступ задаём margin'ом, а не padding'ом: padding ушёл бы внутрь
+     рамки и сузил карточки, а двигать надо саму рамку. */
+  .districts {
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 1.5rem 0.75rem;
+    max-width: none;
+    width: auto;
+  }
+  .districts-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    max-width: 100%;
+  }
+  /* Ужимаем всё, что съедает ширину: в колонке ~165px текст борется за
+     каждый пиксель с паддингами, пином и зазором между ними. */
+  .district-card {
+    padding: 10px;
+    gap: 7px;
+    border-radius: 8px;
+  }
+  .district-card-pin {
+    width: 15px;
+    height: 15px;
+  }
+  .district-card-name {
+    font-size: 0.88rem;
+  }
+  /* Станции метро на телефоне — ОДНА колонка во всю ширину, в отличие от
+     районов рядом. Названия станций длиннее подписей районов
+     («Государственный университет»), и в половину ряда они ломались бы
+     на три строки. А фиксированные 190px от десктопа оставляли бы узкую
+     полосу по центру при ~300px доступной ширины. */
+  .metro-grid .district-card {
+    flex: 0 0 100%;
+  }
+  /* В две колонки подпись в одну строку не помещается: у Батуми это
+     «Приморский бульвар, Пьяцца» — 171px против 135 доступных. Режем
+     многоточием только со второй строки, а не с первой: сокращать текст
+     до одной местности значило бы потерять половину смысла подписи.
+     Высоту ряда грид выравнивает сам, поэтому сетка не разъезжается. */
+  .district-card-hint {
+    font-size: 0.68rem;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+}
+
+/* Узкие телефоны: двум колонкам уже не хватает места под подпись. */
+@media (max-width: 360px) {
+  .districts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ⚠️ Здесь был @media (max-width: 480px) с border-radius: 5px, и стоял он
+   ВНУТРИ блока 768px — скобка закрывалась не на месте. Браузеры понимают
+   вложенные медиа-запросы, поэтому правило срабатывало и превращало
+   задуманные таблетки в прямоугольники. Блок удалён: ширину и отступы на
+   узких экранах задаёт медиа-запрос 360px выше. */
+
+/* ⚠️ Здесь было `@media (max-width: 968px) { .footer-cta { background:
+   transparent } }` — «убрать фон футера на мобильных, только на
+   сервисных страницах» (a6e34c3, июнь). Тогда service.css грузился лишь
+   на лендингах услуг, и оговорка «только сервисные» была верна.
+
+   Позже service.css подключили и к главным (вместе с переключателем
+   городов), и правило молча распространилось на них: на телефоне блок
+   «Начните работать с нами» терял и картинку, и тёмную подложку —
+   background: transparent снимает обе сразу.
+
+   Решение владельца: фон нужен на всех страницах и на всех ширинах,
+   поэтому правило удалено. Размеры картинки по ширинам задаёт style.css
+   (50% на десктопе, cover на мобильных). */
+
+@media (max-width: 1200px) {
+    .price-icon {
+        width: 80px !important;
+        height: 80px !important;
+    }
+    .price-icon svg {
+        width: 40px !important;
+        height: 40px !important;
+    }
+}
+
+
+/* ==== Переключатель города в шапке (хабы) ==== */
+/* Стилистически близок к .language-switcher, но с золотой рамкой и иконкой города */
+.city-switcher {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--dark-concrete);
+  padding: 0.4rem 0.5rem;
+  border-radius: 25px;
+  /* Обводка как у счётчика мастеров: зелёная 2px со свечением */
+  border: 2px solid var(--safety-green);
+  box-shadow: 0 4px 15px rgba(6, 255, 165, 0.3);
+}
+
+/* Иконка «локация» слева от кнопок */
+/* Иконка «локация» убрана со всех ширин: плашка подписана названиями
+   городов, а значок съедал место, из-за которого кнопки не делили
+   ширину поровну. Правило оставлено (а не удалена разметка), чтобы не
+   трогать 111 страниц. */
+.city-switcher-icon {
+  display: none;
+  align-items: center;
+  color: var(--construction-yellow);
+  margin: 0 0.15rem 0 0.25rem;
+}
+.city-switcher-icon svg { width: 18px; height: 18px; }
+
+/* Кнопка города */
+.city-btn {
+  background: transparent;
+  /* Неактивный город — белёсая рамка под цвет подписи, как у неактивной
+     кнопки языка в бургер-меню. Прежняя жёлто-бледная читалась как
+     приглушённый вариант активной, а не как «кнопка не выбрана».
+
+     Толщина 2px против 1px у языка: радиус здесь 20px против 8px, и на
+     таком скруглении тонкая линия размывается сглаживанием — при равной
+     толщине рамка выглядела заметно бледнее соседнего переключателя. */
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.65);
+  /* Отступ уменьшен на 1px против прежних 0.45rem: рамка выросла с 1px до
+     2px, и кнопка стала 39px против 38px у переключателя языка — рядом это
+     было видно. Теперь обе снова 38px. */
+  padding: 0.39rem 0.9rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: 'NotoGeo', 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* Подсветка при наведении — только у НЕактивной кнопки: у активной
+   фон намеренно прозрачный, и общий :hover затирал бы его серым. */
+/* Только для мыши: на тач-экране :hover залипает после тапа
+   и элемент остаётся перекрашенным, пока не коснёшься другого. */
+@media (hover: hover) and (pointer: fine) {
+
+  .city-btn:not(.active):hover {
+    color: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.08);
+  }
+}
+
+
+/* Активный город — «обведённая» кнопка, как активный язык:
+   фон остаётся тёмным, жёлтым горят только рамка и подпись.
+   Залитая кнопка (сначала градиент, потом плоский цвет) перетягивала
+   внимание с заголовка страницы — а город здесь не главное действие.
+
+   ⚠️ border, а не border-color: у неактивной кнопки рамка 1px, и без
+   полной записи ширина осталась бы от неё — рамка активного города
+   выглядела бы тоньше соседней. */
+.city-btn.active {
+  background: transparent;
+  color: var(--construction-yellow);
+  border: 2px solid var(--construction-yellow);
+  box-shadow: none;
+}
+
+@media (max-width: 600px) {
+  .city-btn { padding: 0.4rem 0.7rem; font-size: 0.8rem; }
+}
+
+/* ============================================================
+   ГОРОДА — ДВЕ КНОПКИ В РЯД, НА ВСЕХ ЭКРАНАХ
+   ============================================================
+
+   Было: на десктопе выпадающий список (видна только текущая, остальные
+   по клику), на мобильном — две кнопки рядом. Две разные реализации
+   одного выбора приходилось править по отдельности, и вид сайта на
+   телефоне и на компьютере расходился.
+
+   Стало: везде две кнопки рядом, как было на мобильном, — активная с
+   жёлтой рамкой и жёлтой подписью, неактивная с белёсой рамкой под цвет
+   текста. Язык и «Для мастеров» уехали в бургер-меню, которое теперь
+   тоже общее, поэтому плашка города в шапке осталась одна и место под
+   список больше не нужно.
+
+   Правила выпадающего списка (position: absolute у неактивной кнопки,
+   стрелка ::after, --city-switcher-w) сняты: без них .city-btn работает
+   по базовым правилам выше, одинаково на любой ширине. */
+
+/* Язык и «Для мастеров» живут в бургер-меню — из шапки убраны.
+   ⚠️ display:none, а не удаление из разметки: переключатель языка
+   скрипт переносит в панель меню как существующий узел, а подпись
+   «Для мастеров» берётся оттуда же для ссылки в футере. Удалив их
+   из HTML, мы сломали бы и меню, и футер на 111 страницах. */
+header .language-switcher,
+header .audience-link {
+  display: none;
+}
+
+/* Плашка города равняется по счётчику онлайна над ней: иначе она шире
+   ровно по своему содержимому, и правые края двух строк шапки не
+   сходятся в одну вертикаль. Ширину считает скрипт (--city-switcher-w)
+   уже после загрузки шрифтов — до неё замер даёт другие числа. */
+@media (min-width: 769px) {
+  .city-switcher {
+    width: var(--city-switcher-w, auto);
+  }
+
+  /* Кнопки делят ширину плашки поровну — ровная пара под счётчиком,
+     как на телефоне. flex-basis: 0 обязателен: с auto ширина считается
+     от текста, и «Тбилиси» выходил бы шире «Батуми». */
+  .city-switcher .city-btn {
+    flex: 1 1 0;
+    text-align: center;
+  }
+}
+
+/* ============================================================
+   МОБИЛЬНЫЙ: шапка с переключателем города (<769px)
+   ============================================================
+
+   На десктопе плашки стоят в две строки в правом углу, а выпадающий список
+   города раскрывается по клику. На мобильном обе раскладки не нужны: плашки
+   идут вертикально во всю ширину, оба города видны сразу.
+
+   Без этого блока .header-controls остаётся горизонтальным рядом из четырёх
+   плашек и не помещается в 375px — счётчик обрезается за правым краем. */
+@media (max-width: 768px) {
+  .header-controls {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.7rem;
+  }
+  /* Группы тоже вертикальные: каждая плашка на своей строке */
+  .header-controls .header-group {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.7rem;
+    width: 100%;
+  }
+
+  /* Переключатель города — во всю ширину, города делят её поровну */
+  .city-switcher {
+    width: 100%;
+    justify-content: center;
+  }
+  .city-switcher .city-btn {
+    flex: 1 1 0;
+    text-align: center;
+  }
+
+  /* Единая высота плашек и на мобильном: в вертикальной колонке flex-растяжение
+     ломало бы «толщину». Языковой переключатель НЕ трогаем по ширине — у него
+     радужная рамка через ::before, и навязанная ширина увела бы её мимо плашки. */
+  header .city-switcher,
+  header .audience-link,
+  header .online-counter {
+    height: 52px;
+    flex: 0 0 auto;
+    box-sizing: border-box;
+  }
+}

@@ -202,19 +202,21 @@
         finalCall:    { ru: 'Позвонить', en: 'Call', ge: 'დარეკვა' },
 
         /* ── Подвал ──────────────────────────────────────────── */
-        ftAbout:     { ru: 'Mastera Georgia — сантехника, электрика, ремонт техники, мебель и небольшие домашние работы. Условия зависят от выбранной услуги и города.',
-                       en: 'Mastera Georgia — plumbing, electrics, appliance repair, furniture and small household jobs. Terms depend on the service and the city.',
-                       ge: 'Mastera Georgia — სანტექნიკა, ელექტრიკა, ტექნიკის შეკეთება, ავეჯი და მცირე საოჯახო სამუშაოები. პირობები დამოკიდებულია სერვისსა და ქალაქზე.' },
+        ftAbout:     { ru: 'Mastera Georgia — ваш надёжный помощник по дому. Сантехника, электрика, ремонт бытовой техники, сборка мебели и мелкий бытовой ремонт. Работаем качественно и по фиксированным ценам. Условия и стоимость уточняйте в вашем городе.',
+                       en: 'Mastera Georgia is your reliable help around the home. Plumbing, electrics, appliance repair, furniture assembly and small household repairs. We work to a high standard at fixed prices. Check terms and prices for your city.',
+                       ge: 'Mastera Georgia — თქვენი საიმედო დამხმარე სახლში. სანტექნიკა, ელექტრიკა, საყოფაცხოვრებო ტექნიკის შეკეთება, ავეჯის აწყობა და წვრილი საოჯახო რემონტი. ვმუშაობთ ხარისხიანად და ფიქსირებულ ფასებში. პირობები და ღირებულება დააზუსტეთ თქვენს ქალაქში.' },
         ftAllServices: { ru: 'Все услуги', en: 'All services', ge: 'ყველა სერვისი' },
         ftHome:      { ru: 'Помощь по дому', en: 'Household help', ge: 'დახმარება სახლში' },
         ftAppliance: { ru: 'Бытовая техника', en: 'Home appliances', ge: 'საყოფაცხოვრებო ტექნიკა' },
         ftTech:      { ru: 'Уборка и переезд', en: 'Cleaning and moving', ge: 'დასუფთავება და გადაზიდვა' },
         ftCityInfo:  { ru: 'Город и информация', en: 'City and information', ge: 'ქალაქი და ინფორმაცია' },
         ftYourCity:  { ru: 'Ваш город', en: 'Your city', ge: 'თქვენი ქალაქი' },
-        ftSchedule:  { ru: 'Ежедневно, 09:00–21:00', en: 'Daily, 09:00–21:00', ge: 'ყოველდღე, 09:00–21:00' },
+        /* ⚠️ Часы работы в подвале обязаны совпадать с верхней
+           плашкой: там 09:00–23:00 на 294 страницах разметки, и
+           подвал был единственным местом с другим временем. */
+        ftSchedule:  { ru: 'Ежедневно, 09:00–23:00', en: 'Daily, 09:00–23:00', ge: 'ყოველდღე, 09:00–23:00' },
         ftPrivacy:   { ru: 'Политика конфиденциальности', en: 'Privacy policy', ge: 'კონფიდენციალურობის პოლიტიკა' },
         ftTerms:     { ru: 'Пользовательское соглашение', en: 'Terms of service', ge: 'მომხმარებლის შეთანხმება' },
-        ftForMasters:{ ru: 'Мастерам', en: 'For specialists', ge: 'ოსტატებს' },
         ftDistricts: { ru: 'Районы обслуживания', en: 'Service districts', ge: 'მომსახურების რაიონები' },
         ftRights:    { ru: 'Все права защищены', en: 'All rights reserved', ge: 'ყველა უფლება დაცულია' }
     };
@@ -807,8 +809,12 @@
                   '<ul class="site-footer__links">' +
                     '<li><a href="' + otherHref + '">' +
                       (other.name[LANG] || other.name.ru) + '</a></li>' +
+                    /* ⚠️ Пункта «Мастерам» здесь быть не должно:
+                       мастеров сервис не набирает, страниц
+                       /<lang>/masters/ в проекте нет, и ссылка
+                       вела в 404. См. заметку в script.js о том,
+                       что слоя мастеров на сайте нет вовсе. */
                     '<li><a href="/' + LANG + '/#districts">' + t('ftDistricts') + '</a></li>' +
-                    '<li><a href="/' + LANG + '/masters/">' + t('ftForMasters') + '</a></li>' +
                     '<li><a href="/' + LANG + '/privacy/">' + t('ftPrivacy') + '</a></li>' +
                     '<li><a href="/' + LANG + '/terms/">' + t('ftTerms') + '</a></li>' +
                   '</ul>' +

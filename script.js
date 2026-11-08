@@ -17,7 +17,6 @@ const i18n = {
         phoneForeignInvalid: 'Проверьте номер телефона: укажите его с кодом страны, например +7 916 123 45 67',
         telegramInvalid:     'Пожалуйста, введите корректный Telegram username (например: @username) или номер телефона',
         contactRequired:     'Пожалуйста, заполните хотя бы один из контактов: Telegram или WhatsApp',
-        telegramRequiredMaster: 'Пожалуйста, укажите Telegram — верификация мастера проходит в Telegram-боте',
         submitError:         'Ошибка при отправке. Попробуйте ещё раз.',
         // Причины отказа бота, понятные человеку. Во всех случаях заявка уже
         // продублирована на почту, поэтому про потерю не говорим.
@@ -35,11 +34,8 @@ const i18n = {
         photoBadType:        'Можно прикреплять только изображения',
         photoTooBig:         'Файл слишком большой (до 10 МБ)',
         photoRemove:         'Удалить',
-        masterFinishTelegram:'✅ Продолжить в Telegram',
         urgentLabel:         '🚨 Срочный заказ',
         addressInDescription: 'Укажите в описании только суть задачи, без адреса. Точный адрес вы сообщите мастеру лично, когда он возьмёт заявку.',
-        specialtyOtherPlaceholder: 'Укажите вашу специальность',
-        specialtyOtherRequired:    'Пожалуйста, укажите вашу специальность',
         // ⚠️ Коротко — по ширине поля, а не «на глаз». Прежние 60 символов
         // обрезались и на десктопе (поле 378px в правой колонке модалки),
         // и тем более на мобильном, где остаётся всего 264px под текст.
@@ -49,11 +45,6 @@ const i18n = {
         // целиком, не подсказывает ничего.
         districtOtherPlaceholder:  'Район, ориентир, метро',
         districtOtherRequired:     'Пожалуйста, укажите район или ближайший ориентир — без этого мастер не поймёт, куда ехать',
-        masterCityLabel:           'Город работы',
-        masterCityPlaceholder:     'Город',
-        masterDistrictPlaceholder: 'Сначала выберите город',
-        masterDistrictLabel:       'Район работы',
-        masterCityRequired:        'Пожалуйста, выберите город — заявки приходят мастерам своего города',
         // Подписи полей форм для скринридера (aria-label). На экране их не
         // видно: поля опознаются по placeholder, а он для скринридера не
         // подпись — исчезает при вводе и читается не всеми программами.
@@ -67,12 +58,7 @@ const i18n = {
         a11yService:               'Категория работ',
         a11yMessage:               'Описание задачи',
         a11yPhotos:                'Фотографии задачи (до 3 штук)',
-        a11yCity:                  'Город',
-        a11ySpecialty:             'Специальность',
-        a11yExperience:            'Опыт работы в годах',
-        a11yAbout:                 'О себе и опыте работы',
         a11yDistrictOther:         'Уточните район или ориентир',
-        a11ySpecialtyOther:        'Уточните специальность',
         // Бейдж в окне благодарности. До этого текст был зашит в HTML каждой
         // из 105 страниц и успел разъехаться: на лендингах «15–60 минут», на
         // главных «30–60». Теперь источник один — словарь, HTML не трогаем.
@@ -99,7 +85,6 @@ const i18n = {
         phoneForeignInvalid: 'შეამოწმეთ ტელეფონის ნომერი: მიუთითეთ ქვეყნის კოდით, მაგალითად +7 916 123 45 67',
         telegramInvalid:     'გთხოვთ, შეიყვანოთ სწორი Telegram მომხმარებლის სახელი (მაგ: @username) ან ტელეფონის ნომერი',
         contactRequired:     'გთხოვთ, შეავსოთ ერთ-ერთი საკონტაქტო ველი: Telegram ან WhatsApp',
-        telegramRequiredMaster: 'გთხოვთ, მიუთითოთ Telegram — ხელოსნის ვერიფიკაცია მიმდინარეობს Telegram-ბოტში',
         submitError:         'გაგზავნისას მოხდა შეცდომა. სცადეთ კიდევ ერთხელ.',
         submitContactInText: 'წაშალეთ ტელეფონი და ბმულები დავალების აღწერიდან — კონტაქტები უკვე მიუთითეთ ზემოთ. განაცხადი მიღებულია, დაგიკავშირდებით.',
         submitTooMany:       'თქვენ რამდენიმე განაცხადი გააგზავნეთ ზედიზედ. განაცხადი უკვე მიღებულია — მალე დაგიკავშირდებით.',
@@ -112,18 +97,10 @@ const i18n = {
         photoBadType:        'შესაძლებელია მხოლოდ სურათების მიმაგრება',
         photoTooBig:         'ფაილი ძალიან დიდია (10 მბ-მდე)',
         photoRemove:         'წაშლა',
-        masterFinishTelegram:'✅ გაგრძელება Telegram-ში',
         urgentLabel:         '🚨 სასწრაფო შეკვეთა',
         addressInDescription: 'აღწერაში მიუთითეთ მხოლოდ დავალება, მისამართის გარეშე. ზუსტი მისამართი უთხარით ხელოსნას, როდესაც იგი აიღებს განაცხადს.',
-        specialtyOtherPlaceholder: 'მიუთითეთ თქვენი სპეციალობა',
-        specialtyOtherRequired:    'გთხოვთ, მიუთითოთ თქვენი სპეციალობა',
         districtOtherPlaceholder:  'რაიონი, ორიენტირი, მეტრო',
         districtOtherRequired:     'გთხოვთ, მიუთითოთ რაიონი ან უახლოესი ორიენტირი — ამის გარეშე ხელოსანი ვერ გაიგებს, სად უნდა მივიდეს',
-        masterCityLabel:           'სამუშაო ქალაქი',
-        masterCityPlaceholder:     'ქალაქი',
-        masterDistrictPlaceholder: 'ჯერ აირჩიეთ ქალაქი',
-        masterDistrictLabel:       'სამუშაო რაიონი',
-        masterCityRequired:        'გთხოვთ, აირჩიოთ ქალაქი — განაცხადები მიდის იმავე ქალაქის ხელოსნებთან',
         // Ველების სახელები სკრინრიდერისთვის (aria-label) — ეკრანზე არ ჩანს.
         a11yName:                  'თქვენი სახელი',
         a11yPhone:                 'ტელეფონის ნომერი',
@@ -133,12 +110,7 @@ const i18n = {
         a11yService:               'სამუშაოს კატეგორია',
         a11yMessage:               'დავალების აღწერა',
         a11yPhotos:                'დავალების ფოტოები (3-მდე)',
-        a11yCity:                  'ქალაქი',
-        a11ySpecialty:             'სპეციალობა',
-        a11yExperience:            'სამუშაო გამოცდილება წლებში',
-        a11yAbout:                 'თქვენ შესახებ და გამოცდილება',
         a11yDistrictOther:         'დააზუსტეთ რაიონი ან ორიენტირი',
-        a11ySpecialtyOther:        'დააზუსტეთ სპეციალობა',
         thanksBadgeLabel:          'პასუხის საშუალო დრო',
         thanksBadgeValue:          '15–60 წუთი',
         thanksBadgeLabelNight:     'პასუხის დრო',
@@ -153,7 +125,6 @@ const i18n = {
         phoneForeignInvalid: 'Please check the phone number: include the country code, for example +7 916 123 45 67',
         telegramInvalid:     'Please enter a valid Telegram username (e.g. @username) or phone number',
         contactRequired:     'Please fill in at least one contact field: Telegram or WhatsApp',
-        telegramRequiredMaster: 'Please provide your Telegram — master verification is done in the Telegram bot',
         submitError:         'An error occurred while submitting. Please try again.',
         submitContactInText: 'Please remove phone numbers and links from the task description — you have already provided your contacts above. The request has been received, we will get in touch.',
         submitTooMany:       'You have sent several requests in a row. We already have your request and will contact you shortly.',
@@ -166,18 +137,10 @@ const i18n = {
         photoBadType:        'Only images can be attached',
         photoTooBig:         'File is too large (up to 10 MB)',
         photoRemove:         'Remove',
-        masterFinishTelegram:'✅ Continue in Telegram',
         urgentLabel:         '🚨 Urgent order',
         addressInDescription: 'Describe only the task, without the address. Share the exact address with the specialist directly once they take the request.',
-        specialtyOtherPlaceholder: 'Specify your specialty',
-        specialtyOtherRequired:    'Please specify your specialty',
         districtOtherPlaceholder:  'District, landmark, metro',
         districtOtherRequired:     'Please specify the district or a nearby landmark — without it the specialist will not know where to go',
-        masterCityLabel:           'City of work',
-        masterCityPlaceholder:     'City',
-        masterDistrictPlaceholder: 'Choose a city first',
-        masterDistrictLabel:       'Work district',
-        masterCityRequired:        'Please choose a city — requests go to specialists in the same city',
         // Field names for screen readers (aria-label) — not visible on screen.
         a11yName:                  'Your name',
         a11yPhone:                 'Phone number',
@@ -187,12 +150,7 @@ const i18n = {
         a11yService:               'Service category',
         a11yMessage:               'Task description',
         a11yPhotos:                'Task photos (up to 3)',
-        a11yCity:                  'City',
-        a11ySpecialty:             'Specialty',
-        a11yExperience:            'Years of experience',
-        a11yAbout:                 'About you and your experience',
         a11yDistrictOther:         'Specify the district or a landmark',
-        a11ySpecialtyOther:        'Specify your specialty',
         thanksBadgeLabel:          'Average response time',
         thanksBadgeValue:          '15–60 minutes',
         thanksBadgeLabelNight:     'Response time',
@@ -206,7 +164,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '240';
+const MASTERA_VERSION = '241';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Личный чат владельца сервиса: сюда ведут кнопки «Написать в Telegram»
@@ -242,9 +200,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initBurgerMenu();
     initClientDistrictOptions();
     initClientUrgentOption();
-    initMasterLeadFormTracking();
-    initMasterDistrictOptions();
-    initMasterSpecialtyOther();
     initFAQ();
 });
 
@@ -465,13 +420,8 @@ const A11Y_FIELD_LABELS = [
     ['input[name="whatsapp"]',    'a11yWhatsapp'],
     ['select[name="district"]',   'a11yDistrict'],
     ['select[name="service"]',    'a11yService'],
-    ['select[name="city"]',       'a11yCity'],
-    ['select[name="specialty"]',  'a11ySpecialty'],
     ['textarea[name="message"]',  'a11yMessage'],
-    ['textarea[name="about"]',    'a11yAbout'],
-    ['input[name="experience"]',  'a11yExperience'],
     ['input[name="district_other"]',  'a11yDistrictOther'],
-    ['input[name="specialty_other"]', 'a11ySpecialtyOther'],
     ['.lead-photo-input',         'a11yPhotos'],
 ];
 
@@ -601,9 +551,7 @@ function initModalForms() {
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             closeClientLeadForm();
-            closeMasterLeadForm();
             closeThankYou();
-            closeMasterThankYou();
         }
     });
 
@@ -690,7 +638,7 @@ function normalizeGeorgianPhone(value) {
 
 // Форматирование телефонных номеров
 function initPhoneFormatting() {
-    const phoneInputs = document.querySelectorAll('#leadPhone, #masterLeadPhone');
+    const phoneInputs = document.querySelectorAll('#leadPhone');
     const whatsappInputs = document.querySelectorAll('input[name="whatsapp"]');
     const PREFIX_LEN = '+995'.length;
 
@@ -820,7 +768,7 @@ function validateName(nameInput) {
 // Проставляет полям имени нативную проверку «только буквы» на всех страницах —
 // через JS, без правки HTML каждого лендинга (как районы выше).
 function initNamePatternAttr() {
-    document.querySelectorAll('#clientLeadForm input[name="name"], #masterLeadForm input[name="name"]')
+    document.querySelectorAll('#clientLeadForm input[name="name"]')
         .forEach(function (input) {
             if (input.getAttribute('pattern')) return;   // уже задано в разметке
             input.setAttribute('pattern', NAME_PATTERN_ATTR);
@@ -891,7 +839,7 @@ function validateTelegram(telegramInput) {
     return true;
 }
 
-// Валидация стандартных форм (clientForm / masterForm)
+// Валидация стандартной клиентской формы (clientForm)
 function validateForm(e) {
     const form = e.target;
     const phoneInput    = form.querySelector('input[type="tel"]');
@@ -917,8 +865,6 @@ function validateForm(e) {
 // всё равно увидел бы «Заявка отправлена», а лид не дошёл бы до мастеров.
 // Теперь любой переезд — это правка DNS, а не правка сайта.
 const BOT_REQUEST_URL = 'https://bot.mastera.ge/site/new-request';
-// Эндпоинт бота для анкет мастеров с сайта (уведомление админу-лид).
-const BOT_MASTER_URL  = 'https://bot.mastera.ge/site/new-master';
 
 // ============================================
 // 9.9 РАЙОНЫ ТБИЛИСИ — ЕДИНЫЙ ИСТОЧНИК ПРАВДЫ
@@ -1064,7 +1010,7 @@ function botCityFromUrl() {
     //    строит buildDistrictSelect(), который сам спрашивает город у этой
     //    функции. На момент вызова селект ещё тбилисский, а предвыбор уже
     //    затёрт — получался замкнутый круг.
-    var byDistrict = PAGE_DISTRICT_SLUG ? masterCityFromDistrict(PAGE_DISTRICT_SLUG) : '';
+    var byDistrict = PAGE_DISTRICT_SLUG ? cityFromDistrictSlug(PAGE_DISTRICT_SLUG) : '';
     if (byDistrict) return byDistrict;
 
     // 2) По URL — для страниц без района: хабы (/ru/batumi/) и сервисные
@@ -1081,11 +1027,11 @@ function clientDistrictsForPage() {
     return botCityFromUrl() === 'Батуми' ? BATUMI_DISTRICTS : DISTRICTS;
 }
 
-// Город мастера по выбранному району. Районы Тбилиси и Батуми НЕ пересекаются
+// Город по slug района. Районы Тбилиси и Батуми НЕ пересекаются
 // (проверено в config.yaml бота), поэтому суффиксы вида StariGradNS, как в
 // Сербии, здесь не нужны — slug однозначно определяет город.
-// '' означает «город неизвестен»: бот спросит его сам на шаге дособора анкеты.
-function masterCityFromDistrict(slug) {
+// '' означает «город неизвестен» — вызывающий решает, что делать дальше.
+function cityFromDistrictSlug(slug) {
     if (!slug || slug === 'All') return '';   // «все районы» без города — город неизвестен
     if (slug === 'AllTB') return 'Тбилиси';
     if (slug === 'AllBA') return 'Батуми';
@@ -1093,14 +1039,6 @@ function masterCityFromDistrict(slug) {
         return c.districts.some(function (d) { return d.slug === slug; });
     });
     return found ? found.value : '';
-}
-
-// Район мастера в каноническом виде для бота: «все районы» в пределах города
-// тоже сводим к общему значению, которое понимает бот.
-function masterDistrictForBot(slug) {
-    if (!slug) return 'Все районы';
-    if (slug === 'All' || slug === 'AllTB' || slug === 'AllBA') return 'Все районы';
-    return BOT_DISTRICT_MAP[slug] || slug;
 }
 
 // Подпись района на языке страницы; с подсказкой местностей — для <option>.
@@ -1406,98 +1344,11 @@ function initClientPhotoUpload() {
     initClientPhotoUpload._reset = () => { leadPhotoDataUrls = []; renderPreviews(); };
 }
 
-// Значение опции «Другое» в select специальности по языкам (value из HTML).
-const SPECIALTY_OTHER_VALUE = { ru: 'Другое', en: 'Other', ka: 'სხვა' };
 
-// Инжектит поле «уточните специальность» в форму мастера: показывается только
-// когда в select специальности выбрано «Другое». Без правки HTML каждой страницы
-// (как initClientPhotoUpload / initClientUrgentOption).
-function initMasterSpecialtyOther() {
-    const form = document.getElementById('masterLeadForm');
-    if (!form) return;
-    const select = form.querySelector('select[name="specialty"]');
-    if (!select) return;
-    if (form.querySelector('input[name="specialty_other"]')) return; // уже добавлено
-
-    const lang = ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru';
-    const otherValue = SPECIALTY_OTHER_VALUE[lang] || SPECIALTY_OTHER_VALUE.ru;
-
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.name = 'specialty_other';
-    input.placeholder = t('specialtyOtherPlaceholder');
-    input.setAttribute('aria-label', t('a11ySpecialtyOther'));
-    input.style.display = 'none';           // скрыто, пока не выбрано «Другое»
-    input.minLength = 2;
-
-    // Вставляем сразу после select специальности
-    select.insertAdjacentElement('afterend', input);
-
-    function sync() {
-        const isOther = select.value === otherValue;
-        input.style.display = isOther ? '' : 'none';
-        input.required = isOther;
-        if (!isOther) input.value = '';
-    }
-    select.addEventListener('change', sync);
-    sync();
-}
-
-// Одноразовый код связки «анкета на сайте ↔ мастер в боте». Генерируется при
-// отправке формы, уходит в бота полем code и подставляется в диплинк кнопки
-// «Завершить регистрацию» (?start=m_<code>). По нему бот подтянет анкету, и
-// мастеру не придётся вводить данные заново — только пройти селфи-верификацию.
-let masterLeadCode = '';
-function generateMasterLeadCode() {
-    // 24 hex-символа в нижнем регистре: безопасно для диплинка Telegram (?start=…
-    // допускает [A-Za-z0-9_-]) и переживает .toLowerCase() при разборе в боте.
-    try {
-        const bytes = new Uint8Array(12);
-        crypto.getRandomValues(bytes);
-        return Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
-    } catch (e) {
-        // Фолбэк без Web Crypto (очень старые браузеры)
-        return (Date.now().toString(16) + Math.random().toString(16).slice(2)).slice(0, 24);
-    }
-}
-
-// Отправка анкеты мастера в Telegram-бота (лид админу). Fire-and-forget, не влияет на email.
-async function sendMasterLeadToBot(formData) {
-    const get = (k) => (formData.get(k) || '').toString().trim();
-
-    const lang = ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru';
-    const otherValue = SPECIALTY_OTHER_VALUE[lang] || SPECIALTY_OTHER_VALUE.ru;
-    const specialtyOther = get('specialty_other');
-    let specialty = get('specialty');
-    if (specialty === otherValue && specialtyOther) {
-        specialty = specialtyOther;
-    }
-    const experience = get('experience');
-
-    const payload = {
-        name:      get('name'),
-        phone:     normalizeGeorgianPhone(get('phone')),
-        telegram:  get('telegram'),
-        whatsapp:  normalizeWhatsappPhone(get('whatsapp')),
-        specialty: experience ? specialty + ' (опыт: ' + experience + ' лет)' : specialty,
-        city:      get('city') || masterCityFromDistrict(get('district')),
-        district:  masterDistrictForBot(get('district')),
-        message:   get('about'),
-        specialty_raw: specialty,
-        experience:    experience,
-        code:          masterLeadCode,
-        honeypot:      get('_gotcha'),
-        lang:         lang
-    };
-
-    return await postBotJson(BOT_MASTER_URL, payload);
-}
-// ⚠️ Здесь были masterFinishDeeplink() и ensureMasterTelegramButton() —
-// диплинк «завершить регистрацию в Telegram» и кнопка в модалке
-// благодарности мастеру. В новом проекте страниц /masters/ нет: ни
-// формы мастера, ни #masterThankYouModal в разметке не осталось, так
-// что обе функции только выходили на первой строке. Удалены вместе с
-// константой MASTER_BOT_DEEPLINK.
+// ⚠️ Слоя мастеров в проекте нет вовсе: ни страниц /masters/, ни анкеты,
+// ни модалок, ни эндпоинта /site/new-master. Сайт обслуживает только
+// клиента — заявка уходит в /site/new-request. Мастеров набирают вне
+// сайта, поэтому ссылки и формы для них добавлять сюда не нужно.
 
 // ============================================
 // 10.1 КАСКАД: РАЙОН → ПОДРАЙОН (данные из бота, config.yaml)
@@ -1610,10 +1461,8 @@ const BURGER_ICONS = {
     'stiralnye-mashiny':  '<rect x="3" y="2" width="18" height="20" rx="2"/><circle cx="12" cy="13" r="5"/><circle cx="12" cy="13" r="1.5"/><line x1="7" y1="5.5" x2="7.01" y2="5.5"/><line x1="11" y1="5.5" x2="11.01" y2="5.5"/>',
     'dveri-zamki':        '<path d="M3 21h18"/><path d="M5 21V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v17"/><circle cx="15" cy="12" r="1"/>',
 
-    // Служебные пункты меню. «Для мастеров» — та же иконка, что у ссылки
-    // в шапке: человек узнаёт её, уйдя из шапки в меню.
+    // Служебные пункты меню.
     'home':     '<path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V9.5z"/>',
-    'masters':  '<polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/><path d="M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>',
     'facebook': '<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>',
 };
 
@@ -1995,109 +1844,6 @@ function initClientDistrictOptions() {
     initDistrictOtherInput(form, districtSel);
 }
 
-// Связка «город → районы» в анкете мастера.
-//
-// Зачем: бот рассылает заявки мастерам ОДНОГО города (фильтр city в
-// get_masters_by_rating), поэтому город обязан быть известен точно. Раньше
-// сервис работал в одном Тбилиси и город не спрашивали вовсе. С появлением
-// Батуми мастер выбирает город явно, а список районов перестраивается под него
-// — рассогласование «Батуми + Ваке» стало невозможным в принципе.
-//
-// Селект города создаётся ЗДЕСЬ, а не в разметке: страниц много, и правка через
-// JS не требует обхода каждого HTML (тот же приём, что у районов и фото).
-function initMasterCityDistrict() {
-    const form = document.getElementById('masterLeadForm');
-    if (!form) return;
-    const districtSel = form.querySelector('select[name="district"]');
-    if (!districtSel) return;
-
-    const lang = ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru';
-
-    // Селект города: создаём один раз и ставим ПЕРЕД селектом района.
-    let citySel = form.querySelector('select[name="city"]');
-    if (!citySel) {
-        citySel = document.createElement('select');
-        citySel.name = 'city';
-        citySel.required = true;
-        citySel.setAttribute('aria-label', t('a11yCity'));
-        citySel.className = districtSel.className;   // те же стили, что у района
-
-        const ph = document.createElement('option');
-        ph.value = '';
-        ph.disabled = true;
-        ph.selected = true;
-        ph.setAttribute('data-ru', i18n.ru.masterCityPlaceholder);
-        ph.setAttribute('data-en', i18n.en.masterCityPlaceholder);
-        ph.setAttribute('data-ka', i18n.ka.masterCityPlaceholder);
-        ph.textContent = t('masterCityPlaceholder');
-        citySel.appendChild(ph);
-
-        CITIES.forEach(function (c) {
-            const opt = document.createElement('option');
-            opt.value = c.value;                      // канон-RU для бота
-            opt.setAttribute('data-ru', c.ru);
-            opt.setAttribute('data-en', c.en);
-            opt.setAttribute('data-ka', c.ka);
-            opt.textContent = c[lang] || c.ru;
-            citySel.appendChild(opt);
-        });
-
-        districtSel.insertAdjacentElement('beforebegin', citySel);
-    }
-
-    // Районы выбранного города. Пока город не выбран — район недоступен:
-    // выбирать не из чего, и это сразу видно по подписи.
-    function fillDistricts() {
-        const city = CITIES.find(function (c) { return c.value === citySel.value; });
-        districtSel.innerHTML = '';
-
-        const ph = document.createElement('option');
-        ph.value = '';
-        ph.disabled = true;
-        ph.selected = true;
-        const phKey = city ? 'masterDistrictLabel' : 'masterDistrictPlaceholder';
-        ph.setAttribute('data-ru', i18n.ru[phKey]);
-        ph.setAttribute('data-en', i18n.en[phKey]);
-        ph.setAttribute('data-ka', i18n.ka[phKey]);
-        ph.textContent = t(phKey);
-        districtSel.appendChild(ph);
-
-        if (!city) {
-            districtSel.disabled = true;
-            return;
-        }
-        districtSel.disabled = false;
-
-        city.districts.forEach(function (d) {
-            const opt = document.createElement('option');
-            opt.value = d.slug;
-            opt.setAttribute('data-ru', d.ru);
-            opt.setAttribute('data-en', d.en);
-            opt.setAttribute('data-ka', d.ka);
-            opt.textContent = d[lang] || d.ru;
-            districtSel.appendChild(opt);
-        });
-
-        // «Все районы» — в пределах ВЫБРАННОГО города, поэтому значение своё:
-        // по нему masterCityFromDistrict восстановит город, если он потеряется.
-        const allOpt = document.createElement('option');
-        allOpt.value = city.value === 'Батуми' ? 'AllBA' : 'AllTB';
-        allOpt.setAttribute('data-ru', DISTRICT_SPECIAL.All.ru);
-        allOpt.setAttribute('data-en', DISTRICT_SPECIAL.All.en);
-        allOpt.setAttribute('data-ka', DISTRICT_SPECIAL.All.ka);
-        allOpt.textContent = DISTRICT_SPECIAL.All[lang] || DISTRICT_SPECIAL.All.ru;
-        districtSel.appendChild(allOpt);
-    }
-
-    citySel.addEventListener('change', fillDistricts);
-    fillDistricts();
-}
-
-// Совместимость: старое имя вызывается из инициализации страниц.
-function initMasterDistrictOptions() {
-    initMasterCityDistrict();
-}
-
 // Уточнение района для варианта «Другой»: без него заявка приходит мастеру как
 // «Район: Другой» — мастер не понимает, ехать ли ему, и либо не берёт заявку,
 // либо выкупает контакт вслепую за 10 ₾.
@@ -2397,127 +2143,6 @@ function validateLeadForm(e) {
 // 11. ЛИД-ФОРМА МАСТЕРА
 // ============================================
 
-function initMasterLeadFormTracking() {
-    const masterLeadForm = document.getElementById('masterLeadForm');
-    if (!masterLeadForm) return;
-
-    let isSubmitting = false;
-    let pendingMasterLeadCode = null;
-
-    masterLeadForm.addEventListener('submit', async function (e) {
-        e.preventDefault();
-        if (isSubmitting) return;
-        if (!validateMasterLeadForm(e)) return;
-
-        isSubmitting = true;
-        // Состояние кнопки — как в клиентской форме: без него анкета
-        // выглядит «зависшей», и человек жмёт отправку повторно.
-        const submitBtn = masterLeadForm.querySelector('button[type="submit"]');
-        const submitLabel = submitBtn ? submitBtn.textContent : null;
-        if (submitBtn) {
-            submitBtn.disabled = true;
-            submitBtn.textContent = t('submitSending');
-        }
-
-        const formData = new FormData(masterLeadForm);
-
-        // Один код сохраняется до успешной отправки. При retry после сетевого
-        // сбоя бот получит тот же code и не создаст новую связку.
-        if (!pendingMasterLeadCode) pendingMasterLeadCode = generateMasterLeadCode();
-        masterLeadCode = pendingMasterLeadCode;
-
-        try {
-            await sendMasterLeadToBot(formData);
-
-            // Formspree — дубль анкеты на почту, ответа не ждём (см. тот же
-            // приём в клиентской форме): анкета уже принята ботом, и держать
-            // мастера лишние секунды ради письма незачем.
-            fetch('https://formspree.io/f/mykdoebj', {
-                method: 'POST',
-                body: formData,
-                headers: { 'Accept': 'application/json' }
-            }).catch((err) => console.error('Formspree (дубль анкеты):', err));
-
-            if (typeof gtag === 'function') {
-                gtag('event', 'generate_lead_master', {
-                    form_name: 'master_lead_form',
-                    form_location: 'Регистрация мастера',
-                    user_type: 'master',
-                    value: 0,
-                    currency: 'USD'
-                });
-            }
-
-            closeMasterLeadForm();
-            openMasterThankYou();
-            masterLeadForm.reset();
-            pendingMasterLeadCode = null;
-
-        } catch (error) {
-            console.error('Master form error:', error);
-            alert(t('submitError'));
-            isSubmitting = false;
-        } finally {
-            // Возвращаем кнопку всегда — иначе при повторном открытии анкеты
-            // она осталась бы выключенной с надписью «Отправляем…».
-            if (submitBtn) {
-                submitBtn.textContent = submitLabel;
-                const consent = document.getElementById('masterLeadConsent');
-                submitBtn.disabled = !!(consent && !consent.checked);
-            }
-        }
-    });
-
-    // Checkbox
-    const masterLeadConsent   = document.getElementById('masterLeadConsent');
-    const masterLeadSubmitBtn = document.getElementById('masterLeadSubmitBtn');
-    if (masterLeadConsent && masterLeadSubmitBtn) {
-        masterLeadSubmitBtn.disabled = !masterLeadConsent.checked;
-        masterLeadConsent.addEventListener('change', function () {
-            masterLeadSubmitBtn.disabled = !this.checked;
-        });
-    }
-}
-
-function validateMasterLeadForm(e) {
-    const form          = e.target;
-    const nameInput     = form.querySelector('input[name="name"]');
-    const phoneInput    = document.getElementById('masterLeadPhone');
-    const telegramInput = form.querySelector('input[name="telegram"]');
-
-    const telegramValue = telegramInput ? telegramInput.value.trim() : '';
-
-    // Имя буквами — зеркало is_valid_fio в боте. Если не проверить здесь, бот
-    // забракует анкету и мастер будет вводить все данные заново.
-    if (!validateName(nameInput)) return false;
-
-    // Для мастера Telegram обязателен: верификация (селфи+код) проходит в Telegram-боте.
-    // WhatsApp — по желанию, дополнительный контакт.
-    if (!telegramValue) {
-        alert(t('telegramRequiredMaster'));
-        if (telegramInput) telegramInput.focus();
-        return false;
-    }
-
-    if (!validatePhone(phoneInput)) return false;
-    if (!validateTelegram(telegramInput)) return false;
-
-    // Если специальность «Другое» — уточнение обязательно.
-    const specialtySel = form.querySelector('select[name="specialty"]');
-    const otherInput   = form.querySelector('input[name="specialty_other"]');
-    if (specialtySel && otherInput) {
-        const lang = ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru';
-        const otherValue = SPECIALTY_OTHER_VALUE[lang] || SPECIALTY_OTHER_VALUE.ru;
-        if (specialtySel.value === otherValue && !otherInput.value.trim()) {
-            alert(t('specialtyOtherRequired'));
-            otherInput.focus();
-            return false;
-        }
-    }
-
-    return true;
-}
-
 // ============================================
 // 12. УПРАВЛЕНИЕ МОДАЛЬНЫМИ ОКНАМИ
 // ============================================
@@ -2642,10 +2267,6 @@ function closeClientLeadForm() { _modal('clientLeadFormModal',   'none'); }
 function openThankYou()        { applyThankYouBadge();
                                  _modal('thankYouModal',          'flex'); }
 function closeThankYou()       { _modal('thankYouModal',          'none'); }
-function openMasterThankYou()  { _modal('masterThankYouModal',   'flex'); }
-function closeMasterThankYou() { _modal('masterThankYouModal',   'none'); }
-function openMasterLeadForm()  { _modal('masterLeadFormModal',   'flex'); }
-function closeMasterLeadForm() { _modal('masterLeadFormModal',   'none'); }
 
 function _modal(id, display) {
     const el = document.getElementById(id);
@@ -2658,8 +2279,7 @@ function _modal(id, display) {
 // фон всё равно «протаскивается» пальцем под окном.
 let _savedScrollY = 0;
 function _toggleBodyScrollLock() {
-    const anyOpen = ['clientLeadFormModal', 'thankYouModal',
-                     'masterLeadFormModal', 'masterThankYouModal']
+    const anyOpen = ['clientLeadFormModal', 'thankYouModal']
         .some(id => {
             const m = document.getElementById(id);
             return m && m.style.display !== 'none' && m.style.display !== '';

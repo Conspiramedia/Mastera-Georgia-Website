@@ -206,11 +206,14 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '239';
+const MASTERA_VERSION = '240';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
-// Публичный username бота мастеров — для диплинка «завершить регистрацию».
-const MASTER_BOT_DEEPLINK = 'https://t.me/mastera_tbilisi_bot?start=master';
+// Личный чат владельца сервиса: сюда ведут кнопки «Написать в Telegram»
+// — и CTA на главных, и нижняя панель связи. Это живой диалог, а не бот.
+// ⚠️ Не путать со ссылкой «Telegram-бот» в подвале: та ведёт на
+// клиентского бота по языку страницы и задана прямо в разметке.
+const TELEGRAM_CHAT_URL = 'https://t.me/job_kot';
 
 // Глобальная переменная текущего языка
 // window.__FORCE_LANG__ устанавливается в языковых подстраницах (/ru/, /ge/, /en/)
@@ -1489,37 +1492,12 @@ async function sendMasterLeadToBot(formData) {
 
     return await postBotJson(BOT_MASTER_URL, payload);
 }
-// Диплинк «завершить регистрацию»: если есть код связки — ведём на ?start=m_<code>
-// (бот подтянет анкету и попросит только селфи), иначе на общий ?start=master.
-function masterFinishDeeplink() {
-    if (masterLeadCode) {
-        // Меняем аргумент master → m_<code>, сохраняя базовый URL бота.
-        return MASTER_BOT_DEEPLINK.replace(/\?start=.*$/, '') + '?start=m_' + masterLeadCode;
-    }
-    return MASTER_BOT_DEEPLINK;
-}
-
-// Добавляет в модалку благодарности мастеру кнопку «Завершить регистрацию в Telegram».
-// При повторном вызове (после отправки формы) обновляет href актуальным кодом связки.
-function ensureMasterTelegramButton() {
-    const modal = document.getElementById('masterThankYouModal');
-    if (!modal) return;
-    const content = modal.querySelector('.thank-you-content');
-    if (!content) return;
-    let link = content.querySelector('.master-tg-finish-btn');
-    if (!link) {
-        link = document.createElement('a');
-        link.className = 'master-tg-finish-btn';
-        link.target = '_blank';
-        link.rel = 'noopener';
-        link.textContent = t('masterFinishTelegram');
-        // Вставляем перед кнопкой «Отлично!», если она есть
-        const okBtn = content.querySelector('.thank-you-btn');
-        if (okBtn) content.insertBefore(link, okBtn);
-        else content.appendChild(link);
-    }
-    link.href = masterFinishDeeplink();
-}
+// ⚠️ Здесь были masterFinishDeeplink() и ensureMasterTelegramButton() —
+// диплинк «завершить регистрацию в Telegram» и кнопка в модалке
+// благодарности мастеру. В новом проекте страниц /masters/ нет: ни
+// формы мастера, ни #masterThankYouModal в разметке не осталось, так
+// что обе функции только выходили на первой строке. Удалены вместе с
+// константой MASTER_BOT_DEEPLINK.
 
 // ============================================
 // 10.1 КАСКАД: РАЙОН → ПОДРАЙОН (данные из бота, config.yaml)
@@ -2426,9 +2404,6 @@ function initMasterLeadFormTracking() {
     let isSubmitting = false;
     let pendingMasterLeadCode = null;
 
-    // Кнопка-диплинк в модалке благодарности готовится заранее (до открытия модалки)
-    ensureMasterTelegramButton();
-
     masterLeadForm.addEventListener('submit', async function (e) {
         e.preventDefault();
         if (isSubmitting) return;
@@ -2474,7 +2449,6 @@ function initMasterLeadFormTracking() {
             }
 
             closeMasterLeadForm();
-            ensureMasterTelegramButton();
             openMasterThankYou();
             masterLeadForm.reset();
             pendingMasterLeadCode = null;
@@ -2756,7 +2730,6 @@ function initBackToTop() {
 // то есть на ту же логику, что и отправка заявки: держать её рядом
 // надёжнее, чем дублировать в redesign.js.
 function buildContactLinks() {
-    const isMastersPage = window.location.pathname.includes('/masters/');
     const isBatumiPage = /\/batumi(?:\/|$)/i.test(window.location.pathname);
     const lang = window.__FORCE_LANG__ || 'ru';
 
@@ -2805,14 +2778,6 @@ function buildContactLinks() {
         const svcUsable = (code === pageLang) ? svcName : '';
         const svcDistrictUsable = (code === pageLang) ? svcDistrict : '';
 
-        if (isMastersPage) {
-            return ({
-                ru: 'Здравствуйте! Хочу стать партнёром сервиса.',
-                en: 'Hello! I want to become a partner.',
-                ka: 'გამარჯობა! მინდა გავხდე პარტნიორი.'
-            })[code];
-        }
-
         // Главная страница (service пустой) или чужой язык — общий текст.
         if (!svcUsable) {
             return ({
@@ -2847,11 +2812,15 @@ function buildContactLinks() {
     };
     const waHref = 'https://wa.me/995557645196?text=' + (waTexts[lang] || waTexts.ru);
 
-    // Telegram-бот: на странице мастеров — бот мастеров, иначе клиентский бот по языку
-    // страницы (RU/EN/GE). start=site_<lang> — для атрибуции.
-    const tgBots = { ru: 'mastera_ru_bot', en: 'mastera_en_bot', ka: 'mastera_ka_bot' };
-    const tgBot = isMastersPage ? 'mastera_tbilisi_bot' : (tgBots[lang] || tgBots.ru);
-    const tgHref = 'https://t.me/' + tgBot + '?start=site_' + lang;
+    // ⚠️ Кнопка «Написать в Telegram» ведёт в ЛИЧНЫЙ ЧАТ, а не в бота:
+    // посетитель, который жмёт «написать», хочет живого собеседника, а
+    // попадал в меню бота и уходил. На бота ведёт отдельная ссылка в
+    // подвале — она так и называется, «Telegram-бот».
+    //
+    // Параметра ?start= здесь нет намеренно: это обычный аккаунт, а не
+    // бот, и Telegram такой аргумент просто игнорирует. Язык в ссылке
+    // тоже не нужен — отвечает человек.
+    const tgHref = TELEGRAM_CHAT_URL;
 
     // Подписи (доступность/тултипы) по языку.
     const labels = ({

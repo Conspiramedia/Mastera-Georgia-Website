@@ -164,26 +164,22 @@
     }
 
     /* ── Текущий город ───────────────────────────────────────
-       Берём из адреса: /ru/tbilisi/... На главной города в пути
-       нет — тогда Тбилиси. */
-    var CITY_KEY = 'mastera-city';
+       Город страницы определяется ТОЛЬКО адресом.
+       /ru/batumi/… — Батуми, всё остальное (/ru/, /ru/tbilisi/…) —
+       Тбилиси: корень языка это главная Тбилиси, у неё свой
+       заголовок «мастеров Тбилиси» и свои 10 районов.
 
+       ⚠️ Раньше для корня брался город из localStorage, и это
+       давало прямое противоречие на экране: посетитель, однажды
+       выбравший Батуми, возвращался на /ru/ и видел «Батуми» в
+       переключателе над заголовком «Сервис подбора мастеров
+       Тбилиси». Память о выборе не может спорить с содержимым
+       страницы — страницы у городов разные, и выбор города это
+       переход, а не переключение подписи. */
     function currentCity() {
         var parts = location.pathname.split('/').filter(Boolean);
         for (var i = 0; i < CITIES.length; i++) {
             if (parts.indexOf(CITIES[i].slug) !== -1) return CITIES[i];
-        }
-        // ⚠️ На главной города в пути нет. Берём выбранный ранее:
-        // иначе выбор на главной ничего не менял бы, и ссылки
-        // услуг всегда вели бы в Тбилиси.
-        try {
-            var saved = localStorage.getItem(CITY_KEY);
-            for (var j = 0; j < CITIES.length; j++) {
-                if (CITIES[j].slug === saved) return CITIES[j];
-            }
-        } catch (e) {
-            // Приватный режим: localStorage бросает. Молча
-            // возвращаемся к городу по умолчанию.
         }
         return CITIES[0];
     }
@@ -239,14 +235,6 @@
         return '/' + LANG + '/#lead';
     }
 
-    function rememberCity(slug) {
-        try {
-            localStorage.setItem(CITY_KEY, slug);
-        } catch (e) {
-            // Нечего делать: выбор просто не переживёт перезагрузку.
-        }
-    }
-
     /* ── Выпадающий список услуг ─────────────────────────── */
 
     function buildServicesDropdown() {
@@ -281,10 +269,9 @@
         SERVICES.forEach(function (s, i) {
             var a = document.createElement('a');
             // Страницы готовы не все: недоделанные ведут на форму,
-            // а не в 404.
-            // Метка для applyCity: по ней ссылка переписывается
-            // при смене города на главной.
-            a.setAttribute('data-svc', String(i));
+            // а не в 404. Город берётся из адреса страницы и при
+            // жизни страницы не меняется — смена города это переход
+            // на главную другого города.
             a.href = serviceHref(s, city);
             a.innerHTML = '<span class="nav-dropdown__icon">' + svg(s.icon) + '</span>' +
                           '<strong>' + (s.name[LANG] || s.name.ru) + '</strong>';
@@ -579,24 +566,12 @@
             if (e.target.hasAttribute('data-close') ||
                 e.target.closest('[data-close]')) { close(); return; }
 
-            var card = e.target.closest('.city-card');
-            if (!card) return;
-
-            // Запоминаем в любом случае: и при переходе по
-            // настоящей ссылке — иначе на новой странице город
-            // снова стал бы Тбилиси.
-            var slug = card.getAttribute('data-city');
-            rememberCity(slug);
-
-            // href="#" — страница услуги в другом городе ещё не
-            // существует (мы на главной). Переход не нужен:
-            // обновляем подпись и ссылки на месте.
-            if (card.getAttribute('href') === '#') {
-                e.preventDefault();
-                applyCity(slug);
-                close();
-            }
-            // Иначе ссылка настоящая — браузер уйдёт по ней сам.
+            // Карточка города — обычная ссылка на главную этого
+            // города (/ru/ или /ru/batumi/). Браузер уходит по ней
+            // сам, перехватывать нечего: город определяется адресом
+            // страницы, а не состоянием в памяти.
+            if (!e.target.closest('.city-card')) return;
+            close();
         });
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape' && !modal.hidden) close();
@@ -722,9 +697,8 @@
         cityBtn.setAttribute('data-open-city', '');
         cityBtn.innerHTML = svg('pin') +
             // ⚠️ Сразу текущий город, а не «Выберите город»:
-            // applyCity вызывается только на главной, где города
-            // нет в адресе, и на странице услуги подпись так и
-            // осталась бы приглашением — хотя город известен.
+            // город известен из адреса страницы, и приглашение
+            // выбрать то, что уже выбрано, только путает.
             '<span class="mobile-menu__city-label">' +
             (cityObj.name[LANG] || cityObj.name.ru) + '</span>' +
             '<svg class="mobile-menu__city-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
@@ -764,7 +738,6 @@
         SERVICES.forEach(function (s, i) {
             var a = document.createElement('a');
             a.className = 'mobile-menu__link mobile-menu__link--svc';
-            a.setAttribute('data-svc', String(i));
             a.href = serviceHref(s, city);
             a.innerHTML = '<span class="mobile-menu__icon">' + svg(s.icon) + '</span>' +
                           '<span>' + (s.name[LANG] || s.name.ru) + '</span>';
@@ -876,41 +849,25 @@
         }, { passive: true });
     }
 
-    /* ── Применение выбранного города без перезагрузки ─────
-       Только для главной: там город не часть адреса. На странице
-       услуги переход идёт по настоящей ссылке. */
-    function applyCity(slug) {
+    /* ── Подпись города в шапке ───────────────────────────
+       Страховка на случай, если в разметке страницы осталось
+       чужое название: приводим подпись к городу из адреса.
+       Ссылки услуг здесь не трогаем — они уже построены под
+       нужный город в buildServicesDropdown(). */
+    function syncCityLabel(slug) {
         var city = null;
         CITIES.forEach(function (c) { if (c.slug === slug) city = c; });
         if (!city) return;
 
-        // 1. Подпись в шапке и в мобильном меню.
         var labels = document.querySelectorAll(
             '.city-pill__label, .mobile-menu__city-label');
         Array.prototype.forEach.call(labels, function (el) {
             el.textContent = city.name[LANG] || city.name.ru;
         });
 
-        // 2. Отметка текущего города в модалке.
         var cards = document.querySelectorAll('.city-card');
         Array.prototype.forEach.call(cards, function (c) {
             c.classList.toggle('is-current', c.getAttribute('data-city') === slug);
-        });
-
-        // 3. Ссылки услуг — на страницы выбранного города, а где
-        //    страницы ещё нет, на форму. Иначе смена города вела
-        //    бы в 404.
-        // ⚠️ Мобильное меню тоже держит ссылки услуг: без него в
-        // выборке смена города правила бы только выпадашку, а на
-        // телефоне ссылки вели бы в прежний город.
-        var links = document.querySelectorAll(
-            '.nav-dropdown__grid a[data-svc], .mobile-menu a[data-svc]');
-        Array.prototype.forEach.call(links, function (a) {
-            // ⚠️ В метке индекс услуги, а не слаг: слаг зависит от
-            // города (santehnik-tbilisi / santehnik-batumi), и по
-            // нему услугу после смены города уже не найти.
-            var svc = SERVICES[Number(a.getAttribute('data-svc'))];
-            if (svc) a.href = serviceHref(svc, slug);
         });
     }
 
@@ -1047,12 +1004,9 @@
         buildPriceSearch();
         buildContactBar();
 
-        // На главной показываем город, выбранный в прошлый раз.
-        // На странице услуги город задан адресом — не трогаем.
-        var inPath = CITIES.some(function (c) {
-            return location.pathname.split('/').filter(Boolean).indexOf(c.slug) !== -1;
-        });
-        if (!inPath) applyCity(currentCity().slug);
+        // Подпись города приводим к адресу страницы: в разметке
+        // части страниц зашито «Тбилиси» независимо от города.
+        syncCityLabel(currentCity().slug);
     }
 
     if (document.readyState === 'loading') {

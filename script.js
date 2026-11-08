@@ -206,7 +206,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '236';
+const MASTERA_VERSION = '239';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Публичный username бота мастеров — для диплинка «завершить регистрацию».
@@ -405,6 +405,13 @@ function initFAQ() {
 
     faqItems.forEach(item => {
         const question = item.querySelector('.faq-question');
+        // ⚠️ В новом дизайне FAQ собран на <details>/<summary> —
+        // раскрывается самим браузером, и .faq-question там нет.
+        // Без этой проверки функция падала с TypeError на КАЖДОЙ
+        // странице: ошибка в консоли на всём сайте, по которой
+        // не видно настоящих поломок. Старая разметка
+        // (.faq-question) по-прежнему работает — ветка ниже неё.
+        if (!question) return;
         question.addEventListener('click', () => {
             faqItems.forEach(other => {
                 if (other !== item) other.classList.remove('active');

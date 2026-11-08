@@ -28,6 +28,10 @@ const i18n = {
         // 4–10 секунд, и без обратной связи человек жал кнопку повторно,
         // думая, что промахнулся.
         submitSending:       'Отправляем…',
+        // Быстрая форма первого экрана: человек оставляет только контакт.
+        heroConsent:         'Пожалуйста, подтвердите согласие на обработку данных',
+        heroContactEmpty:    'Пожалуйста, укажите номер WhatsApp',
+        heroSent:            'Заявка принята! Напишем вам в WhatsApp в течение часа в рабочее время.',
         photoLabel:          '📷 Фото проблемы (по желанию, до 3)',
         photoAdd:            'Прикрепить фото',
         photoTooMany:        'Можно прикрепить не более 3 фото',
@@ -91,6 +95,9 @@ const i18n = {
         submitTooLong:       'აღწერა ძალიან გრძელია — აღწერეთ მოკლედ, დანარჩენს ხელოსანს უამბობთ.',
         submitProfanity:     'გთხოვთ, გადააფორმულიროთ დავალების აღწერა.',
         submitSending:       'იგზავნება…',
+        heroConsent:         'გთხოვთ, დაადასტუროთ თანხმობა მონაცემთა დამუშავებაზე',
+        heroContactEmpty:    'გთხოვთ, მიუთითოთ WhatsApp-ის ნომერი',
+        heroSent:            'განაცხადი მიღებულია! მოგწერთ WhatsApp-ში ერთ საათში სამუშაო დროს.',
         photoLabel:          '📷 პრობლემის ფოტო (სურვილისამებრ, 3-მდე)',
         photoAdd:            'ფოტოს მიმაგრება',
         photoTooMany:        'შეგიძლიათ მიამაგროთ მაქსიმუმ 3 ფოტო',
@@ -131,6 +138,9 @@ const i18n = {
         submitTooLong:       'The description is too long — keep it short, you can tell the rest to the specialist.',
         submitProfanity:     'Please rephrase the task description.',
         submitSending:       'Sending…',
+        heroConsent:         'Please confirm your consent to data processing',
+        heroContactEmpty:    'Please enter your WhatsApp number',
+        heroSent:            'Request received! We will message you on WhatsApp within an hour during working hours.',
         photoLabel:          '📷 Photo of the problem (optional, up to 3)',
         photoAdd:            'Attach photo',
         photoTooMany:        'You can attach up to 3 photos',
@@ -164,7 +174,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '243';
+const MASTERA_VERSION = '246';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Личный чат владельца сервиса: сюда ведут кнопки «Написать в Telegram»
@@ -190,6 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSmoothScroll();
     initModalForms();
     initClientLeadFormTracking();
+    initHeroQuickForm();
     initClientPhotoUpload();
     initClientDistrictOptions();
     initClientUrgentOption();
@@ -1434,6 +1445,164 @@ function initClientLeadFormTracking() {
             leadSubmitBtn.disabled = !this.checked;
         });
     }
+}
+
+
+// ============================================
+// 10.2 БЫСТРАЯ ФОРМА ПЕРВОГО ЭКРАНА
+// ============================================
+//
+// Форма в шапке страницы (.v-float-form) спрашивает ОДИН контакт — номер
+// WhatsApp. Это осознанно: на первом экране человек ещё не готов заполнять
+// семь полей, и короткая форма ловит тех, кто иначе ушёл бы совсем.
+// Подробности выясняются в переписке.
+//
+// ⚠️ До 08.11.2026 эта форма не отправляла НИКУДА. У неё нет ни action, ни
+// id, а единственный обработчик submit в файле висит на #clientLeadForm —
+// на форме блока заявки ниже по странице. Браузер применял поведение по
+// умолчанию: GET на саму себя. Страница перезагружалась, номер оставался
+// в адресной строке (/ru/?phone=555123456), и человек видел «пустую» форму
+// вместо подтверждения. Лид не доходил никуда, при этом номер попадал в
+// историю браузера и в логи веб-сервера.
+//
+// Бот требует шесть полей (district, subdistrict, category, description,
+// address, contact), иначе отвечает 400 и заявка пропадает молча — сайт
+// ответа не ждёт. Короткая форма их не спрашивает, поэтому подставляем:
+//   district    — «Другой»: рассылка по району НЕ фильтрует (район только
+//                 печатается в карточке), так что заявка не потеряется;
+//   category    — категория лендинга, как у основной формы;
+//   description — отмечаем, что подробностей нет и нужна переписка;
+//   address     — «Не указан», как и у основной формы.
+// Город берётся botCityFromUrl() — он же решает, каким мастерам слать.
+function initHeroQuickForm() {
+    const form = document.querySelector('.v-float-form__row');
+    if (!form) return;
+
+    // Галочка согласия лежит СНАРУЖИ формы (соседний .v-consent), поэтому
+    // required на ней отправку не блокирует — браузер проверяет только поля
+    // внутри <form>. Ищем её у общего родителя и проверяем сами.
+    const box = form.closest('.v-float-form') || form.parentElement;
+    const consent = box ? box.querySelector('.v-consent input[type="checkbox"]') : null;
+
+    let isSubmitting = false;
+    let idempotencyKey = null;
+
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        if (isSubmitting) return;
+
+        const input = form.querySelector('input[name="phone"]');
+        const raw = input ? input.value.trim() : '';
+        if (!raw) {
+            alert(t('heroContactEmpty'));
+            if (input) input.focus();
+            return;
+        }
+        if (consent && !consent.checked) {
+            alert(t('heroConsent'));
+            consent.focus();
+            return;
+        }
+        // Honeypot: поле скрыто от человека, заполнить его мог только бот.
+        // Отвечаем тихим успехом — спамеру не за что зацепиться.
+        const gotcha = form.querySelector('input[name="_gotcha"]');
+        if (gotcha && gotcha.value.trim()) {
+            form.reset();
+            return;
+        }
+
+        const whatsapp = normalizeWhatsappPhone(raw);
+
+        isSubmitting = true;
+        const btn = form.querySelector('button[type="submit"]');
+        const btnLabel = btn ? btn.innerHTML : null;
+        if (btn) {
+            btn.disabled = true;
+            btn.textContent = t('submitSending');
+        }
+
+        if (!idempotencyKey) idempotencyKey = generateSiteIdempotencyKey('hero');
+
+        // Категория страницы: на лендинге она в скрытом поле основной формы.
+        // На главной там <select>, и до выбора он пуст — resolveBotCategory
+        // вернул бы «Другое». Для быстрой формы это хуже «Мастера на час»:
+        // «Другое» видит узкий круг мастеров, а человек, оставивший один
+        // контакт, про категорию ничего не сказал — значит задача может
+        // быть любой, и показать её надо как можно большему числу людей.
+        const svc = document.querySelector('#clientLeadForm [name="service"]');
+        const rawSvc = svc ? svc.value.trim() : '';
+        const category = rawSvc ? resolveBotCategory(rawSvc) : 'Мастер на час';
+
+        const lang = ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru';
+
+        // Район: на лендинге района он уже предвыбран в основной форме
+        // (<option selected>), и терять эту подсказку незачем — мастер
+        // увидит в карточке «Новый бульвар» вместо бесполезного «Другой».
+        // Где предвыбора нет (главная, лендинг услуги), шлём «Другой»:
+        // человек район не называл. На рассылку это не влияет — она
+        // фильтрует по городу и специальности, район только печатается.
+        const dSel = document.querySelector('#clientLeadForm [name="district"]');
+        const dSlug = dSel && dSel.value && dSel.value !== 'Other' ? dSel.value : '';
+        const district = dSlug ? (BOT_DISTRICT_MAP[dSlug] || 'Другой') : 'Другой';
+
+        // Почта — первой и независимо от бота, тем же приёмом, что в основной
+        // форме: страховка обязана срабатывать именно когда бот отказал.
+        const fd = new FormData();
+        fd.append('whatsapp', whatsapp);
+        fd.append('_subject', 'Быстрая заявка с первого экрана');
+        fd.append('_language', lang);
+        fetch('https://formspree.io/f/xpqjbpyk', {
+            method: 'POST',
+            body: fd,
+            headers: { 'Accept': 'application/json' }
+        }).catch((err) => console.error('Formspree (быстрая заявка):', err));
+
+        try {
+            await postBotJson(BOT_REQUEST_URL, {
+                city:        botCityFromUrl(),
+                name:        '',
+                phone:       '',
+                district:    district,
+                subdistrict: 'Не указан',
+                category:    category,
+                description: 'Задача: быстрая заявка с первого экрана — '
+                           + 'клиент оставил только WhatsApp, подробности уточняем в переписке.',
+                address:     'Не указан',
+                contact:     '🟢 WhatsApp: ' + whatsapp,
+                honeypot:    '',
+                lang:        lang,
+                urgent:      false,
+                photos:      [],
+                idempotency_key: idempotencyKey
+            });
+
+            if (typeof gtag === 'function') {
+                gtag('event', 'generate_lead_client', {
+                    form_name: 'hero_quick_form',
+                    form_location: 'Быстрая заявка, первый экран',
+                    user_type: 'client',
+                    value: 1,
+                    currency: 'USD'
+                });
+            }
+
+            alert(t('heroSent'));
+            form.reset();
+            if (consent) consent.checked = false;
+            idempotencyKey = null;
+
+        } catch (error) {
+            console.error('Быстрая заявка:', error);
+            // Заявка уже ушла на почту выше, поэтому текст не пугает потерей.
+            alert(botErrorMessage(error && error.botError));
+        } finally {
+            isSubmitting = false;
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = btnLabel;   // innerHTML: внутри кнопки есть <svg>
+            }
+        }
+    });
 }
 
 

@@ -18,7 +18,7 @@
   <meta property="og:url" content="https://mastera.ge/ge/tbilisi/master-na-chas-isani/">
   <meta property="og:title" content="ოსტატი საათით — ისანში, თბილისი · 60 წუთში | Mastera">
   <meta property="og:description" content="ისანში, თბილისში ოსტატი საათით: წვრილმანი რემონტი, აწყობა და დაკიდება. იპოვეთ სპეციალისტი და დატოვეთ განაცხადი ონლაინ.">
-  <meta property="og:image" content="https://mastera.ge/image/og-preview-ka.jpg?v=242">
+  <meta property="og:image" content="https://mastera.ge/image/og-preview-ka.jpg?v=243">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="ka_GE">
@@ -30,7 +30,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="ოსტატი საათით ისანში (თბილისი) — დახმარება სახლში 60 წუთში">
   <meta name="twitter:description" content="უნივერსალური ოსტატი საათით ისნის რაიონში. წვრილმანი რემონტი, საკეტების შეცვლა, დაკიდება და აწყობა.">
-  <meta name="twitter:image" content="https://mastera.ge/image/og-preview-ka.jpg?v=242">
+  <meta name="twitter:image" content="https://mastera.ge/image/og-preview-ka.jpg?v=243">
 
   <link rel="icon" type="image/svg+xml" href="/image/favicon.svg">
   <link rel="icon" type="image/x-icon" href="/image/favicon.ico">
@@ -92,9 +92,9 @@
   <!-- critical:service.css — НЕ ПРАВИТЬ РУКАМИ, см. build-critical-css.py -->
   <!-- /critical:service.css -->
   <noscript></noscript>
-  <link rel="stylesheet" href="/redesign.css?v=242">
-  <script src="/redesign.js?v=242" defer></script>
-  <script src="/script.js?v=242" defer></script>
+  <link rel="stylesheet" href="/redesign.css?v=243">
+  <script src="/redesign.js?v=243" defer></script>
+  <script src="/script.js?v=243" defer></script>
 
   <!-- Schema.org: Service -->
   
@@ -484,12 +484,26 @@
 </section>
 
 <section class="section section--soft" id="lead">
-  <div class="container container--narrow">
-    <div class="section-head">
-      <h2>დატოვეთ განაცხადი</h2>
-      <p>აღწერეთ ამოცანა — შევარჩევთ ოსტატს და ფასს დაწყებამდე გეტყვით.</p>
-    </div>
-<form action="https://formspree.io/f/xpqjbpyk" method="POST" class="lead-form" id="clientLeadForm">
+  <div class="container">
+    <div class="hero__grid">
+
+      <div>
+        <span class="section-head__eyebrow">განაცხადი</span>
+        <h2>აღწერეთ ამოცანა — შეგირჩევთ ოსტატს</h2>
+        <p>ვპასუხობთ ერთ საათში სამუშაო დროს. განაცხადი არაფერს გავალდებულებთ: გაიგებთ ფასს და თავად გადაწყვეტთ.</p>
+        <ul class="hero__perks" style="margin-top:1.4rem">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            გადახდა სამუშაოს შემდეგ
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            გასვლა დღესვე
+          </li>
+        </ul>
+      </div>
+
+      <form action="https://formspree.io/f/xpqjbpyk" method="POST" class="lead-form" id="clientLeadForm">
         <input type="text" name="name" placeholder="თქვენი სახელი" required minlength="2" class="form-control">
         <input type="tel" name="phone" id="leadPhone" placeholder="ტელეფონი" class="form-control">
         <input type="text" name="telegram" placeholder="Telegram: @username" data-contact-required pattern="^(@[a-zA-Z0-9_]{5,32}|[0-9]{9,15})?$" class="form-control">
@@ -511,6 +525,8 @@
         </label>
         <button type="submit" class="button button--primary button--large lead-form__submit" id="leadSubmitBtn">განაცხადის გაგზავნა</button>
       </form>
+
+    </div>
   </div>
 </section>
 

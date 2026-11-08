@@ -18,7 +18,7 @@
   <meta property="og:url" content="https://mastera.ge/ru/batumi/master-na-chas-boni-gorodok/">
   <meta property="og:title" content="Мастер на час в Бони-Городке — выезд за 60 минут">
   <meta property="og:description" content="Мастер на час в Бони-Городке: мелкий ремонт, сборка мебели, навеска. Выезд от 30₾, оплата после работы. Оставьте заявку на сайте!">
-  <meta property="og:image" content="https://mastera.ge/image/og-preview-ru.jpg?v=242">
+  <meta property="og:image" content="https://mastera.ge/image/og-preview-ru.jpg?v=243">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="ru_RU">
@@ -30,7 +30,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Мастер на час в Бони-Городке (Батуми) — помощь по дому за 60 минут">
   <meta name="twitter:description" content="Универсальный мастер на час в районе Бони-Городок. Сборка, навеска, мелкий ремонт и помощь по хозяйству.">
-  <meta name="twitter:image" content="https://mastera.ge/image/og-preview-ru.jpg?v=242">
+  <meta name="twitter:image" content="https://mastera.ge/image/og-preview-ru.jpg?v=243">
 
   <link rel="icon" type="image/svg+xml" href="/image/favicon.svg">
   <link rel="icon" type="image/x-icon" href="/image/favicon.ico">
@@ -92,9 +92,9 @@
   <!-- critical:service.css — НЕ ПРАВИТЬ РУКАМИ, см. build-critical-css.py -->
   <!-- /critical:service.css -->
   <noscript></noscript>
-  <link rel="stylesheet" href="/redesign.css?v=242">
-  <script src="/redesign.js?v=242" defer></script>
-  <script src="/script.js?v=242" defer></script>
+  <link rel="stylesheet" href="/redesign.css?v=243">
+  <script src="/redesign.js?v=243" defer></script>
+  <script src="/script.js?v=243" defer></script>
 
   <!-- Schema.org: Service -->
   
@@ -484,12 +484,26 @@
 </section>
 
 <section class="section section--soft" id="lead">
-  <div class="container container--narrow">
-    <div class="section-head">
-      <h2>Оставьте заявку</h2>
-      <p>Опишите задачу — подберём мастера и назовём цену до начала работ.</p>
-    </div>
-<form action="https://formspree.io/f/xpqjbpyk" method="POST" class="lead-form" id="clientLeadForm">
+  <div class="container">
+    <div class="hero__grid">
+
+      <div>
+        <span class="section-head__eyebrow">Заявка</span>
+        <h2>Опишите задачу — подберём мастера</h2>
+        <p>Отвечаем в течение часа в рабочее время. Заявка ни к чему не обязывает: вы узнаете цену и сами решите, продолжать ли.</p>
+        <ul class="hero__perks" style="margin-top:1.4rem">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Оплата после работы
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Выезд сегодня
+          </li>
+        </ul>
+      </div>
+
+      <form action="https://formspree.io/f/xpqjbpyk" method="POST" class="lead-form" id="clientLeadForm">
         <input type="text" name="name" placeholder="Ваше имя" required minlength="2" class="form-control">
         <input type="tel" name="phone" id="leadPhone" placeholder="Телефон" class="form-control">
         <input type="text" name="telegram" placeholder="Telegram: @username" data-contact-required pattern="^(@[a-zA-Z0-9_]{5,32}|[0-9]{9,15})?$" class="form-control">
@@ -511,6 +525,8 @@
         </label>
         <button type="submit" class="button button--primary button--large lead-form__submit" id="leadSubmitBtn">Отправить заявку</button>
       </form>
+
+    </div>
   </div>
 </section>
 

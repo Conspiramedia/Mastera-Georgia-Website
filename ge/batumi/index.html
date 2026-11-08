@@ -22,7 +22,7 @@
   <meta property="og:url" content="https://mastera.ge/ge/batumi/">
   <meta property="og:title" content="საყოფაცხოვრებო მომსახურება ბათუმში — სპეციალისტი | Mastera">
   <meta property="og:description" content="რემონტი, მონტაჟი და საყოფაცხოვრებო მომსახურება ბათუმში 20₾-დან. სანტექნიკოსი, ელექტრიკოსი, ავეჯის აწყობა. დატოვეთ განაცხადი ონლაინ!">
-  <meta property="og:image" content="https://mastera.ge/image/og-preview-ka.jpg?v=242">
+  <meta property="og:image" content="https://mastera.ge/image/og-preview-ka.jpg?v=243">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="ka_GE">
@@ -34,7 +34,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="ოსტატები ბათუმში — ოსტატის პოვნა 60 წუთში">
   <meta name="twitter:description" content="გადამოწმებული ოსტატები ბათუმში. სანტექნიკა, ელექტრიკა, რემონტი. აიტვირთეთ განცხადება საიტზე.">
-  <meta name="twitter:image" content="https://mastera.ge/image/og-preview-ka.jpg?v=242">
+  <meta name="twitter:image" content="https://mastera.ge/image/og-preview-ka.jpg?v=243">
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/image/favicon.svg">
@@ -97,7 +97,7 @@
       "alternateName": "Masters Georgia",
       "description": "ოსტატების შერჩევის სერვისი ბათუმში. სანტექნიკა, ელექტრიკა, ბინის რემონტი, ავეჯის აწყობა, მზიდვები.",
       "url": "https://mastera.ge/ge/batumi/",
-      "image": "https://mastera.ge/image/og-preview-ka.jpg?v=242",
+      "image": "https://mastera.ge/image/og-preview-ka.jpg?v=243",
       "telephone": "+995557645196",
       "email": "info@mastera.ge",
       "priceRange": "₾₾",
@@ -174,9 +174,9 @@
 
   <!-- service.css не нужен для первого экрана — грузим без блокировки рендера -->
   <noscript></noscript>
-  <link rel="stylesheet" href="/redesign.css?v=242">
-  <script src="/redesign.js?v=242" defer></script>
-  <script src="/script.js?v=242" defer></script>
+  <link rel="stylesheet" href="/redesign.css?v=243">
+  <script src="/redesign.js?v=243" defer></script>
+  <script src="/script.js?v=243" defer></script>
 </head>
 <body>
 
@@ -292,9 +292,11 @@
 
     <div class="hero__media">
       <img src="/image/hero-bg.webp" alt="ოსტატი მუშაობისას" class="hero__photo" width="600" height="420">
-      <!-- ⚠️ Отправка в бота пока НЕ подключена: это макет.
-           Контракт /site/new-request описан в CLAUDE.md старого
-           проекта — переносить вместе с валидацией и honeypot. -->
+      <!-- Заявка уходит двумя путями сразу: сначала на почту
+           через Formspree (action формы), потом в бота на
+           /site/new-request — это делает sendLeadToBot() в script.js.
+           Порядок важен: письмо первым, иначе отказ бота
+           унёс бы лид совсем. -->
             <div class="v-float-form hero__form">
         <h2>დავიწყოთ თქვენი ამოცანით</h2>
         <p class="v-float-form__sub">დატოვეთ ტელეფონი — დავაზუსტებთ დეტალებსა და პირობებს.</p>
@@ -656,9 +658,11 @@
         </ul>
       </div>
 
-      <!-- ⚠️ Отправка в бота пока НЕ подключена: это макет.
-           Контракт /site/new-request описан в CLAUDE.md старого
-           проекта — переносить вместе с валидацией и honeypot. -->
+      <!-- Заявка уходит двумя путями сразу: сначала на почту
+           через Formspree (action формы), потом в бота на
+           /site/new-request — это делает sendLeadToBot() в script.js.
+           Порядок важен: письмо первым, иначе отказ бота
+           унёс бы лид совсем. -->
       <form action="https://formspree.io/f/xpqjbpyk" method="POST" class="lead-form" id="clientLeadForm">
         <input type="text" name="name" placeholder="თქვენი სახელი" required minlength="2" class="form-control">
         <input type="tel" name="phone" id="leadPhone" placeholder="ტელეფონი" class="form-control">

@@ -18,7 +18,7 @@
   <meta property="og:url" content="https://mastera.ge/en/tbilisi/master-na-chas-krtsanisi/">
   <meta property="og:title" content="Handyman: Krtsanisi, Tbilisi | 60-Min | Mastera">
   <meta property="og:description" content="Find a handyman in Krtsanisi, Tbilisi for small repairs, assembly or mounting. Describe the task and send a request online.">
-  <meta property="og:image" content="https://mastera.ge/image/og-preview-en.jpg?v=242">
+  <meta property="og:image" content="https://mastera.ge/image/og-preview-en.jpg?v=243">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="en_US">
@@ -30,7 +30,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Handyman in Krtsanisi (Tbilisi) — help around the home in 60 minutes">
   <meta name="twitter:description" content="A universal handyman in the Krtsanisi district. Help around the home, mounting, assembly and small repairs.">
-  <meta name="twitter:image" content="https://mastera.ge/image/og-preview-en.jpg?v=242">
+  <meta name="twitter:image" content="https://mastera.ge/image/og-preview-en.jpg?v=243">
 
   <link rel="icon" type="image/svg+xml" href="/image/favicon.svg">
   <link rel="icon" type="image/x-icon" href="/image/favicon.ico">
@@ -92,9 +92,9 @@
   <!-- critical:service.css — НЕ ПРАВИТЬ РУКАМИ, см. build-critical-css.py -->
   <!-- /critical:service.css -->
   <noscript></noscript>
-  <link rel="stylesheet" href="/redesign.css?v=242">
-  <script src="/redesign.js?v=242" defer></script>
-  <script src="/script.js?v=242" defer></script>
+  <link rel="stylesheet" href="/redesign.css?v=243">
+  <script src="/redesign.js?v=243" defer></script>
+  <script src="/script.js?v=243" defer></script>
 
   <!-- Schema.org: Service -->
   
@@ -484,12 +484,26 @@
 </section>
 
 <section class="section section--soft" id="lead">
-  <div class="container container--narrow">
-    <div class="section-head">
-      <h2>Leave a request</h2>
-      <p>Describe the task — we will find a specialist and name the price before work starts.</p>
-    </div>
-<form action="https://formspree.io/f/xpqjbpyk" method="POST" class="lead-form" id="clientLeadForm">
+  <div class="container">
+    <div class="hero__grid">
+
+      <div>
+        <span class="section-head__eyebrow">Request</span>
+        <h2>Describe the task and we will find a specialist</h2>
+        <p>We reply within an hour during working hours. The request commits you to nothing: you hear the price and decide.</p>
+        <ul class="hero__perks" style="margin-top:1.4rem">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Pay after the job
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Same-day visit
+          </li>
+        </ul>
+      </div>
+
+      <form action="https://formspree.io/f/xpqjbpyk" method="POST" class="lead-form" id="clientLeadForm">
         <input type="text" name="name" placeholder="Your name" required minlength="2" class="form-control">
         <input type="tel" name="phone" id="leadPhone" placeholder="Phone" class="form-control">
         <input type="text" name="telegram" placeholder="Telegram: @username" data-contact-required pattern="^(@[a-zA-Z0-9_]{5,32}|[0-9]{9,15})?$" class="form-control">
@@ -511,6 +525,8 @@
         </label>
         <button type="submit" class="button button--primary button--large lead-form__submit" id="leadSubmitBtn">Submit request</button>
       </form>
+
+    </div>
   </div>
 </section>
 

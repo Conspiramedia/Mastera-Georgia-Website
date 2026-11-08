@@ -2753,6 +2753,66 @@ textarea.form-control {
     resize: vertical;
 }
 
+/* ── Списки: своя стрелка ─────────────────────────────────────
+   Системную стрелку рисует ОС, и выглядит она чужой: в Windows
+   это мелкий чёрный треугольник впритык к краю поля, мимо нашей
+   палитры и скруглений.
+
+   ⚠️ Рисуем фоновой картинкой, а не псевдоэлементом: у <select>
+   нет ::after — содержимое отдаёт нативный виджет, и псевдоэлемент
+   просто не отрисуется. Обёртку заводить не стали: списки стоят в
+   разметке 129 страниц, их пришлось бы переверстать все.
+
+   ⚠️ appearance: none обязателен во всех трёх написаниях —
+   без -webkit- и -moz- системная стрелка останется поверх нашей,
+   и получится две стрелки сразу. */
+select.form-control {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    /* Место справа под стрелку, иначе длинный пункт заедет под неё. */
+    padding-right: 44px;
+    /* Шеврон цвета --muted (#65738b). Цвет внутри data-URI задан
+       числом: переменные CSS в background-image не подставляются. */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2365738b' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 18px 18px;
+    cursor: pointer;
+    /* Плавная смена цвета рамки у стрелки вместе с полем. */
+    transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease),
+                background-color 0.2s var(--ease);
+}
+
+/* Наведение: поле чуть подсвечивается — список выглядит нажимаемым,
+   а не просто текстовым полем. */
+select.form-control:hover {
+    border-color: var(--blue-500);
+    background-color: #fbfcfe;
+}
+
+/* В фокусе стрелка синеет заодно с рамкой: взгляд не теряет поле,
+   с которым работает. */
+select.form-control:focus {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231f62d2' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+}
+
+/* Пока список не выбран, подпись серая, как placeholder у полей
+   ввода: выбранное значение должно отличаться от приглашения.
+
+   ⚠️ Работает на :invalid без помощи JS: у обоих списков стоит
+   required, а первый пункт — пустой disabled selected. Пока он
+   выбран, поле невалидно. Класса-заглушки здесь не нужно. */
+select.form-control:invalid {
+    color: var(--muted-2);
+}
+
+/* ⚠️ Стрелку в Windows рисует ещё и псевдоэлемент ::-ms-expand —
+   appearance: none его не убирает, и стрелки задваиваются. */
+select.form-control::-ms-expand {
+    display: none;
+}
+
 .form-hint {
     margin: 0.5rem 0 0;
     font-size: 0.8rem;
@@ -4320,14 +4380,24 @@ textarea.form-control {
     flex-shrink: 0;
 }
 
-/* «Сменить» прижата к правому краю и приглушена: это не главное
-   действие окна, а возможность исправить. */
-.lead-modal__city-change {
+/* Шеврон справа — тот же знак, что у списков формы ниже: поле
+   города читается как такой же выбор, одним языком со всей
+   формой. Подпись «Сменить» он заменил: слово повторяло то, что
+   стрелка уже говорит. */
+.lead-modal__city-chev {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
     margin-left: auto;
     color: var(--blue-600);
-    font-size: 0.84rem;
-    font-weight: 700;
-    text-decoration: underline;
+    transition: transform 0.25s var(--ease);
+}
+
+/* Лёгкий сдвиг вниз по наведению — подсказка, что откроется
+   список, а не переход на другую страницу. Поворот на 180°
+   приберегли для момента, когда окно городов реально открыто. */
+.lead-modal__city-btn:hover .lead-modal__city-chev {
+    transform: translateY(2px);
 }
 
 /* Форма переехала в окно: рамка и тень здесь лишние — их уже
@@ -4468,9 +4538,20 @@ textarea.form-control {
 /* ── Блок предварительной оценки ──────────────────────────── */
 
 .est-section {
-    /* Отступ только сверху: снизу идёт секция заявки со своим
-       padding, и двойной зазор выглядел бы разрывом. */
+    /* Отступы с обеих сторон.
+
+       ⚠️ Снизу он ОБЯЗАТЕЛЕН, хотя у следующей секции заявки свой
+       padding есть. Тот padding лежит ВНУТРИ её серого блока:
+       он отодвигает форму от края, но сам край остаётся вплотную
+       к карточке. Замер подтвердил зазор 0 px — карточка
+       упиралась в границу серого фона, и это читалось как
+       слипшиеся блоки.
+
+       Снизу меньше, чем сверху: карточка и форма заявки — шаги
+       одного действия, большой разрыв разбивал бы их на два
+       несвязанных экрана. */
     padding-top: var(--section-pad);
+    padding-bottom: calc(var(--section-pad) * 0.55);
 }
 
 .est-card {

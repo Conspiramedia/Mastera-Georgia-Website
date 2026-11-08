@@ -168,7 +168,6 @@
                        en: 'We reply within an hour: we will clarify the details and suggest the next step.',
                        ge: 'ვუპასუხებთ ერთ საათში: დავაზუსტებთ დეტალებს და შემოგთავაზებთ შემდეგ ნაბიჯს.' },
         leadCity:    { ru: 'Город обслуживания', en: 'Service city', ge: 'მომსახურების ქალაქი' },
-        changeCity:  { ru: 'Сменить', en: 'Change', ge: 'შეცვლა' },
 
         /* ── Блок предварительной оценки ─────────────────────── */
         estTitle:    { ru: 'Нужна предварительная оценка?',
@@ -739,10 +738,18 @@
                    второго механизма для него заводить нельзя. */
                 '<div class="lead-modal__city">' +
                   '<span class="lead-modal__city-label">' + t('leadCity') + '</span>' +
+                  /* ⚠️ Подписи «Сменить» здесь нет намеренно. Поле
+                     выглядит и ведёт себя как список рядом, а у
+                     списка шеврон справа и так означает «можно
+                     выбрать другое» — слово только дублировало
+                     смысл и утяжеляло строку. */
                   '<button type="button" class="lead-modal__city-btn" data-open-city>' +
                     svg('pin') +
                     '<span>' + (cityNow.name[LANG] || cityNow.name.ru) + '</span>' +
-                    '<span class="lead-modal__city-change">' + t('changeCity') + '</span>' +
+                    '<svg class="lead-modal__city-chev" viewBox="0 0 24 24" fill="none" ' +
+                    'stroke="currentColor" stroke-width="2.2" stroke-linecap="round" ' +
+                    'stroke-linejoin="round" aria-hidden="true">' +
+                    '<polyline points="6 9 12 15 18 9"/></svg>' +
                   '</button>' +
                 '</div>' +
                 '<div class="lead-modal__slot"></div>' +
@@ -806,6 +813,61 @@
         document.addEventListener('click', function (e) {
             var a = e.target.closest && e.target.closest('a[href$="#lead"], [data-open-lead]');
             if (!a) return;
+
+            /* Карточка района или услуги без своей страницы
+               (data-district / data-service): подставляем выбор в
+               форму, чтобы человек не искал его в списке заново.
+               Делаем это ДО открытия окна — иначе он увидит, как
+               значение подставляется само уже на глазах. */
+            var preDistrict = a.getAttribute('data-district');
+            var preService = a.getAttribute('data-service');
+            if (preDistrict || preService) {
+                var form = document.getElementById('clientLeadForm');
+                if (form) {
+                    if (preDistrict) {
+                        var ds = form.querySelector('[name="district"]');
+                        // Список строит script.js из DISTRICTS. Если
+                        // слага там нет, молча ничего не трогаем:
+                        // пустой select лучше неверного района.
+                        if (ds && ds.querySelector('option[value="' + preDistrict + '"]')) {
+                            ds.value = preDistrict;
+                            ds.dispatchEvent(new Event('change', { bubbles: true }));
+                        }
+                    }
+                    if (preService) {
+                        var ss = form.querySelector('[name="service"]');
+                        /* На лендинге это скрытое поле — туда кладём
+                           категорию как есть. На главной это список,
+                           и в нём ВОСЕМЬ укрупнённых пунктов, а не
+                           все категории бота: «Стиральных машин» и
+                           «Компьютерной помощи» среди них нет.
+
+                           ⚠️ Поэтому значение сначала сводим к пункту
+                           списка. Без этого присваивание молча не
+                           срабатывало (проверено: поле оставалось
+                           пустым) — select игнорирует значение, для
+                           которого нет option. */
+                        if (ss) {
+                            var val = preService;
+                            if (ss.tagName === 'SELECT' &&
+                                !ss.querySelector('option[value="' + val + '"]')) {
+                                val = LEAD_SELECT_FALLBACK[val] || '';
+                            }
+                            if (val) {
+                                ss.value = val;
+                                ss.dispatchEvent(new Event('change', { bubbles: true }));
+                            }
+                            /* Точная категория — скрытым полем, рядом
+                               со списком. Список укрупнённый, и
+                               «Настройка Wi-Fi» через него стала бы
+                               «Другое»: заявку увидел бы узкий круг
+                               мастеров вместо компьютерщиков.
+                               script.js читает это поле первым. */
+                            setExactService(form, preService);
+                        }
+                    }
+                }
+            }
             // Оглавление и подвал — обычная прокрутка.
             if (a.closest('.v-jumpbar') || a.closest('.site-footer')) return;
             // Ссылка на форму ДРУГОЙ страницы (/ru/#lead с лендинга):
@@ -839,6 +901,74 @@
 
        Каждый блок проверяет, нет ли его в разметке: на главных
        финальный призыв свёрстан, второй раз его рисовать не надо. */
+
+    /* Категория бота → пункт списка услуг в форме.
+
+       Список в форме укрупнённый: восемь пунктов вместо двенадцати
+       с лишним категорий бота. Карточки новых услуг помечены
+       категорией бота (её ждёт /site/new-request), и для предвыбора
+       её надо свести к существующему пункту.
+
+       ⚠️ Правим здесь только те категории, которых в списке НЕТ.
+       Совпадающие («Сантехника», «Клининг» и прочие) подставляются
+       напрямую и в этой карте не нужны. */
+    var LEAD_SELECT_FALLBACK = {
+        // Посудомойки и стиралки — работа сантехническая: подвод
+        // воды и слив. Так же их разбирает resolveBotCategory.
+        'Стиральные машины': 'Сантехника',
+        // Компьютеры и Wi-Fi: своего пункта в укрупнённом списке
+        // нет, показываем «Другое». На заявку это НЕ влияет —
+        // точная категория уходит скрытым полем service_exact
+        // (ниже), и бот получает «Компьютерная помощь».
+        'Компьютерная помощь': 'Другое',
+        'Кондиционеры': 'Ремонт',
+        'Двери и замки': 'Ремонт'
+    };
+
+    /* Точная категория заявки в скрытое поле service_exact.
+
+       ⚠️ Поле создаётся здесь, а не в разметке 129 страниц: иначе
+       пришлось бы править их все, и на любой забытой странице
+       предвыбор молча терял бы категорию.
+
+       ⚠️ Сбрасываем его, когда человек сам меняет список услуг:
+       иначе он выбрал бы «Электрика», а заявка ушла бы с прежней
+       категорией карточки — выбор на экране разошёлся бы с тем,
+       что получит бот. */
+    function setExactService(form, category) {
+        var hid = form.querySelector('input[name="service_exact"]');
+        if (!hid) {
+            hid = document.createElement('input');
+            hid.type = 'hidden';
+            hid.name = 'service_exact';
+            form.appendChild(hid);
+
+            var sel = form.querySelector('select[name="service"]');
+            if (sel) {
+                sel.addEventListener('change', function (ev) {
+                    // Снимаем только при ручном выборе: наши
+                    // предвыборы шлют событие программно, у них
+                    // isTrusted === false.
+                    if (ev.isTrusted) hid.value = '';
+                });
+            }
+
+            /* ⚠️ Чистим поле и после отправки — на form.reset()
+               полагаться НЕЛЬЗЯ. Проверено: reset() возвращает
+               скрытому полю значение атрибута value, а у созданного
+               скриптом его нет, и поле сохраняет прежнее значение.
+               Без этого следующая заявка с той же страницы ушла бы
+               с категорией предыдущей карточки — человек выбрал бы
+               электрику, а мастерам ушла бы «Компьютерная помощь».
+
+               Слушаем то же событие, что закрывает окно: его шлёт
+               openThankYou в script.js после успешной отправки. */
+            document.addEventListener('mastera:lead-sent', function () {
+                hid.value = '';
+            });
+        }
+        hid.value = category || '';
+    }
 
     /* Телефон страницы — из первой ссылки tel: в разметке.
        Запасной вариант на случай страницы без неё: кнопка звонка

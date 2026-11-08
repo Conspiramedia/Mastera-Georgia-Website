@@ -193,7 +193,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '264';
+const MASTERA_VERSION = '266';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Личный чат владельца сервиса: сюда ведут кнопки «Написать в Telegram»
@@ -392,7 +392,9 @@ function initModalForms() {
     // Закрытие по ESC
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
-            closeClientLeadForm();
+            // Окно заявки закрывает по ESC само (buildLeadModal в
+            // redesign.js) — оно управляется hidden/is-open, а не
+            // display, и отсюда его гасить нечем.
             closeThankYou();
         }
     });
@@ -1439,7 +1441,8 @@ function initClientLeadFormTracking() {
                 });
             }
 
-            closeClientLeadForm();
+            // Окно заявки, если оно открыто, закроется само:
+            // openThankYou шлёт 'mastera:lead-sent'.
             openThankYou('lead');
             leadForm.reset();
             pendingIdempotencyKey = null;
@@ -1911,8 +1914,22 @@ function applyThankYouBadge(kind) {
     }
 }
 
-function closeClientLeadForm() { _modal('clientLeadFormModal',   'none'); }
-function openThankYou(kind)    { buildThankYouModal();
+/* Заявку могли отправить из модального окна (его собирает
+   buildLeadModal в redesign.js). Окно надо закрыть до показа
+   благодарности, иначе она встанет поверх формы.
+
+   ⚠️ Событие, а не прямой вызов: redesign.js грузится ПЕРВЫМ и о
+   функциях этого файла ничего не знает, а обратная зависимость
+   связала бы два файла намертво. Окна заявки на странице может и
+   не быть — тогда событие просто никто не слушает.
+
+   ⚠️ Прежняя closeClientLeadForm() отсюда убрана: она гасила окно
+   через style.display, а новое окно управляется атрибутом hidden
+   и классом is-open. Скрытое по display окно осталось бы в потоке
+   с формой внутри, и прокрутка к #lead приводила бы в пустую
+   секцию. */
+function openThankYou(kind)    { document.dispatchEvent(new CustomEvent('mastera:lead-sent'));
+                                 buildThankYouModal();
                                  applyThankYouBadge(kind);
                                  _modal('thankYouModal',          'flex'); }
 function closeThankYou()       { _modal('thankYouModal',          'none'); }
@@ -1928,7 +1945,13 @@ function _modal(id, display) {
 // фон всё равно «протаскивается» пальцем под окном.
 let _savedScrollY = 0;
 function _toggleBodyScrollLock() {
-    const anyOpen = ['clientLeadFormModal', 'thankYouModal']
+    // ⚠️ Окно заявки здесь НЕ проверяем, хотя раньше оно стояло в
+    // списке. Оно блокирует прокрутку само (document.body.style
+    // .overflow в buildLeadModal), и два механизма на один фон
+    // конфликтуют: этот ставит body в position:fixed, и окно,
+    // выросшее выше экрана, становится непрокручиваемым изнутри —
+    // до кнопки отправки не добраться.
+    const anyOpen = ['thankYouModal']
         .some(id => {
             const m = document.getElementById(id);
             return m && m.style.display !== 'none' && m.style.display !== '';

@@ -155,7 +155,52 @@
         lang:       { ru: 'Язык сайта',      en: 'Site language',   ge: 'საიტის ენა' },
         openMenu:   { ru: 'Открыть меню',    en: 'Open menu',       ge: 'მენიუს გახსნა' },
         closeMenu:  { ru: 'Закрыть меню',    en: 'Close menu',      ge: 'მენიუს დახურვა' },
-        callMaster: { ru: 'Вызвать мастера', en: 'Book a master',   ge: 'ოსტატის გამოძახება' }
+        callMaster: { ru: 'Вызвать мастера', en: 'Book a master',   ge: 'ოსტატის გამოძახება' },
+
+        /* ── Модальное окно заявки ───────────────────────────── */
+        leadEyebrow: { ru: 'Заявка в Mastera Georgia',
+                       en: 'Request to Mastera Georgia',
+                       ge: 'განაცხადი Mastera Georgia-ში' },
+        leadTitle:   { ru: 'Расскажите, что случилось',
+                       en: 'Tell us what happened',
+                       ge: 'მოგვიყევით, რა მოხდა' },
+        leadLead:    { ru: 'Ответим в течение часа: уточним детали и предложим следующий шаг.',
+                       en: 'We reply within an hour: we will clarify the details and suggest the next step.',
+                       ge: 'ვუპასუხებთ ერთ საათში: დავაზუსტებთ დეტალებს და შემოგთავაზებთ შემდეგ ნაბიჯს.' },
+        leadCity:    { ru: 'Город обслуживания', en: 'Service city', ge: 'მომსახურების ქალაქი' },
+        changeCity:  { ru: 'Сменить', en: 'Change', ge: 'შეცვლა' },
+
+        /* ── Блок предварительной оценки ─────────────────────── */
+        estTitle:    { ru: 'Нужна предварительная оценка?',
+                       en: 'Need a rough estimate?',
+                       ge: 'გჭირდებათ წინასწარი შეფასება?' },
+        estNote:     { ru: 'Ответим в течение часа',
+                       en: 'We reply within an hour',
+                       ge: 'ვუპასუხებთ ერთ საათში' },
+
+        /* ── Полоска после списка услуг ──────────────────────── */
+        notFoundTitle: { ru: 'Не нашли свою задачу?',
+                         en: 'Not found your task?',
+                         ge: 'ვერ იპოვეთ თქვენი ამოცანა?' },
+        notFoundText:  { ru: 'Опишите её своими словами — подберём мастера.',
+                         en: 'Describe it in your own words — we will find a specialist.',
+                         ge: 'აღწერეთ თქვენი სიტყვებით — შეგირჩევთ ოსტატს.' },
+        notFoundBtn:   { ru: 'Получить консультацию',
+                         en: 'Get a consultation',
+                         ge: 'კონსულტაციის მიღება' },
+
+        /* ── Финальный призыв ────────────────────────────────── */
+        finalEyebrow: { ru: 'Заявка на вызов мастера',
+                        en: 'Request a specialist',
+                        ge: 'განაცხადი ოსტატის გამოძახებაზე' },
+        finalTitle:   { ru: 'Опишите задачу — назовём цену заранее',
+                        en: 'Describe the task — we name the price upfront',
+                        ge: 'აღწერეთ ამოცანა — ფასს წინასწარ გეტყვით' },
+        finalText:    { ru: 'Ответим в течение часа. Уточним детали, предложим мастера и начнём работу только после согласования цены.',
+                        en: 'We reply within an hour. We will clarify the details, suggest a specialist and start only after the price is agreed.',
+                        ge: 'ვუპასუხებთ ერთ საათში. დავაზუსტებთ დეტალებს, შემოგთავაზებთ ოსტატს და სამუშაოს დავიწყებთ მხოლოდ ფასის შეთანხმების შემდეგ.' },
+        finalBtn:     { ru: 'Оставить заявку', en: 'Leave a request', ge: 'განაცხადის დატოვება' },
+        finalCall:    { ru: 'Позвонить', en: 'Call', ge: 'დარეკვა' }
     };
 
     function t(key) { return T[key][LANG] || T[key].ru; }
@@ -177,7 +222,11 @@
         brush: '<path d="M4 20s2-1 4-1 2 1 4 1 2-1 4-1 4 1 4 1"/><path d="M6 15V4a2 2 0 0 1 4 0v11"/><path d="M14 15V7a2 2 0 0 1 4 0v8"/>',
         truck: '<rect x="1" y="6" width="13" height="10" rx="1.5"/><path d="M14 9h4l3 3.5V16h-7z"/><circle cx="6" cy="18.5" r="2"/><circle cx="17" cy="18.5" r="2"/>',
         pc:    '<rect x="2" y="4" width="20" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/>',
-        pin:   '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>'
+        pin:   '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>',
+        // Облачко реплики — у полоски «не нашли свою задачу».
+        chat:  '<path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-3.9-.9L3 20.5l1.6-4.6A8.3 8.3 0 0 1 3.6 11 8.4 8.4 0 0 1 12 2.6a8.4 8.4 0 0 1 9 8.4z"/>',
+        // Трубка — у кнопки звонка в финальном призыве.
+        phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>'
     };
 
     function svg(name, cls) {
@@ -630,6 +679,277 @@
         document.addEventListener('click', function (e) {
             if (!wrap.contains(e.target)) close();
         });
+    }
+
+    /* ── Модальное окно заявки ───────────────────────────────
+       Кнопки «Оставить заявку» разбросаны по всей странице, а
+       форма лежит одна — внизу, в секции #lead. Раньше они просто
+       прокручивали к ней, и с первого экрана человек проезжал мимо
+       всего содержимого, теряя по дороге намерение.
+
+       ⚠️ Форма сюда ПЕРЕНОСИТСЯ, а не копируется. Копия означала бы
+       два элемента с id="clientLeadForm" на странице: по этому id
+       в script.js висят и обработчик отправки, и подстановка
+       района, и блок загрузки фото, а getElementById возвращает
+       только ПЕРВЫЙ найденный. Половина кнопок осталась бы без
+       обработчика, а вторая слала бы заявку дважды. Поэтому узел
+       один и тот же, он просто переезжает между секцией и окном.
+
+       Из-за переезда окно собирается по событию load: к этому
+       моменту script.js уже навесил обработчики и достроил форму
+       (районы, фото). Переносить раньше — значит переносить
+       полуфабрикат. */
+
+    function buildLeadModal() {
+        var form = document.getElementById('clientLeadForm');
+        if (!form) return;
+
+        // Место, откуда форму забрали: пустой якорь, по которому её
+        // потом возвращают. Без него порядок блоков в секции #lead
+        // сломался бы — форма встала бы в конец.
+        var home = document.createComment('lead-form-home');
+        form.parentNode.insertBefore(home, form);
+
+        var modal = document.createElement('div');
+        modal.className = 'lead-modal';
+        modal.id = 'clientLeadFormModal';
+        modal.setAttribute('role', 'dialog');
+        modal.setAttribute('aria-modal', 'true');
+        modal.setAttribute('aria-label', t('leadTitle'));
+        modal.hidden = true;
+
+        var cityNow = currentCity();
+
+        modal.innerHTML =
+            '<div class="lead-modal__backdrop" data-close></div>' +
+            '<div class="lead-modal__window">' +
+              '<button type="button" class="lead-modal__close" data-close aria-label="' + t('close') + '">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+                'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+                '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+              '</button>' +
+              '<div class="lead-modal__scroll">' +
+                '<div class="section-head__eyebrow">' + t('leadEyebrow') + '</div>' +
+                '<h2 class="lead-modal__title">' + t('leadTitle') + '</h2>' +
+                '<p class="lead-modal__lead">' + t('leadLead') + '</p>' +
+                /* Город показываем всегда, даже когда он уже выбран:
+                   человек должен видеть, куда поедет мастер. Кнопка
+                   открывает ту же модалку городов, что и в шапке —
+                   выбор города это переход на другую страницу, и
+                   второго механизма для него заводить нельзя. */
+                '<div class="lead-modal__city">' +
+                  '<span class="lead-modal__city-label">' + t('leadCity') + '</span>' +
+                  '<button type="button" class="lead-modal__city-btn" data-open-city>' +
+                    svg('pin') +
+                    '<span>' + (cityNow.name[LANG] || cityNow.name.ru) + '</span>' +
+                    '<span class="lead-modal__city-change">' + t('changeCity') + '</span>' +
+                  '</button>' +
+                '</div>' +
+                '<div class="lead-modal__slot"></div>' +
+              '</div>' +
+            '</div>';
+
+        document.body.appendChild(modal);
+
+        var slot = modal.querySelector('.lead-modal__slot');
+        var lastFocus = null;
+
+        function open(e) {
+            if (e) e.preventDefault();
+            lastFocus = document.activeElement;
+            slot.appendChild(form);
+            // Кнопка отправки в окне — по содержимому, а не во всю
+            // ширину: в узком окне растянутая кнопка выглядит
+            // тяжёлой. В секции #lead она остаётся широкой.
+            form.classList.add('lead-form--modal');
+            modal.hidden = false;
+            document.body.style.overflow = 'hidden';
+            // Пересчёт стилей вместо requestAnimationFrame — тот же
+            // приём, что в модалке городов: в фоновой вкладке кадры
+            // не выдаются и окно осталось бы прозрачным.
+            void modal.offsetHeight;
+            modal.classList.add('is-open');
+            var first = form.querySelector('input, select, textarea');
+            if (first) first.focus();
+        }
+
+        function close() {
+            modal.classList.remove('is-open');
+            document.body.style.overflow = '';
+            setTimeout(function () {
+                modal.hidden = true;
+                // Форма возвращается на своё место в секции #lead.
+                // Держать её в скрытом окне нельзя: без этого
+                // прокрутка к #lead приводила бы к пустой секции.
+                form.classList.remove('lead-form--modal');
+                if (home.parentNode) home.parentNode.insertBefore(form, home.nextSibling);
+            }, 200);
+            if (lastFocus && lastFocus.focus) lastFocus.focus();
+        }
+
+        /* Какие кнопки открывают окно.
+
+           ⚠️ НЕ все ссылки на #lead: пункт «Заявка» во внутренней
+           навигации лендинга (.v-jumpbar) и ссылки в подвале — это
+           оглавление страницы, от них ждут прокрутки, а не окна.
+           Окно вешаем на призывы к действию: шапка, первый экран,
+           блок цен, финальный призыв.
+
+           ⚠️ Класс навигации именно .v-jumpbar. Проверено по
+           разметке: .v-subnav на сайте нет вовсе, и guard по нему
+           молча не срабатывал бы — пункт оглавления открывал бы
+           окно вместо прокрутки.
+
+           Слушаем на document, потому что часть кнопок (мобильное
+           меню, нижняя панель связи, новые блоки ниже) создаётся
+           позже этой функции. */
+        document.addEventListener('click', function (e) {
+            var a = e.target.closest && e.target.closest('a[href$="#lead"], [data-open-lead]');
+            if (!a) return;
+            // Оглавление и подвал — обычная прокрутка.
+            if (a.closest('.v-jumpbar') || a.closest('.site-footer')) return;
+            // Ссылка на форму ДРУГОЙ страницы (/ru/#lead с лендинга):
+            // пусть браузер уходит по ней, формы здесь может не быть.
+            var href = a.getAttribute('href') || '';
+            if (href.indexOf('#') > 0 && href !== '#lead') return;
+            open(e);
+        });
+
+        modal.addEventListener('click', function (e) {
+            if (e.target.hasAttribute('data-close') ||
+                (e.target.closest && e.target.closest('[data-close]'))) close();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && !modal.hidden) close();
+        });
+
+        /* Окно благодарности показывает script.js после успешной
+           отправки. Если заявку отправили из окна, его надо
+           закрыть — иначе благодарность встанет поверх формы.
+           Следим за появлением #thankYouModal: прямого вызова
+           между файлами нет и заводить его незачем. */
+        document.addEventListener('mastera:lead-sent', close);
+    }
+
+    /* ── Блоки-призывы по странице ───────────────────────────
+       Три блока, которые должны стоять на всех 129 страницах.
+       Собираем их здесь, а не правим разметку: блоки одинаковые
+       везде, и вписанные руками они разошлись бы при первой же
+       правке текста — как это уже случилось с .local-content.
+
+       Каждый блок проверяет, нет ли его в разметке: на главных
+       финальный призыв свёрстан, второй раз его рисовать не надо. */
+
+    /* Телефон страницы — из первой ссылки tel: в разметке.
+       Запасной вариант на случай страницы без неё: кнопка звонка
+       без href была бы кнопкой в никуда. */
+    function pageTel() {
+        var a = document.querySelector('a[href^="tel:"]');
+        return a ? a.getAttribute('href') : 'tel:+995557645196';
+    }
+
+    function buildPageCtas() {
+        var main = document.querySelector('main') || document.body;
+
+        /* 1. Полоска после списка услуг: «не нашли свою задачу».
+              Узкая и в одну строку — это подсказка, а не блок:
+              рядом стоит сетка из двенадцати услуг, и второй
+              крупный блок соревновался бы с ней за внимание. */
+        var services = document.getElementById('services');
+        if (services && !document.querySelector('.cta-strip')) {
+            /* Болванка только для разбора HTML — в документ она не
+               попадает, берём из неё готовый узел. Класса на ней
+               нет намеренно: он бы никуда не доехал. Ширину
+               полоске задаёт .container секции, внутрь которой мы
+               её кладём. */
+            var strip = document.createElement('div');
+            strip.innerHTML =
+                '<div class="cta-strip">' +
+                  '<span class="cta-strip__icon">' + svg('chat') + '</span>' +
+                  '<span class="cta-strip__body">' +
+                    '<strong>' + t('notFoundTitle') + '</strong>' +
+                    '<span>' + t('notFoundText') + '</span>' +
+                  '</span>' +
+                  '<button type="button" class="cta-strip__btn" data-open-lead>' +
+                    t('notFoundBtn') + '</button>' +
+                '</div>';
+            // Внутрь секции, последним: снаружи полоска оторвалась
+            // бы от списка услуг и читалась как отдельный блок.
+            var sc = services.querySelector('.container') || services;
+            sc.appendChild(strip.firstChild);
+        }
+
+        /* 2. Блок предварительной оценки. Ставим перед секцией
+              заявки: человек, доскроллив до низа, получает
+              короткий путь (один номер) рядом с длинным (форма). */
+        var lead = document.getElementById('lead');
+        if (lead && !document.querySelector('.est-card')) {
+            var est = document.createElement('section');
+            est.className = 'est-section';
+            est.innerHTML =
+                '<div class="container">' +
+                  '<div class="est-card">' +
+                    '<div class="est-card__head">' +
+                      '<h2 class="est-card__title">' + t('estTitle') + '</h2>' +
+                      '<span class="est-card__note">' + t('estNote') + '</span>' +
+                    '</div>' +
+                    '<button type="button" class="est-card__btn" data-open-lead>' +
+                      t('finalBtn') +
+                      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+                      'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ' +
+                      'aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/>' +
+                      '<polyline points="12 5 19 12 12 19"/></svg>' +
+                    '</button>' +
+                  '</div>' +
+                '</div>';
+            lead.parentNode.insertBefore(est, lead);
+        }
+
+        /* 3. Финальный призыв. На главных он свёрстан в разметке —
+              там его не трогаем. На лендингах его не было вовсе:
+              страница заканчивалась формой, и человек, дочитавший
+              до конца, упирался в подвал.
+
+           ⚠️ Главное действие — КНОПКА там, где форма есть на
+           странице, и ССЫЛКА на /<lang>/#lead там, где её нет
+           (политика, соглашение). Кнопка с data-open-lead на
+           такой странице нажималась бы вхолостую: открывать
+           нечего, и ничего не происходило бы вообще — проверено,
+           клик не делал ни-че-го. */
+        if (!document.querySelector('.final-cta')) {
+            var hasForm = !!document.getElementById('clientLeadForm');
+            var mainAction = hasForm
+                ? '<button type="button" class="button button--white button--large" data-open-lead>'
+                : '<a class="button button--white button--large" href="/' + LANG + '/#lead">';
+            var mainClose = hasForm ? '</button>' : '</a>';
+            var fin = document.createElement('section');
+            fin.className = 'final-cta final-cta--built';
+            fin.innerHTML =
+                '<div class="container">' +
+                  '<div class="final-cta__card">' +
+                    '<div class="final-cta__text">' +
+                      '<div class="section-head__eyebrow">' + t('finalEyebrow') + '</div>' +
+                      '<h2>' + t('finalTitle') + '</h2>' +
+                      '<p>' + t('finalText') + '</p>' +
+                    '</div>' +
+                    '<div class="final-cta__actions">' +
+                      mainAction + t('finalBtn') +
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+                        'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ' +
+                        'aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/>' +
+                        '<polyline points="12 5 19 12 12 19"/></svg>' +
+                      mainClose +
+                      /* Номер берём из разметки, а не константой в
+                         коде: он уже стоит в шапке каждой страницы
+                         (.topbar__phone), и второй экземпляр при
+                         смене номера остался бы старым. */
+                      '<a class="button button--ghost-dark button--large" href="' +
+                        pageTel() + '">' + svg('phone') + t('finalCall') + '</a>' +
+                    '</div>' +
+                  '</div>' +
+                '</div>';
+            main.appendChild(fin);
+        }
     }
 
     /* ── Модальное окно выбора города ────────────────────── */
@@ -1218,6 +1538,14 @@
             clearTimeout(centerTimer);
             centerTimer = setTimeout(centerDropdownPanels, 120);
         });
+        buildPageCtas();
+        /* ⚠️ Окно заявки — только по load. Оно переносит в себя
+           живую форму #clientLeadForm, а её достраивает script.js
+           (районы, блок фото) и на неё же вешает отправку. Этот
+           файл грузится ПЕРВЫМ, и на DOMContentLoaded форма ещё
+           полуфабрикат — в окно уехал бы пустой селект районов.
+           Тот же приём, что у buildContactBar и меню районов. */
+        window.addEventListener('load', buildLeadModal, { once: true });
         buildCityModal();
         buildPhoneReveal();
         buildBurger();

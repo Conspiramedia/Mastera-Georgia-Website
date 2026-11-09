@@ -206,7 +206,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '192';
+const MASTERA_VERSION = '209';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Публичный username бота мастеров — для диплинка «завершить регистрацию».
@@ -237,6 +237,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initClientLeadFormTracking();
     initClientPhotoUpload();
     initCityDropdown();
+    // ⚠️ Меню шапки строится ДО бургера: бургер дописывает свою кнопку в
+    // конец шапки, и порядок вставки определяет, что окажется правее.
+    initTopbar();
+    initHeaderNav();
     initBurgerMenu();
     initClientDistrictOptions();
     initClientUrgentOption();
@@ -1651,6 +1655,365 @@ const BURGER_SERVICES = [
     { slug: 'stiralnye-mashiny', ru: 'Стиральные машины',  ka: 'სარეცხი მანქანები',   en: 'Washing machines', flat: true },
     { slug: 'dveri-zamki',       ru: 'Двери и замки',      ka: 'კარები და საკეტები',  en: 'Doors and locks',  flat: true },
 ];
+
+// ============================================
+// ГОРИЗОНТАЛЬНОЕ МЕНЮ ШАПКИ — ТОЛЬКО ДЕСКТОП
+// ============================================
+// Строка «Услуги ⌄ · Как работаем · Районы ⌄ · Вопросы» между логотипом
+// и переключателями. Прежде на десктопе навигации в шапке не было вовсе:
+// все 12 услуг и 15 районов лежали в бургере, то есть на широком экране
+// человек видел три полоски там, где у него полно места.
+//
+// Разметку строит скрипт, а не HTML: иначе пришлось бы править 130
+// страниц, причём на каждой — свой город и язык. Здесь и то, и другое
+// читается из адреса, поэтому пункты сразу ведут в нужный город.
+//
+// ⚠️ Районы берутся НЕ из DISTRICTS/BATUMI_DISTRICTS: те массивы описывают
+// список для формы заявки, их слаги («Vake») не совпадают с адресами
+// страниц («master-na-chas-vake»). Поэтому ниже свой список, сверенный
+// с папками на диске.
+const NAV_DISTRICTS = {
+    tbilisi: [
+        { slug: 'master-na-chas-vake',        ru: 'Ваке',        ka: 'ვაკე',        en: 'Vake' },
+        { slug: 'master-na-chas-saburtalo',   ru: 'Сабуртало',   ka: 'საბურთალო',   en: 'Saburtalo' },
+        { slug: 'master-na-chas-mtatsminda',  ru: 'Мтацминда',   ka: 'მთაწმინდა',   en: 'Mtatsminda' },
+        { slug: 'master-na-chas-didube',      ru: 'Дидубе',      ka: 'დიდუბე',      en: 'Didube' },
+        { slug: 'master-na-chas-gldani',      ru: 'Глдани',      ka: 'გლდანი',      en: 'Gldani' },
+        { slug: 'master-na-chas-isani',       ru: 'Исани',       ka: 'ისანი',       en: 'Isani' },
+        { slug: 'master-na-chas-samgori',     ru: 'Самгори',     ka: 'სამგორი',     en: 'Samgori' },
+        { slug: 'master-na-chas-nadzaladevi', ru: 'Надзаладеви', ka: 'ნაძალადევი',  en: 'Nadzaladevi' },
+        { slug: 'master-na-chas-chugureti',   ru: 'Чугурети',    ka: 'ჩუღურეთი',    en: 'Chughureti' },
+        { slug: 'master-na-chas-krtsanisi',   ru: 'Крцаниси',    ka: 'კრწანისი',    en: 'Krtsanisi' },
+    ],
+    batumi: [
+        { slug: 'master-na-chas-stary-batumi',    ru: 'Старый Батуми', ka: 'ძველი ბათუმი',  en: 'Old Batumi' },
+        { slug: 'master-na-chas-novy-bulvar',     ru: 'Новый бульвар', ka: 'ახალი ბულვარი', en: 'New Boulevard' },
+        { slug: 'master-na-chas-khimshiashvili',  ru: 'Химшиашвили',   ka: 'ხიმშიაშვილი',   en: 'Khimshiashvili' },
+        { slug: 'master-na-chas-boni-gorodok',    ru: 'Бони-городок',  ka: 'ბონი-გოროდოკი', en: 'Boni Gorodok' },
+        { slug: 'master-na-chas-aeroport-batumi', ru: 'Аэропорт',      ka: 'აეროპორტი',     en: 'Airport' },
+    ],
+};
+
+// Подписи пунктов верхнего уровня — отдельной таблицей: три языка рядом
+// читаются лучше, чем разбросанные по коду тернарники.
+const NAV_LABELS = {
+    services:  { ru: 'Услуги',       ka: 'სერვისები',      en: 'Services' },
+    how:       { ru: 'Как работаем', ka: 'როგორ ვმუშაობთ', en: 'How it works' },
+    districts: { ru: 'Районы',       ka: 'რაიონები',       en: 'Districts' },
+    faq:       { ru: 'Вопросы',      ka: 'კითხვები',       en: 'FAQ' },
+    call:      { ru: 'Позвонить',    ka: 'დარეკვა',        en: 'Call' },
+};
+
+// ============================================
+// ВЕРХНЯЯ ПОЛОСА НАД ШАПКОЙ — ТОЛЬКО ДЕСКТОП
+// ============================================
+// Узкая строка: часы работы — обещание по цене — телефон.
+// Решение владельца 09.11.2026: телефон уезжает сюда, и шапка
+// освобождается под логотип, меню и переключатели.
+//
+// ⚠️ Часы НЕ выдуманы и не скопированы с образца: это реальные часы
+// сервиса, выведенные из QUIET_HOURS (см. ниже по файлу) — окно, когда
+// заявка уходит мастерам со звуком. Будни 08:00–22:00, выходные
+// 09:00–22:00, поэтому в полосе стоит общее «08:00–22:00».
+// QUIET_HOURS зеркалит config.yaml бота; меняя их там — поменять и
+// подпись здесь.
+const TOPBAR_TEXT = {
+    hours: {
+        ru: 'Ежедневно, 08:00–22:00',
+        ka: 'ყოველდღე, 08:00–22:00',
+        en: 'Daily, 08:00–22:00',
+    },
+    promise: {
+        ru: 'Стоимость согласуем до начала работ',
+        ka: 'ფასს ვათანხმებთ სამუშაოს დაწყებამდე',
+        en: 'We agree the price before work starts',
+    },
+};
+
+function initTopbar() {
+    const header = document.querySelector('header');
+    if (!header) return;
+    // Полоса ставится один раз: на страницах с двумя шапками (их нет,
+    // но защита дешевле отладки) вторая не нужна.
+    if (document.querySelector('.topbar')) return;
+
+    const path = location.pathname;
+    const langDir = path.startsWith('/en/') ? 'en' : path.startsWith('/ge/') ? 'ge' : 'ru';
+    const pageLang = langDir === 'ge' ? 'ka' : langDir;
+    const L = (obj) => obj[pageLang] || obj.ru;
+
+    // Номер берём из существующей ссылки в шапке — единственный
+    // источник, иначе он разъедется с разметкой и микроразметкой.
+    const phoneLink = header.querySelector('.header-phone-link');
+
+    const bar = document.createElement('div');
+    bar.className = 'topbar';
+
+    const inner = document.createElement('div');
+    inner.className = 'topbar__inner';
+
+    // Иконка + подпись. Иконки — тонкие контурные, как в шапке.
+    function makeItem(iconSvg, text, extraClass) {
+        const span = document.createElement('span');
+        span.className = 'topbar__item' + (extraClass ? ' ' + extraClass : '');
+        span.insertAdjacentHTML('beforeend', iconSvg);
+        const t = document.createElement('span');
+        t.textContent = text;
+        span.appendChild(t);
+        return span;
+    }
+
+    const clockSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"'
+        + ' stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+        + '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+    const shieldSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"'
+        + ' stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+        + '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>';
+    const phoneSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"'
+        + ' stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+        + '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6'
+        + ' 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81'
+        + 'a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57'
+        + ' 2.81.7A2 2 0 0 1 22 16.92z"/></svg>';
+
+    inner.appendChild(makeItem(clockSvg, L(TOPBAR_TEXT.hours), 'topbar__item--hours'));
+    inner.appendChild(makeItem(shieldSvg, L(TOPBAR_TEXT.promise), 'topbar__item--promise'));
+
+    if (phoneLink) {
+        const wrap = document.createElement('span');
+        wrap.className = 'topbar__item topbar__item--phone';
+        wrap.insertAdjacentHTML('beforeend', phoneSvg);
+        const a = document.createElement('a');
+        a.className = 'topbar__phone';
+        a.href = phoneLink.getAttribute('href');
+        // Только номер, без префикса «// » из шапки.
+        a.textContent = phoneLink.textContent.replace(/^\/\/\s*/, '').trim();
+        wrap.appendChild(a);
+        inner.appendChild(wrap);
+    }
+
+    bar.appendChild(inner);
+    // Полоса стоит НАД шапкой — первым элементом body, до <header>.
+    header.parentNode.insertBefore(bar, header);
+}
+
+function initHeaderNav() {
+    const header = document.querySelector('header');
+    if (!header) return;
+    const controls = header.querySelector('.header-controls');
+    if (!controls) return;
+
+    // Язык и город — из адреса, как и в бургере: пункты обязаны вести в
+    // тот город, где человек уже находится, иначе клик по «Сантехнику»
+    // в Батуми уводил бы его в Тбилиси.
+    const path = location.pathname;
+    const langDir = path.startsWith('/en/') ? 'en' : path.startsWith('/ge/') ? 'ge' : 'ru';
+    const pageLang = langDir === 'ge' ? 'ka' : langDir;
+    const citySlug = path.includes('/batumi/') ? 'batumi' : 'tbilisi';
+    const L = (obj) => obj[pageLang] || obj.ru;
+    const cityHome = citySlug === 'batumi' ? `/${langDir}/batumi/` : `/${langDir}/`;
+
+    const nav = document.createElement('nav');
+    nav.className = 'header-nav';
+    nav.setAttribute('aria-label', L({ ru: 'Основное меню', ka: 'ძირითადი მენიუ', en: 'Main menu' }));
+
+    const caretSvg = '<svg class="header-nav__caret" viewBox="0 0 24 24" fill="none"'
+        + ' stroke="currentColor" stroke-width="2.5" stroke-linecap="round"'
+        + ' stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>';
+
+    // Закрывает все раскрытые списки, кроме переданного.
+    function closeAll(except) {
+        nav.querySelectorAll('.header-nav__item.is-open').forEach((el) => {
+            if (el === except) return;
+            el.classList.remove('is-open');
+            const b = el.querySelector('.header-nav__link');
+            if (b) b.setAttribute('aria-expanded', 'false');
+        });
+    }
+
+    // Пункт со списком. Кнопка, а не ссылка: сама никуда не ведёт, только
+    // раскрывает перечень — ссылка без адреса для клавиатуры бессмысленна.
+    function makeDropdown(labelObj, items) {
+        const wrap = document.createElement('div');
+        wrap.className = 'header-nav__item header-nav__item--has-menu';
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'header-nav__link';
+        btn.setAttribute('aria-expanded', 'false');
+        // textContent для подписи, разметка только для стрелки: подписи
+        // приходят из таблицы выше, но собирать их конкатенацией в
+        // innerHTML — привычка, которая однажды подставит чужой текст.
+        btn.appendChild(document.createTextNode(L(labelObj)));
+        btn.insertAdjacentHTML('beforeend', caretSvg);
+
+        const list = document.createElement('div');
+        list.className = 'header-nav__menu';
+        items.forEach(({ href, text }) => {
+            const a = document.createElement('a');
+            a.href = href;
+            a.textContent = text;
+            // Текущая страница подсвечивается — человек видит, где он.
+            if (path === href) a.setAttribute('aria-current', 'page');
+            list.appendChild(a);
+        });
+
+        // Раскрытие и на наведении (css), и на клике (здесь): на ноутбуке
+        // с сенсорным экраном hover не срабатывает, и без клика список
+        // остался бы недоступен.
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const open = wrap.classList.toggle('is-open');
+            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            closeAll(wrap);
+        });
+
+        wrap.appendChild(btn);
+        wrap.appendChild(list);
+        return wrap;
+    }
+
+    // Простая ссылка на блок страницы.
+    // ⚠️ Адрес всегда полный («/ru/#faq»), а не голый хеш: на странице
+    // услуги таких блоков нет, и «#faq» никуда бы не прокрутил. С главной
+    // браузер видит тот же путь и просто прокручивает, без перезагрузки.
+    function makeAnchor(labelObj, hash) {
+        const wrap = document.createElement('div');
+        wrap.className = 'header-nav__item';
+        const a = document.createElement('a');
+        a.className = 'header-nav__link';
+        a.href = cityHome + hash;
+        a.textContent = L(labelObj);
+        wrap.appendChild(a);
+        return wrap;
+    }
+
+    nav.appendChild(makeDropdown(NAV_LABELS.services, BURGER_SERVICES.map((svc) => ({
+        href: svc.flat
+            ? `/${langDir}/${citySlug}/${svc.slug}/`
+            : `/${langDir}/${citySlug}/${svc.slug}-${citySlug}/`,
+        text: svc[pageLang] || svc.ru,
+    }))));
+
+    // ⚠️ Якоря именно такие: id блоков на сайте русские по написанию
+    // («kak-eto-rabotaet») и одинаковы на всех трёх языках — сверено по
+    // разметке. «#how-it-works» не существует нигде.
+    nav.appendChild(makeAnchor(NAV_LABELS.how, '#kak-eto-rabotaet'));
+
+    nav.appendChild(makeDropdown(NAV_LABELS.districts, (NAV_DISTRICTS[citySlug] || []).map((d) => ({
+        href: `/${langDir}/${citySlug}/${d.slug}/`,
+        text: d[pageLang] || d.ru,
+    }))));
+
+    nav.appendChild(makeAnchor(NAV_LABELS.faq, '#faq'));
+
+    // Меню встаёт между логотипом и переключателями — как в эталоне.
+    controls.parentNode.insertBefore(nav, controls);
+
+    // ── Город и язык — такими же пунктами с выпадашкой ───────────
+    // Решение владельца 09.11.2026: вместо двух плашек «Тбилиси |
+    // Батуми» и трёх кнопок RUS/GEO/ENG — по одному пункту со
+    // списком, как «Услуги». Так строка короче на ~150 px, и счётчик
+    // мастеров помещается целиком.
+    //
+    // ⚠️ Исходные .city-switcher и .language-switcher НЕ удаляются, а
+    // прячутся стилями: ссылки в них нужны поисковику (город и язык —
+    // это разные URL), а переключатель языка вдобавок переиспользует
+    // бургер на телефоне. Здесь строится отдельное представление тех
+    // же ссылок.
+    const pinSvg = '<svg class="header-nav__icon" viewBox="0 0 24 24" fill="none"'
+        + ' stroke="currentColor" stroke-width="2" stroke-linecap="round"'
+        + ' stroke-linejoin="round" aria-hidden="true">'
+        + '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>'
+        + '<circle cx="12" cy="10" r="3"/></svg>';
+    const globeSvg = '<svg class="header-nav__icon" viewBox="0 0 24 24" fill="none"'
+        + ' stroke="currentColor" stroke-width="2" stroke-linecap="round"'
+        + ' stroke-linejoin="round" aria-hidden="true">'
+        + '<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>'
+        + '<path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>';
+
+    // Пункт, у которого подпись — текущее значение (город или язык), а
+    // в списке остальные варианты. Отличается от makeDropdown иконкой
+    // слева и тем, что подпись берётся из активной ссылки.
+    function makeSwitcher(iconSvg, currentText, links, extraClass) {
+        const wrap = document.createElement('div');
+        wrap.className = 'header-nav__item header-nav__item--has-menu ' + extraClass;
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'header-nav__link';
+        btn.setAttribute('aria-expanded', 'false');
+        btn.insertAdjacentHTML('beforeend', iconSvg);
+        const label = document.createElement('span');
+        label.textContent = currentText;
+        btn.appendChild(label);
+        btn.insertAdjacentHTML('beforeend', caretSvg);
+
+        const list = document.createElement('div');
+        list.className = 'header-nav__menu header-nav__menu--right';
+        links.forEach(({ href, text, active }) => {
+            const a = document.createElement('a');
+            a.href = href;
+            a.textContent = text;
+            if (active) a.setAttribute('aria-current', 'page');
+            list.appendChild(a);
+        });
+
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const open = wrap.classList.toggle('is-open');
+            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            closeAll(wrap);
+        });
+
+        wrap.appendChild(btn);
+        wrap.appendChild(list);
+        return wrap;
+    }
+
+    // Город: подписи и адреса берём из существующих ссылок разметки —
+    // они уже учитывают язык страницы, и дублировать их тут нельзя,
+    // иначе список разойдётся с переключателем на телефоне.
+    const cityLinks = [...header.querySelectorAll('.city-switcher .city-btn')];
+    if (cityLinks.length) {
+        const activeCity = cityLinks.find((a) => a.classList.contains('active')) || cityLinks[0];
+        nav.appendChild(makeSwitcher(pinSvg, activeCity.textContent.trim(),
+            cityLinks.map((a) => ({
+                href: a.getAttribute('href'),
+                text: a.textContent.trim(),
+                active: a.classList.contains('active'),
+            })), 'header-nav__item--city'));
+    }
+
+    // Язык: в подписи короткий код (RU/GE/EN), в списке полные
+    // подписи RUS/GEO/ENG — как на кнопках в разметке.
+    const langLinks = [...header.querySelectorAll('.language-switcher .lang-btn')];
+    if (langLinks.length) {
+        const shortCode = { ru: 'RU', ka: 'GE', en: 'EN' }[pageLang] || 'RU';
+        nav.appendChild(makeSwitcher(globeSvg, shortCode,
+            langLinks.map((a) => ({
+                href: a.getAttribute('href'),
+                text: a.textContent.trim(),
+                active: a.classList.contains('active'),
+            })), 'header-nav__item--lang'));
+    }
+
+    // ⚠️ Кнопки «Позвонить» в шапке НЕТ (решение владельца 09.11.2026).
+    // Прежде здесь из .header-phone-link собиралась жёлтая кнопка в
+    // правом углу. Сам номер при этом остаётся видимым в шапке строкой
+    // под названием — его не прячем, иначе телефон исчез бы с десктопа
+    // совсем. Подпись NAV_LABELS.call оставлена в таблице на случай
+    // возврата кнопки.
+
+    // Клик мимо меню и Esc закрывают раскрытый список — один слушатель
+    // на документ, а не по штуке на пункт.
+    document.addEventListener('click', (e) => {
+        if (!nav.contains(e.target)) closeAll(null);
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeAll(null);
+    });
+}
 
 // Бургер-меню на телефоне: выезжает справа, как в соседнем проекте Auto RS.
 // Сверху языки одной строкой, ниже девять услуг текущего города, внизу

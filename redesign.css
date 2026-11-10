@@ -4057,6 +4057,40 @@ html[lang="ka"] .final-cta__buttons .button {
     letter-spacing: -0.02em;
 }
 
+/* ── Стрелка в карточке прайса ───────────────────────────────
+   ⚠️ Только у варианта-ссылки. На лендингах той же разметкой
+   набраны 423 нерабочих блока <div class="price-preview"> —
+   это просто цифры, и стрелка обещала бы переход, которого
+   нет. Селектор a.price-preview отсекает их.
+
+   Стрелка встаёт в одну строку с ценой, а не отдельной
+   строкой под ней: цена уже прижата к низу карточки
+   (margin-top: auto), и вторая строка растянула бы карточку.
+   Цвет и размер — как у .district-card и .area-card, чтобы
+   все кликабельные карточки выглядели одинаково. */
+a.price-preview .price-preview__value {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+a.price-preview .price-preview__value::after {
+    content: '';
+    width: 14px;
+    height: 14px;
+    /* auto прижимает стрелку к правому краю карточки. */
+    margin-left: auto;
+    flex: 0 0 auto;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232f77eb' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3Cpolyline points='12 5 19 12 12 19'/%3E%3C/svg%3E") center / contain no-repeat;
+    opacity: 0.45;
+    transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+a.price-preview:hover .price-preview__value::after {
+    opacity: 1;
+    transform: translateX(3px);
+}
+
 /* CTA-строка на тёмном фоне — единственный тёмный акцент в
    прайсе, подчёркивает переход к заявке. */
 .price-cta {

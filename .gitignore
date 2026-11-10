@@ -30,3 +30,6 @@ keywords_gads.txt
 # и bump-version.py, к сайту отношения не имеет.
 __pycache__/
 *.pyc
+
+# Временные TTF генератора OG-превью (build-og-preview.py)
+.og-build/

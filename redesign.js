@@ -23,6 +23,61 @@
     // грузинские страницы молча откатывались на русский: на
     // /ge/ в меню стояло «Тбилиси» вместо «თბილისი».
     if (LANG === 'ka') LANG = 'ge';
+
+    // ============================================================
+    // БЛОКИРОВКА ПРОКРУТКИ ПОД МОДАЛЬНЫМ ОКНОМ
+    // ============================================================
+    // ⚠️ Одна функция на все окна сайта (заявка, выбор города,
+    // мобильное меню). Раньше каждое само писало
+    // body.style.overflow = 'hidden', и все три одинаково дёргали
+    // вёрстку вбок.
+    //
+    // Что происходило: overflow: hidden убирает полосу прокрутки,
+    // освободившиеся 15 px достаются содержимому, и вся страница
+    // становится шире — при открытии окна контент прыгал вправо,
+    // при закрытии возвращался. Пользователь видит это как
+    // «страница съехала и приблизилась» (замер на 1024: ширина
+    // 1009 → 1024 → 1009).
+    //
+    // ⚠️ scrollbar-gutter: stable на <html> тут НЕ спасает, хотя и
+    // стоит в стилях: при overflow: hidden место под полосу больше
+    // не резервируется. Проверено замером — сдвиг те же 15 px и с
+    // блокировкой на <html>, и на <body>.
+    //
+    // Поэтому ширину исчезнувшей полосы возвращаем отступом справа.
+    // Счётчик, а не флаг: окно выбора города можно открыть поверх
+    // формы заявки, и закрытие верхнего окна не должно снимать
+    // блокировку, пока открыто нижнее.
+    var scrollLockCount = 0;
+    var scrollLockPad = '';
+
+    function lockScroll() {
+        scrollLockCount += 1;
+        if (scrollLockCount > 1) return;
+        // Ширина полосы прокрутки = сколько viewport потеряет при
+        // её исчезновении. На телефонах и при overlay-полосах это
+        // 0, и тогда отступ не нужен вовсе.
+        var sbw = window.innerWidth - document.documentElement.clientWidth;
+        scrollLockPad = document.body.style.paddingRight;
+        document.body.style.overflow = 'hidden';
+        if (sbw > 0) {
+            // Прибавляем к собственному отступу тела, а не заменяем
+            // его: иначе на страницах со своим padding он потеряется.
+            // Без своего отступа пишем простое значение — calc(15px)
+            // работает, но в инспекторе читается как ошибка.
+            document.body.style.paddingRight = scrollLockPad
+                ? 'calc(' + scrollLockPad + ' + ' + sbw + 'px)'
+                : sbw + 'px';
+        }
+    }
+
+    function unlockScroll() {
+        if (scrollLockCount === 0) return;
+        scrollLockCount -= 1;
+        if (scrollLockCount > 0) return;
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = scrollLockPad;
+    }
     if (LANG !== 'ru' && LANG !== 'en' && LANG !== 'ge') LANG = 'ru';
 
     /* ── Данные ──────────────────────────────────────────────
@@ -929,7 +984,7 @@
             // тяжёлой. В секции #lead она остаётся широкой.
             form.classList.add('lead-form--modal');
             modal.hidden = false;
-            document.body.style.overflow = 'hidden';
+            lockScroll();
             // Пересчёт стилей вместо requestAnimationFrame — тот же
             // приём, что в модалке городов: в фоновой вкладке кадры
             // не выдаются и окно осталось бы прозрачным.
@@ -941,7 +996,7 @@
 
         function close() {
             modal.classList.remove('is-open');
-            document.body.style.overflow = '';
+            unlockScroll();
             setTimeout(function () {
                 modal.hidden = true;
                 // Форма возвращается на своё место в секции #lead.
@@ -1343,7 +1398,7 @@
             lastFocus = document.activeElement;
             modal.hidden = false;
             // Страница под окном не должна прокручиваться.
-            document.body.style.overflow = 'hidden';
+            lockScroll();
             // ⚠️ Пересчёт стилей вместо requestAnimationFrame: в
             // фоновой вкладке кадры не выдаются и обратный вызов
             // не приходит — окно остаётся прозрачным навсегда.
@@ -1355,7 +1410,7 @@
 
         function close() {
             modal.classList.remove('is-open');
-            document.body.style.overflow = '';
+            unlockScroll();
             // Ждём конца перехода, иначе окно исчезнет рывком.
             setTimeout(function () { modal.hidden = true; }, 200);
             if (lastFocus) lastFocus.focus();
@@ -1564,10 +1619,62 @@
             var tel = document.createElement('a');
             tel.className = 'mobile-menu__phone';
             tel.href = phoneSrc.getAttribute('href');
-            // Номер открытый: сюда долистали намеренно, прятать его
-            // здесь — мешать позвонить.
-            tel.textContent = (phoneSrc.getAttribute('data-full') ||
-                               phoneSrc.textContent || '').trim();
+
+            /* ⚠️ Номер ЗАКРЫТ и открывается глазком — как и везде на
+               сайте. Раньше здесь он стоял открытым («сюда долистали
+               намеренно»), но это ломало смысл маскировки: сборщики
+               номеров листают страницу целиком и забирали его из
+               меню, пока в шапке он был закрыт. Решение владельца
+               10.11.2026 — прятать во всех местах без исключений.
+
+               Полный номер берём из data-full у топбара: туда его
+               кладёт buildPhoneReveal() при маскировке. Если меню
+               собралось раньше неё, data-full ещё нет — тогда
+               читаем видимый текст. */
+            var fullNum = (phoneSrc.getAttribute('data-full') ||
+                           phoneSrc.textContent || '').trim();
+
+            var telNum = document.createElement('span');
+            telNum.className = 'mobile-menu__phone-num';
+            telNum.textContent = maskPhone(fullNum);
+            tel.appendChild(telNum);
+
+            var telEye = document.createElement('span');
+            telEye.className = 'mobile-menu__phone-eye';
+            telEye.setAttribute('role', 'button');
+            telEye.setAttribute('tabindex', '0');
+            telEye.setAttribute('aria-label', t('showPhone'));
+            telEye.innerHTML =
+                '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
+                '<path d="M12 5C7 5 3.1 8.1 1 12c2.1 3.9 6 7 11 7s8.9-3.1 11-7c-2.1-3.9-6-7-11-7Zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0-6a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z"/>' +
+                '</svg>';
+            tel.appendChild(telEye);
+
+            function revealMenuPhone(e) {
+                // Глазок только раскрывает номер и не звонит: иначе
+                // первое же касание уводило бы в набор, и человек не
+                // успел бы увидеть, какой номер набирает.
+                if (e) { e.preventDefault(); e.stopPropagation(); }
+                telNum.textContent = fullNum;
+                telEye.remove();
+            }
+
+            telEye.addEventListener('click', revealMenuPhone);
+            telEye.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') revealMenuPhone(e);
+            });
+
+            /* ⚠️ Пока номер скрыт, сама ссылка звонить не должна:
+               иначе смысл маскировки теряется — достаточно нажать
+               на строку, и номер уйдёт в набор нераскрытым. После
+               раскрытия обработчик снимается и ссылка работает. */
+            tel.addEventListener('click', function (e) {
+                if (telEye.isConnected) {
+                    e.preventDefault();
+                    revealMenuPhone(e);
+                }
+            });
+
             inner.appendChild(tel);
         }
 
@@ -1609,6 +1716,10 @@
             btn.setAttribute('aria-label', t('closeMenu'));
             menu.setAttribute('aria-hidden', 'false');
             document.body.classList.add('menu-open');
+            // ⚠️ Класс оставлен (на нём висят стили панели), но
+            // саму прокрутку блокирует общая функция — иначе меню
+            // дёргало бы вёрстку так же, как дёргали окна.
+            lockScroll();
         }
 
         function close() {
@@ -1618,6 +1729,7 @@
             btn.setAttribute('aria-label', t('openMenu'));
             menu.setAttribute('aria-hidden', 'true');
             document.body.classList.remove('menu-open');
+            unlockScroll();
             // Прячем после перехода: hidden сразу оборвал бы его.
             setTimeout(function () {
                 if (!menu.classList.contains('is-open')) menu.hidden = true;

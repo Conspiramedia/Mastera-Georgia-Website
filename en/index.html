@@ -21,7 +21,7 @@
   <meta property="og:url" content="https://mastera.ge/en/">
   <meta property="og:title" content="Handyman in Tbilisi — Urgent Call-Out, from 20₾">
   <meta property="og:description" content="Handyman matching service in Tbilisi. Plumbing, electrical, furniture assembly — from 20₾. 60-minute response. Verified specialists, pay after work.">
-  <meta property="og:image" content="https://mastera.ge/image/og-preview-en.jpg?v=273">
+  <meta property="og:image" content="https://mastera.ge/image/og-preview-en.jpg?v=284">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="en_US">
@@ -33,7 +33,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Handymen in Tbilisi — Find a Handyman in 60 Minutes">
   <meta name="twitter:description" content="Verified handymen in Tbilisi. Plumbing, electrical, repairs. Leave a request on the website.">
-  <meta name="twitter:image" content="https://mastera.ge/image/og-preview-en.jpg?v=273">
+  <meta name="twitter:image" content="https://mastera.ge/image/og-preview-en.jpg?v=284">
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/image/favicon.svg">
@@ -46,8 +46,12 @@
   <link rel="preload" as="image" href="/image/hero-bg.webp" fetchpriority="high">
 
   <!-- Шрифт в критическом пути: без preload браузер узнаёт о нём
-       только после разбора style.css и начинает качать позже. -->
-  <link rel="preload" href="/fonts/montserrat-var.woff2" as="font"
+       только после разбора redesign.css и начинает качать позже.
+       ⚠️ Файл зависит от языка страницы (unicode-range в CSS):
+       кириллица для /ru/, латиница для /en/ и /ge/. Грузинский
+       NotoGeo подтянется из CSS. Montserrat тут стоял по ошибке —
+       редизайн его не использует. -->
+  <link rel="preload" href="/fonts/inter-latin.woff2" as="font"
         type="font/woff2" crossorigin>
   <!-- Соединение со счётчиком заводится заранее: DNS, TCP и TLS к чужому
        домену занимают время, и без preconnect они стартуют только в момент
@@ -95,7 +99,7 @@
       "name": "Masters Georgia",
       "description": "Handyman matching service in Tbilisi, Georgia. Plumbing, electrical, apartment repair, furniture assembly, movers.",
       "url": "https://mastera.ge/en/",
-      "image": "https://mastera.ge/image/og-preview-en.jpg?v=273",
+      "image": "https://mastera.ge/image/og-preview-en.jpg?v=284",
       "telephone": "+995557645196",
       "email": "info@mastera.ge",
       "priceRange": "₾₾",
@@ -172,9 +176,9 @@
 
   <!-- service.css не нужен для первого экрана — грузим без блокировки рендера -->
   <noscript></noscript>
-  <link rel="stylesheet" href="/redesign.css?v=273">
-  <script src="/redesign.js?v=273" defer></script>
-  <script src="/script.js?v=273" defer></script>
+  <link rel="stylesheet" href="/redesign.css?v=284">
+  <script src="/redesign.js?v=284" defer></script>
+  <script src="/script.js?v=284" defer></script>
 </head>
 <body>
 
@@ -336,7 +340,7 @@
         <span class="trust-strip__label">districts in two cities</span>
       </div>
       <div class="trust-strip__item">
-        <span class="trust-strip__num">12</span>
+        <span class="trust-strip__num">15</span>
         <span class="trust-strip__label">types of work</span>
       </div>
       <div class="trust-strip__item">

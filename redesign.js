@@ -298,9 +298,27 @@
         pin:   '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>',
         // Облачко реплики — у полоски «не нашли свою задачу».
         chat:  '<path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-3.9-.9L3 20.5l1.6-4.6A8.3 8.3 0 0 1 3.6 11 8.4 8.4 0 0 1 12 2.6a8.4 8.4 0 0 1 9 8.4z"/>',
-        // Трубка — у кнопки звонка в финальном призыве.
+        // Трубка — запасной вариант кнопки связи в финальном
+        // призыве, если ссылка WhatsApp почему-то не собралась.
         phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>'
     };
+
+    /* Значки мессенджеров — готовые картинки из /image/, те же
+       самые, что в нижней панели связи. Рисовать их контуром
+       нельзя: у WhatsApp и Telegram узнаваемые фирменные знаки,
+       и самодельный похожий читается как подделка.
+
+       Размер в атрибутах width/height — чтобы браузер отвёл
+       место до загрузки и строка кнопки не дёргалась. */
+    function brandIcon(name) {
+        /* ⚠️ Без loading="lazy": значок крошечный, а отложенная
+           загрузка даёт заметный скачок — кнопка доезжает до
+           экрана пустой и значок появляется уже на глазах.
+           Размеры в атрибутах — чтобы место было отведено
+           заранее и строка не дёргалась. */
+        return '<img class="button__brand" src="/image/' + name + '-icon.webp"' +
+               ' alt="" width="24" height="24" decoding="async">';
+    }
 
     function svg(name, cls) {
         return '<svg class="' + (cls || '') + '" viewBox="0 0 24 24" fill="none" ' +
@@ -609,6 +627,136 @@
         });
         document.addEventListener('click', function (e) {
             if (!wrap.contains(e.target)) close();
+        });
+    }
+
+    /* ── Местности в карточках районов ───────────────────────
+       Блок «География» на главных страницах показывал только имя
+       района, а те же карточки на лендингах (.area-card) — ещё и
+       популярные местности: «Сабуртало, Дельиси». Клиент, который
+       не знает деления Тбилиси на районы, по голому названию не
+       находил своё место.
+
+       Подсказки берём из справочника script.js (window.
+       MASTERA_CITIES), а НЕ вписываем в разметку шести страниц:
+       список районов по правилу проекта живёт в одном месте, и
+       копия здесь разошлась бы с ним при первой же правке.
+
+       ⚠️ Район ищем по подписи, а не по ссылке: slug страницы и
+       slug справочника совпадают не всегда (Старый Батуми —
+       stary-batumi против OldBatumi), а подпись в карточке
+       напечатана ровно тем же значением, что лежит в справочнике
+       под языком страницы.
+
+       ⚠️ В <select> формы те же подсказки намеренно НЕ выводятся
+       (см. комментарий к DISTRICTS в script.js): там длинная
+       подпись мешает выбору на телефоне. Карточка — другое
+       место, в ней вторая строка как раз помогает. */
+    function fillDistrictHints() {
+        var cards = document.querySelectorAll('.district-card');
+        if (!cards.length) return;
+
+        var book = window.MASTERA_CITIES;
+        if (!Array.isArray(book)) return;
+
+        var RU_CITY = { tbilisi: 'Тбилиси', batumi: 'Батуми' };
+        var cityRu = RU_CITY[currentCity().slug];
+        var entry = null;
+        for (var i = 0; i < book.length; i++) {
+            if (book[i] && book[i].ru === cityRu) { entry = book[i]; break; }
+        }
+        if (!entry || !Array.isArray(entry.districts)) return;
+
+        /* Ключи справочника — ru/en/ka, а LANG здесь ge: в
+           разметке сайта грузинский раздел называется /ge/, тогда
+           как код языка по ISO — ka. Без перевода ключа подписи
+           молча падали бы в русский фолбэк. */
+        var key = LANG === 'ge' ? 'ka' : LANG;
+        var hintKey = 'hint' + key.charAt(0).toUpperCase() + key.slice(1);
+
+        /* В справочнике у района три местности — он питает и
+           другие места. В карточку главной они не влезают:
+           карточек 15, сетка даёт ~217 px, а трём местностям
+           нужно 331-430 px (замерено). Обрезка многоточием на
+           полуслове выглядит поломкой, поэтому список режем
+           заранее, по месту: ниже, когда карточки уже в DOM и
+           ширину видно, оставляем столько местностей, сколько
+           помещается целиком, но не меньше одной. */
+        var byName = {};
+        entry.districts.forEach(function (d) {
+            var name = d[key] || d.ru;
+            if (!name) return;
+            var low = name.toLowerCase();
+            byName[name] = (d[hintKey] || d.hintRu || '')
+                .split(',')
+                .map(function (s) { return s.trim(); })
+                .filter(Boolean)
+                /* Отбрасываем местность, совпадающую с названием
+                   района: у Дигоми и Ортачалы первая в списке —
+                   сам район, и подсказка читалась «Дигоми /
+                   Дигоми», не добавляя ничего. В справочнике
+                   такой повтор уместен (там список местностей
+                   полный), в карточке — нет. */
+                .filter(function (s) { return s.toLowerCase() !== low; });
+        });
+
+        var built = [];
+        Array.prototype.forEach.call(cards, function (card) {
+            // Уже достроена (повторный вызов) — не трогаем.
+            if (card.querySelector('.district-card__name')) return;
+
+            /* Имя лежит голым текстовым узлом рядом со значком.
+               Берём именно его, а не textContent всей карточки:
+               внутри есть ещё <svg>, и его разметка в текст не
+               попадает, но пробелы вокруг — да. */
+            var textNode = null;
+            for (var n = 0; n < card.childNodes.length; n++) {
+                var node = card.childNodes[n];
+                if (node.nodeType === 3 && node.nodeValue.trim()) {
+                    textNode = node;
+                    break;
+                }
+            }
+            if (!textNode) return;
+
+            var name = textNode.nodeValue.trim();
+            var parts = byName[name];
+            if (!parts || !parts.length) return;   // нет в справочнике — оставляем как есть
+
+            var wrap = document.createElement('span');
+            wrap.className = 'district-card__text';
+
+            var nameEl = document.createElement('span');
+            nameEl.className = 'district-card__name';
+            nameEl.textContent = name;
+
+            var hintEl = document.createElement('span');
+            hintEl.className = 'district-card__hint';
+            hintEl.textContent = parts[0];
+
+            wrap.appendChild(nameEl);
+            wrap.appendChild(hintEl);
+            card.replaceChild(wrap, textNode);
+
+            built.push({ hint: hintEl, parts: parts });
+        });
+
+        /* Вторую местность добавляем отдельным проходом, когда
+           все карточки уже в DOM: ширину можно только замерить,
+           а замер после каждой вставки заставлял бы браузер
+           пересчитывать раскладку по кругу.
+
+           Условие — подсказка помещается целиком (scrollWidth не
+           больше clientWidth). Если нет, остаётся одна местность:
+           лучше короткая, но читаемая подсказка, чем обрезанная
+           многоточием на середине слова. */
+        built.forEach(function (item) {
+            if (item.parts.length < 2) return;
+            var one = item.hint.textContent;
+            item.hint.textContent = item.parts[0] + ', ' + item.parts[1];
+            if (item.hint.scrollWidth > item.hint.clientWidth) {
+                item.hint.textContent = one;
+            }
         });
     }
 
@@ -1266,6 +1414,41 @@
                 ? '<button type="button" class="button button--white button--large" data-open-lead>'
                 : '<a class="button button--white button--large" href="/' + LANG + '/#lead">';
             var mainClose = hasForm ? '</button>' : '</a>';
+
+            /* Вторая кнопка — «Написать в WhatsApp». Раньше тут
+               стоял звонок, но в переписке клиент успевает
+               приложить фото и описать задачу, а по телефону
+               диктует адрес на слух.
+
+               Ссылку и подпись берём у buildContactLinks() из
+               script.js — той же функции, что питает нижнюю
+               панель связи: там текст сообщения уже собран под
+               услугу, район и город страницы. Свой экземпляр
+               этой логики завёл бы вторую правду.
+
+               ⚠️ script.js подключён ПОСЛЕ redesign.js и тоже с
+               defer, поэтому к моменту init() функции может ещё
+               не быть. Если её нет — ждём load и строим блок
+               тогда; без этого кнопка молча осталась бы
+               телефонной. Так же устроен buildContactBar(). */
+            if (typeof window.buildContactLinks !== 'function') {
+                if (document.readyState !== 'complete') {
+                    window.addEventListener('load', buildPageCtas, { once: true });
+                }
+                return;
+            }
+            var contacts = window.buildContactLinks();
+            var secondAction = contacts && contacts.waHref
+                ? '<a class="button button--ghost-dark button--large" href="' +
+                      contacts.waHref + '" target="_blank" rel="noopener">' +
+                      brandIcon('whatsapp') + contacts.labels.wa + '</a>'
+                /* Запасной вариант: если ссылка почему-то не
+                   собралась, оставляем звонок — кнопка в никуда
+                   хуже телефонной. Номер из разметки, а не
+                   константой: он уже стоит в шапке каждой
+                   страницы. */
+                : '<a class="button button--ghost-dark button--large" href="' +
+                      pageTel() + '">' + svg('phone') + t('finalCall') + '</a>';
             var fin = document.createElement('section');
             fin.className = 'final-cta final-cta--built';
             fin.innerHTML =
@@ -1283,12 +1466,7 @@
                         'aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/>' +
                         '<polyline points="12 5 19 12 12 19"/></svg>' +
                       mainClose +
-                      /* Номер берём из разметки, а не константой в
-                         коде: он уже стоит в шапке каждой страницы
-                         (.topbar__phone), и второй экземпляр при
-                         смене номера остался бы старым. */
-                      '<a class="button button--ghost-dark button--large" href="' +
-                        pageTel() + '">' + svg('phone') + t('finalCall') + '</a>' +
+                      secondAction +
                     '</div>' +
                   '</div>' +
                 '</div>';
@@ -1922,6 +2100,9 @@
            не выполнен. См. комментарий у самой функции. */
         window.addEventListener('load', function () {
             buildDistrictsDropdown();
+            // Тот же справочник из script.js, та же причина ждать
+            // load: местности в карточках районов на главных.
+            fillDistrictHints();
             // Центрируем ПОСЛЕ сборки обоих меню: до неё пункт
             // «Районы» — обычная ссылка, и мерить нечего.
             centerDropdownPanels();

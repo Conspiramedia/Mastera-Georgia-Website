@@ -193,7 +193,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '284';
+const MASTERA_VERSION = '300';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Личный чат владельца сервиса: сюда ведут кнопки «Написать в Telegram»
@@ -2071,9 +2071,25 @@ function _toggleBodyScrollLock() {
 // что текст сообщения опирается на скрытое поле service и разбор адреса,
 // то есть на ту же логику, что и отправка заявки: держать её рядом
 // надёжнее, чем дублировать в redesign.js.
+/* Язык страницы для подписей и текста сообщения.
+   Обычно его ставит сама страница в window.__FORCE_LANG__, но на
+   служебных (/ge/terms/, /en/privacy/ и т.п.) этой переменной
+   нет — там оставался русский, и грузинская страница объявляла
+   кнопку связи как «Написать в WhatsApp». Запасной источник —
+   атрибут lang у <html>: он проставлен везде.
+   ⚠️ В разметке грузинский помечен кодом ka, а разделы сайта
+   лежат в /ge/ — здесь нужен именно ka, как в таблицах ниже. */
+function contactLang() {
+    if (window.__FORCE_LANG__) return window.__FORCE_LANG__;
+    const html = (document.documentElement.getAttribute('lang') || '').toLowerCase();
+    if (html.startsWith('ka') || html.startsWith('ge')) return 'ka';
+    if (html.startsWith('en')) return 'en';
+    return 'ru';
+}
+
 function buildContactLinks() {
     const isBatumiPage = /\/batumi(?:\/|$)/i.test(window.location.pathname);
-    const lang = window.__FORCE_LANG__ || 'ru';
+    const lang = contactLang();
 
     // ── Услуга и район лендинга для предзаполненного текста WhatsApp ──
     // Берём из скрытого поля service, а НЕ из URL: на каждом лендинге оно уже
@@ -2115,7 +2131,7 @@ function buildContactLinks() {
     // лучше нейтральная фраза целиком, чем смесь двух языков.
     function buildWaText(code) {
         const city = cityNames[code] || cityNames.ru;
-        const pageLang = window.__FORCE_LANG__ || 'ru';
+        const pageLang = contactLang();
         // Услугу подставляем, только если текст на языке страницы.
         const svcUsable = (code === pageLang) ? svcName : '';
         const svcDistrictUsable = (code === pageLang) ? svcDistrict : '';

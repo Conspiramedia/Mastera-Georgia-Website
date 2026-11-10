@@ -193,7 +193,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '321';
+const MASTERA_VERSION = '322';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Личный чат владельца сервиса: сюда ведут кнопки «Написать в Telegram»
@@ -201,6 +201,45 @@ window.MASTERA_VERSION = MASTERA_VERSION;
 // ⚠️ Не путать со ссылкой «Telegram-бот» в подвале: та ведёт на
 // клиентского бота по языку страницы и задана прямо в разметке.
 const TELEGRAM_CHAT_URL = 'https://t.me/job_kot';
+
+// Зеркало is_valid_fio в боте (validators.py): там имя проверяется isalpha(),
+// и цифры отклоняются. Без проверки здесь мусорное имя уходит в анкете мастера
+// в бота, тот её браковал — и мастер вводил заново всё, что заполнил на сайте.
+const NAME_PATTERN = /^[\p{L}]{2,}(?:[\s-][\p{L}]{2,})*$/u;
+
+// Тот же смысл для атрибута pattern: браузер компилирует его БЕЗ флага 'u',
+// и \p{L} там не работает как класс букв — проверка пропускала бы даже цифры.
+// Диапазоны: латиница, кириллица, грузинский (мхедрули).
+//
+// ⚠️ Обе константы объявлены ЗДЕСЬ, в начале файла, а не рядом с
+// validateName ниже. initNamePatternAttr() вызывается из initModalForms()
+// по DOMContentLoaded, а тег <script> стоит с defer: документ к этому
+// моменту бывает уже разобран не до конца, и обращение к const из
+// временной мёртвой зоны падало с «Cannot access 'NAME_PATTERN_ATTR'
+// before initialization» — маска имени не проставлялась ни на одной
+// странице. const не поднимается, поэтому объявление обязано быть выше
+// любого вызова.
+const NAME_PATTERN_ATTR =
+    '[A-Za-zÀ-ÖØ-öø-ÿĀ-žА-Яа-яЁёა-ჰ]{2,}' +
+    '(?:[ \\-][A-Za-zÀ-ÖØ-öø-ÿĀ-žА-Яа-яЁёა-ჰ]{2,})*[ ]*';
+
+// Соответствие «поле формы → ключ подписи в i18n».
+// Ключи селекторов намеренно по name/типу, а не по id: id есть не у всех
+// полей, а разметка форм одинакова на всех страницах.
+// ⚠️ Здесь же, в начале файла, и по той же причине, что NAME_PATTERN_ATTR
+// выше: applyFieldLabels() вызывается по DOMContentLoaded, то есть раньше,
+// чем разбор файла доходит до середины.
+const A11Y_FIELD_LABELS = [
+    ['input[name="name"]',        'a11yName'],
+    ['input[name="phone"]',       'a11yPhone'],
+    ['input[name="telegram"]',    'a11yTelegram'],
+    ['input[name="whatsapp"]',    'a11yWhatsapp'],
+    ['select[name="district"]',   'a11yDistrict'],
+    ['select[name="service"]',    'a11yService'],
+    ['textarea[name="message"]',  'a11yMessage'],
+    ['input[name="district_other"]',  'a11yDistrictOther'],
+    ['.lead-photo-input',         'a11yPhotos'],
+];
 
 // Глобальная переменная текущего языка
 // window.__FORCE_LANG__ устанавливается в языковых подстраницах (/ru/, /ge/, /en/)
@@ -241,12 +280,16 @@ document.addEventListener('DOMContentLoaded', () => {
    доступности показывал 9 полей без подписи: телефон, имя,
    Telegram, WhatsApp, район, услуга и описание задачи.
    Скринридер объявлял их как «поле ввода, пусто», а <select> —
-   как «список, свёрнут», не называя, что именно выбирают. */
-if (document.readyState === 'complete') {
-    applyFieldLabels();
-} else {
-    window.addEventListener('load', applyFieldLabels, { once: true });
-}
+   как «список, свёрнут», не называя, что именно выбирают.
+
+   ⚠️ Сама подписка на load живёт В КОНЦЕ ФАЙЛА, а не здесь.
+   Тег <script> стоит с defer, поэтому документ к моменту разбора
+   нередко уже 'complete', и ветка с немедленным вызовом
+   срабатывала прямо на этой строке — когда const A11Y_FIELD_LABELS
+   (объявлен ниже) ещё в временной мёртвой зоне. В консоли падало
+   «Cannot access 'A11Y_FIELD_LABELS' before initialization», и
+   подписи не проставлялись ни разу. const не поднимается, поэтому
+   вызов обязан стоять после объявления. */
 // ============================================
 // 2. АНИМАЦИЯ ПОЯВЛЕНИЯ ПРИ СКРОЛЛЕ
 // ============================================
@@ -300,17 +343,8 @@ function initSmoothScroll() {
 // Соответствие «поле формы → ключ подписи в i18n».
 // Ключи селекторов намеренно по name/типу, а не по id: id есть не у всех
 // полей, а разметка форм одинакова на всех 108 страницах.
-const A11Y_FIELD_LABELS = [
-    ['input[name="name"]',        'a11yName'],
-    ['input[name="phone"]',       'a11yPhone'],
-    ['input[name="telegram"]',    'a11yTelegram'],
-    ['input[name="whatsapp"]',    'a11yWhatsapp'],
-    ['select[name="district"]',   'a11yDistrict'],
-    ['select[name="service"]',    'a11yService'],
-    ['textarea[name="message"]',  'a11yMessage'],
-    ['input[name="district_other"]',  'a11yDistrictOther'],
-    ['.lead-photo-input',         'a11yPhotos'],
-];
+/* A11Y_FIELD_LABELS объявлен в начале файла —
+   см. комментарий там о временной мёртвой зоне при defer. */
 
 /**
  * Проставляет полям форм aria-label — подпись, которую читает скринридер.
@@ -629,17 +663,8 @@ const TELEGRAM_PATTERN = /^(@[a-zA-Z0-9_]{5,32}|[0-9]{9,15})$/;
 // Имя: только буквы (кириллица, латиница, грузинский алфавит), пробелы и дефис
 // для составных имён («Анна-Мария», «Giorgi Beridze»). Каждое слово — от 2 букв.
 //
-// Зеркало is_valid_fio в боте (validators.py): там имя проверяется isalpha(),
-// и цифры отклоняются. Без проверки здесь мусорное имя уходит в анкете мастера
-// в бота, тот её браковал — и мастер вводил заново всё, что заполнил на сайте.
-const NAME_PATTERN = /^[\p{L}]{2,}(?:[\s-][\p{L}]{2,})*$/u;
-
-// Тот же смысл для атрибута pattern: браузер компилирует его БЕЗ флага 'u',
-// и \p{L} там не работает как класс букв — проверка пропускала бы даже цифры.
-// Диапазоны: латиница, кириллица, грузинский (мхедрули).
-const NAME_PATTERN_ATTR =
-    '[A-Za-zÀ-ÖØ-öø-ÿĀ-žА-Яа-яЁёა-ჰ]{2,}' +
-    '(?:[ \\-][A-Za-zÀ-ÖØ-öø-ÿĀ-žА-Яа-яЁёა-ჰ]{2,})*[ ]*';
+/* NAME_PATTERN и NAME_PATTERN_ATTR объявлены в начале файла —
+   см. комментарий там о временной мёртвой зоне при defer. */
 
 function validateName(nameInput) {
     if (!nameInput) return true;
@@ -2211,4 +2236,21 @@ function buildContactLinks() {
     })[lang] || { open: 'Связаться с нами', wa: 'WhatsApp', tg: 'Telegram' };
 
     return { waHref: waHref, tgHref: tgHref, labels: labels, lang: lang };
+}
+
+// ============================================
+// ОТЛОЖЕННЫЕ ВЫЗОВЫ — только в самом конце файла
+// ============================================
+/* ⚠️ Стоит здесь, а НЕ рядом с обработчиком DOMContentLoaded выше.
+   Тег <script> подключён с defer: к моменту разбора документ часто
+   уже 'complete', и ветка с немедленным вызовом срабатывает сразу,
+   на той же строке. Наверху файла const A11Y_FIELD_LABELS и
+   NAME_PATTERN_ATTR ещё не инициализированы (временная мёртвая
+   зона), и вызов падал с «Cannot access ... before initialization»,
+   унося с собой подписи полей и маску имени. Здесь, после всех
+   объявлений, этого не происходит. */
+if (document.readyState === 'complete') {
+    applyFieldLabels();
+} else {
+    window.addEventListener('load', applyFieldLabels, { once: true });
 }

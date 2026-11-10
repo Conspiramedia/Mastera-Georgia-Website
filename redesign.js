@@ -946,8 +946,13 @@
             var items = g.idx.map(function (i) {
                 return SERVICES[i] ? svcLink(SERVICES[i]) : '';
             }).join('');
+            /* h4, а не h5: заголовки подвала идут после h2
+               «Нужен мастер сегодня?», и уровни нельзя
+               перепрыгивать — аудит доступности помечает разрыв
+               h2 -> h4 как ошибку навигации. Колонки вложены в
+               блок с h3, поэтому здесь ровно следующий уровень. */
             return '<div class="site-footer__col">' +
-                   '<h5>' + t(g.key) + '</h5>' +
+                   '<h4>' + t(g.key) + '</h4>' +
                    '<ul>' + items + '</ul></div>';
         }).join('');
 
@@ -988,12 +993,12 @@
                 '</div>' +
 
                 '<div class="site-footer__services">' +
-                  '<h4>' + t('ftAllServices') + '</h4>' +
+                  '<h3>' + t('ftAllServices') + '</h3>' +
                   '<div class="site-footer__cols">' + cols + '</div>' +
                 '</div>' +
 
                 '<div class="site-footer__info">' +
-                  '<h4>' + t('ftCityInfo') + '</h4>' +
+                  '<h3>' + t('ftCityInfo') + '</h3>' +
                   /* Карточка города — кнопка выбора, как в шапке:
                      подвал последнее, что видит человек, и смена
                      города здесь экономит ему путь наверх. */

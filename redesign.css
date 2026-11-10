@@ -938,15 +938,6 @@ p {
     box-shadow: 0 14px 32px rgba(31, 98, 210, 0.35);
 }
 
-.button--secondary {
-    background: var(--blue-100);
-    color: var(--blue-700);
-}
-
-.button--secondary:hover {
-    background: #d8e8ff;
-    color: var(--blue-700);
-}
 
 .button--ghost {
     background: rgba(255, 255, 255, 0.82);
@@ -989,9 +980,6 @@ p {
     transform: scale(1.29);
 }
 
-.button--block {
-    width: 100%;
-}
 
 /* ── Стрелка в кнопке ────────────────────────────────────────
    Одна стрелка на все кнопки действия: раньше её рисовали
@@ -3089,17 +3077,6 @@ p {
     box-shadow: var(--shadow-md);
 }
 
-.form-row {
-    margin-bottom: 1rem;
-}
-
-.form-row label {
-    display: block;
-    margin-bottom: 0.4rem;
-    color: var(--ink);
-    font-size: 0.88rem;
-    font-weight: 700;
-}
 
 .form-control {
     width: 100%;
@@ -3190,11 +3167,6 @@ select.form-control::-ms-expand {
     display: none;
 }
 
-.form-hint {
-    margin: 0.5rem 0 0;
-    font-size: 0.8rem;
-    color: var(--muted-2);
-}
 
 /* Honeypot: поле-ловушка для ботов. Скрыто от людей и от
    скринридеров, но остаётся в DOM — бот его заполнит. */
@@ -4456,10 +4428,6 @@ a.price-preview:hover .price-preview__value::after {
 
 /* Форма заявки читается узкой колонкой: во всю ширину 1240px
    поля растягиваются на полметра и выглядят анкетой. */
-.container--narrow {
-    width: min(calc(100% - 40px), 720px);
-    margin-inline: auto;
-}
 
 @media (max-width: 640px) {
     .faq-row summary {
@@ -4622,22 +4590,6 @@ a.price-preview:hover .price-preview__value::after {
 .works-list a:hover,
 .prose a.footer-link:hover {
     text-decoration-color: var(--blue-700);
-}
-
-/* Подпись под кнопкой первого экрана. Раньше на этом месте стояла
-   мини-форма «Ваш телефон» + «Узнать стоимость» из макета — она
-   никуда не отправляла (ни action, ни обработчика), и заявка с
-   самой посещаемой страницы сайта пропадала. Вместо неё кнопка к
-   рабочей форме ниже, а здесь — обещание времени ответа. */
-.v-float-form__note {
-    margin: 0.8rem 0 0;
-    /* ⚠️ Тёмный, а не белый: .v-float-form — БЕЛАЯ карточка на
-       светлом hero главной (не тёмный hero лендинга). Светлая
-       подпись здесь давала контраст 1.0 — пустое место вместо
-       текста. Замер контраста это поймал, глаз бы не поймал. */
-    color: var(--muted);
-    font-size: 0.86rem;
-    text-align: center;
 }
 
 /* ============================================================

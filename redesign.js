@@ -2022,16 +2022,16 @@
             '<a class="contact-bar__btn contact-bar__btn--wa" href="' + links.waHref + '"' +
             ' target="_blank" rel="noopener" aria-label="' + links.labels.wa + '">' +
                 '<span class="contact-bar__ico" aria-hidden="true">' +
-                    '<img src="/image/whatsapp-icon.webp" alt="" width="192" height="192"' +
-                    ' loading="lazy" decoding="async">' +
+                    '<img src="/image/whatsapp-icon.webp" alt="" width="96" height="96"' +
+                    ' decoding="async">' +
                 '</span>' +
                 '<span>' + caption.wa + '</span>' +
             '</a>' +
             '<a class="contact-bar__btn contact-bar__btn--tg" href="' + links.tgHref + '"' +
             ' target="_blank" rel="noopener" aria-label="' + links.labels.tg + '">' +
                 '<span class="contact-bar__ico" aria-hidden="true">' +
-                    '<img src="/image/telegram-icon.webp" alt="" width="192" height="192"' +
-                    ' loading="lazy" decoding="async">' +
+                    '<img src="/image/telegram-icon.webp" alt="" width="96" height="96"' +
+                    ' decoding="async">' +
                 '</span>' +
                 '<span>' + caption.tg + '</span>' +
             '</a>';

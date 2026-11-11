@@ -340,6 +340,7 @@
            плашкой: там 09:00–23:00 на 294 страницах разметки, и
            подвал был единственным местом с другим временем. */
         ftSchedule:  { ru: 'Ежедневно, 09:00–23:00', en: 'Daily, 09:00–23:00', ge: 'ყოველდღე, 09:00–23:00' },
+        ftFacebook:  { ru: 'Мы в Facebook', en: 'We are on Facebook', ge: 'ჩვენ Facebook-ზე' },
         ftPrivacy:   { ru: 'Политика конфиденциальности', en: 'Privacy policy', ge: 'კონფიდენციალურობის პოლიტიკა' },
         ftTerms:     { ru: 'Пользовательское соглашение', en: 'Terms of service', ge: 'მომხმარებლის შეთანხმება' },
         ftDistricts: { ru: 'Районы обслуживания', en: 'Service districts', ge: 'მომსახურების რაიონები' },
@@ -389,6 +390,23 @@
         return '<img class="button__brand" src="/image/' + name + '-icon.webp"' +
                ' alt="" width="24" height="24" decoding="async">';
     }
+
+    /* Страница сервиса в Facebook. Конечный адрес, без
+       profile.php?id=… — тот отдаёт 301. */
+    var FACEBOOK_URL =
+        'https://www.facebook.com/people/' +
+        '%D0%9C%D0%B0%D1%81%D1%82%D0%B5%D1%80%D0%B0-' +
+        '%D0%93%D1%80%D1%83%D0%B7%D0%B8%D0%B8/61595113524507/';
+
+    /* ⚠️ Своя разметка, а не ICONS + svg(): та функция жёстко ставит
+       fill="none" и stroke, под штриховые иконки сайта. Логотип
+       Facebook — сплошная фигура, в обводке он не читается. */
+    var FACEBOOK_ICON =
+        '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
+        '<path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 ' +
+        '8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.52 1.49-3.92 3.77-3.92 1.1 0 ' +
+        '2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.63.78-1.63 1.57v1.89h2.78l-.45 ' +
+        '2.91h-2.33V22c4.78-.76 8.44-4.92 8.44-9.94z"/></svg>';
 
     function svg(name, cls) {
         return '<svg class="' + (cls || '') + '" viewBox="0 0 24 24" fill="none" ' +
@@ -1059,6 +1077,21 @@
                     '<li><a href="' + tel + '">' + telText + '</a></li>' +
                     '<li><a href="mailto:info@mastera.ge">info@mastera.ge</a></li>' +
                     '<li class="site-footer__hours">' + t('ftSchedule') + '</li>' +
+                    /* ⚠️ Ссылка на Facebook была в футере старого сайта на
+                       151 странице, а JS редизайна перерисовывает подвал
+                       целиком — и терял её. Это возврат потерянного, а не
+                       новый пункт.
+                       Адрес сразу конечный: profile.php?id=… отдаёт 301 на
+                       /people/…, и прежняя ссылка стоила лишнего редиректа.
+                       Место выбрано в контактах, а не в site-footer__links:
+                       там юридические ссылки (политика, соглашение), среди
+                       них соцсеть теряется. */
+                    '<li class="site-footer__social">' +
+                      '<a href="' + FACEBOOK_URL + '" target="_blank" rel="noopener">' +
+                        FACEBOOK_ICON +
+                        '<span>' + t('ftFacebook') + '</span>' +
+                      '</a>' +
+                    '</li>' +
                   '</ul>' +
                 '</div>' +
 

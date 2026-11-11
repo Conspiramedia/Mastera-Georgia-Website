@@ -12,6 +12,21 @@
 страницы (полезно после исправления перевода). Эталон с ручным оформлением
 (содержит .price-preview__unit) пропускается.
 
+⚠️ НЕ ЗАПУСКАТЬ БЕЗ НУЖДЫ — скрипт отстал от разметки и откатит ручную
+работу. Проверено 11.11.2026 на реальном прогоне:
+
+  • Карточки превью он берёт механически — первые три позиции прайса, без
+    подписи. А в HTML карточки отобраны руками и у них есть пояснение
+    <p class="price-preview__desc"> («Раковина, ванна, унитаз»), которого
+    build_previews() не умеет выводить вовсе. Прогон стёр подписи на 140
+    страницах и подменил состав карточек, вставив «Минимальный выезд»
+    первой позицией.
+
+Поэтому точечные правки прайса вносим прямо в HTML, а не перегенерацией.
+Если скрипт всё же понадобится — сначала научить build_previews() отдавать
+__desc и брать те же позиции, что стоят в HTML, иначе правка одного блока
+снесёт десяток чужих.
+
 Запуск:
   python build-landing-prices.py
 """
@@ -33,12 +48,13 @@ I18N = {
         'prices_eyebrow': 'Цены',
         'prices_note': 'Цена зависит от объёма и сложности. Согласуем стоимость до начала работ.',
         'cta_text': 'Полная стоимость — до начала работ',
+        'cta_sub': 'Без выезда, без доплат, без скрытых условий.',
         'cta_btn': 'Рассчитать мою задачу',
         'full_title': 'Полный прайс — все работы',
         'search_placeholder': 'Найти работу в прайсе',
         'search_reset': 'Сбросить',
         'why_eyebrow': 'Почему мы',
-        'why_h2': 'Почему выбирают Mastera',
+        'why_h2': 'Почему выбирают Mastera Georgia',
         'why': [
             ('Гарантия на работу', 'Устраняем недочёты и даём гарантию на выполненные работы.'),
             ('Проверенные мастера', 'Каждый специалист проходит проверку документов, а клиенты ставят оценку.'),
@@ -46,7 +62,7 @@ I18N = {
             ('Выезд в день обращения', 'Отклик за 60 минут, выезд — сегодня или в удобное время.'),
         ],
         'about_eyebrow': 'Наш подход',
-        'about_h2': 'За что вы обращаетесь в Mastera',
+        'about_h2': 'За что вы обращаетесь в Mastera Georgia',
         'about': [
             ('Цена согласована до начала работ', 'Мастер называет стоимость до того, как возьмётся за работу. Решение продолжать — за вами.'),
             ('Мастер проверен', 'Регистрация с документами и рейтинг по отзывам клиентов. Специалисты с низким рейтингом перестают получать заявки.'),
@@ -58,12 +74,13 @@ I18N = {
         'prices_eyebrow': 'Prices',
         'prices_note': 'The price depends on the scope and complexity. We agree on the cost before work starts.',
         'cta_text': 'Full price — before work starts',
+        'cta_sub': 'No call-out fee, no extras, no hidden terms.',
         'cta_btn': 'Calculate my task',
         'full_title': 'Full price list — all jobs',
         'search_placeholder': 'Find a job in the price list',
         'search_reset': 'Reset',
         'why_eyebrow': 'Why us',
-        'why_h2': 'Why choose Mastera',
+        'why_h2': 'Why choose Mastera Georgia',
         'why': [
             ('Guaranteed work', 'We fix any issues and provide a warranty on completed work.'),
             ('Vetted masters', 'Every specialist is verified with documents and rated by clients.'),
@@ -71,7 +88,7 @@ I18N = {
             ('Same-day visit', 'Response within 60 minutes, visit today or at your convenience.'),
         ],
         'about_eyebrow': 'Our approach',
-        'about_h2': 'Why you turn to Mastera',
+        'about_h2': 'Why you turn to Mastera Georgia',
         'about': [
             ('Price agreed before work', 'The master quotes a price before starting. You decide whether to proceed.'),
             ('Vetted master', 'Document registration and client ratings. Low-rated specialists stop receiving requests.'),
@@ -83,12 +100,13 @@ I18N = {
         'prices_eyebrow': 'ფასები',
         'prices_note': 'ფასი დამოკიდებულია მოცულობასა და სირთულეზე. ღირებულებას ვათანხმებთ მუშაობის დაწყებამდე.',
         'cta_text': 'სრული ღირებულება — მუშაობის დაწყებამდე',
+        'cta_sub': 'გამოძახების გარეშე, დანამატების გარეშე, ფარული პირობების გარეშე.',
         'cta_btn': 'გამოთვალე ჩემი დავალება',
         'full_title': 'სრული ფასები — ყველა სამუშაო',
         'search_placeholder': 'იპოვე სამუშაო ფასებში',
         'search_reset': 'გასუფთავება',
         'why_eyebrow': 'რატომ ჩვენ',
-        'why_h2': 'რატომ ირჩევენ Mastera-ს',
+        'why_h2': 'რატომ ირჩევენ Mastera Georgia-ს',
         'why': [
             ('გარანტია სამუშაოზე', 'ვასწორებთ ხარვეზებს და ვაძლევთ გარანტიას შესრულებულ სამუშაოზე.'),
             ('შემოწმებული ხელოსნები', 'ყველა სპეციალისტი გადის დოკუმენტების შემოწმებას და კლიენტები აფასებენ.'),
@@ -96,7 +114,7 @@ I18N = {
             ('გასვლა მიმართვის დღეს', 'პასუხი 60 წუთში, გასვლა — დღეს ან თქვენთვის მოსახერხებელ დროს.'),
         ],
         'about_eyebrow': 'ჩვენი მიდგომა',
-        'about_h2': 'რატომ მოგმართავთ Mastera-ს',
+        'about_h2': 'რატომ მოგმართავთ Mastera Georgia-ს',
         'about': [
             ('ფასი შეთანხმებულია მუშაობამდე', 'ხელოსანი ასახელებს ღირებულებას მუშაობის დაწყებამდე. გაგრძელება თქვენზეა.'),
             ('ხელოსანი შემოწმებულია', 'რეგისტრაცია დოკუმენტებით და რეიტინგი კლიენტების შეფასებით. დაბალი რეიტინგის სპეციალისტები წყვეტენ განაცხადების მიღებას.'),
@@ -171,7 +189,10 @@ def build_prices(t, h2, items):
         '    </div>\n'
         '\n'
         '    <div class="price-cta">\n'
-        '      <span class="price-cta__text">%s</span>\n'
+        '      <div class="price-cta__body">\n'
+        '        <span class="price-cta__text">%s</span>\n'
+        '        <span class="price-cta__sub">%s</span>\n'
+        '      </div>\n'
         '      <a href="#lead" class="button button--primary">%s</a>\n'
         '    </div>\n'
         '\n'
@@ -191,7 +212,7 @@ def build_prices(t, h2, items):
     ) % (
         t['prices_eyebrow'], h2, t['prices_note'],
         build_previews(items),
-        t['cta_text'], t['cta_btn'],
+        t['cta_text'], t['cta_sub'], t['cta_btn'],
         t['full_title'],
         t['search_placeholder'], t['search_placeholder'], t['search_reset'],
         build_full_lines(items),

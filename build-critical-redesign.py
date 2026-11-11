@@ -129,6 +129,14 @@ CRITICAL = {
     '.mobile-menu.is-open .mobile-menu__inner',
     '.districts-panel', '.city-modal', '.city-modal[hidden]',
     '.lead-modal', '.lead-modal[hidden]', '.ty-modal', '.ty-modal[hidden]',
+    # ⚠️ Парные правила к .lead-modal, по той же причине, что у
+    # .mobile-menu выше. На мобильной ширине в .lead-modal стоит
+    # overflow:hidden, а прокрутку взамен даёт .lead-modal__scroll;
+    # высоту по экрану задаёт .lead-modal__window. Попади во
+    # встроенный CSS только первое — окно, открытое до загрузки
+    # redesign.css, не прокручивалось бы вовсе, и низ формы
+    # (согласие, кнопка «Отправить») стал бы недоступен.
+    '.lead-modal__window', '.lead-modal__scroll',
     '[hidden]',
 }
 

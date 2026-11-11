@@ -7,12 +7,11 @@
  *
  * Принимает те же два POST, что и бот, по тем же путям:
  *   POST /site/new-request  — заявка клиента  (sendLeadToBot в script.js)
- *   POST /site/new-master   — анкета мастера  (sendMasterLeadToBot в script.js)
  * и кладёт карточку в приватный канал владельца через Telegram Bot API.
  *
  * ⚠️ Worker вешается на ТОТ ЖЕ хост, что и бот (bot.mastera.ge, route
  * «bot.mastera.ge/site/*»). Поэтому script.js править НЕ нужно: константы
- * BOT_REQUEST_URL / BOT_MASTER_URL уже ведут на наш поддомен, а не на
+ * BOT_REQUEST_URL уже ведёт на наш поддомен, а не на
  * технический адрес Railway. Переезд — это правка DNS/route, не правка сайта.
  *
  * ⚠️ Сайт ответа НЕ ЖДЁТ (fire-and-forget, .catch(() => {})). Значит любая
@@ -339,62 +338,6 @@ function buildRequestCard(p) {
   return lines.join('\n');
 }
 
-/**
- * Карточка анкеты мастера. Отдельный заголовок и значок — в ленте они идут
- * вперемешку с заявками, и различать их надо с первого взгляда.
- *
- * Поле code (одноразовый код связки «анкета ↔ бот») в карточку НЕ выводим:
- * пока бот выключен, диплинк ?start=m_<code> никуда не ведёт, а лишняя
- * строка только путала бы. Сайт его присылает — просто игнорируем.
- */
-function buildMasterCard(p) {
-  const lines = [];
-  lines.push(`👷 <b>АНКЕТА МАСТЕРА</b> · ${nowTbilisi()}`);
-  lines.push(SEP);
-
-  const name = clean(p.name);
-  if (name) lines.push(`👤 Имя: ${esc(name)}`);
-
-  const specialty = clean(p.specialty);
-  if (specialty) lines.push(`🔧 Специальность: ${esc(specialty)}`);
-
-  const city = clean(p.city);
-  if (city) lines.push(`🏙 Город: ${esc(city)}`);
-
-  const district = clean(p.district);
-  if (district) lines.push(`📍 Район: ${esc(district)}`);
-
-  const lang = clean(p.lang);
-  if (lang) {
-    const langName = { ru: 'русский', en: 'английский', ka: 'грузинский' }[lang] || lang;
-    lines.push(`🗣 Язык анкеты: ${esc(langName)}`);
-  }
-
-  lines.push('🌐 Источник: сайт');
-
-  const about = clean(p.message);
-  if (about) {
-    const short = about.length > DESC_LIMIT ? `${about.slice(0, DESC_LIMIT)}…` : about;
-    lines.push(`📝 О себе: ${esc(short)}`);
-  }
-
-  // Контакты мастера — отдельной секцией, как в карточке заявки.
-  const contactLines = [];
-  const phone = clean(p.phone);
-  if (phone) contactLines.push(`📱 Tel.: ${esc(phone)}`);
-  const tg = clean(p.telegram);
-  if (tg) contactLines.push(`✈️ Telegram: ${esc(tg)}`);
-  const wa = clean(p.whatsapp);
-  if (wa) contactLines.push(`🟢 WhatsApp: ${esc(wa)}`);
-
-  if (contactLines.length) {
-    lines.push(SEP);
-    lines.push(contactLines.join('\n'));
-  }
-
-  return lines.join('\n');
-}
-
 // ──────────────────────────────────────────────────────────────────────
 // Обработка запроса
 // ──────────────────────────────────────────────────────────────────────
@@ -438,9 +381,11 @@ export default {
       return json({ ok: false, error: 'method_not_allowed' }, 405, cors);
     }
 
-    const isRequest = url.pathname === '/site/new-request';
-    const isMaster = url.pathname === '/site/new-master';
-    if (!isRequest && !isMaster) {
+    // Единственный принимаемый путь. Анкет мастеров сайт не шлёт вовсе:
+    // раздела для мастеров на нём нет, и держать открытый /site/new-master
+    // без отправителя значило бы оставить вход, которым может
+    // воспользоваться только чужой.
+    if (url.pathname !== '/site/new-request') {
       return json({ ok: false, error: 'not_found' }, 404, cors);
     }
 
@@ -476,10 +421,10 @@ export default {
       return json({ ok: true }, 200, cors);
     }
 
-    const text = isRequest ? buildRequestCard(payload) : buildMasterCard(payload);
+    const text = buildRequestCard(payload);
     // Заявка должна звенеть: владелец реагирует на неё вручную, и чем
-    // быстрее, тем выше шанс сделки. Анкета мастера не срочная — тихо.
-    const msgId = await sendMessage(env, text, { silent: isMaster });
+    // быстрее, тем выше шанс сделки.
+    const msgId = await sendMessage(env, text);
 
     if (!msgId) {
       // Карточка не ушла. Говорим об этом честно (502 виден в аналитике
@@ -490,7 +435,7 @@ export default {
 
     // Фото — вторым запросом, ответом на карточку. Ответ сайту не ждёт их:
     // ctx.waitUntil даёт Worker достроить отправку уже после ответа.
-    if (isRequest && Array.isArray(payload.photos) && payload.photos.length) {
+    if (Array.isArray(payload.photos) && payload.photos.length) {
       ctx.waitUntil(sendPhotos(env, payload.photos, msgId));
     }
 

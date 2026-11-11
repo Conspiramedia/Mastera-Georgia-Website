@@ -18,7 +18,7 @@
   <meta property="og:url" content="https://mastera.ge/ru/tbilisi/master-na-chas-vake/">
   <meta property="og:title" content="Мастер на час в Ваке — элитный ремонт, выезд за 60 мин">
   <meta property="og:description" content="Мастер на час в Ваке: элитный ремонт, сборка мебели, монтаж. Выезд за 60 мин, от 30₾. Оплата после работы. Оставьте заявку!">
-  <meta property="og:image" content="https://mastera.ge/image/og-preview-ru.jpg?v=209">
+  <meta property="og:image" content="https://mastera.ge/image/og-preview-ru.jpg?v=345">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="ru_RU">
@@ -30,14 +30,14 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Мастер на час в Ваке (Тбилиси) — помощь по дому за 60 минут">
   <meta name="twitter:description" content="Универсальный мастер на час в районе Ваке. Сборка, навеска, мелкий ремонт и помощь по хозяйству.">
-  <meta name="twitter:image" content="https://mastera.ge/image/og-preview-ru.jpg?v=209">
+  <meta name="twitter:image" content="https://mastera.ge/image/og-preview-ru.jpg?v=345">
 
   <link rel="icon" type="image/svg+xml" href="/image/favicon.svg">
   <link rel="icon" type="image/x-icon" href="/image/favicon.ico">
   <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/image/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <meta name="theme-color" content="#FDB913">
+  <meta name="theme-color" content="#2f77eb">
 
   <!-- Preload LCP-картинки (hero-фон): фон первого экрана объявлен в CSS,
        и без preload браузер узнаёт о нём только после разбора style.css и
@@ -45,8 +45,14 @@
   <link rel="preload" as="image" href="/image/hero-bg.webp" fetchpriority="high">
 
   <!-- Шрифт в критическом пути: без preload браузер узнаёт о нём
-       только после разбора style.css и начинает качать позже. -->
-  <link rel="preload" href="/fonts/montserrat-var.woff2" as="font"
+       только после разбора redesign.css и начинает качать позже.
+       ⚠️ Файл зависит от языка страницы (unicode-range в CSS):
+       кириллица для /ru/, латиница для /en/ и /ge/. Грузинский
+       NotoGeo подтянется из CSS. Montserrat тут стоял по ошибке —
+       редизайн его не использует. -->
+  <link rel="preload" href="/fonts/inter-cyrillic.woff2" as="font"
+        type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-latin.woff2" as="font"
         type="font/woff2" crossorigin>
   <!-- Соединение со счётчиком заводится заранее: DNS, TCP и TLS к чужому
        домену занимают время, и без preconnect они стартуют только в момент
@@ -90,12 +96,15 @@
   <meta name="geo.placename" content="Vake, Tbilisi, Georgia">
 
   <!-- critical:service.css — НЕ ПРАВИТЬ РУКАМИ, см. build-critical-css.py -->
-  <style>.service-hero{position:relative;padding:3rem 5% 8rem;text-align:center;z-index:1;min-height:770px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:1.8rem;background-color:var(--dark-concrete);background-image:linear-gradient(rgba(10,10,10,0.8),rgba(10,10,10,0.9)),url('/image/hero-bg.webp');background-position:0 0,center center;background-size:100% 100%,50%;background-repeat:no-repeat}@media (max-width:768px){.service-hero{padding:2.5rem 4% 3rem;min-height:0;background-color:var(--dark-concrete);background-image:linear-gradient(rgba(10,10,10,0.65),rgba(10,10,10,0.75)),url('/image/hero-bg.webp');background-position:0 0,center center;background-size:100% 100%,cover;background-repeat:no-repeat}}.service-hero h1{font-family:'NotoGeo','Montserrat',sans-serif;font-size:clamp(2rem,4.1vw,4rem);line-height:1.2;margin-bottom:1.5rem;font-weight:800;color:#d0d0d0;min-height:2.6em}@media (max-width:1024px) and (min-width:769px){.service-hero h1{font-size:3.5rem}}@media (max-width:968px){.service-hero h1{font-size:3rem}}@media (max-width:768px){.service-hero h1{font-size:2rem;line-height:1.3;margin-bottom:1rem}}@media (max-width:640px){.service-hero h1{font-size:clamp(1.3rem,1rem + 3vw,4rem);font-weight:900}}.service-hero .lead{font-size:1.1rem;color:#FDB913;margin-bottom:2rem;line-height:1.6}.service-cta-top{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}.city-switcher{display:flex;align-items:center;gap:0.4rem;background:var(--dark-concrete);padding:0.4rem 0.5rem;border-radius:25px;border:2px solid var(--safety-green);box-shadow:0 4px 15px rgba(6,255,165,0.3)}.city-switcher-icon{display:none;align-items:center;color:var(--construction-yellow);margin:0 0.15rem 0 0.25rem}.city-switcher-icon svg{width:18px;height:18px}.city-btn{background:transparent;border:2px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.65);padding:0.39rem 0.9rem;border-radius:20px;cursor:pointer;font-family:'NotoGeo','Montserrat',sans-serif;font-size:0.85rem;font-weight:600;transition:all 0.3s ease;text-decoration:none;white-space:nowrap}.city-btn.active{background:transparent;color:var(--construction-yellow);border:2px solid var(--construction-yellow);box-shadow:none}@media (max-width:600px){.city-btn{padding:0.4rem 0.7rem;font-size:0.8rem}}header .language-switcher,header .audience-link{display:none}@media (min-width:769px){.city-switcher{width:var(--city-switcher-w,auto)}.city-switcher .city-btn{flex:1 1 0;text-align:center}}@media (max-width:768px){.header-controls{width:100%;flex-direction:column;align-items:stretch;gap:0.7rem}.header-controls .header-group{flex-direction:column;align-items:stretch;gap:0.7rem;width:100%}.city-switcher{width:100%;justify-content:center}.city-switcher .city-btn{flex:1 1 0;text-align:center}header .city-switcher,header .audience-link,header .online-counter{height:52px;flex:0 0 auto;box-sizing:border-box}}</style>
   <!-- /critical:service.css -->
-  <link rel="stylesheet" href="/style.css?v=209">
-  <link rel="stylesheet" href="/service.css?v=209" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="/service.css?v=209"></noscript>
-  <script src="/script.js?v=209" defer></script>
+  <noscript></noscript>
+  <!-- critical:redesign.css — НЕ ПРАВИТЬ РУКАМИ, см. build-critical-redesign.py -->
+  <style>:root{--navy-950:#041027;--navy-900:#07152f;--navy-850:#0a1b39;--navy-800:#10264b;--blue-tg:#2368d9;--blue-700:#1f62d2;--blue-600:#2f77eb;--blue-500:#3d8bff;--blue-400:#6ba8ff;--blue-100:#e7f1ff;--cyan-100:#e9faff;--cyan-300:#91dcf8;--green-500:#20b983;--green-100:#e3f8f0;--amber-500:#f3a83b;--red-500:#e75757;--ink:#14223d;--ink-2:#263754;--muted:#55627a;--muted-2:#606e84;--line:#dfe7f1;--line-dark:rgba(255,255,255,0.13);--soft:#f4f7fb;--white:#fff;--shadow-sm:0 8px 24px rgba(11,31,68,0.08);--shadow-md:0 18px 50px rgba(9,29,66,0.13);--shadow-lg:0 32px 90px rgba(3,17,43,0.2);--radius-sm:14px;--radius-md:22px;--radius-lg:32px;--radius-xl:42px;--container:1240px;--header-height:76px;--ease:cubic-bezier(.2,.75,.2,1);--section-pad:104px;--arrow-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3Cpolyline points='12 5 19 12 12 19'/%3E%3C/svg%3E")}@font-face{font-family:'Inter';src:url('/fonts/inter-latin.woff2') format('woff2');font-weight:100 900;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215}@font-face{font-family:'Inter';src:url('/fonts/inter-cyrillic.woff2') format('woff2');font-weight:100 900;font-display:swap;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}@font-face{font-family:'NotoGeo';src:url('/fonts/notosansgeorgian.woff2') format('woff2');font-weight:400;font-display:swap;unicode-range:U+10A0-10FF,U+1C90-1CBA,U+1CBD-1CBF,U+2D00-2D2F}@font-face{font-family:'NotoGeo';src:url('/fonts/notosansgeorgian-bold.woff2') format('woff2');font-weight:500 700;font-display:swap;unicode-range:U+10A0-10FF,U+1C90-1CBA,U+1CBD-1CBF,U+2D00-2D2F}@font-face{font-family:'NotoGeo';src:url('/fonts/notosansgeorgian-black.woff2') format('woff2');font-weight:800 900;font-display:swap;unicode-range:U+10A0-10FF,U+1C90-1CBA,U+1CBD-1CBF,U+2D00-2D2F}*,*::before,*::after{box-sizing:border-box}html{scrollbar-gutter:stable;scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}body{margin:0;background:var(--white);color:var(--ink-2);font-family:'Inter','NotoGeo','Segoe UI',Roboto,Arial,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}img{max-width:100%;display:block}a{color:var(--blue-700);text-decoration:none;transition:color 0.2s var(--ease)}a:hover{color:var(--blue-600)}.container{width:100%;max-width:var(--container);margin:0 auto;padding:0 5%}h1,h2,h3,h4{margin:0 0 0.5em;color:var(--ink);font-weight:760;line-height:1.08;letter-spacing:-0.035em}h1{font-size:clamp(2.65rem,5.3vw,5.05rem);font-weight:760;letter-spacing:-0.035em}h2{font-size:clamp(2rem,3.5vw,3.45rem);letter-spacing:-0.03em}p{margin:0 0 1rem;color:var(--muted)}.site-header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.97);backdrop-filter:saturate(180%) blur(12px);-webkit-backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid rgba(223,231,241,0.7);box-shadow:0 10px 30px rgba(7,21,47,0.08)}.site-header__inner{display:flex;align-items:center;gap:1.15rem;min-height:var(--header-height);position:relative;z-index:1}.logo{display:flex;align-items:center;gap:0.65rem;flex:0 0 auto;color:var(--ink)}.logo:hover{color:var(--ink)}.logo__mark{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,var(--blue-600),var(--blue-700));color:var(--white);box-shadow:0 6px 16px rgba(31,98,210,0.32)}.logo__mark svg{width:28px;height:28px}.logo__text{display:flex;flex-direction:column;line-height:1.05}.logo__name{font-size:1.22rem;font-weight:760;letter-spacing:-0.03em}.logo__sub{font-size:0.6rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted-2);margin-top:6px}.site-nav{display:flex;align-items:center;gap:1.25rem;margin-left:auto;flex-shrink:0;flex-wrap:nowrap}.site-nav__link{white-space:nowrap}.site-nav__link{color:var(--ink-2);font-size:0.92rem;font-weight:650}.site-nav__link:hover{color:var(--blue-700)}.header-actions{display:flex;align-items:center;gap:0.7rem;flex:0 0 auto;margin-left:auto}.lang-switch{display:flex;gap:2px;padding:3px;border-radius:12px;background:var(--soft)}.lang-switch__btn{padding:6px 11px;border-radius:9px;color:var(--muted);font-size:0.8rem;font-weight:700;letter-spacing:0.02em;transition:all 0.2s var(--ease)}.lang-switch__btn:hover{color:var(--ink)}.lang-switch__btn.is-active{background:var(--white);color:var(--blue-700);box-shadow:0 2px 6px rgba(11,31,68,0.1)}.lang-drop{position:relative;flex:0 0 auto}.lang-drop__btn{display:flex;align-items:center;gap:0.33rem;height:40px;padding:0 10px;border:1px solid var(--line);border-radius:12px;background:var(--soft);color:var(--ink-2);font-family:inherit;font-size:0.8rem;font-weight:700;letter-spacing:0.02em;cursor:pointer;transition:border-color 0.2s var(--ease),background 0.2s var(--ease)}.lang-drop__btn:hover,.lang-drop.is-open .lang-drop__btn{border-color:var(--blue-400);background:var(--blue-100);color:var(--blue-700)}.lang-drop__globe{width:16px;height:16px;flex:0 0 auto;opacity:0.8}.lang-drop__chev{width:13px;height:13px;flex:0 0 auto;color:var(--muted-2);transition:transform 0.2s var(--ease)}.lang-drop__panel{position:absolute;top:calc(100% + 10px);right:0;z-index:120;min-width:186px;padding:7px;border:1px solid var(--line);border-radius:15px;background:var(--white);box-shadow:0 22px 60px rgba(3,17,43,0.17);display:none;transform:translateY(-6px);transition:transform 0.18s var(--ease)}.lang-drop__panel::before{content:'';position:absolute;top:-10px;left:0;right:0;height:10px}.burger{display:none;position:relative;width:44px;height:44px;padding:0;border:0;border-radius:12px;background:var(--soft);cursor:pointer;transition:background 0.2s var(--ease)}.burger:hover{background:var(--blue-100)}.burger span{position:absolute;left:11px;width:22px;height:2px;border-radius:2px;background:var(--ink);transition:transform 0.22s var(--ease),opacity 0.16s var(--ease)}.burger span:nth-child(1){top:15px}.burger span:nth-child(2){top:21px}.burger span:nth-child(3){top:27px}.mobile-menu{position:fixed;left:0;right:0;bottom:0;z-index:90;background:var(--white);overflow-y:auto;-webkit-overflow-scrolling:touch}.mobile-menu.is-open .mobile-menu__inner{opacity:1}.mobile-menu[hidden]{display:none}.mobile-menu .mobile-menu__inner{display:grid;gap:2px;padding-top:26px;padding-bottom:32px;opacity:0.001;transition:opacity 0.18s var(--ease)}.button{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:13px 22px;border:1px solid transparent;border-radius:var(--radius-sm);font-family:inherit;font-size:0.91rem;font-weight:760;line-height:1.15;letter-spacing:normal;cursor:pointer;white-space:nowrap;transition:transform 0.2s var(--ease),box-shadow 0.2s var(--ease),background-color 0.2s var(--ease)}.button--primary{background:var(--blue-700);color:var(--white);box-shadow:0 10px 26px rgba(31,98,210,0.28)}.button--primary:hover{background:#1b57bb;color:var(--white);transform:translateY(-2px);box-shadow:0 14px 32px rgba(31,98,210,0.35)}.button--ghost{background:rgba(255,255,255,0.82);color:var(--ink);box-shadow:var(--shadow-sm)}.button--ghost:hover{background:var(--white);color:var(--ink);transform:translateY(-2px)}.button--large{padding:16px 28px;font-size:1.02rem}.button::after,.cta-strip__btn::after{content:'';width:17px;height:17px;flex:0 0 auto;background-color:currentColor;-webkit-mask:var(--arrow-mask) center / contain no-repeat;mask:var(--arrow-mask) center / contain no-repeat;transition:transform 0.2s var(--ease)}.button:hover::after,.cta-strip__btn:hover::after{transform:translateX(3px)}.button--ghost-dark::after,.button:has(.button__brand)::after,.lead-form__submit::after,.v-button::after,.est-card__btn::after{content:none}.section{padding:var(--section-pad) 0}.section-head__eyebrow{display:inline-flex;align-items:center;gap:0.5rem;margin-bottom:0.9rem;color:var(--blue-700);font-size:0.78rem;font-weight:760;letter-spacing:0.13em;text-transform:uppercase}.section-head__eyebrow::before{content:'';width:26px;height:2px;border-radius:2px;background:var(--blue-600)}.hero{background:linear-gradient(#f8fbff 0%,var(--white) 74%);padding:86px 0}.hero__grid{display:grid;grid-template-columns:1.04fr 0.96fr;gap:3.4rem;align-items:start}.hero h1{font-size:clamp(1.6rem,4vw,3rem)}.hero__eyebrow{display:inline-flex;align-items:center;gap:0.55rem;margin-bottom:1.1rem;color:var(--blue-700);font-size:0.78rem;font-weight:760;letter-spacing:0.13em;text-transform:uppercase}.hero__eyebrow::before{content:'';width:26px;height:2px;border-radius:2px;background:var(--blue-600)}.hero__lead{max-width:30em;margin-bottom:1.9rem;font-size:clamp(1.08rem,1.7vw,1.28rem);line-height:1.62}.hero__price{display:block;margin-bottom:26px;padding:16px 19px;border-left:3px solid var(--blue-500);background:var(--soft);border-radius:0 12px 12px 0;color:var(--ink);transition:background-color 0.2s var(--ease),border-color 0.2s var(--ease)}.hero__price:hover{background:var(--blue-100);border-color:var(--blue-600);color:var(--ink)}.hero__price__label{display:block;margin-bottom:4px;color:var(--muted);font-size:0.88rem}.hero__price__value{display:block;margin-bottom:6px;font-size:1.3rem;font-weight:760;letter-spacing:-0.02em}.hero__price__more{display:flex;align-items:center;gap:0.5rem;color:var(--muted);font-size:0.84rem}.hero__price__more svg{width:15px;height:15px;transition:transform 0.25s var(--ease)}.hero__price:hover .hero__price__more svg{transform:translateX(4px)}.hero__cta{display:flex;flex-wrap:wrap;gap:0.85rem;margin-bottom:1.9rem}.hero__perks{display:grid;grid-template-columns:repeat(2,max-content);gap:0.75rem 1.7rem;margin:0;padding:0;list-style:none}.hero__perks li{display:flex;align-items:center;gap:0.5rem;color:var(--ink-2);font-size:0.92rem;font-weight:600}.hero__perks svg{width:18px;height:18px;flex:0 0 auto;color:var(--green-500)}.hero__media{position:relative;min-width:0;padding-bottom:130px}.hero__text,.v-hero-copy{min-width:0}.hero__photo{width:100%;height:420px;object-fit:cover;object-position:center top;border-radius:var(--radius-lg);box-shadow:var(--shadow-md)}.hero__form{position:absolute;left:22px;right:22px;bottom:0}.legal{max-width:50rem;padding:0 24px}.legal h1,.legal h2{overflow-wrap:anywhere;hyphens:auto}.legal h1{font-size:clamp(1.95rem,4.2vw,3.1rem);letter-spacing:-0.025em;line-height:1.14;margin-bottom:0.7em}.legal h2{margin:2.6rem 0 0.8rem;font-size:1.45rem;letter-spacing:-0.02em;line-height:1.25}.legal p{margin:0 0 1.1rem;color:var(--ink-2);line-height:1.75}.legal__lead{margin-bottom:2.4rem;padding:20px 24px;border-left:3px solid var(--blue-500);border-radius:0 10px 10px 0;background:var(--soft);font-size:1.06rem;line-height:1.68}.legal a{color:var(--blue-700);text-decoration:underline;text-underline-offset:2px}.legal a:hover{color:var(--blue-600)}.legal strong{color:var(--ink);font-weight:700}@media (max-width:560px){.legal{padding:0 18px}.legal__lead{padding:16px 18px;font-size:1rem}.legal h2{margin:2.1rem 0 0.7rem;font-size:1.24rem}}.nav-dropdown{position:relative;display:flex;align-items:center}.nav-dropdown__btn{display:inline-flex;align-items:center;gap:0.4rem;padding:11px 13px;border:none;border-radius:10px;background:transparent;font-family:inherit;cursor:pointer}.nav-dropdown__chev{width:14px;height:14px;transition:transform 0.2s var(--ease)}.nav-dropdown__panel{position:absolute;top:calc(100% + 18px);left:calc(50% - var(--nav-dd-shift,0px));transform:translateX(-50%) translateY(-8px);width:min(760px,calc(100vw - 48px));padding:22px;border-radius:22px;background:var(--white);box-shadow:0 32px 90px rgba(3,17,43,0.2);opacity:0;visibility:hidden;transition:opacity 0.2s var(--ease),visibility 0.2s var(--ease),transform 0.2s var(--ease);z-index:120}.topbar__phone-num{font-variant-numeric:tabular-nums}.topbar__phone-eye{display:inline-grid;place-items:center;width:22px;height:22px;margin-left:6px;border-radius:7px;color:rgba(255,255,255,0.7);cursor:pointer;transition:background-color 0.18s var(--ease),color 0.18s var(--ease)}.topbar__phone-eye:hover,.topbar__phone-eye:focus-visible{background:rgba(255,255,255,0.12);color:var(--white)}.topbar__phone-eye svg{width:15px;height:15px}.city-modal{position:fixed;inset:0;display:grid;place-items:center;padding:5%;z-index:200}.city-modal[hidden]{display:none}.ty-modal{position:fixed;inset:0;align-items:center;justify-content:center;padding:5%;background:rgba(4,16,39,0.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:200}@media (max-width:768px){.ty-modal{padding:18px}}.topbar{background:var(--navy-950);color:rgba(255,255,255,0.82);font-size:0.82rem}.topbar__inner{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;min-height:36px}.topbar__item{display:flex;align-items:center;gap:0.45rem;color:rgba(255,255,255,0.82);white-space:nowrap}.topbar__item svg{width:15px;height:15px;flex:0 0 auto;opacity:0.75}.topbar__phone{color:var(--white);font-weight:700}.topbar__phone:hover{color:var(--blue-400)}@media (max-width:768px){.topbar__item--promise{display:none}.topbar{font-size:0.72rem}.topbar__item svg{width:13px;height:13px}.topbar__inner{gap:0.6rem}.topbar__phone{font-size:0.76rem}}@media (max-width:360px){.topbar__item--hours{display:none}.topbar__inner{justify-content:center}}.city-pill{display:inline-flex;align-items:center;gap:0.4rem;padding:9px 13px;border:1px solid var(--line);border-radius:12px;background:var(--soft);color:var(--ink);font-size:0.9rem;font-weight:700;white-space:nowrap}.city-pill:hover{border-color:var(--blue-400);color:var(--blue-700)}.city-pill svg{width:15px;height:15px;flex:0 0 auto;color:var(--blue-600)}.city-pill .city-pill__chev{width:13px;height:13px;color:var(--muted-2)}.breadcrumbs{padding:15px 0;font-size:0.85rem;color:var(--muted)}.breadcrumbs a{color:var(--muted)}.breadcrumbs a:hover{color:var(--blue-700)}.breadcrumbs__sep{margin:0 0.4rem;color:var(--muted-2)}.breadcrumbs__inner{display:flex;flex-wrap:wrap;align-items:center;gap:2px}.breadcrumbs__current{color:var(--ink);font-weight:600}.v-hero{background:linear-gradient(115deg,#091b33,#102c4c);color:var(--white);padding:54px 0 76px;overflow:hidden}.v-hero-grid{display:grid;grid-template-columns:1.07fr 1fr;gap:54px;align-items:start}.v-kicker{display:flex;align-items:center;gap:13px;margin:0 0 18px;color:#98c8ff;font-size:0.72rem;font-weight:750;letter-spacing:0.16em;line-height:1.5;text-transform:uppercase}.v-kicker__dot{width:4px;height:4px;border-radius:50%;background:currentColor;opacity:0.6}.v-hero h1{margin:0 0 24px;color:var(--white);font-size:clamp(2.1rem,3.6vw,3.2rem);font-weight:750;line-height:1.1;letter-spacing:-0.035em}.v-intro{max-width:590px;margin:0 0 26px;color:#d0dbea;font-size:1.02rem;line-height:1.65}.u-quick-price{display:block;margin-bottom:26px;padding:16px 19px;border-left:3px solid #75b6fc;background:rgba(255,255,255,0.05);color:var(--white);transition:background-color 0.2s var(--ease)}.u-quick-price:hover{background:rgba(255,255,255,0.09);color:var(--white)}.u-quick-price__label{display:block;margin-bottom:4px;color:#c6d6ea;font-size:0.88rem}.u-quick-price__value{display:block;margin-bottom:6px;font-size:1.3rem;font-weight:760;letter-spacing:-0.02em}.u-quick-price__more{display:flex;align-items:center;gap:0.5rem;color:#a9c6e8;font-size:0.84rem}.u-quick-price__more svg{width:15px;height:15px;transition:transform 0.25s var(--ease)}.u-quick-price:hover .u-quick-price__more svg{transform:translateX(4px)}.v-actions{display:flex;flex-wrap:wrap;align-items:center;gap:0.6rem 1.4rem}.v-button{display:inline-flex;align-items:center;gap:0.6rem;padding:13px 22px;border:none;border-radius:12px;background:var(--blue-700);color:var(--white);font-family:inherit;font-size:0.91rem;font-weight:760;letter-spacing:normal;cursor:pointer;box-shadow:0 7px 20px rgba(25,96,210,0.3);transition:transform 0.2s var(--ease),box-shadow 0.2s var(--ease),background-color 0.2s var(--ease)}.v-button:hover{background:#1b57bb;color:var(--white);transform:translateY(-2px);box-shadow:0 12px 28px rgba(25,96,210,0.38)}.v-button svg{width:17px;height:17px;flex:0 0 auto}.v-text-link{display:inline-flex;align-items:center;gap:0.5rem;color:#d5e7ff;font-size:0.95rem;font-weight:600}.v-text-link:hover{color:var(--white)}.v-hero-note{display:flex;align-items:center;gap:9px;margin-top:21px;color:#aebfd4;font-size:0.82rem}.v-hero-media{position:relative;min-width:0;padding-bottom:120px}.v-hero-img{display:block;width:100%;height:475px;object-fit:cover;border-radius:25px}.v-float-form{position:absolute;bottom:0;left:24px;right:24px;padding:22px;border-radius:18px;background:var(--white);color:var(--ink);box-shadow:0 20px 40px rgba(0,16,36,0.24)}.v-float-form h2{margin:0 0 7px;font-size:1.44rem;line-height:1.25;letter-spacing:-0.02em}.v-float-form__sub{margin:0 0 15px;color:#637288;font-size:0.86rem;line-height:1.5}.v-float-form__row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.v-float-form .form-control{height:48px;padding:0 15px;border-radius:12px;background:var(--soft)}.v-float-form .v-button{height:48px;padding:0 14px;white-space:nowrap}.v-float-form .v-button svg{flex:0 0 auto}.v-float-form .v-button{justify-content:center;width:100%}.v-consent{display:flex;align-items:flex-start;gap:0.6rem;margin-top:13px;color:var(--muted);font-size:0.76rem;line-height:1.45}.v-consent input{width:16px;height:16px;flex:0 0 auto;margin:1px 0 0;accent-color:var(--blue-600)}.v-consent a{position:relative;color:var(--blue-700);text-decoration:underline;text-underline-offset:2px}.v-consent a:hover{color:var(--blue-600)}.v-jumpbar{border-bottom:1px solid var(--line);background:var(--white)}.v-jumpbar__inner{display:flex;flex-wrap:wrap;gap:0.5rem 2rem;padding-block:18px}@media (max-width:1024px){.v-hero-grid{grid-template-columns:1fr;gap:2.6rem}.v-hero-img{height:380px}}@media (max-width:768px){.v-hero{padding:34px 0 48px}.v-hero-img{height:260px}.v-hero-media{padding-bottom:0}.v-float-form{position:static;margin-top:1rem}.v-float-form__row{grid-template-columns:1fr}.v-actions .v-button{width:100%;justify-content:center}}.form-control{width:100%;padding:13px 15px;border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--white);color:var(--ink);font-family:inherit;font-size:0.97rem;transition:border-color 0.2s var(--ease),box-shadow 0.2s var(--ease)}.form-control:focus{outline:none;border-color:var(--blue-500);box-shadow:0 0 0 3px rgba(61,139,255,0.18)}.form-control::placeholder{color:var(--muted-2)}.form-gotcha{position:absolute;left:-9999px;opacity:0;pointer-events:none}@media (max-width:1360px){.site-nav{display:none}.burger{display:block}}@media (max-width:1024px){.hero__grid,.final-cta__grid{grid-template-columns:1fr;gap:2.4rem}.hero__photo{height:340px}}@media (max-width:768px){:root{--section-pad:64px}body{font-size:16px}.hero{padding:52px 0 64px}.site-nav,.city-pill,.header-actions .button{display:none}.hero__photo{height:260px}.hero__perks{grid-template-columns:1fr}.hero__form{position:static;margin-top:1rem}.hero__media{padding-bottom:0}}@media (max-width:420px){.container{padding:0 4%}.lang-drop__btn{padding:0 8px}.lang-drop__chev{display:none}.logo__mark{width:38px;height:38px}.hero__cta .button{width:100%}}@media (max-width:340px){.logo__sub{display:none}.logo__geo{display:block;margin-left:-0.28em;font-size:0.78em;font-weight:700;letter-spacing:-0.01em;color:var(--muted-2)}}@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important;scroll-behavior:auto !important}}.contact-bar{position:fixed;right:16px;bottom:16px;z-index:60;display:flex;flex-direction:row;align-items:stretch;overflow:hidden;border-radius:var(--radius-sm);box-shadow:0 6px 20px rgba(4,16,39,0.3)}.contact-bar__btn{position:relative;display:flex;align-items:center;justify-content:center;gap:9px;min-height:52px;padding:10px 18px;box-sizing:border-box;color:#fff;font-family:inherit;font-size:0.95rem;font-weight:700;text-decoration:none}.contact-bar__btn:hover,.contact-bar__btn:focus,.contact-bar__btn:active,.contact-bar__btn:visited{color:#fff}.contact-bar__ico{width:26px;height:26px;flex:none;display:flex;align-items:center;justify-content:center;border-radius:50%;background:#fff;overflow:hidden}.contact-bar__btn img{width:20px;height:20px;display:block;flex:none}.contact-bar__btn--wa img{width:26px;height:26px}.contact-bar__btn--wa{background:var(--navy-900)}.contact-bar__btn--tg{background:var(--blue-tg)}.contact-bar__btn::after{content:'';position:absolute;inset:0;background:#000;opacity:0;transition:opacity 0.12s ease;pointer-events:none}.contact-bar__btn:active::after{opacity:0.12}.contact-bar__btn>*{position:relative;z-index:1}@media (max-width:768px){:root{--contact-bar-gap:12px}.contact-bar{left:var(--contact-bar-gap);right:var(--contact-bar-gap);bottom:calc(var(--contact-bar-gap) + env(safe-area-inset-bottom,0px));flex-direction:row;gap:0;overflow:hidden;border-radius:var(--radius-sm);box-shadow:0 6px 20px rgba(4,16,39,0.3)}body.has-contact-bar{padding-bottom:calc(52px + var(--contact-bar-gap) * 2 + env(safe-area-inset-bottom,0px))}.contact-bar__btn{flex:1 1 50%;min-height:52px;padding:10px 8px;border-radius:0;box-shadow:none}}.lead-modal{position:fixed;inset:0;z-index:120;display:flex;align-items:flex-start;justify-content:center;padding:4vh 16px;opacity:0;transition:opacity 0.2s var(--ease);overflow-y:auto;overscroll-behavior:contain}.lead-modal[hidden]{display:none}.lead-modal__window{position:relative;width:100%;max-width:560px;margin:auto;max-height:calc(100vh - 8vh);max-height:calc(100dvh - 8vh);display:flex;flex-direction:column;padding:34px 34px 30px;border-radius:var(--radius-lg);background:var(--white);box-shadow:var(--shadow-lg);transform:translateY(14px) scale(0.985);transition:transform 0.24s var(--ease)}.lead-modal__scroll{padding-right:34px;flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}@media (max-width:768px){.lead-modal{padding:0;overflow:hidden}.lead-modal__window{max-width:none;max-height:100vh;max-height:100dvh;height:100vh;height:100dvh;border-radius:0;padding:26px 18px 30px}.lead-modal__scroll{padding-right:44px}}</style>
+  <!-- /critical:redesign.css -->
+  <link rel="stylesheet" href="/redesign.css?v=345" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="/redesign.css?v=345"></noscript>
+  <script src="/redesign.js?v=345" defer></script>
+  <script src="/script.js?v=345" defer></script>
 
   <!-- Schema.org: Service -->
   
@@ -133,492 +142,453 @@
   }
   </script>
 </head>
-
 <body>
-  <header>
-    <div class="logo">
-      <div class="logo-text">
-        <div class="logo-title"><a href="/ru/" class="logo-title-link" aria-label="Мастера Грузии — на главную">Мастера Грузии</a></div>
-        <div class="subtitle">// Мастера для любой задачи</div>
-        <div class="subtitle header-phone">
-          <a href="tel:+995557645196" class="header-phone-link">// +995 557 645 196</a>
-        </div>
-        <div class="subtitle header-support">
-          <a href="/ru/fb/" target="_blank" class="header-support-link">// Мы в Facebook</a>
-        </div>
-      </div>
-    </div>
-    <div class="header-controls">
-      <!-- Группа навигации: город + язык -->
-      <div class="header-group">
-        <!-- Переключатель города — навигация по URL -->
-        <div class="city-switcher">
-          <span class="city-switcher-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
-          <a href="/ru/" class="city-btn active" data-city="tbilisi">Тбилиси</a>
-          <a href="/ru/batumi/" class="city-btn" data-city="batumi">Батуми</a>
-        </div>
+<div class="topbar">
+  <div class="container topbar__inner">
+    <span class="topbar__item topbar__item--hours">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Ежедневно, 09:00–23:00
+    </span>
+    <span class="topbar__item topbar__item--promise">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Стоимость согласуем до начала работ
+    </span>
+    <span class="topbar__item topbar__item--phone">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      <a href="tel:+995557645196" class="topbar__phone">+995 557 645 196</a>
+    </span>
+  </div>
+</div>
 
-        <div class="language-switcher">
-          <a href="/ru/tbilisi/master-na-chas-vake/" class="lang-btn active" data-lang="ru">RUS</a>
-          <a href="/ge/tbilisi/master-na-chas-vake/" class="lang-btn" data-lang="ka">GEO</a>
-          <a href="/en/tbilisi/master-na-chas-vake/" class="lang-btn" data-lang="en">ENG</a>
-        </div>
-      </div>
+<!-- ============================================================
+     Шапка
+     ============================================================ -->
+<header class="site-header">
+  <div class="container site-header__inner">
 
-      <!-- Группа статуса: «Для мастеров» + онлайн -->
-      <div class="header-group">
-        <a href="/ru/masters/" class="audience-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/><path d="M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> <span class="audience-link-text">Для мастеров</span></a>
-
-        <div class="online-counter">
-          <span class="online-indicator"></span>
-          <span class="online-text">Сейчас онлайн: <strong class="online-count" data-base="3">3</strong> мастеров</span>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    <div class="service-hero">
-      <h1 class="service-title">Вызвать мастера в Ваке<br>Ремонт любой сложности</h1>
-      <p class="lead">
-        Нужен мастер в Ваке — повесить, прикрутить, собрать или починить?<br>Вызовите универсального мастера на час рядом с вами: проспект Чавчавадзе, Абашидзе, парк Ваке, Багеби, Турье озеро.<br>Оставьте заявку — мастер из района откликнется за 60 минут.
-      </p>
-      <div class="service-cta-top">
-        <button class="cta-button cta-clients" onclick="openClientLeadForm()">
-          <span class="cta-main">Вызвать мастера</span>
-          <span class="cta-sub">Бесплатно и быстро</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Локальный интро-блок -->
-    <div class="sections-container">
-      <div class="split-sections" style="grid-template-columns: 1fr; max-width: 700px; margin: 3rem auto 0;">
-        <div class="section-card">
-          <div class="section-icon icon-masters">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-              <circle cx="12" cy="10" r="3"/>
-            </svg>
-          </div>
-          <h2 class="section-title" style="text-align:center;">Мастер на час в районе Ваке</h2>
-          <p style="color:#cfcfcf; line-height:1.7;">
-            Ваке — престижный зелёный район в западной части Тбилиси: проспект Чавчавадзе и Абашидзе, парк Ваке и площадь Героев, новые ЖК на Багеби и у Турьего озера. Здесь много съёмного жилья бизнес-класса, квартир иностранцев и недавно сданных новостроек — а значит, постоянно нужна аккуратная помощь по дому: собрать дизайнерскую мебель, повесить ТВ и картины без повреждения дорогой отделки, обустроить квартиру под аренду.
-          </p>
-          <p style="color:#cfcfcf; line-height:1.7; margin-top:1rem;">
-            Мастера, которые уже работают в Ваке, откликаются быстрее всего — не нужно ждать выезд с другого конца города. Опишите задачу, и ближайший свободный мастер свяжется с вами за 60 минут.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Прайс-лист -->
-    <div class="price-table">
-      <div class="price-icon">
+    <a href="/ru/" class="logo">
+      <span class="logo__mark">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
-          <line x1="7" y1="7" x2="7.01" y2="7"/>
+          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
         </svg>
+      </span>
+      <span class="logo__text">
+        <span class="logo__name">Mastera<span class="logo__geo"> Georgia</span></span>
+        <span class="logo__sub">Сервис для дома</span>
+      </span>
+    </a>
+
+    <nav class="site-nav">
+      <a href="/ru/#services" class="site-nav__link">Услуги</a>
+      <a href="/ru/#how" class="site-nav__link">Как работаем</a>
+      <a href="#districts" class="site-nav__link">Районы</a>
+      <a href="#faq" class="site-nav__link">Вопросы</a>
+    </nav>
+
+    <div class="header-actions">
+      <a href="#" class="city-pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span class="city-pill__label">Тбилиси</span>
+        <svg class="city-pill__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </a>
+      <div class="lang-switch">
+        <a href="/ru/tbilisi/master-na-chas-vake/" class="lang-switch__btn is-active">RU</a>
+        <a href="/en/tbilisi/master-na-chas-vake/" class="lang-switch__btn">EN</a>
+        <a href="/ge/tbilisi/master-na-chas-vake/" class="lang-switch__btn">GE</a>
       </div>
-      <h2>Цены на услуги мастера на час в Ваке</h2>
-      <div class="price-row">
-        <span class="price-name">Час работы мастера</span>
-        <span class="price-val">от 40₾/час</span>
-      </div>
-      <div class="price-row">
-        <span class="price-name">Минимальный выезд / заказ</span>
-        <span class="price-val">от 30₾</span>
-      </div>
-      <div class="price-row">
-        <span class="price-name">Повесить полку, картину, мелочь (1 шт.)</span>
-        <span class="price-val">от 20₾</span>
-      </div>
-      <div class="price-row">
-        <span class="price-name">Подтянуть, закрепить, отрегулировать</span>
-        <span class="price-val">от 20₾</span>
-      </div>
-      <div class="price-row">
-        <span class="price-name">Навеска ТВ / зеркала на стену</span>
-        <span class="price-val">от 25₾</span>
-      </div>
-      <div class="price-row">
-        <span class="price-name">Замена дверного замка</span>
-        <span class="price-val">от 30₾</span>
-      </div>
-      <div class="price-row">
-        <span class="price-name">Несколько мелких задач за один визит</span>
-        <span class="price-val">по договорённости</span>
-      </div>
-      <p style="text-align:center; font-size:0.8rem; color: rgb(159, 159, 159); margin-top:1rem;">
-        Цены едины для всего Тбилиси. Точная стоимость — после оценки объёма работ. Крупные задачи — сборка мебели, навеска ТВ, бытовой ремонт — смотрите в отдельных услугах ниже.
-      </p>
+      <a href="#lead" class="button button--primary">Вызвать мастера</a>
     </div>
 
-    <!-- Что умеем -->
-    <div class="sections-container">
-      <div class="split-sections" style="grid-template-columns: 1fr;">
-        <div class="section-card">
-          <div class="section-icon icon-masters">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-              <polyline points="9 22 9 12 15 12 15 22"/>
-            </svg>
-          </div>
-          <h2 class="section-title">Что делает мастер на час в Ваке</h2>
-          <ul class="benefits-list">
-            <li><strong>Разовые мелкие задачи</strong> — повесить, прикрутить, подтянуть, закрепить, переставить. Несколько дел за один визит</li>
-            <li><strong>Обустройство съёмной квартиры</strong> — частый запрос в Ваке: навеска, мелкий монтаж и сборка при заселении или подготовке к аренде</li>
-            <li><strong>Аккуратная навеска</strong> — ТВ, полки, зеркала и картины с учётом дорогой отделки в новостройках и квартирах бизнес-класса</li>
-            <li><strong>Помощь по дому и хозяйству</strong> — «муж на час»: бытовые мелочи и разовые поручения там, где не нужен профильный специалист</li>
-          </ul>
-          <p class="section-title" style="margin-top:1.5rem;">Нужна конкретная задача? У нас есть профильные мастера:</p>
-          <ul class="benefits-list">
-            <li><strong>Сборка мебели</strong> — шкафы, кухни, кровати, мебель IKEA — <a href="/ru/tbilisi/sborka-mebeli-tbilisi/" class="footer-link">отдельная услуга →</a></li>
-            <li><strong>Навеска и монтаж</strong> — ТВ на стену, полки, зеркала, карнизы — <a href="/ru/tbilisi/naveska-montazh-tbilisi/" class="footer-link">отдельная услуга →</a></li>
-            <li><strong>Бытовой ремонт</strong> — замена замков, ремонт мебели, регулировка дверей и окон — <a href="/ru/tbilisi/bytovoy-remont-tbilisi/" class="footer-link">отдельная услуга →</a></li>
-            <li><strong>Сантехника и электрика</strong> — для профильных работ вызовите <a href="/ru/tbilisi/santehnik-tbilisi/" class="footer-link">сантехника</a> или <a href="/ru/tbilisi/elektrik-tbilisi/" class="footer-link">электрика</a></li>
-          </ul>
-          <button class="cta-button cta-clients" onclick="openClientLeadForm()">
-            <span class="cta-main">Оставить заявку</span>
-            <span class="cta-sub">Перезвоним за 60 мин</span>
+  </div>
+</header>
+
+<main>
+
+<nav class="breadcrumbs" aria-label="Главная">
+  <div class="container breadcrumbs__inner">
+    <a href="/ru/">Главная</a>
+    <span class="breadcrumbs__sep">/</span>
+    <span class="breadcrumbs__current">Вызвать мастера в Ваке Ремонт любой сложности</span>
+  </div>
+</nav>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList",
+ "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://mastera.ge/ru/"}, {"@type": "ListItem", "position": 2, "name": "Вызвать мастера в Ваке Ремонт любой сложности"}]}
+</script>
+
+<section class="v-hero">
+  <div class="container v-hero-grid">
+
+    <div class="v-hero-copy">
+      <div class="v-kicker">MASTERA<span class="v-kicker__dot"></span>Тбилиси</div>
+
+      <h1>Вызвать мастера в Ваке<br>Ремонт любой сложности</h1>
+
+      <p class="v-intro">Нужен мастер в Ваке — повесить, прикрутить, собрать или починить?<br>Вызовите универсального мастера на час рядом с вами: проспект Чавчавадзе, Абашидзе, парк Ваке, Багеби, Турье озеро.<br>Оставьте заявку — мастер из района откликнется за 60 минут.</p>
+
+      <a href="#prices" class="u-quick-price">
+        <span class="u-quick-price__label">Час работы мастера</span>
+        <span class="u-quick-price__value">от 40₾/час</span>
+        <span class="u-quick-price__more">Цены <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+      </a>
+
+      <div class="v-actions">
+        <a href="#lead" class="v-button">Оставьте заявку <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <a href="#prices" class="v-text-link">Цены</a>
+      </div>
+
+      <div class="v-hero-note">Ежедневно, 09:00–23:00</div>
+    </div>
+
+    <div class="v-hero-media">
+      <img src="/image/hero-bg.webp" alt="Вызвать мастера в Ваке Ремонт любой сложности" class="v-hero-img"
+           width="600" height="475" fetchpriority="high">
+      <div class="v-float-form">
+        <h2>Начнём с вашей задачи</h2>
+        <p class="v-float-form__sub">Оставьте WhatsApp — уточним детали и условия.</p>
+
+        <form class="v-float-form__row">
+          <input type="tel" name="phone" class="form-control" placeholder="Номер WhatsApp" required>
+          <button type="submit" class="v-button">
+            Узнать стоимость
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </button>
-        </div>
+
+          <!-- Ловушка для ботов: человек это поле не увидит. -->
+          <input type="text" name="_gotcha" class="form-gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
+        </form>
+
+        <label class="v-consent">
+          <input type="checkbox" required>
+          <span>Даю согласие на обработку персональных данных и принимаю <a href="/ru/privacy/">политику конфиденциальности</a> и <a href="/ru/terms/">пользовательское соглашение</a></span>
+        </label>
       </div>
     </div>
 
-    <!-- Как вызвать -->
-    <section class="how-it-works how-it-works-clients">
-      <h2 class="section-heading">Вызвать мастера в Ваке?</h2>
-      <p class="section-subtitle">Подберём мастера рядом с вами за 60 минут</p>
-      <div class="steps-container">
-        <div class="step-card step-card-client" data-step="1">
-          <div class="step-number">01</div>
-          <div class="step-icon step-icon-client">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-            </svg>
-          </div>
-          <h3 class="step-title">Оставьте заявку</h3>
-          <p class="step-description">Опишите что нужно сделать: собрать шкаф, повесить полки, поклеить обои</p>
-        </div>
-        <div class="step-card step-card-client" data-step="2">
-          <div class="step-number">02</div>
-          <div class="step-icon step-icon-client">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-              <circle cx="9" cy="7" r="4"/>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-            </svg>
-          </div>
-          <h3 class="step-title">Подберём мастера</h3>
-          <p class="step-description">Свяжемся в течение 60 минут и подберём мастера из Ваке или соседнего Сабуртало</p>
-        </div>
-        <div class="step-card step-card-client" data-step="3">
-          <div class="step-number">03</div>
-          <div class="step-icon step-icon-client">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-            </svg>
-          </div>
-          <h3 class="step-title">Согласуйте цену</h3>
-          <p class="step-description">Мастер оценит работу и назовёт стоимость без учёта материалов</p>
-        </div>
-        <div class="step-card step-card-client" data-step="4">
-          <div class="step-number">04</div>
-          <div class="step-icon step-icon-client">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-              <polyline points="22 4 12 14.01 9 11.01"/>
-            </svg>
-          </div>
-          <h3 class="step-title">Оплатите мастеру напрямую</h3>
-          <p class="step-description">Платите мастеру напрямую после выполнения работ — цену знаете заранее</p>
-        </div>
-      </div>
-      <div class="steps-button">
-        <button class="cta-button cta-clients" onclick="openClientLeadForm()">
-          <span class="cta-main">Вызвать мастера</span>
-          <span class="cta-sub">Бесплатно и быстро</span>
-        </button>
-      </div>
-    </section>
+  </div>
+</section>
 
-    <!-- Районы -->
-    <div class="districts">
-      <h2>Мастера работают во всех районах Тбилиси</h2>
-      <div class="districts-grid">
-        <a href="/ru/tbilisi/master-na-chas-vake/" class="district-card" aria-current="page"><svg class="district-card-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span class="district-card-body"><span class="district-card-name">Ваке</span><span class="district-card-hint">Ваке, Мухатгверди</span></span></a>
-        <a href="/ru/tbilisi/master-na-chas-saburtalo/" class="district-card"><svg class="district-card-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span class="district-card-body"><span class="district-card-name">Сабуртало</span><span class="district-card-hint">Сабуртало, Дельиси</span></span></a>
-        <a href="/ru/tbilisi/master-na-chas-didube/" class="district-card"><svg class="district-card-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span class="district-card-body"><span class="district-card-name">Дидубе</span><span class="district-card-hint">Автовокзал, Дигоми</span></span></a>
-        <a href="/ru/tbilisi/master-na-chas-chugureti/" class="district-card"><svg class="district-card-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span class="district-card-body"><span class="district-card-name">Чугурети</span><span class="district-card-hint">Авлабари, Метехи</span></span></a>
-        <a href="/ru/tbilisi/master-na-chas-isani/" class="district-card"><svg class="district-card-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span class="district-card-body"><span class="district-card-name">Исани</span><span class="district-card-hint">Навтлуги, Ортачала</span></span></a>
-        <a href="/ru/tbilisi/master-na-chas-samgori/" class="district-card"><svg class="district-card-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span class="district-card-body"><span class="district-card-name">Самгори</span><span class="district-card-hint">Варкетили, Лило</span></span></a>
-        <a href="/ru/tbilisi/master-na-chas-gldani/" class="district-card"><svg class="district-card-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span class="district-card-body"><span class="district-card-name">Глдани</span><span class="district-card-hint">Темка, Ахметели</span></span></a>
-        <a href="/ru/tbilisi/master-na-chas-nadzaladevi/" class="district-card"><svg class="district-card-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span class="district-card-body"><span class="district-card-name">Надзаладеви</span><span class="district-card-hint">Вокзал, Церетели</span></span></a>
-        <a href="/ru/tbilisi/master-na-chas-mtatsminda/" class="district-card"><svg class="district-card-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span class="district-card-body"><span class="district-card-name">Мтацминда</span><span class="district-card-hint">Центр, Сололаки</span></span></a>
-        <a href="/ru/tbilisi/master-na-chas-krtsanisi/" class="district-card"><svg class="district-card-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span class="district-card-body"><span class="district-card-name">Крцаниси</span><span class="district-card-hint">Понтичала, Аэропорт</span></span></a>
+<nav class="v-jumpbar">
+  <div class="container v-jumpbar__inner">
+    <a href="#prices">Цены</a>
+    <a href="#districts">Районы</a>
+    <a href="#faq">Вопросы</a>
+    <a href="#lead">Заявка</a>
+  </div>
+</nav>
+
+<section class="section" id="works">
+  <div class="container">
+    <div class="section-head"><h2>Мастер на час в районе Ваке</h2></div>
+    <div class="prose">
+      <p>Ваке — престижный зелёный район в западной части Тбилиси: проспект Чавчавадзе и Абашидзе, парк Ваке и площадь Героев, новые ЖК на Багеби и у Турьего озера. Здесь много съёмного жилья бизнес-класса, квартир иностранцев и недавно сданных новостроек — а значит, постоянно нужна аккуратная помощь по дому: собрать дизайнерскую мебель, повесить ТВ и картины без повреждения дорогой отделки, обустроить квартиру под аренду.</p>
+      <p>Мастера, которые уже работают в Ваке, откликаются быстрее всего — не нужно ждать выезд с другого конца города. Опишите задачу, и ближайший свободный мастер свяжется с вами за 60 минут.</p>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+    <div class="section-head"><h2>Что делает мастер на час в Ваке</h2></div>
+    <ul class="works-list">
+      <li><strong>Разовые мелкие задачи</strong> — повесить, прикрутить, подтянуть, закрепить, переставить. Несколько дел за один визит</li>
+      <li><strong>Обустройство съёмной квартиры</strong> — частый запрос в Ваке: навеска, мелкий монтаж и сборка при заселении или подготовке к аренде</li>
+      <li><strong>Аккуратная навеска</strong> — ТВ, полки, зеркала и картины с учётом дорогой отделки в новостройках и квартирах бизнес-класса</li>
+      <li><strong>Помощь по дому и хозяйству</strong> — «муж на час»: бытовые мелочи и разовые поручения там, где не нужен профильный специалист</li>
+      <li><strong>Сборка мебели</strong> — шкафы, кухни, кровати, мебель IKEA — <a href="/ru/tbilisi/sborka-mebeli-tbilisi/" class="footer-link">отдельная услуга →</a></li>
+      <li><strong>Навеска и монтаж</strong> — ТВ на стену, полки, зеркала, карнизы — <a href="/ru/tbilisi/naveska-montazh-tbilisi/" class="footer-link">отдельная услуга →</a></li>
+      <li><strong>Бытовой ремонт</strong> — замена замков, ремонт мебели, регулировка дверей и окон — <a href="/ru/tbilisi/bytovoy-remont-tbilisi/" class="footer-link">отдельная услуга →</a></li>
+      <li><strong>Сантехника и электрика</strong> — для профильных работ вызовите <a href="/ru/tbilisi/santehnik-tbilisi/" class="footer-link">сантехника</a> или <a href="/ru/tbilisi/elektrik-tbilisi/" class="footer-link">электрика</a></li>
+    </ul>
+  </div>
+</section>
+
+<section class="section section--soft" id="prices">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-head__eyebrow">Цены</span>
+      <h2>Цены на услуги мастера на час в Ваке</h2>
+      <p>Цена зависит от объёма и сложности. Согласуем стоимость до начала работ.</p>
+    </div>
+
+    <div class="price-previews">
+      <div class="price-preview">
+        <h3>Час работы мастера</h3>
+        <p class="price-preview__desc">Любые мелкие задачи</p>
+        <div class="price-preview__value">от 40₾/час</div>
+      </div>
+      <div class="price-preview">
+        <h3>Минимальный выезд / заказ</h3>
+        <p class="price-preview__desc">Выезд входит в стоимость</p>
+        <div class="price-preview__value">от 90₾</div>
+      </div>
+      <div class="price-preview">
+        <h3>Повесить полку, картину, мелочь</h3>
+        <p class="price-preview__desc">Быстро и по уровню</p>
+        <div class="price-preview__value">от 20₾</div>
       </div>
     </div>
 
-    <div class="districts metro-block">
-      <p class="metro-none">В районе нет станций метро — мастера приезжают на машине или наземным транспортом.</p>
+    <div class="price-cta">
+      <div class="price-cta__body">
+        <span class="price-cta__text">Полная стоимость — до начала работ</span>
+        <span class="price-cta__sub">Без выезда, без доплат, без скрытых условий.</span>
+      </div>
+      <a href="#lead" class="button button--primary">Рассчитать мою задачу</a>
     </div>
 
-    <div class="steps-button">
-      <button class="cta-button cta-clients" onclick="openClientLeadForm()">
-        <span class="cta-main">Оставить заявку</span>
-        <span class="cta-sub">Перезвоним за 60 мин</span>
-      </button>
+    <details class="price-full">
+      <summary>Полный прайс — все работы</summary>
+      <div class="price-full__body">
+        <div class="price-search">
+          <input type="search" placeholder="Найти работу в прайсе" aria-label="Найти работу в прайсе">
+          <button type="button">Сбросить</button>
+        </div>
+
+          <div class="price-line"><span class="price-line__name">Минимальный выезд / заказ</span><span class="price-line__val">от 90₾</span></div>
+          <div class="price-line"><span class="price-line__name">Час работы мастера</span><span class="price-line__val">от 40₾/час</span></div>
+          <div class="price-line"><span class="price-line__name">Повесить полку, картину, мелочь (1 шт.)</span><span class="price-line__val">от 20₾</span></div>
+          <div class="price-line"><span class="price-line__name">Подтянуть, закрепить, отрегулировать</span><span class="price-line__val">от 20₾</span></div>
+          <div class="price-line"><span class="price-line__name">Навеска ТВ / зеркала на стену</span><span class="price-line__val">от 25₾</span></div>
+          <div class="price-line"><span class="price-line__name">Замена дверного замка</span><span class="price-line__val">от 30₾</span></div>
+          <div class="price-line"><span class="price-line__name">Несколько мелких задач за один визит</span><span class="price-line__val">по договорённости</span></div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section class="section" id="why">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-head__eyebrow">Почему мы</span>
+      <h2>Почему выбирают Mastera Georgia</h2>
     </div>
 
-    <!-- FAQ -->
-    <section class="faq">
-      <h2 class="section-heading">Вопросы и ответы<br>Мастер на час в Ваке</h2>
-      <div class="faq-container">
-        <div class="faq-item">
-          <button class="faq-question"><span class="faq-icon">?</span><span class="faq-text">Как быстро приедет мастер в Ваке?</span><span class="faq-arrow">›</span></button>
-          <div class="faq-answer"><p>В Ваке много свободных мастеров рядом — на проспекте Чавчавадзе, Абашидзе, у парка Ваке и Багеби. Первый отклик — в среднем <strong>15–60 минут</strong>, выезд возможен в день обращения.</p></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-question"><span class="faq-icon">?</span><span class="faq-text">Сколько стоит мастер на час в Ваке?</span><span class="faq-arrow">›</span></button>
-          <div class="faq-answer"><p>Цены в Ваке такие же, как по всему городу: час работы — <strong>от 40₾</strong>, разовая мелкая задача — <strong>от 20₾</strong>, минимальный выезд — <strong>от 30₾</strong>. Поиск мастера через сервис <strong>бесплатный</strong>.</p></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-question"><span class="faq-icon">?</span><span class="faq-text">Повесите ТВ и картины в съёмной квартире без повреждений?</span><span class="faq-arrow">›</span></button>
-          <div class="faq-answer"><p>Да. В Ваке много арендного жилья бизнес-класса и новых ЖК — мастера аккуратно крепят ТВ, полки, зеркала и картины с учётом дорогой отделки. Для сложного монтажа есть <a href="/ru/tbilisi/naveska-montazh-tbilisi/" class="footer-link">отдельная услуга навески</a>.</p></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-question"><span class="faq-icon">?</span><span class="faq-text">Что входит в услугу мастер на час?</span><span class="faq-arrow">›</span></button>
-          <div class="faq-answer"><p>Любые мелкие разовые задачи: повесить, прикрутить, подтянуть, закрепить, отрегулировать, помочь по хозяйству — можно несколько дел за один визит. Для крупных задач у нас есть профильные мастера: <a href="/ru/tbilisi/sborka-mebeli-tbilisi/" class="footer-link">сборка мебели</a>, <a href="/ru/tbilisi/naveska-montazh-tbilisi/" class="footer-link">навеска и монтаж</a>, <a href="/ru/tbilisi/bytovoy-remont-tbilisi/" class="footer-link">бытовой ремонт</a>.</p></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-question"><span class="faq-icon">?</span><span class="faq-text">Мастера проверенные?</span><span class="faq-arrow">›</span></button>
-          <div class="faq-answer"><p><strong>Да.</strong> Все мастера проходят проверку. Перед выбором видите рейтинг и отзывы других клиентов.</p></div>
-        </div>
+    <div class="why-grid">
+      <div class="why-card">
+        <span class="why-card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </span>
+        <h3>Гарантия на работу</h3>
+        <p>Устраняем недочёты и даём гарантию на выполненные работы.</p>
       </div>
-      <div class="faq-buttons">
-        <button class="cta-button cta-clients" onclick="openClientLeadForm()">
-          <span class="cta-main">Вызвать мастера</span>
-          <span class="cta-sub">Бесплатно и быстро</span>
-        </button>
+      <div class="why-card">
+        <span class="why-card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </span>
+        <h3>Проверенные мастера</h3>
+        <p>Каждый специалист проходит проверку документов, а клиенты ставят оценку.</p>
       </div>
-    </section>
+      <div class="why-card">
+        <span class="why-card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1"/></svg>
+        </span>
+        <h3>Цена до начала работ</h3>
+        <p>Стоимость согласуем заранее — без доплат и сюрпризов.</p>
+      </div>
+      <div class="why-card">
+        <span class="why-card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </span>
+        <h3>Выезд в день обращения</h3>
+        <p>Отклик за 60 минут, выезд — сегодня или в удобное время.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- Другие услуги -->
-    <section class="other-services">
-      <h2 class="services-heading">Другие услуги</h2>
-      <p class="services-subtitle">Подберём мастера для любой задачи в Тбилиси</p>
-      <div class="services-grid">
-        <a href="/ru/tbilisi/gruzchiki-tbilisi/" class="service-card">
-          <div class="service-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="1" y="3" width="15" height="13"/>
-              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
-              <circle cx="5.5" cy="18.5" r="2.5"/>
-              <circle cx="18.5" cy="18.5" r="2.5"/>
-            </svg>
-          </div>
-          <h3 class="service-card-title">Грузчики</h3>
-          <p class="service-card-desc">Переезды, подъём мебели и техники на этаж, погрузка и разгрузка, вынос мусора</p>
-          <span class="service-card-link">Вызвать грузчиков</span>
-        </a>
-        <a href="/ru/tbilisi/klining-tbilisi/" class="service-card">
-          <div class="service-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2s5 6.5 5 11a5 5 0 0 1-10 0c0-4.5 5-11 5-11z"/>
-            </svg>
-          </div>
-          <h3 class="service-card-title">Уборка / Клининг</h3>
-          <p class="service-card-desc">Генеральная уборка, уборка после ремонта, мытьё окон, химчистка мебели</p>
-          <span class="service-card-link">Заказать уборку</span>
-        </a>
-        <a href="/ru/tbilisi/remont-kompyuterov-tbilisi/" class="service-card">
-          <div class="service-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="4" y="4" width="16" height="16" rx="2"/>
-              <rect x="9" y="9" width="6" height="6"/>
-              <line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/>
-              <line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/>
-              <line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/>
-              <line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/>
-            </svg>
-          </div>
-          <h3 class="service-card-title">Компьютерный мастер</h3>
-          <p class="service-card-desc">Ремонт ПК и ноутбуков, установка Windows и Office, чистка, удаление вирусов, настройка интернета</p>
-          <span class="service-card-link">Вызвать мастера</span>
-        </a>
-        <a href="/ru/tbilisi/santehnik-tbilisi/" class="service-card">
-          <div class="service-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
-            </svg>
-          </div>
-          <h3 class="service-card-title">Сантехник</h3>
-          <p class="service-card-desc">Ремонт труб, устранение протечек, замена смесителей, установка сантехники</p>
-          <span class="service-card-link">Найти сантехника</span>
-        </a>
-        <a href="/ru/tbilisi/elektrik-tbilisi/" class="service-card">
-          <div class="service-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-            </svg>
-          </div>
-          <h3 class="service-card-title">Электрик</h3>
-          <p class="service-card-desc">Замена розеток и проводки, подключение техники, установка освещения, ремонт щитков</p>
-          <span class="service-card-link">Найти электрика</span>
-        </a>
-        <a href="/ru/tbilisi/sborka-mebeli-tbilisi/" class="service-card">
-          <div class="service-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/>
-              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-              <line x1="12" y1="22.08" x2="12" y2="12"/>
-            </svg>
-          </div>
-          <h3 class="service-card-title">Сборка мебели</h3>
-          <p class="service-card-desc">Сборка и разборка шкафов, кухонь, кроватей, мебели IKEA</p>
-          <span class="service-card-link">Вызвать сборщика</span>
-        </a>
-        <a href="/ru/tbilisi/bytovoy-remont-tbilisi/" class="service-card">
-          <div class="service-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M15 12l-8.5 8.5a2.12 2.12 0 0 1-3-3L12 9"/>
-              <path d="M17.64 15 22 10.64"/>
-              <path d="m20.91 11.7-1.25-1.25c-.6-.6-.93-1.4-.93-2.25v-.86L16.01 4.6a5.56 5.56 0 0 0-3.94-1.64H9l.92.82A6.18 6.18 0 0 1 12 8.4v1.56l2 2h.86c.85 0 1.65.34 2.25.93l1.25 1.25"/>
-            </svg>
-          </div>
-          <h3 class="service-card-title">Бытовой ремонт</h3>
-          <p class="service-card-desc">Замена замков, ремонт мебели, регулировка дверей и окон, мелкие поломки</p>
-          <span class="service-card-link">Вызвать мастера</span>
-        </a>
-        <a href="/ru/tbilisi/naveska-montazh-tbilisi/" class="service-card">
-          <div class="service-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-              <line x1="8" y1="21" x2="16" y2="21"/>
-              <line x1="12" y1="17" x2="12" y2="21"/>
-            </svg>
-          </div>
-          <h3 class="service-card-title">Навеска и монтаж</h3>
-          <p class="service-card-desc">ТВ на стену, полки, карнизы, зеркала, картины — надёжное крепление</p>
-          <span class="service-card-link">Вызвать мастера</span>
-        </a>
-        <a href="/ru/tbilisi/master-na-chas-tbilisi/" class="service-card">
-          <div class="service-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-              <polyline points="9 22 9 12 15 12 15 22"/>
-            </svg>
-          </div>
-          <h3 class="service-card-title">Мастер на час в Тбилиси</h3>
-          <p class="service-card-desc">Универсальный мастер на час по всему городу — все районы Тбилиси</p>
-          <span class="service-card-link">Перейти</span>
-        </a>
-      </div>
-      <!-- Переход в другой город: Тбилиси и Батуми были связаны
-           только через обзорную страницу города, и вес внутренних
-           ссылок до услуг Батуми почти не доходил. -->
-      <div class="other-city-link">
-        <a href="/ru/batumi/master-na-chas-batumi/" class="other-city-card"><svg class="other-city-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V7l7-4v18"/><path d="M19 21V11l-7-4"/><path d="M9 9v.01"/><path d="M9 12v.01"/><path d="M9 15v.01"/><path d="M9 18v.01"/></svg><span class="other-city-body"><span class="other-city-label">Другой город</span><span class="other-city-name">Мастер на час в Батуми</span></span><svg class="other-city-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-      </div>
-    </section>
-  </main>
-    <section class="footer-cta">
-      <h2 class="footer-cta-title">Нужен мастер?</h2>
-      <p class="footer-cta-text">
-        Найдите нужного специалиста в короткие сроки.<br>
-        P.S. Сохрани ссылку — вдруг завтра потечёт батарея или отвалится розетка.<br>
-        Лучше знать, куда написать, чем искать!
-      </p>
-      <button class="cta-button cta-footer" onclick="openClientLeadForm()">
-        <span class="cta-main">Заказать мастера</span>
-        <span class="cta-sub">Опытные мастера Тбилиси</span>
-      </button>
-    </section>
-  <footer>
-      <p class="footer-text">
-        Срочный выезд в Тбилиси и Батуми<br>
-        📞 <a href="tel:+995557645196" class="footer-link">+995 557 645 196</a><br>
-        💬 <a href="https://t.me/job_kot" target="_blank" rel="noopener" class="footer-link">Telegram</a>
-        📘 <a href="https://www.facebook.com/profile.php?id=61595113524507" target="_blank" rel="noopener" class="footer-link">Facebook</a><br>
-        ✉️ <a href="mailto:info@mastera.ge" class="footer-link">info@mastera.ge</a><br>
-        🔧 <a href="/ru/masters/" class="footer-link footer-masters-link">Для мастеров</a><br>
-        © 2026 <strong>Мастера Грузии</strong>
-      </p>
-      <p class="footer-privacy">
-        Отправляя форму, вы соглашаетесь на обработку персональных данных в соответствии с законодательством Грузии.
-      </p>
-    </footer>
+<section class="section section--soft" id="about">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-head__eyebrow">Наш подход</span>
+      <h2>За что вы обращаетесь в Mastera Georgia</h2>
+    </div>
 
-  <div id="clientLeadFormModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="clientLeadFormTitle">
-    <div class="modal-content">
-      <span class="modal-close" onclick="closeClientLeadForm()">&times;</span>
-      <h2 class="modal-title" id="clientLeadFormTitle">Вызвать мастера на час в Ваке</h2>
-      <p class="modal-subtitle">Опишите задачу — мастер откликнется за 60 мин</p>
-      <form action="https://formspree.io/f/xpqjbpyk" method="POST" class="contact-form" id="clientLeadForm">
-        <input type="text" name="name" placeholder="Ваше имя" required minlength="2">
-        <input type="tel" name="phone" id="leadPhone" placeholder="Телефон">
-        <input type="text" name="telegram" placeholder="Telegram: @username" data-contact-required pattern="^(@[a-zA-Z0-9_]{5,32}|[0-9]{9,15})?$">
-        <p class="contact-or-text">ИЛИ</p>
-        <input type="text" name="whatsapp" placeholder="WhatsApp: номер телефона" data-contact-required>
-        <select name="district" required>
+    <div class="about-list">
+      <details class="about-item">
+        <summary>Цена согласована до начала работ</summary>
+        <div class="about-item__body"><p>Мастер называет стоимость до того, как возьмётся за работу. Решение продолжать — за вами.</p></div>
+      </details>
+      <details class="about-item">
+        <summary>Мастер проверен</summary>
+        <div class="about-item__body"><p>Регистрация с документами и рейтинг по отзывам клиентов. Специалисты с низким рейтингом перестают получать заявки.</p></div>
+      </details>
+      <details class="about-item">
+        <summary>Приедем в удобное время</summary>
+        <div class="about-item__body"><p>Выезд в день обращения или к назначенному времени. Срочные заявки берём в работу первыми.</p></div>
+      </details>
+      <details class="about-item">
+        <summary>Гарантия на работу</summary>
+        <div class="about-item__body"><p>На работы, где это применимо, мастер даёт гарантию. Споры решаем по переписке и фотографиям.</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="section section--dark" id="how">
+  <div class="container">
+    <div class="section-head"><h2>Вызвать мастера в Ваке?</h2></div>
+    <div class="steps-grid">
+      <div class="step-card"><span class="step-card__num">01</span><h3>Оставьте заявку</h3><p>Опишите что нужно сделать: собрать шкаф, повесить полки, поклеить обои</p></div>
+      <div class="step-card"><span class="step-card__num">02</span><h3>Подберём мастера</h3><p>Свяжемся в течение 60 минут и подберём мастера из Ваке или соседнего Сабуртало</p></div>
+      <div class="step-card"><span class="step-card__num">03</span><h3>Согласуйте цену</h3><p>Мастер оценит работу и назовёт стоимость без учёта материалов</p></div>
+      <div class="step-card"><span class="step-card__num">04</span><h3>Оплатите мастеру напрямую</h3><p>Платите мастеру напрямую после выполнения работ — цену знаете заранее</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--soft" id="districts">
+  <div class="container">
+    <div class="section-head"><h2>Мастера работают во всех районах Тбилиси</h2></div>
+    <div class="area-grid">
+      <a href="/ru/tbilisi/master-na-chas-saburtalo/" class="area-card"><span class="area-card__name">Сабуртало</span><span class="area-card__hint">Сабуртало, Дельиси</span></a>
+      <a href="/ru/tbilisi/master-na-chas-didube/" class="area-card"><span class="area-card__name">Дидубе</span><span class="area-card__hint">Автовокзал, Дигоми</span></a>
+      <a href="/ru/tbilisi/master-na-chas-chugureti/" class="area-card"><span class="area-card__name">Чугурети</span><span class="area-card__hint">Авлабари, Метехи</span></a>
+      <a href="/ru/tbilisi/master-na-chas-isani/" class="area-card"><span class="area-card__name">Исани</span><span class="area-card__hint">Навтлуги, Ортачала</span></a>
+      <a href="/ru/tbilisi/master-na-chas-samgori/" class="area-card"><span class="area-card__name">Самгори</span><span class="area-card__hint">Варкетили, Лило</span></a>
+      <a href="/ru/tbilisi/master-na-chas-gldani/" class="area-card"><span class="area-card__name">Глдани</span><span class="area-card__hint">Темка, Ахметели</span></a>
+      <a href="/ru/tbilisi/master-na-chas-nadzaladevi/" class="area-card"><span class="area-card__name">Надзаладеви</span><span class="area-card__hint">Вокзал, Церетели</span></a>
+      <a href="/ru/tbilisi/master-na-chas-mtatsminda/" class="area-card"><span class="area-card__name">Мтацминда</span><span class="area-card__hint">Центр, Сололаки</span></a>
+      <a href="/ru/tbilisi/master-na-chas-krtsanisi/" class="area-card"><span class="area-card__name">Крцаниси</span><span class="area-card__hint">Понтичала, Аэропорт</span></a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="faq">
+  <div class="container">
+    <div class="section-head"><h2>Вызвать мастера в Ваке?</h2></div>
+    <div class="faq-list">
+      <details class="faq-row">
+        <summary>Как быстро приедет мастер в Ваке?</summary>
+        <div class="faq-row__answer"><p>В Ваке много свободных мастеров рядом — на проспекте Чавчавадзе, Абашидзе, у парка Ваке и Багеби. Первый отклик — в среднем <strong>15–60 минут</strong>, выезд возможен в день обращения.</p></div>
+      </details>
+      <details class="faq-row">
+        <summary>Сколько стоит мастер на час в Ваке?</summary>
+        <div class="faq-row__answer"><p>Цены в Ваке такие же, как по всему городу: час работы — <strong>от 40₾</strong>, разовая мелкая задача — <strong>от 20₾</strong>, минимальный выезд — <strong>от 90₾</strong>. Поиск мастера через сервис <strong>бесплатный</strong>.</p></div>
+      </details>
+      <details class="faq-row">
+        <summary>Повесите ТВ и картины в съёмной квартире без повреждений?</summary>
+        <div class="faq-row__answer"><p>Да. В Ваке много арендного жилья бизнес-класса и новых ЖК — мастера аккуратно крепят ТВ, полки, зеркала и картины с учётом дорогой отделки. Для сложного монтажа есть <a href="/ru/tbilisi/naveska-montazh-tbilisi/" class="footer-link">отдельная услуга навески</a>.</p></div>
+      </details>
+      <details class="faq-row">
+        <summary>Что входит в услугу мастер на час?</summary>
+        <div class="faq-row__answer"><p>Любые мелкие разовые задачи: повесить, прикрутить, подтянуть, закрепить, отрегулировать, помочь по хозяйству — можно несколько дел за один визит. Для крупных задач у нас есть профильные мастера: <a href="/ru/tbilisi/sborka-mebeli-tbilisi/" class="footer-link">сборка мебели</a>, <a href="/ru/tbilisi/naveska-montazh-tbilisi/" class="footer-link">навеска и монтаж</a>, <a href="/ru/tbilisi/bytovoy-remont-tbilisi/" class="footer-link">бытовой ремонт</a>.</p></div>
+      </details>
+      <details class="faq-row">
+        <summary>Мастера проверенные?</summary>
+        <div class="faq-row__answer"><p><strong>Да.</strong> Все мастера проходят проверку. Перед выбором видите рейтинг и отзывы других клиентов.</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="section section--soft" id="services">
+  <div class="container">
+    <div class="section-head"><h2>Другие услуги</h2><p>Подберём мастера для любой задачи в Тбилиси</p></div>
+    <div class="services-grid">
+      <a href="/ru/tbilisi/gruzchiki-tbilisi/" class="service-card"><span class="service-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="6" width="13" height="10" rx="1.5"/><path d="M14 9h4l3 3.5V16h-7z"/><circle cx="6" cy="18.5" r="2"/><circle cx="17" cy="18.5" r="2"/></svg></span><div class="service-card__body"><div class="service-card__title"><h3>Грузчики</h3></div><p class="service-card__text">Переезды, подъём мебели и техники на этаж, погрузка и разгрузка, вынос мусора</p><div class="service-card__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div></div></a>
+      <a href="/ru/tbilisi/klining-tbilisi/" class="service-card"><span class="service-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/></svg></span><div class="service-card__body"><div class="service-card__title"><h3>Уборка / Клининг</h3></div><p class="service-card__text">Генеральная уборка, уборка после ремонта, мытьё окон, химчистка мебели</p><div class="service-card__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div></div></a>
+      <a href="/ru/tbilisi/remont-kompyuterov-tbilisi/" class="service-card"><span class="service-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></span><div class="service-card__body"><div class="service-card__title"><h3>Компьютерный мастер</h3></div><p class="service-card__text">Ремонт ПК и ноутбуков, установка Windows и Office, чистка, удаление вирусов, настройка интернета</p><div class="service-card__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div></div></a>
+      <a href="/ru/tbilisi/santehnik-tbilisi/" class="service-card"><span class="service-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.7s6 6.6 6 10.3a6 6 0 0 1-12 0c0-3.7 6-10.3 6-10.3z"/></svg></span><div class="service-card__body"><div class="service-card__title"><h3>Сантехник</h3></div><p class="service-card__text">Ремонт труб, устранение протечек, замена смесителей, установка сантехники</p><div class="service-card__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div></div></a>
+      <a href="/ru/tbilisi/elektrik-tbilisi/" class="service-card"><span class="service-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span><div class="service-card__body"><div class="service-card__title"><h3>Электрик</h3></div><p class="service-card__text">Замена розеток и проводки, подключение техники, установка освещения, ремонт щитков</p><div class="service-card__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div></div></a>
+      <a href="/ru/tbilisi/sborka-mebeli-tbilisi/" class="service-card"><span class="service-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.3 7 12 12 20.7 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg></span><div class="service-card__body"><div class="service-card__title"><h3>Сборка мебели</h3></div><p class="service-card__text">Сборка и разборка шкафов, кухонь, кроватей, мебели IKEA</p><div class="service-card__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div></div></a>
+      <a href="/ru/tbilisi/bytovoy-remont-tbilisi/" class="service-card"><span class="service-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 2v6"/><path d="M15 2v6"/><path d="M6 8h12v3a6 6 0 0 1-12 0z"/><path d="M12 17v5"/></svg></span><div class="service-card__body"><div class="service-card__title"><h3>Бытовой ремонт</h3></div><p class="service-card__text">Замена замков, ремонт мебели, регулировка дверей и окон, мелкие поломки</p><div class="service-card__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div></div></a>
+      <a href="/ru/tbilisi/naveska-montazh-tbilisi/" class="service-card"><span class="service-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg></span><div class="service-card__body"><div class="service-card__title"><h3>Навеска и монтаж</h3></div><p class="service-card__text">ТВ на стену, полки, карнизы, зеркала, картины — надёжное крепление</p><div class="service-card__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div></div></a>
+      <a href="/ru/tbilisi/master-na-chas-tbilisi/" class="service-card"><span class="service-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span><div class="service-card__body"><div class="service-card__title"><h3>Мастер на час в Тбилиси</h3></div><p class="service-card__text">Универсальный мастер на час по всему городу — все районы Тбилиси</p><div class="service-card__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div></div></a>
+      <a href="/ru/batumi/master-na-chas-batumi/" class="service-card"><span class="service-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M10 21v-5h4v5"/><path d="M9 10h.01"/><path d="M15 10h.01"/></svg></span><div class="service-card__body"><div class="service-card__title"><h3>Мастер на час в Батуми</h3></div><p class="service-card__text">Другой город</p><div class="service-card__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div></div></a>
+    </div>
+  </div>
+</section>
+
+<section class="section section--soft" id="lead">
+  <div class="container">
+    <div class="hero__grid">
+
+      <div>
+        <span class="section-head__eyebrow">Заявка в Mastera Georgia</span>
+        <h2>Опишите задачу — подберём мастера</h2>
+        <p>Отвечаем в течение часа в рабочее время. Заявка ни к чему не обязывает: вы узнаете цену и сами решите, продолжать ли.</p>
+        <ul class="hero__perks" style="margin-top:1.4rem">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Оплата после работы
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Выезд сегодня
+          </li>
+        </ul>
+      </div>
+
+      <form action="https://formspree.io/f/xpqjbpyk" method="POST" class="lead-form" id="clientLeadForm">
+        <input type="text" name="name" placeholder="Ваше имя" required minlength="2" class="form-control">
+        <input type="tel" name="phone" id="leadPhone" placeholder="Телефон" class="form-control">
+        <input type="text" name="telegram" placeholder="Telegram: @username" data-contact-required pattern="^(@[a-zA-Z0-9_]{5,32}|[0-9]{9,15})?$" class="form-control">
+        <p class="lead-form__or">ИЛИ</p>
+        <input type="text" name="whatsapp" placeholder="WhatsApp: номер телефона" data-contact-required class="form-control">
+        <select name="district" required class="form-control">
           <option value="" disabled>Выберите район</option>
           <option value="Vake" selected></option>
           <option value="Other"></option>
         </select>
         <input type="hidden" name="service" value="Мастер на час — Ваке">
-        <textarea name="message" rows="4" placeholder="Опишите задачу: собрать шкаф, повесить полки, мелкий ремонт... Без адреса — его сообщите мастеру лично." required minlength="10"></textarea>
+        <textarea name="message" rows="4" placeholder="Опишите задачу: собрать шкаф, повесить полки, мелкий ремонт... Без адреса — его сообщите мастеру лично." required minlength="10" class="form-control"></textarea>
         <input type="hidden" name="_subject" value="Заявка — Мастер на час Ваке, Тбилиси">
         <input type="hidden" name="_language" value="ru">
         <input type="text" name="_gotcha" style="display:none">
-        <label class="consent-label">
+        <label class="lead-form__consent">
           <input type="checkbox" id="leadConsent" checked required>
           <span>Согласен на обработку данных</span>
         </label>
-        <button type="submit" class="submit-btn" id="leadSubmitBtn">Отправить заявку</button>
+        <button type="submit" class="button button--primary button--large lead-form__submit" id="leadSubmitBtn">Отправить заявку</button>
       </form>
+
     </div>
   </div>
+</section>
 
-  <div id="thankYouModal" class="modal">
-    <div class="modal-content thank-you-content">
-      <span class="modal-close" onclick="closeThankYou()">&times;</span>
-      <div class="thank-you-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-        </svg>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+
+    <div class="site-footer__grid">
+      <div>
+        <h3>Mastera Georgia</h3>
+        <p style="color:rgba(255,255,255,.62)">Сервис подбора мастеров в Тбилиси и Батуми. Бытовые работы, ремонт и помощь по дому.</p>
       </div>
-      <h2 class="thank-you-title">Заявка принята!</h2>
-      <p class="thank-you-text">Мастер свяжется с вами в ближайшее время.</p>
-      <div class="thank-you-badge">
-        <span class="badge-label">Среднее время отклика</span>
-        <span class="badge-value">15–60 минут</span>
+      <div>
+        <h3>Услуги</h3>
+        <ul>
+          <li><a href="/ru/tbilisi/master-na-chas-tbilisi/">Мастер на час</a></li>
+          <li><a href="/ru/tbilisi/santehnik-tbilisi/">Сантехник</a></li>
+          <li><a href="/ru/tbilisi/elektrik-tbilisi/">Электрик</a></li>
+          <li><a href="/ru/tbilisi/klining-tbilisi/">Клининг</a></li>
+        </ul>
       </div>
-      <button class="submit-btn thank-you-btn" onclick="closeThankYou()">Отлично!</button>
+      <div>
+        <h3>Контакты</h3>
+        <ul>
+          <li><a href="tel:+995557645196">+995 557 645 196</a></li>
+          <li><a href="https://t.me/mastera_ru_bot">Telegram-бот</a></li>
+          <li><a href="https://www.facebook.com/profile.php?id=61595113524507" target="_blank" rel="noopener">Facebook</a></li>
+          <li><a href="mailto:info@mastera.ge">info@mastera.ge</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Сервис</h3>
+        <ul>
+          <li><a href="/ru/batumi/">Батуми</a></li>
+          <li><a href="/ru/fb/">Мы в Facebook</a></li>
+        </ul>
+      </div>
     </div>
+
+    <div class="site-footer__bottom">
+      <span>© 2026 Mastera Georgia · Тбилиси, Грузия</span>
+      <span>Тбилиси · Батуми</span>
+    </div>
+
   </div>
-
-  <div id="masterLeadFormModal" class="modal" style="display:none"></div>
-  <div id="masterThankYouModal" class="modal" style="display:none"></div>
-  <!-- Кнопка «наверх». Появляется после прокрутки примерно на экран,
-       чтобы не загораживать первый экран. Слева, напротив WhatsApp. -->
-  <button id="backToTop" class="back-to-top" type="button" aria-label="Наверх">
-    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
-      <path d="M12 19V5M12 5l-7 7M12 5l7 7" fill="none" stroke="currentColor"
-            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </button>
-
-<!-- WhatsApp floating button -->
-  <a id="scrollToTop" class="scroll-to-top whatsapp-fab" href="https://wa.me/995557645196" target="_blank" rel="noopener">
-    <img src="/image/whatsapp-icon.webp" alt="WhatsApp" width="192" height="192" loading="lazy" decoding="async">
-  </a>
-
+</footer>
 </body>
 </html>
-
-
-

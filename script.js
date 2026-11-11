@@ -17,7 +17,6 @@ const i18n = {
         phoneForeignInvalid: 'Проверьте номер телефона: укажите его с кодом страны, например +7 916 123 45 67',
         telegramInvalid:     'Пожалуйста, введите корректный Telegram username (например: @username) или номер телефона',
         contactRequired:     'Пожалуйста, заполните хотя бы один из контактов: Telegram или WhatsApp',
-        telegramRequiredMaster: 'Пожалуйста, укажите Telegram — верификация мастера проходит в Telegram-боте',
         submitError:         'Ошибка при отправке. Попробуйте ещё раз.',
         // Причины отказа бота, понятные человеку. Во всех случаях заявка уже
         // продублирована на почту, поэтому про потерю не говорим.
@@ -29,17 +28,17 @@ const i18n = {
         // 4–10 секунд, и без обратной связи человек жал кнопку повторно,
         // думая, что промахнулся.
         submitSending:       'Отправляем…',
+        // Быстрая форма первого экрана: человек оставляет только контакт.
+        heroConsent:         'Пожалуйста, подтвердите согласие на обработку данных',
+        heroContactEmpty:    'Пожалуйста, укажите номер WhatsApp',
         photoLabel:          '📷 Фото проблемы (по желанию, до 3)',
         photoAdd:            'Прикрепить фото',
         photoTooMany:        'Можно прикрепить не более 3 фото',
         photoBadType:        'Можно прикреплять только изображения',
         photoTooBig:         'Файл слишком большой (до 10 МБ)',
         photoRemove:         'Удалить',
-        masterFinishTelegram:'✅ Продолжить в Telegram',
         urgentLabel:         '🚨 Срочный заказ',
         addressInDescription: 'Укажите в описании только суть задачи, без адреса. Точный адрес вы сообщите мастеру лично, когда он возьмёт заявку.',
-        specialtyOtherPlaceholder: 'Укажите вашу специальность',
-        specialtyOtherRequired:    'Пожалуйста, укажите вашу специальность',
         // ⚠️ Коротко — по ширине поля, а не «на глаз». Прежние 60 символов
         // обрезались и на десктопе (поле 378px в правой колонке модалки),
         // и тем более на мобильном, где остаётся всего 264px под текст.
@@ -49,11 +48,6 @@ const i18n = {
         // целиком, не подсказывает ничего.
         districtOtherPlaceholder:  'Район, ориентир, метро',
         districtOtherRequired:     'Пожалуйста, укажите район или ближайший ориентир — без этого мастер не поймёт, куда ехать',
-        masterCityLabel:           'Город работы',
-        masterCityPlaceholder:     'Город',
-        masterDistrictPlaceholder: 'Сначала выберите город',
-        masterDistrictLabel:       'Район работы',
-        masterCityRequired:        'Пожалуйста, выберите город — заявки приходят мастерам своего города',
         // Подписи полей форм для скринридера (aria-label). На экране их не
         // видно: поля опознаются по placeholder, а он для скринридера не
         // подпись — исчезает при вводе и читается не всеми программами.
@@ -67,15 +61,22 @@ const i18n = {
         a11yService:               'Категория работ',
         a11yMessage:               'Описание задачи',
         a11yPhotos:                'Фотографии задачи (до 3 штук)',
-        a11yCity:                  'Город',
-        a11ySpecialty:             'Специальность',
-        a11yExperience:            'Опыт работы в годах',
-        a11yAbout:                 'О себе и опыте работы',
         a11yDistrictOther:         'Уточните район или ориентир',
-        a11ySpecialtyOther:        'Уточните специальность',
         // Бейдж в окне благодарности. До этого текст был зашит в HTML каждой
         // из 105 страниц и успел разъехаться: на лендингах «15–60 минут», на
         // главных «30–60». Теперь источник один — словарь, HTML не трогаем.
+        // Окно благодарности. Собирается в JS (см. buildThankYouModal):
+        // в разметке страниц его нет, поэтому до 08.11.2026 клиент
+        // основной формы не видел подтверждения вообще.
+        thanksTitle:               'Заявка принята!',
+        thanksText:                'Заявка уже у мастеров. Свяжемся с вами, чтобы уточнить детали и назвать цену.',
+        thanksTextHero:            'Мы получили ваш номер. Напишем в WhatsApp, уточним задачу и назовём цену.',
+        // Ночной вариант для быстрой формы: обещать WhatsApp «в течение часа»
+        // в 02:00 — значит не сдержать слово. Отдельный текст нужен потому,
+        // что общий ночной говорит «свяжемся», а здесь у нас только номер
+        // WhatsApp — человек ждал бы звонка.
+        thanksTextHeroNight:       'Мы получили ваш номер. Напишем в WhatsApp с {time} — или раньше, если мастер освободится ночью.',
+        thanksClose:               'Понятно',
         thanksBadgeLabel:          'Среднее время отклика',
         thanksBadgeValue:          '15–60 минут',
         // Ночной вариант. Показывается в «тихие часы» бота: обещать отклик за
@@ -99,31 +100,24 @@ const i18n = {
         phoneForeignInvalid: 'შეამოწმეთ ტელეფონის ნომერი: მიუთითეთ ქვეყნის კოდით, მაგალითად +7 916 123 45 67',
         telegramInvalid:     'გთხოვთ, შეიყვანოთ სწორი Telegram მომხმარებლის სახელი (მაგ: @username) ან ტელეფონის ნომერი',
         contactRequired:     'გთხოვთ, შეავსოთ ერთ-ერთი საკონტაქტო ველი: Telegram ან WhatsApp',
-        telegramRequiredMaster: 'გთხოვთ, მიუთითოთ Telegram — ხელოსნის ვერიფიკაცია მიმდინარეობს Telegram-ბოტში',
         submitError:         'გაგზავნისას მოხდა შეცდომა. სცადეთ კიდევ ერთხელ.',
         submitContactInText: 'წაშალეთ ტელეფონი და ბმულები დავალების აღწერიდან — კონტაქტები უკვე მიუთითეთ ზემოთ. განაცხადი მიღებულია, დაგიკავშირდებით.',
         submitTooMany:       'თქვენ რამდენიმე განაცხადი გააგზავნეთ ზედიზედ. განაცხადი უკვე მიღებულია — მალე დაგიკავშირდებით.',
         submitTooLong:       'აღწერა ძალიან გრძელია — აღწერეთ მოკლედ, დანარჩენს ხელოსანს უამბობთ.',
         submitProfanity:     'გთხოვთ, გადააფორმულიროთ დავალების აღწერა.',
         submitSending:       'იგზავნება…',
+        heroConsent:         'გთხოვთ, დაადასტუროთ თანხმობა მონაცემთა დამუშავებაზე',
+        heroContactEmpty:    'გთხოვთ, მიუთითოთ WhatsApp-ის ნომერი',
         photoLabel:          '📷 პრობლემის ფოტო (სურვილისამებრ, 3-მდე)',
         photoAdd:            'ფოტოს მიმაგრება',
         photoTooMany:        'შეგიძლიათ მიამაგროთ მაქსიმუმ 3 ფოტო',
         photoBadType:        'შესაძლებელია მხოლოდ სურათების მიმაგრება',
         photoTooBig:         'ფაილი ძალიან დიდია (10 მბ-მდე)',
         photoRemove:         'წაშლა',
-        masterFinishTelegram:'✅ გაგრძელება Telegram-ში',
         urgentLabel:         '🚨 სასწრაფო შეკვეთა',
         addressInDescription: 'აღწერაში მიუთითეთ მხოლოდ დავალება, მისამართის გარეშე. ზუსტი მისამართი უთხარით ხელოსნას, როდესაც იგი აიღებს განაცხადს.',
-        specialtyOtherPlaceholder: 'მიუთითეთ თქვენი სპეციალობა',
-        specialtyOtherRequired:    'გთხოვთ, მიუთითოთ თქვენი სპეციალობა',
         districtOtherPlaceholder:  'რაიონი, ორიენტირი, მეტრო',
         districtOtherRequired:     'გთხოვთ, მიუთითოთ რაიონი ან უახლოესი ორიენტირი — ამის გარეშე ხელოსანი ვერ გაიგებს, სად უნდა მივიდეს',
-        masterCityLabel:           'სამუშაო ქალაქი',
-        masterCityPlaceholder:     'ქალაქი',
-        masterDistrictPlaceholder: 'ჯერ აირჩიეთ ქალაქი',
-        masterDistrictLabel:       'სამუშაო რაიონი',
-        masterCityRequired:        'გთხოვთ, აირჩიოთ ქალაქი — განაცხადები მიდის იმავე ქალაქის ხელოსნებთან',
         // Ველების სახელები სკრინრიდერისთვის (aria-label) — ეკრანზე არ ჩანს.
         a11yName:                  'თქვენი სახელი',
         a11yPhone:                 'ტელეფონის ნომერი',
@@ -133,12 +127,12 @@ const i18n = {
         a11yService:               'სამუშაოს კატეგორია',
         a11yMessage:               'დავალების აღწერა',
         a11yPhotos:                'დავალების ფოტოები (3-მდე)',
-        a11yCity:                  'ქალაქი',
-        a11ySpecialty:             'სპეციალობა',
-        a11yExperience:            'სამუშაო გამოცდილება წლებში',
-        a11yAbout:                 'თქვენ შესახებ და გამოცდილება',
         a11yDistrictOther:         'დააზუსტეთ რაიონი ან ორიენტირი',
-        a11ySpecialtyOther:        'დააზუსტეთ სპეციალობა',
+        thanksTitle:               'განაცხადი მიღებულია!',
+        thanksText:                'განაცხადი უკვე ხელოსნებთანაა. დაგიკავშირდებით დეტალების დასაზუსტებლად და ფასის დასახელებლად.',
+        thanksTextHero:            'მივიღეთ თქვენი ნომერი. მოგწერთ WhatsApp-ში, დავაზუსტებთ ამოცანას და დავასახელებთ ფასს.',
+        thanksTextHeroNight:       'მივიღეთ თქვენი ნომერი. მოგწერთ WhatsApp-ში {time}-დან — ან უფრო ადრე, თუ ხელოსანი ღამით გათავისუფლდება.',
+        thanksClose:               'გასაგებია',
         thanksBadgeLabel:          'პასუხის საშუალო დრო',
         thanksBadgeValue:          '15–60 წუთი',
         thanksBadgeLabelNight:     'პასუხის დრო',
@@ -153,31 +147,24 @@ const i18n = {
         phoneForeignInvalid: 'Please check the phone number: include the country code, for example +7 916 123 45 67',
         telegramInvalid:     'Please enter a valid Telegram username (e.g. @username) or phone number',
         contactRequired:     'Please fill in at least one contact field: Telegram or WhatsApp',
-        telegramRequiredMaster: 'Please provide your Telegram — master verification is done in the Telegram bot',
         submitError:         'An error occurred while submitting. Please try again.',
         submitContactInText: 'Please remove phone numbers and links from the task description — you have already provided your contacts above. The request has been received, we will get in touch.',
         submitTooMany:       'You have sent several requests in a row. We already have your request and will contact you shortly.',
         submitTooLong:       'The description is too long — keep it short, you can tell the rest to the specialist.',
         submitProfanity:     'Please rephrase the task description.',
         submitSending:       'Sending…',
+        heroConsent:         'Please confirm your consent to data processing',
+        heroContactEmpty:    'Please enter your WhatsApp number',
         photoLabel:          '📷 Photo of the problem (optional, up to 3)',
         photoAdd:            'Attach photo',
         photoTooMany:        'You can attach up to 3 photos',
         photoBadType:        'Only images can be attached',
         photoTooBig:         'File is too large (up to 10 MB)',
         photoRemove:         'Remove',
-        masterFinishTelegram:'✅ Continue in Telegram',
         urgentLabel:         '🚨 Urgent order',
         addressInDescription: 'Describe only the task, without the address. Share the exact address with the specialist directly once they take the request.',
-        specialtyOtherPlaceholder: 'Specify your specialty',
-        specialtyOtherRequired:    'Please specify your specialty',
         districtOtherPlaceholder:  'District, landmark, metro',
         districtOtherRequired:     'Please specify the district or a nearby landmark — without it the specialist will not know where to go',
-        masterCityLabel:           'City of work',
-        masterCityPlaceholder:     'City',
-        masterDistrictPlaceholder: 'Choose a city first',
-        masterDistrictLabel:       'Work district',
-        masterCityRequired:        'Please choose a city — requests go to specialists in the same city',
         // Field names for screen readers (aria-label) — not visible on screen.
         a11yName:                  'Your name',
         a11yPhone:                 'Phone number',
@@ -187,12 +174,12 @@ const i18n = {
         a11yService:               'Service category',
         a11yMessage:               'Task description',
         a11yPhotos:                'Task photos (up to 3)',
-        a11yCity:                  'City',
-        a11ySpecialty:             'Specialty',
-        a11yExperience:            'Years of experience',
-        a11yAbout:                 'About you and your experience',
         a11yDistrictOther:         'Specify the district or a landmark',
-        a11ySpecialtyOther:        'Specify your specialty',
+        thanksTitle:               'Request received!',
+        thanksText:                'Your request is already with our specialists. We will contact you to confirm the details and name the price.',
+        thanksTextHero:            'We have your number. We will message you on WhatsApp, confirm the task and name the price.',
+        thanksTextHeroNight:       'We have your number. We will message you on WhatsApp from {time} — or sooner, if a specialist is free tonight.',
+        thanksClose:               'Got it',
         thanksBadgeLabel:          'Average response time',
         thanksBadgeValue:          '15–60 minutes',
         thanksBadgeLabelNight:     'Response time',
@@ -206,11 +193,53 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '209';
+const MASTERA_VERSION = '345';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
-// Публичный username бота мастеров — для диплинка «завершить регистрацию».
-const MASTER_BOT_DEEPLINK = 'https://t.me/mastera_tbilisi_bot?start=master';
+// Личный чат владельца сервиса: сюда ведут кнопки «Написать в Telegram»
+// — и CTA на главных, и нижняя панель связи. Это живой диалог, а не бот.
+// ⚠️ Не путать со ссылкой «Telegram-бот» в подвале: та ведёт на
+// клиентского бота по языку страницы и задана прямо в разметке.
+const TELEGRAM_CHAT_URL = 'https://t.me/job_kot';
+
+// Зеркало is_valid_fio в боте (validators.py): там имя проверяется isalpha(),
+// и цифры отклоняются. Без проверки здесь мусорное имя уходит в анкете мастера
+// в бота, тот её браковал — и мастер вводил заново всё, что заполнил на сайте.
+const NAME_PATTERN = /^[\p{L}]{2,}(?:[\s-][\p{L}]{2,})*$/u;
+
+// Тот же смысл для атрибута pattern: браузер компилирует его БЕЗ флага 'u',
+// и \p{L} там не работает как класс букв — проверка пропускала бы даже цифры.
+// Диапазоны: латиница, кириллица, грузинский (мхедрули).
+//
+// ⚠️ Обе константы объявлены ЗДЕСЬ, в начале файла, а не рядом с
+// validateName ниже. initNamePatternAttr() вызывается из initModalForms()
+// по DOMContentLoaded, а тег <script> стоит с defer: документ к этому
+// моменту бывает уже разобран не до конца, и обращение к const из
+// временной мёртвой зоны падало с «Cannot access 'NAME_PATTERN_ATTR'
+// before initialization» — маска имени не проставлялась ни на одной
+// странице. const не поднимается, поэтому объявление обязано быть выше
+// любого вызова.
+const NAME_PATTERN_ATTR =
+    '[A-Za-zÀ-ÖØ-öø-ÿĀ-žА-Яа-яЁёა-ჰ]{2,}' +
+    '(?:[ \\-][A-Za-zÀ-ÖØ-öø-ÿĀ-žА-Яа-яЁёა-ჰ]{2,})*[ ]*';
+
+// Соответствие «поле формы → ключ подписи в i18n».
+// Ключи селекторов намеренно по name/типу, а не по id: id есть не у всех
+// полей, а разметка форм одинакова на всех страницах.
+// ⚠️ Здесь же, в начале файла, и по той же причине, что NAME_PATTERN_ATTR
+// выше: applyFieldLabels() вызывается по DOMContentLoaded, то есть раньше,
+// чем разбор файла доходит до середины.
+const A11Y_FIELD_LABELS = [
+    ['input[name="name"]',        'a11yName'],
+    ['input[name="phone"]',       'a11yPhone'],
+    ['input[name="telegram"]',    'a11yTelegram'],
+    ['input[name="whatsapp"]',    'a11yWhatsapp'],
+    ['select[name="district"]',   'a11yDistrict'],
+    ['select[name="service"]',    'a11yService'],
+    ['textarea[name="message"]',  'a11yMessage'],
+    ['input[name="district_other"]',  'a11yDistrictOther'],
+    ['.lead-photo-input',         'a11yPhotos'],
+];
 
 // Глобальная переменная текущего языка
 // window.__FORCE_LANG__ устанавливается в языковых подстраницах (/ru/, /ge/, /en/)
@@ -226,100 +255,41 @@ function t(key) {
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    initStatsAnimation();
     initSmoothScroll();
-    initButtonHoverEffects();
-    initOnlineCounter();
-    initLanguageSwitcher();
     initModalForms();
-    initScrollToTop();
-    initBackToTop();
     initClientLeadFormTracking();
+    initHeroQuickForm();
     initClientPhotoUpload();
-    initCityDropdown();
-    // ⚠️ Меню шапки строится ДО бургера: бургер дописывает свою кнопку в
-    // конец шапки, и порядок вставки определяет, что окажется правее.
-    initTopbar();
-    initHeaderNav();
-    initBurgerMenu();
     initClientDistrictOptions();
     initClientUrgentOption();
-    initMasterLeadFormTracking();
-    initMasterDistrictOptions();
-    initMasterSpecialtyOther();
-    initWhatsAppButtonTracking();
-    initFAQ();
+    applyFieldLabels();
 });
 
-// ============================================
-// 1. АНИМАЦИЯ ЦИФР (УНИВЕРСАЛЬНАЯ)
-// ============================================
+/* Подписи полей — ещё раз после полной загрузки.
+   ⚠️ Окно заявки и нижняя панель контактов собираются в
+   redesign.js по событию load, то есть ПОЗЖЕ обработчика выше:
+   на DOMContentLoaded их полей в документе ещё нет, и первый
+   вызов их не застаёт. Повторный проход подписывает и их.
+   Повтор безопасен: applyFieldLabels только проставляет
+   aria-label и ничего не накапливает.
 
-function initStatsAnimation() {
-    const stats = document.querySelectorAll('.stat-number');
-    if (stats.length === 0) return;
+   ⚠️ Раньше applyFieldLabels вызывался ТОЛЬКО из setLanguage,
+   а тот остался от старого сайта с переключением языка на лету
+   и в редизайне не вызывается никогда (у каждого языка свой
+   адрес). Из-за этого подписи не проставлялись вовсе, и аудит
+   доступности показывал 9 полей без подписи: телефон, имя,
+   Telegram, WhatsApp, район, услуга и описание задачи.
+   Скринридер объявлял их как «поле ввода, пусто», а <select> —
+   как «список, свёрнут», не называя, что именно выбирают.
 
-    const observerOptions = {
-        threshold: 0.5,
-        rootMargin: '0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && !entry.target.dataset.animated) {
-                const element = entry.target;
-                const target = parseInt(element.dataset.target, 10);
-                const suffix = element.dataset.suffix || '';
-                const startVal = parseInt(element.dataset.start, 10) || 0;
-                element.dataset.animated = 'true';
-                animateCounter(element, target, 2500, suffix, startVal);
-                observer.unobserve(element);
-            }
-        });
-    }, observerOptions);
-
-    stats.forEach(stat => {
-        if (!stat.dataset.target) {
-            const rawText = stat.textContent.trim();
-            const match = rawText.match(/^(\d+)(.*)$/);
-            if (match) {
-                stat.dataset.target = match[1];
-                stat.dataset.suffix = match[2];
-            } else {
-                return;
-            }
-        }
-        stat.textContent = '0' + (stat.dataset.suffix || '');
-        observer.observe(stat);
-    });
-}
-
-function animateCounter(element, target, duration, suffix, start) {
-    start = start || 0;
-    const range = target - start;
-    const isReverse = start > target;
-    const startTime = performance.now();
-
-    function ease(t) {
-        return isReverse ? t : (1 - Math.pow(1 - t, 5));
-    }
-
-    function animate(currentTime) {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const easedProgress = ease(progress);
-        const current = Math.floor(start + easedProgress * range);
-        element.textContent = current + suffix;
-        if (progress < 1) {
-            requestAnimationFrame(animate);
-        } else {
-            element.textContent = target + suffix;
-        }
-    }
-
-    requestAnimationFrame(animate);
-}
-
+   ⚠️ Сама подписка на load живёт В КОНЦЕ ФАЙЛА, а не здесь.
+   Тег <script> стоит с defer, поэтому документ к моменту разбора
+   нередко уже 'complete', и ветка с немедленным вызовом
+   срабатывала прямо на этой строке — когда const A11Y_FIELD_LABELS
+   (объявлен ниже) ещё в временной мёртвой зоне. В консоли падало
+   «Cannot access 'A11Y_FIELD_LABELS' before initialization», и
+   подписи не проставлялись ни разу. const не поднимается, поэтому
+   вызов обязан стоять после объявления. */
 // ============================================
 // 2. АНИМАЦИЯ ПОЯВЛЕНИЯ ПРИ СКРОЛЛЕ
 // ============================================
@@ -340,6 +310,28 @@ function initSmoothScroll() {
         anchor.addEventListener('click', function (e) {
             const href = this.getAttribute('href');
             if (href === '#' || href === '#!') return;
+
+            /* ⚠️ Кнопки-призывы на #lead открывают ОКНО заявки
+               (обработчик в redesign.js), прокручивать к секции их
+               не нужно. Слушатель здесь висит на самом элементе, а
+               тот, что открывает окно, — делегированный на document,
+               поэтому срабатываем мы первыми: страница уезжала вниз,
+               и окно открывалось уже поверх прокрученной страницы.
+               Видно это было не сразу — окно ставит body в
+               overflow:hidden и обрывает плавную прокрутку на
+               полпути, но при «уменьшить движение» (scroll-behavior:
+               auto) она отрабатывает мгновенно и целиком, а после
+               закрытия окна человек оказывается не там, где кликал.
+
+               Условие зеркалит redesign.js: оглавление лендинга
+               (.v-jumpbar) и ссылки подвала — это навигация по
+               странице, от них ждут именно прокрутки. Меняя список
+               исключений там, правь и здесь, иначе кнопка снова
+               начнёт делать два действия сразу. */
+            if (href === '#lead' &&
+                !this.closest('.v-jumpbar') &&
+                !this.closest('.site-footer')) return;
+
             e.preventDefault();
             const target = document.querySelector(href);
             if (target) {
@@ -348,128 +340,11 @@ function initSmoothScroll() {
         });
     });
 }
-
-// ============================================
-// 4. ЭФФЕКТЫ НАВЕДЕНИЯ НА КНОПКИ
-// ============================================
-
-function initButtonHoverEffects() {
-    document.querySelectorAll('.cta-button').forEach(button => {
-        button.addEventListener('mouseenter', function () {
-            this.style.transform = 'scale(1.05)';
-        });
-        button.addEventListener('mouseleave', function () {
-            this.style.transform = 'scale(1)';
-        });
-    });
-}
-
-// ============================================
-// 5. СЧЕТЧИК ОНЛАЙН МАСТЕРОВ
-// ============================================
-
-function initOnlineCounter() {
-    const counterElement = document.querySelector('.online-count');
-    if (!counterElement) return;
-
-    const minCount = 3;
-    const maxCount = 16;
-    const baseVal = parseInt(counterElement.dataset.base, 10);
-    const initialCount = !isNaN(baseVal) ? baseVal : Math.floor(Math.random() * 8) + 1;
-    counterElement.textContent = initialCount;
-    let currentCount = initialCount;
-
-    function updateCounter() {
-        const change = Math.floor(Math.random() * 7) - 3; // -3..+3
-        let targetCount = Math.max(minCount, Math.min(maxCount, currentCount + change));
-        counterElement.classList.add('updating');
-        setTimeout(() => {
-            counterElement.textContent = targetCount;
-            counterElement.classList.remove('updating');
-            currentCount = targetCount;
-        }, 150);
-    }
-
-    function scheduleNextUpdate() {
-        const delay = Math.random() * 8000 + 12000;
-        setTimeout(() => {
-            updateCounter();
-            scheduleNextUpdate();
-        }, delay);
-    }
-
-    setTimeout(scheduleNextUpdate, 5000);
-}
-
-// ============================================
-// 6. FAQ АККОРДЕОН
-// ============================================
-
-function initFAQ() {
-    const faqItems = document.querySelectorAll('.faq-item');
-    if (faqItems.length === 0) return;
-
-    faqItems.forEach(item => {
-        const question = item.querySelector('.faq-question');
-        question.addEventListener('click', () => {
-            faqItems.forEach(other => {
-                if (other !== item) other.classList.remove('active');
-            });
-            item.classList.toggle('active');
-        });
-    });
-}
-
-// ============================================
-// 7. ПЕРЕКЛЮЧЕНИЕ ЯЗЫКОВ
-// ============================================
-
-function initLanguageSwitcher() {
-    const langButtons = document.querySelectorAll('.lang-btn');
-
-    // На языковых подстраницах (/ru/, /ge/, /en/) язык задан принудительно
-    if (window.__FORCE_LANG__) {
-        setLanguage(window.__FORCE_LANG__);
-        return;
-    }
-
-    const browserLang = navigator.language || navigator.userLanguage;
-
-    let defaultLang = 'ru';
-    if (browserLang.startsWith('ka')) defaultLang = 'ka';
-    else if (browserLang.startsWith('en')) defaultLang = 'en';
-
-    const savedLang = localStorage.getItem('language') || defaultLang;
-    setLanguage(savedLang);
-
-    langButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const lang = btn.dataset.lang;
-            setLanguage(lang);
-            localStorage.setItem('language', lang);
-        });
-    });
-}
-
 // Соответствие «поле формы → ключ подписи в i18n».
 // Ключи селекторов намеренно по name/типу, а не по id: id есть не у всех
 // полей, а разметка форм одинакова на всех 108 страницах.
-const A11Y_FIELD_LABELS = [
-    ['input[name="name"]',        'a11yName'],
-    ['input[name="phone"]',       'a11yPhone'],
-    ['input[name="telegram"]',    'a11yTelegram'],
-    ['input[name="whatsapp"]',    'a11yWhatsapp'],
-    ['select[name="district"]',   'a11yDistrict'],
-    ['select[name="service"]',    'a11yService'],
-    ['select[name="city"]',       'a11yCity'],
-    ['select[name="specialty"]',  'a11ySpecialty'],
-    ['textarea[name="message"]',  'a11yMessage'],
-    ['textarea[name="about"]',    'a11yAbout'],
-    ['input[name="experience"]',  'a11yExperience'],
-    ['input[name="district_other"]',  'a11yDistrictOther'],
-    ['input[name="specialty_other"]', 'a11ySpecialtyOther'],
-    ['.lead-photo-input',         'a11yPhotos'],
-];
+/* A11Y_FIELD_LABELS объявлен в начале файла —
+   см. комментарий там о временной мёртвой зоне при defer. */
 
 /**
  * Проставляет полям форм aria-label — подпись, которую читает скринридер.
@@ -596,10 +471,10 @@ function initModalForms() {
     // Закрытие по ESC
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
-            closeClientLeadForm();
-            closeMasterLeadForm();
+            // Окно заявки закрывает по ESC само (buildLeadModal в
+            // redesign.js) — оно управляется hidden/is-open, а не
+            // display, и отсюда его гасить нечем.
             closeThankYou();
-            closeMasterThankYou();
         }
     });
 
@@ -686,7 +561,7 @@ function normalizeGeorgianPhone(value) {
 
 // Форматирование телефонных номеров
 function initPhoneFormatting() {
-    const phoneInputs = document.querySelectorAll('#leadPhone, #masterLeadPhone');
+    const phoneInputs = document.querySelectorAll('#leadPhone');
     const whatsappInputs = document.querySelectorAll('input[name="whatsapp"]');
     const PREFIX_LEN = '+995'.length;
 
@@ -788,17 +663,8 @@ const TELEGRAM_PATTERN = /^(@[a-zA-Z0-9_]{5,32}|[0-9]{9,15})$/;
 // Имя: только буквы (кириллица, латиница, грузинский алфавит), пробелы и дефис
 // для составных имён («Анна-Мария», «Giorgi Beridze»). Каждое слово — от 2 букв.
 //
-// Зеркало is_valid_fio в боте (validators.py): там имя проверяется isalpha(),
-// и цифры отклоняются. Без проверки здесь мусорное имя уходит в анкете мастера
-// в бота, тот её браковал — и мастер вводил заново всё, что заполнил на сайте.
-const NAME_PATTERN = /^[\p{L}]{2,}(?:[\s-][\p{L}]{2,})*$/u;
-
-// Тот же смысл для атрибута pattern: браузер компилирует его БЕЗ флага 'u',
-// и \p{L} там не работает как класс букв — проверка пропускала бы даже цифры.
-// Диапазоны: латиница, кириллица, грузинский (мхедрули).
-const NAME_PATTERN_ATTR =
-    '[A-Za-zÀ-ÖØ-öø-ÿĀ-žА-Яа-яЁёა-ჰ]{2,}' +
-    '(?:[ \\-][A-Za-zÀ-ÖØ-öø-ÿĀ-žА-Яа-яЁёა-ჰ]{2,})*[ ]*';
+/* NAME_PATTERN и NAME_PATTERN_ATTR объявлены в начале файла —
+   см. комментарий там о временной мёртвой зоне при defer. */
 
 function validateName(nameInput) {
     if (!nameInput) return true;
@@ -816,7 +682,7 @@ function validateName(nameInput) {
 // Проставляет полям имени нативную проверку «только буквы» на всех страницах —
 // через JS, без правки HTML каждого лендинга (как районы выше).
 function initNamePatternAttr() {
-    document.querySelectorAll('#clientLeadForm input[name="name"], #masterLeadForm input[name="name"]')
+    document.querySelectorAll('#clientLeadForm input[name="name"]')
         .forEach(function (input) {
             if (input.getAttribute('pattern')) return;   // уже задано в разметке
             input.setAttribute('pattern', NAME_PATTERN_ATTR);
@@ -886,19 +752,6 @@ function validateTelegram(telegramInput) {
     }
     return true;
 }
-
-// Валидация стандартных форм (clientForm / masterForm)
-function validateForm(e) {
-    const form = e.target;
-    const phoneInput    = form.querySelector('input[type="tel"]');
-    const telegramInput = form.querySelector('input[name="telegram"]');
-
-    if (!validatePhone(phoneInput)) { e.preventDefault(); return false; }
-    if (!validateTelegram(telegramInput)) { e.preventDefault(); return false; }
-
-    return true;
-}
-
 // ============================================
 // 10. ЛИД-ФОРМА КЛИЕНТА
 // ============================================
@@ -913,8 +766,6 @@ function validateForm(e) {
 // всё равно увидел бы «Заявка отправлена», а лид не дошёл бы до мастеров.
 // Теперь любой переезд — это правка DNS, а не правка сайта.
 const BOT_REQUEST_URL = 'https://bot.mastera.ge/site/new-request';
-// Эндпоинт бота для анкет мастеров с сайта (уведомление админу-лид).
-const BOT_MASTER_URL  = 'https://bot.mastera.ge/site/new-master';
 
 // ============================================
 // 9.9 РАЙОНЫ ТБИЛИСИ — ЕДИНЫЙ ИСТОЧНИК ПРАВДЫ
@@ -951,21 +802,21 @@ const DISTRICTS = [
       hintEn: 'Center, Vera, Sololaki',
       hintKa: 'ცენტრი, ვერა, სოლოლაკი' },
     { slug: 'Didube',      ru: 'Дидубе',      en: 'Didube',      ka: 'დიდუბე',
-      hintRu: 'Дидубе-Чугурети, Автовокзал, Дигоми',
-      hintEn: 'Didube-Chughureti, Bus Station, Digomi',
-      hintKa: 'დიდუბე-ჩუღურეთი, ავტოსადგური, დიღომი' },
+      hintRu: 'Дидубе-Чугурети, Автовокзал, Светицховели',
+      hintEn: 'Didube-Chughureti, Bus Station, Svetitskhoveli',
+      hintKa: 'დიდუბე-ჩუღურეთი, ავტოსადგური, სვეტიცხოველი' },
     { slug: 'Chugureti',   ru: 'Чугурети',    en: 'Chughureti',  ka: 'ჩუღურეთი',
       hintRu: 'Грмагеле, Авлабари, Метехи',
       hintEn: 'Grmaghele, Avlabari, Metekhi',
       hintKa: 'გრმაღელე, ავლაბარი, მეტეხი' },
     { slug: 'Isani',       ru: 'Исани',       en: 'Isani',       ka: 'ისანი',
-      hintRu: 'Самгори, Навтлуги, Ортачала',
-      hintEn: 'Samgori, Navtlugi, Ortachala',
-      hintKa: 'სამგორი, ნავთლუღი, ორთაჭალა' },
+      hintRu: 'Навтлуги, Вазисубани, Мтацминда-Исани',
+      hintEn: 'Navtlugi, Vazisubani, Mtatsminda-Isani',
+      hintKa: 'ნავთლუღი, ვაზისუბანი, მთაწმინდა-ისანი' },
     { slug: 'Samgori',     ru: 'Самгори',     en: 'Samgori',     ka: 'სამგორი',
-      hintRu: 'Восток, Варкетили, Лило',
-      hintEn: 'Vostok, Varketili, Lilo',
-      hintKa: 'აღმოსავლეთი, ვარკეთილი, ლილო' },
+      hintRu: 'Восток, Лило, Дампало',
+      hintEn: 'Vostok, Lilo, Dampalo',
+      hintKa: 'აღმოსავლეთი, ლილო, დამპალო' },
     { slug: 'Gldani',      ru: 'Глдани',      en: 'Gldani',      ka: 'გლდანი',
       hintRu: 'Темка, Муштаиди, Ахметели',
       hintEn: 'Temka, Mushtaidi, Akhmeteli',
@@ -977,7 +828,40 @@ const DISTRICTS = [
     { slug: 'Krtsanisi',   ru: 'Крцаниси',    en: 'Krtsanisi',   ka: 'კრწანისი',
       hintRu: 'Понтичала, Лочини, Аэропорт',
       hintEn: 'Ponichala, Lochini, Airport',
-      hintKa: 'ფონიჭალა, ლოჭინი, აეროპორტი' }
+      hintKa: 'ფონიჭალა, ლოჭინი, აეროპორტი' },
+    /* ⚠️ Пять районов ниже добавлены 08.11.2026. Дигоми,
+       Варкетили и Ортачала до этого значились МЕСТНОСТЯМИ в
+       подсказках Дидубе, Самгори и Исани — оттуда они убраны
+       в этой же правке. Оставить их в обоих местах нельзя:
+       одно место предлагалось бы двумя пунктами списка, и
+       клиент выбирал бы наугад, а район уходит мастеру в
+       карточке заявки.
+
+       ⚠️ В выпадающем меню шапки этих районов НЕТ намеренно
+       (решение владельца): меню строится по DISTRICT_PAGES в
+       redesign.js, куда их не вносим, пока нет своих страниц.
+       Кнопка «Все районы» ведёт в блок «География», где они
+       есть. Появятся страницы — добавить строки туда. */
+    { slug: 'Digomi',      ru: 'Дигоми',      en: 'Digomi',      ka: 'დიღომი',
+      hintRu: 'Дигоми, Вашлиджвари, Третий массив',
+      hintEn: 'Digomi, Vashlijvari, Third Massif',
+      hintKa: 'დიღომი, ვაშლიჯვარი, მესამე მასივი' },
+    { slug: 'Varketili',   ru: 'Варкетили',   en: 'Varketili',   ka: 'ვარკეთილი',
+      hintRu: 'Варкетили 1-4, Явнана, Гарекахети',
+      hintEn: 'Varketili 1-4, Iavnana, Garekakheti',
+      hintKa: 'ვარკეთილი 1-4, იავნანა, გარეკახეთი' },
+    { slug: 'Mukhiani',    ru: 'Мухиани',     en: 'Mukhiani',    ka: 'მუხიანი',
+      hintRu: 'Мухиани, Санзона, Квемо Мухиани',
+      hintEn: 'Mukhiani, Sanzona, Kvemo Mukhiani',
+      hintKa: 'მუხიანი, სანზონა, ქვემო მუხიანი' },
+    { slug: 'Avchala',     ru: 'Авчала',      en: 'Avchala',     ka: 'ავჭალა',
+      hintRu: 'Авчала, Земо Авчала, Глдани-Нахаловка',
+      hintEn: 'Avchala, Zemo Avchala, Gldani-Nakhalovka',
+      hintKa: 'ავჭალა, ზემო ავჭალა, გლდანი-ნახალოვკა' },
+    { slug: 'Ortachala',   ru: 'Ортачала',    en: 'Ortachala',   ka: 'ორთაჭალა',
+      hintRu: 'Ортачала, Абанотубани, Нижний Вера',
+      hintEn: 'Ortachala, Abanotubani, Lower Vera',
+      hintKa: 'ორთაჭალა, აბანოთუბანი, ქვემო ვერა' }
 ];
 
 // ── Районы Батуми ──
@@ -1013,6 +897,19 @@ const CITIES = [
     { value: 'Тбилиси', ru: 'Тбилиси', en: 'Tbilisi', ka: 'თბილისი', districts: DISTRICTS },
     { value: 'Батуми',  ru: 'Батуми',  en: 'Batumi',  ka: 'ბათუმი',  districts: BATUMI_DISTRICTS }
 ];
+
+// ⚠️ Отдаём справочник наружу. script.js — не модуль и не IIFE, но
+// объявления на верхнем уровне сделаны через const: у таких привязок
+// область видимости — сам скрипт, и свойства window они НЕ создают
+// (в отличие от var). Без этой строки redesign.js видел бы
+// window.MASTERA_CITIES как undefined, молча не строил бы меню районов,
+// и пункт «Районы» остался бы обычной ссылкой — ошибка тихая.
+//
+// Передаём именно CITIES, а не два массива по отдельности: в нём уже
+// лежит связка «город → его районы», а меню шапки выбирает список по
+// городу страницы. Копии списка не делаем — единый источник районов
+// остаётся здесь (правило «один список районов» в CLAUDE.md).
+window.MASTERA_CITIES = CITIES;
 
 // Подписи служебных опций, которых нет в config.locations бота:
 //   Other — «мой район не в списке» (клиентская форма), уточняется текстом;
@@ -1060,7 +957,7 @@ function botCityFromUrl() {
     //    строит buildDistrictSelect(), который сам спрашивает город у этой
     //    функции. На момент вызова селект ещё тбилисский, а предвыбор уже
     //    затёрт — получался замкнутый круг.
-    var byDistrict = PAGE_DISTRICT_SLUG ? masterCityFromDistrict(PAGE_DISTRICT_SLUG) : '';
+    var byDistrict = PAGE_DISTRICT_SLUG ? cityFromDistrictSlug(PAGE_DISTRICT_SLUG) : '';
     if (byDistrict) return byDistrict;
 
     // 2) По URL — для страниц без района: хабы (/ru/batumi/) и сервисные
@@ -1077,11 +974,11 @@ function clientDistrictsForPage() {
     return botCityFromUrl() === 'Батуми' ? BATUMI_DISTRICTS : DISTRICTS;
 }
 
-// Город мастера по выбранному району. Районы Тбилиси и Батуми НЕ пересекаются
+// Город по slug района. Районы Тбилиси и Батуми НЕ пересекаются
 // (проверено в config.yaml бота), поэтому суффиксы вида StariGradNS, как в
 // Сербии, здесь не нужны — slug однозначно определяет город.
-// '' означает «город неизвестен»: бот спросит его сам на шаге дособора анкеты.
-function masterCityFromDistrict(slug) {
+// '' означает «город неизвестен» — вызывающий решает, что делать дальше.
+function cityFromDistrictSlug(slug) {
     if (!slug || slug === 'All') return '';   // «все районы» без города — город неизвестен
     if (slug === 'AllTB') return 'Тбилиси';
     if (slug === 'AllBA') return 'Батуми';
@@ -1089,14 +986,6 @@ function masterCityFromDistrict(slug) {
         return c.districts.some(function (d) { return d.slug === slug; });
     });
     return found ? found.value : '';
-}
-
-// Район мастера в каноническом виде для бота: «все районы» в пределах города
-// тоже сводим к общему значению, которое понимает бот.
-function masterDistrictForBot(slug) {
-    if (!slug) return 'Все районы';
-    if (slug === 'All' || slug === 'AllTB' || slug === 'AllBA') return 'Все районы';
-    return BOT_DISTRICT_MAP[slug] || slug;
 }
 
 // Подпись района на языке страницы; с подсказкой местностей — для <option>.
@@ -1152,6 +1041,20 @@ function resolveBotCategory(rawService) {
         // (шкаф, мебель). Проверено на списке обиходных слов.
         [['двер', 'дверн', 'door', 'дверного замка', 'door lock',
           'კარის'], 'Ремонт'],
+        // Бойлеры и водонагреватели — «Сантехника»: работа идёт по
+        // трубам и воде, и прайс на неё лежит там же.
+        // ⚠️ Правило стоит ДО «Ремонта» и ДО «мастера на час»:
+        // подпись «Ремонт и установка бойлеров» содержит и «ремонт»,
+        // и «установ» — без этой строки заявка уехала бы в бытовой
+        // ремонт квартир или к мастеру на час, мимо сантехников.
+        [['бойлер', 'водонагреват', 'boiler', 'water heater',
+          'ბოილერ', 'წყალგამაცხელებელ'], 'Сантехника'],
+        // Wi-Fi, роутеры и домашняя сеть — «Компьютерная помощь».
+        // ⚠️ Тоже ДО «мастера на час»: «Настройка Wi-Fi» иначе
+        // поймалась бы широким фолбэком. Маркер 'wi-fi' пишем и
+        // без дефиса: в заявках встречается и «вайфай», и «wifi».
+        [['wi-fi', 'wifi', 'вай-фай', 'вайфай', 'роутер', 'router',
+          'ვაი-ფაი', 'როუტერ'], 'Компьютерная помощь'],
         [['ремонт', 'repair', 'რემონტ'], 'Ремонт'],
         // «Мастер на час», «Handyman …», «ოსტატი საათით …», навеска/монтаж — работа мастера на час.
         [['мастер на час', 'handyman', 'ოსტატი საათით', 'навеск', 'монтаж',
@@ -1265,7 +1168,17 @@ async function sendLeadToBot(formData, idempotencyKey) {
         phone:       phone,
         district:    BOT_DISTRICT_MAP[get('district')] || get('district') || 'Другой',
         subdistrict: districtOther || 'Не указан',
-        category:    resolveBotCategory(get('service')),
+        /* Категория: обычно из списка услуг, но карточка услуги без
+           своей страницы может задать её точнее.
+
+           ⚠️ Список в форме укрупнённый — восемь пунктов. Заявка с
+           карточки «Настройка Wi-Fi» через него стала бы «Другое»
+           и ушла бы узкому кругу мастеров вместо тех, кто чинит
+           компьютеры. Поэтому карточка кладёт свою категорию в
+           скрытое поле service_exact (его ставит redesign.js), и
+           она имеет приоритет. Поле пустое — работает прежний
+           разбор по списку. */
+        category:    resolveBotCategory(get('service_exact') || get('service')),
         description: descParts.join('\n'),
         address:     'Не указан',
         contact:     contactParts.join('\n') || 'Нет контакта',
@@ -1402,123 +1315,20 @@ function initClientPhotoUpload() {
     initClientPhotoUpload._reset = () => { leadPhotoDataUrls = []; renderPreviews(); };
 }
 
-// Значение опции «Другое» в select специальности по языкам (value из HTML).
-const SPECIALTY_OTHER_VALUE = { ru: 'Другое', en: 'Other', ka: 'სხვა' };
 
-// Инжектит поле «уточните специальность» в форму мастера: показывается только
-// когда в select специальности выбрано «Другое». Без правки HTML каждой страницы
-// (как initClientPhotoUpload / initClientUrgentOption).
-function initMasterSpecialtyOther() {
-    const form = document.getElementById('masterLeadForm');
-    if (!form) return;
-    const select = form.querySelector('select[name="specialty"]');
-    if (!select) return;
-    if (form.querySelector('input[name="specialty_other"]')) return; // уже добавлено
-
-    const lang = ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru';
-    const otherValue = SPECIALTY_OTHER_VALUE[lang] || SPECIALTY_OTHER_VALUE.ru;
-
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.name = 'specialty_other';
-    input.placeholder = t('specialtyOtherPlaceholder');
-    input.setAttribute('aria-label', t('a11ySpecialtyOther'));
-    input.style.display = 'none';           // скрыто, пока не выбрано «Другое»
-    input.minLength = 2;
-
-    // Вставляем сразу после select специальности
-    select.insertAdjacentElement('afterend', input);
-
-    function sync() {
-        const isOther = select.value === otherValue;
-        input.style.display = isOther ? '' : 'none';
-        input.required = isOther;
-        if (!isOther) input.value = '';
-    }
-    select.addEventListener('change', sync);
-    sync();
-}
-
-// Одноразовый код связки «анкета на сайте ↔ мастер в боте». Генерируется при
-// отправке формы, уходит в бота полем code и подставляется в диплинк кнопки
-// «Завершить регистрацию» (?start=m_<code>). По нему бот подтянет анкету, и
-// мастеру не придётся вводить данные заново — только пройти селфи-верификацию.
-let masterLeadCode = '';
-function generateMasterLeadCode() {
-    // 24 hex-символа в нижнем регистре: безопасно для диплинка Telegram (?start=…
-    // допускает [A-Za-z0-9_-]) и переживает .toLowerCase() при разборе в боте.
-    try {
-        const bytes = new Uint8Array(12);
-        crypto.getRandomValues(bytes);
-        return Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
-    } catch (e) {
-        // Фолбэк без Web Crypto (очень старые браузеры)
-        return (Date.now().toString(16) + Math.random().toString(16).slice(2)).slice(0, 24);
-    }
-}
-
-// Отправка анкеты мастера в Telegram-бота (лид админу). Fire-and-forget, не влияет на email.
-async function sendMasterLeadToBot(formData) {
-    const get = (k) => (formData.get(k) || '').toString().trim();
-
-    const lang = ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru';
-    const otherValue = SPECIALTY_OTHER_VALUE[lang] || SPECIALTY_OTHER_VALUE.ru;
-    const specialtyOther = get('specialty_other');
-    let specialty = get('specialty');
-    if (specialty === otherValue && specialtyOther) {
-        specialty = specialtyOther;
-    }
-    const experience = get('experience');
-
-    const payload = {
-        name:      get('name'),
-        phone:     normalizeGeorgianPhone(get('phone')),
-        telegram:  get('telegram'),
-        whatsapp:  normalizeWhatsappPhone(get('whatsapp')),
-        specialty: experience ? specialty + ' (опыт: ' + experience + ' лет)' : specialty,
-        city:      get('city') || masterCityFromDistrict(get('district')),
-        district:  masterDistrictForBot(get('district')),
-        message:   get('about'),
-        specialty_raw: specialty,
-        experience:    experience,
-        code:          masterLeadCode,
-        honeypot:      get('_gotcha'),
-        lang:         lang
-    };
-
-    return await postBotJson(BOT_MASTER_URL, payload);
-}
-// Диплинк «завершить регистрацию»: если есть код связки — ведём на ?start=m_<code>
-// (бот подтянет анкету и попросит только селфи), иначе на общий ?start=master.
-function masterFinishDeeplink() {
-    if (masterLeadCode) {
-        // Меняем аргумент master → m_<code>, сохраняя базовый URL бота.
-        return MASTER_BOT_DEEPLINK.replace(/\?start=.*$/, '') + '?start=m_' + masterLeadCode;
-    }
-    return MASTER_BOT_DEEPLINK;
-}
-
-// Добавляет в модалку благодарности мастеру кнопку «Завершить регистрацию в Telegram».
-// При повторном вызове (после отправки формы) обновляет href актуальным кодом связки.
-function ensureMasterTelegramButton() {
-    const modal = document.getElementById('masterThankYouModal');
-    if (!modal) return;
-    const content = modal.querySelector('.thank-you-content');
-    if (!content) return;
-    let link = content.querySelector('.master-tg-finish-btn');
-    if (!link) {
-        link = document.createElement('a');
-        link.className = 'master-tg-finish-btn';
-        link.target = '_blank';
-        link.rel = 'noopener';
-        link.textContent = t('masterFinishTelegram');
-        // Вставляем перед кнопкой «Отлично!», если она есть
-        const okBtn = content.querySelector('.thank-you-btn');
-        if (okBtn) content.insertBefore(link, okBtn);
-        else content.appendChild(link);
-    }
-    link.href = masterFinishDeeplink();
-}
+// ⚠️ Слоя мастеров нет В ЭТОМ РЕПОЗИТОРИИ: здесь ни анкеты, ни модалок,
+// ни вызова /site/new-master. Клиентская заявка уходит в
+// /site/new-request — это всё, что умеет редизайн.
+//
+// Но на ПРОДЕ страницы /<lang>/masters/ живы: отдают 200, стоят в
+// sitemap.xml, проиндексированы, и на них рабочая анкета (шлёт на
+// Formspree, не боту). В футере на них стоит ссылка «Для мастеров».
+// Поэтому прежняя формулировка «слоя мастеров нет вовсе» неверна и
+// уже привела к потере ссылки при редизайне.
+//
+// Правило: решая судьбу /masters/, сверяйся с продом, а не с
+// содержимым этой папки. Саму страницу предстоит переверстать в новом
+// оформлении — до тех пор она остаётся от старого сайта.
 
 // ============================================
 // 10.1 КАСКАД: РАЙОН → ПОДРАЙОН (данные из бота, config.yaml)
@@ -1586,770 +1396,6 @@ function buildDistrictSelect(select, withHints) {
     // 4. Возвращаем предвыбор лендинга (район страницы) — он пережил пересборку.
     if (preselected) select.value = preselected;
 }
-
-// ── Переключатель города в шапке ───────────────────────────────────────────
-// На десктопе плашка показывает только текущий город, остальные — списком по
-// клику: при добавлении городов ширина шапки не меняется. На мобильном (<769px)
-// кнопки остаются в ряд, там CSS-правила дропдауна не действуют.
-//
-// Ширину плашки считаем в JS, а не в CSS: она должна совпадать с «Для мастеров»
-// над ней, а длина той надписи меняется при переключении языка (RUS/GEO/ENG).
-// Переключатель языка на телефоне: свёрнут до текущего языка, остальные
-// раскрываются по клику. Нужен, потому что на мобильном он становится
-// компактной кнопкой справа от логотипа (см. style.css, блок «ШАПКА НА
-// ТЕЛЕФОНАХ»), и его прежняя строка в шапке освобождается.
-//
-// Зеркалит initCityDropdown ниже, но с обратным условием по ширине:
-// у городов выпадающий список работает на ДЕСКТОПЕ, у языка — на МОБИЛЬНОМ.
-// Услуги для бургер-меню. Слаг собирается из основы и суффикса города:
-// santehnik-tbilisi / santehnik-batumi — схема одинакова для всех девяти
-// категорий, поэтому отдельная таблица адресов не нужна.
-//
-// Подписи короткие, как в меню, а не как в заголовках лендингов:
-// «Сантехник», а не «Сантехник в Тбилиси» — город уже выбран выше.
-// Иконки пунктов меню — те же, что на карточках услуг главной страницы
-// (ru/index.html, блок .service-card-icon). Намеренно дублируем разметку,
-// а не ссылаемся на карточки: лендинга услуг на 99 страницах из 108 нет,
-// и брать иконку со страницы было бы неоткуда.
-//
-// Цвет задаётся в CSS через currentColor, здесь его нет — иначе пункт
-// меню и его иконка разъехались бы по цвету при правке темы.
-const BURGER_ICONS = {
-    'master-na-chas':     '<path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>',
-    'santehnik':          '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>',
-    'elektrik':           '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
-    'bytovoy-remont':     '<path d="M15 12l-8.5 8.5a2.12 2.12 0 0 1-3-3L12 9"/><path d="M17.64 15 22 10.64"/><path d="m20.91 11.7-1.25-1.25c-.6-.6-.93-1.4-.93-2.25v-.86L16.01 4.6a5.56 5.56 0 0 0-3.94-1.64H9l.92.82A6.18 6.18 0 0 1 12 8.4v1.56l2 2h.86c.85 0 1.65.34 2.25.93l1.25 1.25"/>',
-    'sborka-mebeli':      '<line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>',
-    'naveska-montazh':    '<rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>',
-    'klining':            '<path d="M12 2s5 6.5 5 11a5 5 0 0 1-10 0c0-4.5 5-11 5-11z"/>',
-    'gruzchiki':          '<rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>',
-    'remont-kompyuterov': '<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/>',
-
-    // Узкие услуги. Контуры взяты с карточек на самих лендингах,
-    // чтобы в меню и на странице стояла одна и та же иконка.
-    'konditsionery':      '<path d="M9.59 4.59A2 2 0 1 1 11 8H2"/><path d="M12.59 19.41A2 2 0 1 0 14 16H2"/><path d="M17.73 7.73A2.5 2.5 0 1 1 19.5 12H2"/>',
-    'stiralnye-mashiny':  '<rect x="3" y="2" width="18" height="20" rx="2"/><circle cx="12" cy="13" r="5"/><circle cx="12" cy="13" r="1.5"/><line x1="7" y1="5.5" x2="7.01" y2="5.5"/><line x1="11" y1="5.5" x2="11.01" y2="5.5"/>',
-    'dveri-zamki':        '<path d="M3 21h18"/><path d="M5 21V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v17"/><circle cx="15" cy="12" r="1"/>',
-
-    // Служебные пункты меню. «Для мастеров» — та же иконка, что у ссылки
-    // в шапке: человек узнаёт её, уйдя из шапки в меню.
-    'home':     '<path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V9.5z"/>',
-    'masters':  '<polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/><path d="M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>',
-    'facebook': '<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>',
-};
-
-const BURGER_SERVICES = [
-    { slug: 'master-na-chas',    ru: 'Мастер на час',      ka: 'ოსტატი საათით',       en: 'Handyman' },
-    { slug: 'santehnik',         ru: 'Сантехник',          ka: 'სანტექნიკოსი',        en: 'Plumber' },
-    { slug: 'elektrik',          ru: 'Электрик',           ka: 'ელექტრიკოსი',         en: 'Electrician' },
-    { slug: 'bytovoy-remont',    ru: 'Бытовой ремонт',     ka: 'საყოფაცხოვრებო რემონტი', en: 'Home repair' },
-    { slug: 'sborka-mebeli',     ru: 'Сборка мебели',      ka: 'ავეჯის აწყობა',       en: 'Furniture assembly' },
-    { slug: 'naveska-montazh',   ru: 'Навеска и монтаж',   ka: 'დამაგრება და მონტაჟი', en: 'Mounting' },
-    { slug: 'klining',           ru: 'Клининг',            ka: 'დასუფთავება',         en: 'Cleaning' },
-    { slug: 'gruzchiki',         ru: 'Грузчики',           ka: 'მტვირთავები',         en: 'Movers' },
-    { slug: 'remont-kompyuterov', ru: 'Ремонт компьютеров', ka: 'კომპიუტერის შეკეთება', en: 'Computer repair' },
-    // ⚠️ Узкие услуги лежат по пути БЕЗ суффикса города
-    // (/ru/tbilisi/konditsionery/, а не konditsionery-tbilisi), поэтому
-    // помечены flat: ссылка для них собирается без «-<город>».
-    { slug: 'konditsionery',     ru: 'Кондиционеры',       ka: 'კონდიციონერები',      en: 'Air conditioners', flat: true },
-    { slug: 'stiralnye-mashiny', ru: 'Стиральные машины',  ka: 'სარეცხი მანქანები',   en: 'Washing machines', flat: true },
-    { slug: 'dveri-zamki',       ru: 'Двери и замки',      ka: 'კარები და საკეტები',  en: 'Doors and locks',  flat: true },
-];
-
-// ============================================
-// ГОРИЗОНТАЛЬНОЕ МЕНЮ ШАПКИ — ТОЛЬКО ДЕСКТОП
-// ============================================
-// Строка «Услуги ⌄ · Как работаем · Районы ⌄ · Вопросы» между логотипом
-// и переключателями. Прежде на десктопе навигации в шапке не было вовсе:
-// все 12 услуг и 15 районов лежали в бургере, то есть на широком экране
-// человек видел три полоски там, где у него полно места.
-//
-// Разметку строит скрипт, а не HTML: иначе пришлось бы править 130
-// страниц, причём на каждой — свой город и язык. Здесь и то, и другое
-// читается из адреса, поэтому пункты сразу ведут в нужный город.
-//
-// ⚠️ Районы берутся НЕ из DISTRICTS/BATUMI_DISTRICTS: те массивы описывают
-// список для формы заявки, их слаги («Vake») не совпадают с адресами
-// страниц («master-na-chas-vake»). Поэтому ниже свой список, сверенный
-// с папками на диске.
-const NAV_DISTRICTS = {
-    tbilisi: [
-        { slug: 'master-na-chas-vake',        ru: 'Ваке',        ka: 'ვაკე',        en: 'Vake' },
-        { slug: 'master-na-chas-saburtalo',   ru: 'Сабуртало',   ka: 'საბურთალო',   en: 'Saburtalo' },
-        { slug: 'master-na-chas-mtatsminda',  ru: 'Мтацминда',   ka: 'მთაწმინდა',   en: 'Mtatsminda' },
-        { slug: 'master-na-chas-didube',      ru: 'Дидубе',      ka: 'დიდუბე',      en: 'Didube' },
-        { slug: 'master-na-chas-gldani',      ru: 'Глдани',      ka: 'გლდანი',      en: 'Gldani' },
-        { slug: 'master-na-chas-isani',       ru: 'Исани',       ka: 'ისანი',       en: 'Isani' },
-        { slug: 'master-na-chas-samgori',     ru: 'Самгори',     ka: 'სამგორი',     en: 'Samgori' },
-        { slug: 'master-na-chas-nadzaladevi', ru: 'Надзаладеви', ka: 'ნაძალადევი',  en: 'Nadzaladevi' },
-        { slug: 'master-na-chas-chugureti',   ru: 'Чугурети',    ka: 'ჩუღურეთი',    en: 'Chughureti' },
-        { slug: 'master-na-chas-krtsanisi',   ru: 'Крцаниси',    ka: 'კრწანისი',    en: 'Krtsanisi' },
-    ],
-    batumi: [
-        { slug: 'master-na-chas-stary-batumi',    ru: 'Старый Батуми', ka: 'ძველი ბათუმი',  en: 'Old Batumi' },
-        { slug: 'master-na-chas-novy-bulvar',     ru: 'Новый бульвар', ka: 'ახალი ბულვარი', en: 'New Boulevard' },
-        { slug: 'master-na-chas-khimshiashvili',  ru: 'Химшиашвили',   ka: 'ხიმშიაშვილი',   en: 'Khimshiashvili' },
-        { slug: 'master-na-chas-boni-gorodok',    ru: 'Бони-городок',  ka: 'ბონი-გოროდოკი', en: 'Boni Gorodok' },
-        { slug: 'master-na-chas-aeroport-batumi', ru: 'Аэропорт',      ka: 'აეროპორტი',     en: 'Airport' },
-    ],
-};
-
-// Подписи пунктов верхнего уровня — отдельной таблицей: три языка рядом
-// читаются лучше, чем разбросанные по коду тернарники.
-const NAV_LABELS = {
-    services:  { ru: 'Услуги',       ka: 'სერვისები',      en: 'Services' },
-    how:       { ru: 'Как работаем', ka: 'როგორ ვმუშაობთ', en: 'How it works' },
-    districts: { ru: 'Районы',       ka: 'რაიონები',       en: 'Districts' },
-    faq:       { ru: 'Вопросы',      ka: 'კითხვები',       en: 'FAQ' },
-    call:      { ru: 'Позвонить',    ka: 'დარეკვა',        en: 'Call' },
-};
-
-// ============================================
-// ВЕРХНЯЯ ПОЛОСА НАД ШАПКОЙ — ТОЛЬКО ДЕСКТОП
-// ============================================
-// Узкая строка: часы работы — обещание по цене — телефон.
-// Решение владельца 09.11.2026: телефон уезжает сюда, и шапка
-// освобождается под логотип, меню и переключатели.
-//
-// ⚠️ Часы НЕ выдуманы и не скопированы с образца: это реальные часы
-// сервиса, выведенные из QUIET_HOURS (см. ниже по файлу) — окно, когда
-// заявка уходит мастерам со звуком. Будни 08:00–22:00, выходные
-// 09:00–22:00, поэтому в полосе стоит общее «08:00–22:00».
-// QUIET_HOURS зеркалит config.yaml бота; меняя их там — поменять и
-// подпись здесь.
-const TOPBAR_TEXT = {
-    hours: {
-        ru: 'Ежедневно, 08:00–22:00',
-        ka: 'ყოველდღე, 08:00–22:00',
-        en: 'Daily, 08:00–22:00',
-    },
-    promise: {
-        ru: 'Стоимость согласуем до начала работ',
-        ka: 'ფასს ვათანხმებთ სამუშაოს დაწყებამდე',
-        en: 'We agree the price before work starts',
-    },
-};
-
-function initTopbar() {
-    const header = document.querySelector('header');
-    if (!header) return;
-    // Полоса ставится один раз: на страницах с двумя шапками (их нет,
-    // но защита дешевле отладки) вторая не нужна.
-    if (document.querySelector('.topbar')) return;
-
-    const path = location.pathname;
-    const langDir = path.startsWith('/en/') ? 'en' : path.startsWith('/ge/') ? 'ge' : 'ru';
-    const pageLang = langDir === 'ge' ? 'ka' : langDir;
-    const L = (obj) => obj[pageLang] || obj.ru;
-
-    // Номер берём из существующей ссылки в шапке — единственный
-    // источник, иначе он разъедется с разметкой и микроразметкой.
-    const phoneLink = header.querySelector('.header-phone-link');
-
-    const bar = document.createElement('div');
-    bar.className = 'topbar';
-
-    const inner = document.createElement('div');
-    inner.className = 'topbar__inner';
-
-    // Иконка + подпись. Иконки — тонкие контурные, как в шапке.
-    function makeItem(iconSvg, text, extraClass) {
-        const span = document.createElement('span');
-        span.className = 'topbar__item' + (extraClass ? ' ' + extraClass : '');
-        span.insertAdjacentHTML('beforeend', iconSvg);
-        const t = document.createElement('span');
-        t.textContent = text;
-        span.appendChild(t);
-        return span;
-    }
-
-    const clockSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"'
-        + ' stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
-        + '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
-    const shieldSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"'
-        + ' stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
-        + '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>';
-    const phoneSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"'
-        + ' stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
-        + '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6'
-        + ' 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81'
-        + 'a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57'
-        + ' 2.81.7A2 2 0 0 1 22 16.92z"/></svg>';
-
-    inner.appendChild(makeItem(clockSvg, L(TOPBAR_TEXT.hours), 'topbar__item--hours'));
-    inner.appendChild(makeItem(shieldSvg, L(TOPBAR_TEXT.promise), 'topbar__item--promise'));
-
-    if (phoneLink) {
-        const wrap = document.createElement('span');
-        wrap.className = 'topbar__item topbar__item--phone';
-        wrap.insertAdjacentHTML('beforeend', phoneSvg);
-        const a = document.createElement('a');
-        a.className = 'topbar__phone';
-        a.href = phoneLink.getAttribute('href');
-        // Только номер, без префикса «// » из шапки.
-        a.textContent = phoneLink.textContent.replace(/^\/\/\s*/, '').trim();
-        wrap.appendChild(a);
-        inner.appendChild(wrap);
-    }
-
-    bar.appendChild(inner);
-    // Полоса стоит НАД шапкой — первым элементом body, до <header>.
-    header.parentNode.insertBefore(bar, header);
-}
-
-function initHeaderNav() {
-    const header = document.querySelector('header');
-    if (!header) return;
-    const controls = header.querySelector('.header-controls');
-    if (!controls) return;
-
-    // Язык и город — из адреса, как и в бургере: пункты обязаны вести в
-    // тот город, где человек уже находится, иначе клик по «Сантехнику»
-    // в Батуми уводил бы его в Тбилиси.
-    const path = location.pathname;
-    const langDir = path.startsWith('/en/') ? 'en' : path.startsWith('/ge/') ? 'ge' : 'ru';
-    const pageLang = langDir === 'ge' ? 'ka' : langDir;
-    const citySlug = path.includes('/batumi/') ? 'batumi' : 'tbilisi';
-    const L = (obj) => obj[pageLang] || obj.ru;
-    const cityHome = citySlug === 'batumi' ? `/${langDir}/batumi/` : `/${langDir}/`;
-
-    const nav = document.createElement('nav');
-    nav.className = 'header-nav';
-    nav.setAttribute('aria-label', L({ ru: 'Основное меню', ka: 'ძირითადი მენიუ', en: 'Main menu' }));
-
-    const caretSvg = '<svg class="header-nav__caret" viewBox="0 0 24 24" fill="none"'
-        + ' stroke="currentColor" stroke-width="2.5" stroke-linecap="round"'
-        + ' stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>';
-
-    // Закрывает все раскрытые списки, кроме переданного.
-    function closeAll(except) {
-        nav.querySelectorAll('.header-nav__item.is-open').forEach((el) => {
-            if (el === except) return;
-            el.classList.remove('is-open');
-            const b = el.querySelector('.header-nav__link');
-            if (b) b.setAttribute('aria-expanded', 'false');
-        });
-    }
-
-    // Пункт со списком. Кнопка, а не ссылка: сама никуда не ведёт, только
-    // раскрывает перечень — ссылка без адреса для клавиатуры бессмысленна.
-    function makeDropdown(labelObj, items) {
-        const wrap = document.createElement('div');
-        wrap.className = 'header-nav__item header-nav__item--has-menu';
-
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'header-nav__link';
-        btn.setAttribute('aria-expanded', 'false');
-        // textContent для подписи, разметка только для стрелки: подписи
-        // приходят из таблицы выше, но собирать их конкатенацией в
-        // innerHTML — привычка, которая однажды подставит чужой текст.
-        btn.appendChild(document.createTextNode(L(labelObj)));
-        btn.insertAdjacentHTML('beforeend', caretSvg);
-
-        const list = document.createElement('div');
-        list.className = 'header-nav__menu';
-        items.forEach(({ href, text }) => {
-            const a = document.createElement('a');
-            a.href = href;
-            a.textContent = text;
-            // Текущая страница подсвечивается — человек видит, где он.
-            if (path === href) a.setAttribute('aria-current', 'page');
-            list.appendChild(a);
-        });
-
-        // Раскрытие и на наведении (css), и на клике (здесь): на ноутбуке
-        // с сенсорным экраном hover не срабатывает, и без клика список
-        // остался бы недоступен.
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const open = wrap.classList.toggle('is-open');
-            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-            closeAll(wrap);
-        });
-
-        wrap.appendChild(btn);
-        wrap.appendChild(list);
-        return wrap;
-    }
-
-    // Простая ссылка на блок страницы.
-    // ⚠️ Адрес всегда полный («/ru/#faq»), а не голый хеш: на странице
-    // услуги таких блоков нет, и «#faq» никуда бы не прокрутил. С главной
-    // браузер видит тот же путь и просто прокручивает, без перезагрузки.
-    function makeAnchor(labelObj, hash) {
-        const wrap = document.createElement('div');
-        wrap.className = 'header-nav__item';
-        const a = document.createElement('a');
-        a.className = 'header-nav__link';
-        a.href = cityHome + hash;
-        a.textContent = L(labelObj);
-        wrap.appendChild(a);
-        return wrap;
-    }
-
-    nav.appendChild(makeDropdown(NAV_LABELS.services, BURGER_SERVICES.map((svc) => ({
-        href: svc.flat
-            ? `/${langDir}/${citySlug}/${svc.slug}/`
-            : `/${langDir}/${citySlug}/${svc.slug}-${citySlug}/`,
-        text: svc[pageLang] || svc.ru,
-    }))));
-
-    // ⚠️ Якоря именно такие: id блоков на сайте русские по написанию
-    // («kak-eto-rabotaet») и одинаковы на всех трёх языках — сверено по
-    // разметке. «#how-it-works» не существует нигде.
-    nav.appendChild(makeAnchor(NAV_LABELS.how, '#kak-eto-rabotaet'));
-
-    nav.appendChild(makeDropdown(NAV_LABELS.districts, (NAV_DISTRICTS[citySlug] || []).map((d) => ({
-        href: `/${langDir}/${citySlug}/${d.slug}/`,
-        text: d[pageLang] || d.ru,
-    }))));
-
-    nav.appendChild(makeAnchor(NAV_LABELS.faq, '#faq'));
-
-    // Меню встаёт между логотипом и переключателями — как в эталоне.
-    controls.parentNode.insertBefore(nav, controls);
-
-    // ── Город и язык — такими же пунктами с выпадашкой ───────────
-    // Решение владельца 09.11.2026: вместо двух плашек «Тбилиси |
-    // Батуми» и трёх кнопок RUS/GEO/ENG — по одному пункту со
-    // списком, как «Услуги». Так строка короче на ~150 px, и счётчик
-    // мастеров помещается целиком.
-    //
-    // ⚠️ Исходные .city-switcher и .language-switcher НЕ удаляются, а
-    // прячутся стилями: ссылки в них нужны поисковику (город и язык —
-    // это разные URL), а переключатель языка вдобавок переиспользует
-    // бургер на телефоне. Здесь строится отдельное представление тех
-    // же ссылок.
-    const pinSvg = '<svg class="header-nav__icon" viewBox="0 0 24 24" fill="none"'
-        + ' stroke="currentColor" stroke-width="2" stroke-linecap="round"'
-        + ' stroke-linejoin="round" aria-hidden="true">'
-        + '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>'
-        + '<circle cx="12" cy="10" r="3"/></svg>';
-    const globeSvg = '<svg class="header-nav__icon" viewBox="0 0 24 24" fill="none"'
-        + ' stroke="currentColor" stroke-width="2" stroke-linecap="round"'
-        + ' stroke-linejoin="round" aria-hidden="true">'
-        + '<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>'
-        + '<path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>';
-
-    // Пункт, у которого подпись — текущее значение (город или язык), а
-    // в списке остальные варианты. Отличается от makeDropdown иконкой
-    // слева и тем, что подпись берётся из активной ссылки.
-    function makeSwitcher(iconSvg, currentText, links, extraClass) {
-        const wrap = document.createElement('div');
-        wrap.className = 'header-nav__item header-nav__item--has-menu ' + extraClass;
-
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'header-nav__link';
-        btn.setAttribute('aria-expanded', 'false');
-        btn.insertAdjacentHTML('beforeend', iconSvg);
-        const label = document.createElement('span');
-        label.textContent = currentText;
-        btn.appendChild(label);
-        btn.insertAdjacentHTML('beforeend', caretSvg);
-
-        const list = document.createElement('div');
-        list.className = 'header-nav__menu header-nav__menu--right';
-        links.forEach(({ href, text, active }) => {
-            const a = document.createElement('a');
-            a.href = href;
-            a.textContent = text;
-            if (active) a.setAttribute('aria-current', 'page');
-            list.appendChild(a);
-        });
-
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const open = wrap.classList.toggle('is-open');
-            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-            closeAll(wrap);
-        });
-
-        wrap.appendChild(btn);
-        wrap.appendChild(list);
-        return wrap;
-    }
-
-    // Город: подписи и адреса берём из существующих ссылок разметки —
-    // они уже учитывают язык страницы, и дублировать их тут нельзя,
-    // иначе список разойдётся с переключателем на телефоне.
-    const cityLinks = [...header.querySelectorAll('.city-switcher .city-btn')];
-    if (cityLinks.length) {
-        const activeCity = cityLinks.find((a) => a.classList.contains('active')) || cityLinks[0];
-        nav.appendChild(makeSwitcher(pinSvg, activeCity.textContent.trim(),
-            cityLinks.map((a) => ({
-                href: a.getAttribute('href'),
-                text: a.textContent.trim(),
-                active: a.classList.contains('active'),
-            })), 'header-nav__item--city'));
-    }
-
-    // Язык: в подписи короткий код (RU/GE/EN), в списке полные
-    // подписи RUS/GEO/ENG — как на кнопках в разметке.
-    const langLinks = [...header.querySelectorAll('.language-switcher .lang-btn')];
-    if (langLinks.length) {
-        const shortCode = { ru: 'RU', ka: 'GE', en: 'EN' }[pageLang] || 'RU';
-        nav.appendChild(makeSwitcher(globeSvg, shortCode,
-            langLinks.map((a) => ({
-                href: a.getAttribute('href'),
-                text: a.textContent.trim(),
-                active: a.classList.contains('active'),
-            })), 'header-nav__item--lang'));
-    }
-
-    // ⚠️ Кнопки «Позвонить» в шапке НЕТ (решение владельца 09.11.2026).
-    // Прежде здесь из .header-phone-link собиралась жёлтая кнопка в
-    // правом углу. Сам номер при этом остаётся видимым в шапке строкой
-    // под названием — его не прячем, иначе телефон исчез бы с десктопа
-    // совсем. Подпись NAV_LABELS.call оставлена в таблице на случай
-    // возврата кнопки.
-
-    // Клик мимо меню и Esc закрывают раскрытый список — один слушатель
-    // на документ, а не по штуке на пункт.
-    document.addEventListener('click', (e) => {
-        if (!nav.contains(e.target)) closeAll(null);
-    });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeAll(null);
-    });
-}
-
-// Бургер-меню на телефоне: выезжает справа, как в соседнем проекте Auto RS.
-// Сверху языки одной строкой, ниже девять услуг текущего города, внизу
-// кнопка заявки. Шапка остаётся НАД панелью — логотип и крестик видны.
-//
-// Кнопка и панель создаются здесь, а не в разметке: иначе пришлось бы
-// править 108 HTML-страниц. Переключатель языка — существующий узел,
-// он только переезжает в панель, поэтому ссылки для краулера те же.
-function initBurgerMenu() {
-    const header = document.querySelector('header');
-    if (!header) return;
-
-    const lang = header.querySelector('.language-switcher');
-
-    const btn = document.createElement('button');
-    btn.className = 'burger-btn';
-    btn.type = 'button';
-    btn.setAttribute('aria-label', 'Меню');
-    btn.setAttribute('aria-expanded', 'false');
-    // Три полоски + круг с языками справа. Круг — не отдельная кнопка, а
-    // часть этой же: нажатие в любом месте открывает одно и то же меню,
-    // где язык и переключается. Он нужен только как подсказка «здесь
-    // меняется язык» — прежде бургер ничего про языки не говорил, и
-    // люди уходили со страницы, не найдя переключатель.
-    //
-    // Полоски разной длины (длинная — короткая — длинная) освобождают
-    // место под круг посередине: тот наезжает на габарит бургера, но до
-    // самих полосок не достаёт. Классы, а не nth-child: порядок полосок
-    // в разметке потом не перепутать молча.
-    btn.innerHTML =
-        '<span class="burger-bars">'
-      +   '<span class="burger-bar burger-bar-top"></span>'
-      +   '<span class="burger-bar burger-bar-mid"></span>'
-      +   '<span class="burger-bar burger-bar-bot"></span>'
-      + '</span>'
-      + '<span class="burger-lang-badge" aria-hidden="true"></span>';
-
-    const overlay = document.createElement('div');
-    overlay.className = 'burger-overlay';
-
-    const panel = document.createElement('nav');
-    panel.className = 'burger-panel';
-    panel.setAttribute('aria-label', 'Меню');
-
-    // Своя строка «Меню + крестик» внутри панели — как в эталоне
-    // (Auto RS, components/HeaderMenu.tsx). Панель перекрывает шапку
-    // сайта целиком, поэтому её логотип и бургер под меню не видны,
-    // и закрывать меню нечем без собственной кнопки.
-    const head = document.createElement('div');
-    head.className = 'burger-head';
-
-    const headTitle = document.createElement('span');
-    headTitle.className = 'burger-head-title';
-
-    const closeBtn = document.createElement('button');
-    closeBtn.className = 'burger-close';
-    closeBtn.type = 'button';
-
-    head.appendChild(headTitle);
-    head.appendChild(closeBtn);
-
-    // Содержимое ниже строки — прокручивается отдельно от неё
-    const body = document.createElement('div');
-    body.className = 'burger-body';
-
-    // Своя полоса прокрутки. Системная на телефоне оверлейная: всплывает
-    // на время движения пальца и тут же гаснет, а ::-webkit-scrollbar
-    // мобильный Safari не рендерит вообще — подробности в CSS у
-    // .burger-scroll. Пока список не тронули, ничто не подсказывало,
-    // что под кнопкой «Оставить заявку» есть ещё пункты.
-    const scrollbar = document.createElement('div');
-    scrollbar.className = 'burger-scroll';
-    scrollbar.hidden = true;
-
-    // Язык страницы: на лендингах его задаёт window.__FORCE_LANG__
-    const pageLang = window.__FORCE_LANG__ || 'ru';
-    // Город берём у botCityFromUrl: она определяет его по району лендинга,
-    // а не по подстроке «batumi» в адресе — у районов novy-bulvar,
-    // khimshiashvili и boni-gorodok названия города в слаге нет.
-    const city = (typeof botCityFromUrl === 'function' ? botCityFromUrl() : 'Тбилиси');
-    const citySlug = city === 'Батуми' ? 'batumi' : 'tbilisi';
-    const langDir = pageLang === 'ka' ? 'ge' : pageLang;
-
-    // Пункт меню: иконка + подпись. Общая сборка для услуг и служебных
-    // ссылок — иначе подсветка текущей страницы и разметка иконки
-    // разъехались бы между двумя группами при первой же правке.
-    function makeLink(href, text, iconKey, external) {
-        const a = document.createElement('a');
-        a.href = href;
-
-        // Иконка декоративная: та же мысль уже сказана текстом рядом,
-        // поэтому aria-hidden — скринридер не читает её дважды.
-        const ico = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        ico.setAttribute('viewBox', '0 0 24 24');
-        ico.setAttribute('fill', 'none');
-        ico.setAttribute('stroke', 'currentColor');
-        ico.setAttribute('stroke-width', '2');
-        ico.setAttribute('stroke-linecap', 'round');
-        ico.setAttribute('stroke-linejoin', 'round');
-        ico.setAttribute('aria-hidden', 'true');
-        ico.innerHTML = BURGER_ICONS[iconKey] || '';
-        a.appendChild(ico);
-
-        a.appendChild(document.createTextNode(text));
-
-        if (external) {
-            a.target = '_blank';
-            a.rel = 'noopener';
-        }
-        // Текущая страница подсвечивается — человек видит, где он
-        if (window.location.pathname === href) a.classList.add('is-current');
-        return a;
-    }
-
-    const links = document.createElement('div');
-    links.className = 'burger-links';
-
-    // Главная — первым пунктом: с лендинга услуги вернуться было некуда,
-    // кроме логотипа, и это не все замечают.
-    //
-    // ⚠️ Главная СВОЯ у каждого города: у Батуми это /<lang>/batumi/, а не
-    // /<lang>/. Жёсткая ссылка на /<lang>/ уводила человека из Батуми в
-    // Тбилиси, и пункт не подсвечивался на батумском хабе — он просто не
-    // совпадал с адресом страницы. Тот же адрес, что у кнопки города.
-    const homeHref = citySlug === 'batumi' ? `/${langDir}/batumi/` : `/${langDir}/`;
-    links.appendChild(makeLink(homeHref,
-        { ru: 'Главная', ka: 'მთავარი', en: 'Home' }[pageLang] || 'Главная', 'home'));
-
-    BURGER_SERVICES.forEach((svc) => {
-        const href = svc.flat
-            ? `/${langDir}/${citySlug}/${svc.slug}/`
-            : `/${langDir}/${citySlug}/${svc.slug}-${citySlug}/`;
-        links.appendChild(makeLink(href, svc[pageLang] || svc.ru, svc.slug));
-    });
-
-    // Служебные ссылки — отдельной группой после услуг, чтобы не
-    // путались со списком категорий. Подписи те же, что в шапке.
-    const extra = document.createElement('div');
-    extra.className = 'burger-links burger-links-extra';
-    extra.appendChild(makeLink(`/${langDir}/masters/`,
-        { ru: 'Для мастеров', ka: 'ოსტატებისთვის', en: 'For masters' }[pageLang] || 'Для мастеров',
-        'masters'));
-    extra.appendChild(makeLink(`/${langDir}/fb/`, 'Facebook', 'facebook', true));
-
-    const cta = document.createElement('button');
-    cta.className = 'burger-cta';
-    cta.type = 'button';
-    cta.textContent = { ru: 'Заказать услугу', ka: 'შეუკვეთეთ მომსახურება', en: 'Order a service' }[pageLang]
-                   || 'Заказать услугу';
-
-    headTitle.textContent = { ru: 'Меню', ka: 'მენიუ', en: 'Menu' }[pageLang] || 'Меню';
-
-    // В круге — код языка ТЕКУЩЕЙ страницы: человек видит, на каком языке
-    // он сейчас, и понимает, что это переключатель. Грузинский помечен
-    // как GE, а не KA: так же подписан раздел сайта (/ge/) и кнопка в
-    // шапке (GEO), хотя внутри кода язык зовётся ka.
-    const langBadge = btn.querySelector('.burger-lang-badge');
-    if (langBadge) {
-        langBadge.textContent = { ru: 'RU', ka: 'GE', en: 'EN' }[pageLang] || 'RU';
-    }
-    // Кнопка одна, поэтому и подпись для скринридера одна — она называет
-    // оба назначения сразу, иначе круг для незрячего просто исчезает
-    // (сам он aria-hidden, чтобы код языка не читался отдельной строкой).
-    btn.setAttribute('aria-label',
-        { ru: 'Меню и выбор языка', ka: 'მენიუ და ენის არჩევა', en: 'Menu and language' }[pageLang]
-        || 'Меню и выбор языка');
-    closeBtn.setAttribute('aria-label',
-        { ru: 'Закрыть меню', ka: 'მენიუს დახურვა', en: 'Close menu' }[pageLang] || 'Закрыть меню');
-
-    header.appendChild(btn);
-    document.body.appendChild(overlay);
-    document.body.appendChild(panel);
-
-    // Пересчитывает размер и положение ползунка по фактической прокрутке.
-    // Зовётся при открытии и на каждом scroll: высоты до открытия панели
-    // нулевые (display управляется классом), поэтому считать заранее нельзя.
-    function updateBurgerScrollbar() {
-        const track = body.clientHeight;
-        const total = body.scrollHeight;
-
-        // Прокручивать нечего — полосы быть не должно: на широком экране
-        // или в альбомной ориентации список помещается целиком.
-        if (total <= track + 1) {
-            scrollbar.hidden = true;
-            return;
-        }
-        scrollbar.hidden = false;
-
-        // Минимум 32px: при длинном списке пропорциональный ползунок
-        // вырождается в точку и перестаёт читаться как полоса.
-        const h = Math.max(32, Math.round(track * track / total));
-        const maxTop = track - h;
-        const progress = body.scrollTop / (total - track);
-
-        scrollbar.style.height = h + 'px';
-        // Отсчёт от верха .burger-body, а не панели: над ним ещё строка «Меню».
-        scrollbar.style.top = (body.offsetTop + Math.round(progress * maxTop)) + 'px';
-    }
-
-    body.addEventListener('scroll', updateBurgerScrollbar, { passive: true });
-    window.addEventListener('resize', updateBurgerScrollbar);
-
-    function setOpen(open) {
-        // Замер ширины полосы прокрутки здесь больше не нужен: место под
-        // неё зарезервировано постоянно (scrollbar-gutter на html), поэтому
-        // блокировка прокрутки ширину страницы не меняет и контент не
-        // дёргается. Прежний расчёт отступа промахивался на доли пикселя
-        // при дробном масштабе — подробности в комментарии у html в CSS.
-        panel.classList.toggle('is-open', open);
-        overlay.classList.toggle('is-open', open);
-        btn.classList.toggle('is-open', open);
-        document.body.classList.toggle('burger-open', open);
-        btn.setAttribute('aria-expanded', String(open));
-
-        if (open) {
-            // Строго ПОСЛЕ переключения классов: до него панель скрыта и
-            // scrollHeight/clientHeight равны нулю — ползунок посчитался бы
-            // в ноль и не появился.
-            body.scrollTop = 0;
-            updateBurgerScrollbar();
-        }
-    }
-
-    // Меню одно на все ширины. Прежде оно собиралось только на телефоне, а
-    // на десктопе пряталось и возвращало переключатель языка в шапку —
-    // там были свои языки в ряд и город выпадающим списком. Теперь
-    // устройство навигации общее, и развилка по ширине не нужна.
-    function apply() {
-        // Собираем панель заново в нужном порядке: строка «Меню»,
-        // затем языки, услуги и кнопка. Порядок задаём каждый раз,
-        // а не только при первом вызове: appendChild переносит узел
-        // в конец, и после возврата языка из шапки он оказывался
-        // под кнопкой заявки.
-        panel.replaceChildren();
-        body.replaceChildren();
-        panel.appendChild(head);
-        if (lang) body.appendChild(lang);
-        body.appendChild(links);
-        body.appendChild(extra);
-        body.appendChild(cta);
-        panel.appendChild(body);
-        // Полоса — сестра .burger-body, а не его потомок: внутри
-        // прокручиваемого блока она уехала бы вместе с содержимым.
-        panel.appendChild(scrollbar);
-
-        btn.hidden = false;
-        panel.hidden = false;
-        overlay.hidden = false;
-    }
-
-    btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        setOpen(!panel.classList.contains('is-open'));
-    });
-
-    // Клик по затемнению, по крестику, по ссылке внутри меню и Escape
-    overlay.addEventListener('click', () => setOpen(false));
-    closeBtn.addEventListener('click', () => setOpen(false));
-    panel.addEventListener('click', (e) => {
-        if (e.target.closest('a')) setOpen(false);
-    });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') setOpen(false);
-    });
-
-    cta.addEventListener('click', () => {
-        setOpen(false);
-        if (typeof openClientLeadForm === 'function') openClientLeadForm();
-    });
-
-    apply();
-}
-
-function initCityDropdown() {
-    const DESKTOP = '(min-width: 769px)';
-    const city = document.querySelector('.city-switcher');
-    if (!city) return;
-
-    // ⚠️ Раскрытие по клику убрано вместе с выпадающим списком: на десктопе
-    // теперь две кнопки городов в ряд, как на телефоне. Прежний обработчик
-    // звал preventDefault() на клике по плашке — с видимыми кнопками это
-    // глушило бы переход по ссылке активного города.
-    //
-    // Функция оставлена ради синхронизации ширины ниже: плашка города
-    // равняется по счётчику онлайна, и считать это в CSS нечем.
-
-    // Плашка-ориентир, по ширине которой равняем переключатель города, —
-    // счётчик онлайна: он стоит прямо над городом и остался в шапке
-    // единственным соседом.
-    //
-    // ⚠️ Раньше ориентиром была «Для мастеров». Она уехала в бургер-меню и
-    // скрыта через display:none, то есть её offsetWidth теперь 0 — ширина
-    // считалась бы по содержимому самого города, и правые края двух строк
-    // шапки не сходились бы (234 px против 306 px у счётчика).
-    const masters = document.querySelector('.online-counter');
-
-    function syncWidth() {
-        const root = document.documentElement.style;
-
-        if (!window.matchMedia(DESKTOP).matches) {
-            // На мобильном ширины не навязываем — плашки тянутся сами
-            root.removeProperty('--city-switcher-w');
-            return;
-        }
-
-        // Снимаем прежнее значение, чтобы замерить естественную ширину
-        root.removeProperty('--city-switcher-w');
-
-        // Округляем вверх: дробная ширина (например 174.6px) даёт субпиксельный
-        // сдвиг, и рамка выпадающего списка не сходится с рамкой плашки ровно.
-        if (masters) {
-            const need = Math.ceil(Math.max(masters.offsetWidth, city.scrollWidth));
-            root.setProperty('--city-switcher-w', need + 'px');
-        }
-    }
-
-    // Первый расчёт — после загрузки шрифтов: до неё ширины текста отличаются,
-    // и плашки разъезжались бы при подмене шрифта.
-    if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(syncWidth);
-    } else {
-        syncWidth();
-    }
-    syncWidth();
-
-    // Пересчёт при изменении размера окна и смене языка
-    let t = null;
-    window.addEventListener('resize', () => {
-        clearTimeout(t);
-        t = setTimeout(syncWidth, 150);
-    });
-    document.querySelectorAll('.lang-btn').forEach(b =>
-        b.addEventListener('click', () => setTimeout(syncWidth, 50))
-    );
-}
-
 // Собирает список районов в клиентской форме и включает уточнение для «Другого».
 function initClientDistrictOptions() {
     const form = document.getElementById('clientLeadForm');
@@ -2359,109 +1405,6 @@ function initClientDistrictOptions() {
 
     buildDistrictSelect(districtSel, false);  // только названия районов
     initDistrictOtherInput(form, districtSel);
-}
-
-// Связка «город → районы» в анкете мастера.
-//
-// Зачем: бот рассылает заявки мастерам ОДНОГО города (фильтр city в
-// get_masters_by_rating), поэтому город обязан быть известен точно. Раньше
-// сервис работал в одном Тбилиси и город не спрашивали вовсе. С появлением
-// Батуми мастер выбирает город явно, а список районов перестраивается под него
-// — рассогласование «Батуми + Ваке» стало невозможным в принципе.
-//
-// Селект города создаётся ЗДЕСЬ, а не в разметке: страниц много, и правка через
-// JS не требует обхода каждого HTML (тот же приём, что у районов и фото).
-function initMasterCityDistrict() {
-    const form = document.getElementById('masterLeadForm');
-    if (!form) return;
-    const districtSel = form.querySelector('select[name="district"]');
-    if (!districtSel) return;
-
-    const lang = ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru';
-
-    // Селект города: создаём один раз и ставим ПЕРЕД селектом района.
-    let citySel = form.querySelector('select[name="city"]');
-    if (!citySel) {
-        citySel = document.createElement('select');
-        citySel.name = 'city';
-        citySel.required = true;
-        citySel.setAttribute('aria-label', t('a11yCity'));
-        citySel.className = districtSel.className;   // те же стили, что у района
-
-        const ph = document.createElement('option');
-        ph.value = '';
-        ph.disabled = true;
-        ph.selected = true;
-        ph.setAttribute('data-ru', i18n.ru.masterCityPlaceholder);
-        ph.setAttribute('data-en', i18n.en.masterCityPlaceholder);
-        ph.setAttribute('data-ka', i18n.ka.masterCityPlaceholder);
-        ph.textContent = t('masterCityPlaceholder');
-        citySel.appendChild(ph);
-
-        CITIES.forEach(function (c) {
-            const opt = document.createElement('option');
-            opt.value = c.value;                      // канон-RU для бота
-            opt.setAttribute('data-ru', c.ru);
-            opt.setAttribute('data-en', c.en);
-            opt.setAttribute('data-ka', c.ka);
-            opt.textContent = c[lang] || c.ru;
-            citySel.appendChild(opt);
-        });
-
-        districtSel.insertAdjacentElement('beforebegin', citySel);
-    }
-
-    // Районы выбранного города. Пока город не выбран — район недоступен:
-    // выбирать не из чего, и это сразу видно по подписи.
-    function fillDistricts() {
-        const city = CITIES.find(function (c) { return c.value === citySel.value; });
-        districtSel.innerHTML = '';
-
-        const ph = document.createElement('option');
-        ph.value = '';
-        ph.disabled = true;
-        ph.selected = true;
-        const phKey = city ? 'masterDistrictLabel' : 'masterDistrictPlaceholder';
-        ph.setAttribute('data-ru', i18n.ru[phKey]);
-        ph.setAttribute('data-en', i18n.en[phKey]);
-        ph.setAttribute('data-ka', i18n.ka[phKey]);
-        ph.textContent = t(phKey);
-        districtSel.appendChild(ph);
-
-        if (!city) {
-            districtSel.disabled = true;
-            return;
-        }
-        districtSel.disabled = false;
-
-        city.districts.forEach(function (d) {
-            const opt = document.createElement('option');
-            opt.value = d.slug;
-            opt.setAttribute('data-ru', d.ru);
-            opt.setAttribute('data-en', d.en);
-            opt.setAttribute('data-ka', d.ka);
-            opt.textContent = d[lang] || d.ru;
-            districtSel.appendChild(opt);
-        });
-
-        // «Все районы» — в пределах ВЫБРАННОГО города, поэтому значение своё:
-        // по нему masterCityFromDistrict восстановит город, если он потеряется.
-        const allOpt = document.createElement('option');
-        allOpt.value = city.value === 'Батуми' ? 'AllBA' : 'AllTB';
-        allOpt.setAttribute('data-ru', DISTRICT_SPECIAL.All.ru);
-        allOpt.setAttribute('data-en', DISTRICT_SPECIAL.All.en);
-        allOpt.setAttribute('data-ka', DISTRICT_SPECIAL.All.ka);
-        allOpt.textContent = DISTRICT_SPECIAL.All[lang] || DISTRICT_SPECIAL.All.ru;
-        districtSel.appendChild(allOpt);
-    }
-
-    citySel.addEventListener('change', fillDistricts);
-    fillDistricts();
-}
-
-// Совместимость: старое имя вызывается из инициализации страниц.
-function initMasterDistrictOptions() {
-    initMasterCityDistrict();
 }
 
 // Уточнение района для варианта «Другой»: без него заявка приходит мастеру как
@@ -2478,7 +1421,11 @@ function initDistrictOtherInput(form, select) {
     const input = document.createElement('input');
     input.type = 'text';
     input.name = 'district_other';
-    input.className = 'district-other-input';
+    // form-control — общее оформление полей нового дизайна. Без него поле
+    // оставалось голым системным input'ом посреди формы: рамка 1.6px inset,
+    // высота 21px против 51px у соседей. В старом style.css класса
+    // .form-control нет, поэтому страницы прежнего дизайна не затронуты.
+    input.className = 'district-other-input form-control';
     // data-*-placeholder → плейсхолдер переводится в setLanguage при смене языка.
     input.setAttribute('data-ru-placeholder', i18n.ru.districtOtherPlaceholder);
     input.setAttribute('data-en-placeholder', i18n.en.districtOtherPlaceholder);
@@ -2630,8 +1577,9 @@ function initClientLeadFormTracking() {
                 });
             }
 
-            closeClientLeadForm();
-            openThankYou();
+            // Окно заявки, если оно открыто, закроется само:
+            // openThankYou шлёт 'mastera:lead-sent'.
+            openThankYou('lead');
             leadForm.reset();
             pendingIdempotencyKey = null;
             if (initClientPhotoUpload._reset) initClientPhotoUpload._reset(); // чистим превью фото
@@ -2668,6 +1616,177 @@ function initClientLeadFormTracking() {
             leadSubmitBtn.disabled = !this.checked;
         });
     }
+}
+
+
+// ============================================
+// 10.2 БЫСТРАЯ ФОРМА ПЕРВОГО ЭКРАНА
+// ============================================
+//
+// Форма в шапке страницы (.v-float-form) спрашивает ОДИН контакт — номер
+// WhatsApp. Это осознанно: на первом экране человек ещё не готов заполнять
+// семь полей, и короткая форма ловит тех, кто иначе ушёл бы совсем.
+// Подробности выясняются в переписке.
+//
+// ⚠️ До 08.11.2026 эта форма не отправляла НИКУДА. У неё нет ни action, ни
+// id, а единственный обработчик submit в файле висит на #clientLeadForm —
+// на форме блока заявки ниже по странице. Браузер применял поведение по
+// умолчанию: GET на саму себя. Страница перезагружалась, номер оставался
+// в адресной строке (/ru/?phone=555123456), и человек видел «пустую» форму
+// вместо подтверждения. Лид не доходил никуда, при этом номер попадал в
+// историю браузера и в логи веб-сервера.
+//
+// Бот требует шесть полей (district, subdistrict, category, description,
+// address, contact), иначе отвечает 400 и заявка пропадает молча — сайт
+// ответа не ждёт. Короткая форма их не спрашивает, поэтому подставляем:
+//   district    — «Другой»: рассылка по району НЕ фильтрует (район только
+//                 печатается в карточке), так что заявка не потеряется;
+//   category    — категория лендинга, как у основной формы;
+//   description — отмечаем, что подробностей нет и нужна переписка;
+//   address     — «Не указан», как и у основной формы.
+// Город берётся botCityFromUrl() — он же решает, каким мастерам слать.
+function initHeroQuickForm() {
+    const form = document.querySelector('.v-float-form__row');
+    if (!form) return;
+
+    // Галочка согласия лежит СНАРУЖИ формы (соседний .v-consent), поэтому
+    // required на ней отправку не блокирует — браузер проверяет только поля
+    // внутри <form>. Ищем её у общего родителя и проверяем сами.
+    const box = form.closest('.v-float-form') || form.parentElement;
+    const consent = box ? box.querySelector('.v-consent input[type="checkbox"]') : null;
+
+    let isSubmitting = false;
+    let idempotencyKey = null;
+
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        if (isSubmitting) return;
+
+        const input = form.querySelector('input[name="phone"]');
+        const raw = input ? input.value.trim() : '';
+        if (!raw) {
+            alert(t('heroContactEmpty'));
+            if (input) input.focus();
+            return;
+        }
+        if (consent && !consent.checked) {
+            alert(t('heroConsent'));
+            consent.focus();
+            return;
+        }
+        // Honeypot: поле скрыто от человека, заполнить его мог только бот.
+        // Отвечаем тихим успехом — спамеру не за что зацепиться.
+        const gotcha = form.querySelector('input[name="_gotcha"]');
+        if (gotcha && gotcha.value.trim()) {
+            form.reset();
+            return;
+        }
+
+        const whatsapp = normalizeWhatsappPhone(raw);
+
+        isSubmitting = true;
+        const btn = form.querySelector('button[type="submit"]');
+        const btnLabel = btn ? btn.innerHTML : null;
+        if (btn) {
+            btn.disabled = true;
+            btn.textContent = t('submitSending');
+        }
+
+        if (!idempotencyKey) idempotencyKey = generateSiteIdempotencyKey('hero');
+
+        // Категория страницы: на лендинге она в скрытом поле основной формы.
+        // На главной там <select>, и до выбора он пуст — resolveBotCategory
+        // вернул бы «Другое». Для быстрой формы это хуже «Мастера на час»:
+        // «Другое» видит узкий круг мастеров, а человек, оставивший один
+        // контакт, про категорию ничего не сказал — значит задача может
+        // быть любой, и показать её надо как можно большему числу людей.
+        const svc = document.querySelector('#clientLeadForm [name="service"]');
+        const rawSvc = svc ? svc.value.trim() : '';
+        const category = rawSvc ? resolveBotCategory(rawSvc) : 'Мастер на час';
+
+        const lang = ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru';
+
+        // Район: на лендинге района он уже предвыбран в основной форме
+        // (<option selected>), и терять эту подсказку незачем — мастер
+        // увидит в карточке «Новый бульвар» вместо бесполезного «Другой».
+        // Где предвыбора нет (главная, лендинг услуги), шлём «Другой»:
+        // человек район не называл. На рассылку это не влияет — она
+        // фильтрует по городу и специальности, район только печатается.
+        const dSel = document.querySelector('#clientLeadForm [name="district"]');
+        const dSlug = dSel && dSel.value && dSel.value !== 'Other' ? dSel.value : '';
+        const district = dSlug ? (BOT_DISTRICT_MAP[dSlug] || 'Другой') : 'Другой';
+
+        // Почта — первой и независимо от бота, тем же приёмом, что в основной
+        // форме: страховка обязана срабатывать именно когда бот отказал.
+        const fd = new FormData();
+        fd.append('whatsapp', whatsapp);
+        fd.append('_subject', 'Быстрая заявка с первого экрана');
+        fd.append('_language', lang);
+        fetch('https://formspree.io/f/xpqjbpyk', {
+            method: 'POST',
+            body: fd,
+            headers: { 'Accept': 'application/json' }
+        }).catch((err) => console.error('Formspree (быстрая заявка):', err));
+
+        try {
+            await postBotJson(BOT_REQUEST_URL, {
+                city:        botCityFromUrl(),
+                name:        '',
+                phone:       '',
+                district:    district,
+                subdistrict: 'Не указан',
+                category:    category,
+                /* ⚠️ В описании НЕЛЬЗЯ называть мессенджер и слово
+                   «контакт». Бот прогоняет description через ту же
+                   модерацию, что и заявки из бота
+                   (_validate_site_request_content → contains_contact_info),
+                   а «whatsapp», «telegram», «контакт» — стоп-слова:
+                   это защита от обхода платной выдачи контактов.
+                   Прежний текст «клиент оставил только WhatsApp»
+                   получал 400 contact_in_text, и заявка не доходила
+                   НИ в бота, НИ в канал — сайт ответа не ждёт, так
+                   что отказ был молчаливым. Сам номер уходит полем
+                   contact: оно шифруется и модерацию не проходит.
+                   Меняя текст — проверь его на contains_contact_info
+                   и contains_address, а не на глаз. */
+                description: 'Задача: быстрая заявка с первого экрана. '
+                           + 'Подробности клиент не указал — уточняем при связи.',
+                address:     'Не указан',
+                contact:     '🟢 WhatsApp: ' + whatsapp,
+                honeypot:    '',
+                lang:        lang,
+                urgent:      false,
+                photos:      [],
+                idempotency_key: idempotencyKey
+            });
+
+            if (typeof gtag === 'function') {
+                gtag('event', 'generate_lead_client', {
+                    form_name: 'hero_quick_form',
+                    form_location: 'Быстрая заявка, первый экран',
+                    user_type: 'client',
+                    value: 1,
+                    currency: 'USD'
+                });
+            }
+
+            openThankYou('hero');
+            form.reset();
+            if (consent) consent.checked = false;
+            idempotencyKey = null;
+
+        } catch (error) {
+            console.error('Быстрая заявка:', error);
+            // Заявка уже ушла на почту выше, поэтому текст не пугает потерей.
+            alert(botErrorMessage(error && error.botError));
+        } finally {
+            isSubmitting = false;
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = btnLabel;   // innerHTML: внутри кнопки есть <svg>
+            }
+        }
+    });
 }
 
 
@@ -2759,131 +1878,6 @@ function validateLeadForm(e) {
 // 11. ЛИД-ФОРМА МАСТЕРА
 // ============================================
 
-function initMasterLeadFormTracking() {
-    const masterLeadForm = document.getElementById('masterLeadForm');
-    if (!masterLeadForm) return;
-
-    let isSubmitting = false;
-    let pendingMasterLeadCode = null;
-
-    // Кнопка-диплинк в модалке благодарности готовится заранее (до открытия модалки)
-    ensureMasterTelegramButton();
-
-    masterLeadForm.addEventListener('submit', async function (e) {
-        e.preventDefault();
-        if (isSubmitting) return;
-        if (!validateMasterLeadForm(e)) return;
-
-        isSubmitting = true;
-        // Состояние кнопки — как в клиентской форме: без него анкета
-        // выглядит «зависшей», и человек жмёт отправку повторно.
-        const submitBtn = masterLeadForm.querySelector('button[type="submit"]');
-        const submitLabel = submitBtn ? submitBtn.textContent : null;
-        if (submitBtn) {
-            submitBtn.disabled = true;
-            submitBtn.textContent = t('submitSending');
-        }
-
-        const formData = new FormData(masterLeadForm);
-
-        // Один код сохраняется до успешной отправки. При retry после сетевого
-        // сбоя бот получит тот же code и не создаст новую связку.
-        if (!pendingMasterLeadCode) pendingMasterLeadCode = generateMasterLeadCode();
-        masterLeadCode = pendingMasterLeadCode;
-
-        try {
-            await sendMasterLeadToBot(formData);
-
-            // Formspree — дубль анкеты на почту, ответа не ждём (см. тот же
-            // приём в клиентской форме): анкета уже принята ботом, и держать
-            // мастера лишние секунды ради письма незачем.
-            fetch('https://formspree.io/f/mykdoebj', {
-                method: 'POST',
-                body: formData,
-                headers: { 'Accept': 'application/json' }
-            }).catch((err) => console.error('Formspree (дубль анкеты):', err));
-
-            if (typeof gtag === 'function') {
-                gtag('event', 'generate_lead_master', {
-                    form_name: 'master_lead_form',
-                    form_location: 'Регистрация мастера',
-                    user_type: 'master',
-                    value: 0,
-                    currency: 'USD'
-                });
-            }
-
-            closeMasterLeadForm();
-            ensureMasterTelegramButton();
-            openMasterThankYou();
-            masterLeadForm.reset();
-            pendingMasterLeadCode = null;
-
-        } catch (error) {
-            console.error('Master form error:', error);
-            alert(t('submitError'));
-            isSubmitting = false;
-        } finally {
-            // Возвращаем кнопку всегда — иначе при повторном открытии анкеты
-            // она осталась бы выключенной с надписью «Отправляем…».
-            if (submitBtn) {
-                submitBtn.textContent = submitLabel;
-                const consent = document.getElementById('masterLeadConsent');
-                submitBtn.disabled = !!(consent && !consent.checked);
-            }
-        }
-    });
-
-    // Checkbox
-    const masterLeadConsent   = document.getElementById('masterLeadConsent');
-    const masterLeadSubmitBtn = document.getElementById('masterLeadSubmitBtn');
-    if (masterLeadConsent && masterLeadSubmitBtn) {
-        masterLeadSubmitBtn.disabled = !masterLeadConsent.checked;
-        masterLeadConsent.addEventListener('change', function () {
-            masterLeadSubmitBtn.disabled = !this.checked;
-        });
-    }
-}
-
-function validateMasterLeadForm(e) {
-    const form          = e.target;
-    const nameInput     = form.querySelector('input[name="name"]');
-    const phoneInput    = document.getElementById('masterLeadPhone');
-    const telegramInput = form.querySelector('input[name="telegram"]');
-
-    const telegramValue = telegramInput ? telegramInput.value.trim() : '';
-
-    // Имя буквами — зеркало is_valid_fio в боте. Если не проверить здесь, бот
-    // забракует анкету и мастер будет вводить все данные заново.
-    if (!validateName(nameInput)) return false;
-
-    // Для мастера Telegram обязателен: верификация (селфи+код) проходит в Telegram-боте.
-    // WhatsApp — по желанию, дополнительный контакт.
-    if (!telegramValue) {
-        alert(t('telegramRequiredMaster'));
-        if (telegramInput) telegramInput.focus();
-        return false;
-    }
-
-    if (!validatePhone(phoneInput)) return false;
-    if (!validateTelegram(telegramInput)) return false;
-
-    // Если специальность «Другое» — уточнение обязательно.
-    const specialtySel = form.querySelector('select[name="specialty"]');
-    const otherInput   = form.querySelector('input[name="specialty_other"]');
-    if (specialtySel && otherInput) {
-        const lang = ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru';
-        const otherValue = SPECIALTY_OTHER_VALUE[lang] || SPECIALTY_OTHER_VALUE.ru;
-        if (specialtySel.value === otherValue && !otherInput.value.trim()) {
-            alert(t('specialtyOtherRequired'));
-            otherInput.focus();
-            return false;
-        }
-    }
-
-    return true;
-}
-
 // ============================================
 // 12. УПРАВЛЕНИЕ МОДАЛЬНЫМИ ОКНАМИ
 // ============================================
@@ -2962,31 +1956,89 @@ function quietHoursReplyTime() {
     return null;
 }
 
-// Заполняет окно благодарности: днём — обычный бейдж, ночью — честное
-// «свяжемся утром». Текст берётся из словаря i18n, а не из HTML страницы:
-// раньше он был зашит в каждую из 105 страниц и успел разъехаться
-// («15–60» на лендингах против «30–60» на главных).
+// Собирает окно благодарности и возвращает его. Окно создаётся в JS и
+// добавляется в <body> один раз за сессию.
 //
-// HTML при этом НЕ трогаем: зашитый текст остаётся запасным вариантом на
-// случай, если скрипт не отработает — пустое окно хуже неточной цифры.
-function applyThankYouBadge() {
+// ⚠️ Почему не в разметке: #thankYouModal не существует НИ НА ОДНОЙ
+// странице нового сайта. Основная форма при этом вызывала openThankYou(),
+// _modal() молча не находил элемент — и клиент, отправив заявку, не видел
+// никакого подтверждения: форма просто очищалась. Положить окно в разметку
+// 129 страниц значит снова развести текст по копиям (так уже разъехался
+// бейдж: «15–60» на лендингах против «30–60» на главных). Здесь он один.
+function buildThankYouModal() {
+    let modal = document.getElementById('thankYouModal');
+    if (modal) return modal;
+
+    modal = document.createElement('div');
+    modal.id = 'thankYouModal';
+    modal.className = 'ty-modal';
+    modal.style.display = 'none';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'thankYouTitle');
+
+    modal.innerHTML =
+        '<div class="ty-modal__window">' +
+            '<button type="button" class="ty-modal__close" aria-label="' +
+                t('thanksClose') + '">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+                'stroke-linecap="round" aria-hidden="true">' +
+                '<line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>' +
+            '</button>' +
+            '<div class="ty-modal__icon">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" ' +
+                'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+                '<polyline points="20 6 9 17 4 12"/></svg>' +
+            '</div>' +
+            '<h3 class="ty-modal__title" id="thankYouTitle"></h3>' +
+            '<p class="thank-you-text"></p>' +
+            '<div class="ty-modal__badge">' +
+                '<span class="badge-label"></span>' +
+                '<strong class="badge-value"></strong>' +
+            '</div>' +
+            '<button type="button" class="button button--primary ty-modal__ok"></button>' +
+        '</div>';
+
+    document.body.appendChild(modal);
+
+    // Закрытие: крестик, кнопка «Понятно» и клик по затемнению. Клик по
+    // самому окну закрывать не должен — проверяем, что цель именно фон.
+    modal.querySelector('.ty-modal__close').addEventListener('click', closeThankYou);
+    modal.querySelector('.ty-modal__ok').addEventListener('click', closeThankYou);
+    modal.addEventListener('click', function (e) {
+        if (e.target === modal) closeThankYou();
+    });
+
+    return modal;
+}
+
+// Заполняет окно благодарности: днём — обычный бейдж, ночью — честное
+// «свяжемся утром». Текст берётся из словаря i18n, а не из разметки.
+//
+// kind: 'lead' — основная форма (задача описана, район выбран),
+//       'hero' — быстрая форма первого экрана (есть только WhatsApp),
+// у них разный текст: в первом случае «свяжемся», во втором — «напишем
+// в WhatsApp», иначе клиент ждёт звонка, а мы пишем в мессенджер.
+function applyThankYouBadge(kind) {
     const modal = document.getElementById('thankYouModal');
     if (!modal) return;
+    const title = modal.querySelector('.ty-modal__title');
     const label = modal.querySelector('.badge-label');
     const value = modal.querySelector('.badge-value');
     const text  = modal.querySelector('.thank-you-text');
+    const ok    = modal.querySelector('.ty-modal__ok');
     if (!label || !value) return;
 
-    // Исходный дневной текст запоминаем при первом вызове: окно открывается
-    // много раз за сессию, и без этого ночная подмена стала бы постоянной.
-    if (text && !text.dataset.dayText) text.dataset.dayText = text.innerHTML;
+    if (title) title.textContent = t('thanksTitle');
+    if (ok) ok.textContent = t('thanksClose');
 
+    const dayText = kind === 'hero' ? t('thanksTextHero') : t('thanksText');
     const replyTime = quietHoursReplyTime();
 
     if (!replyTime) {
         label.textContent = t('thanksBadgeLabel');
         value.textContent = t('thanksBadgeValue');
-        if (text && text.dataset.dayText) text.innerHTML = text.dataset.dayText;
+        if (text) text.textContent = dayText;
         return;
     }
 
@@ -2994,6 +2046,14 @@ function applyThankYouBadge() {
     value.textContent = t('thanksBadgeValueNight').replace('{time}', replyTime);
 
     if (text) {
+        // У быстрой формы свой ночной текст: у нас от клиента только номер
+        // WhatsApp, и общее «свяжемся» заставило бы его ждать звонка.
+        // Галочки «срочно» в быстрой форме нет, поэтому ветку срочности
+        // она не проходит.
+        if (kind === 'hero') {
+            text.textContent = t('thanksTextHeroNight').replace('{time}', replyTime);
+            return;
+        }
         // Для срочной заявки «свяжемся утром» звучит как отказ — там свой текст.
         const urgent = !!(document.getElementById('leadUrgent') &&
                           document.getElementById('leadUrgent').checked);
@@ -3003,15 +2063,25 @@ function applyThankYouBadge() {
     }
 }
 
-function openClientLeadForm()  { _modal('clientLeadFormModal',   'flex'); }
-function closeClientLeadForm() { _modal('clientLeadFormModal',   'none'); }
-function openThankYou()        { applyThankYouBadge();
+/* Заявку могли отправить из модального окна (его собирает
+   buildLeadModal в redesign.js). Окно надо закрыть до показа
+   благодарности, иначе она встанет поверх формы.
+
+   ⚠️ Событие, а не прямой вызов: redesign.js грузится ПЕРВЫМ и о
+   функциях этого файла ничего не знает, а обратная зависимость
+   связала бы два файла намертво. Окна заявки на странице может и
+   не быть — тогда событие просто никто не слушает.
+
+   ⚠️ Прежняя closeClientLeadForm() отсюда убрана: она гасила окно
+   через style.display, а новое окно управляется атрибутом hidden
+   и классом is-open. Скрытое по display окно осталось бы в потоке
+   с формой внутри, и прокрутка к #lead приводила бы в пустую
+   секцию. */
+function openThankYou(kind)    { document.dispatchEvent(new CustomEvent('mastera:lead-sent'));
+                                 buildThankYouModal();
+                                 applyThankYouBadge(kind);
                                  _modal('thankYouModal',          'flex'); }
 function closeThankYou()       { _modal('thankYouModal',          'none'); }
-function openMasterThankYou()  { _modal('masterThankYouModal',   'flex'); }
-function closeMasterThankYou() { _modal('masterThankYouModal',   'none'); }
-function openMasterLeadForm()  { _modal('masterLeadFormModal',   'flex'); }
-function closeMasterLeadForm() { _modal('masterLeadFormModal',   'none'); }
 
 function _modal(id, display) {
     const el = document.getElementById(id);
@@ -3024,8 +2094,13 @@ function _modal(id, display) {
 // фон всё равно «протаскивается» пальцем под окном.
 let _savedScrollY = 0;
 function _toggleBodyScrollLock() {
-    const anyOpen = ['clientLeadFormModal', 'thankYouModal',
-                     'masterLeadFormModal', 'masterThankYouModal']
+    // ⚠️ Окно заявки здесь НЕ проверяем, хотя раньше оно стояло в
+    // списке. Оно блокирует прокрутку само (document.body.style
+    // .overflow в buildLeadModal), и два механизма на один фон
+    // конфликтуют: этот ставит body в position:fixed, и окно,
+    // выросшее выше экрана, становится непрокручиваемым изнутри —
+    // до кнопки отправки не добраться.
+    const anyOpen = ['thankYouModal']
         .some(id => {
             const m = document.getElementById(id);
             return m && m.style.display !== 'none' && m.style.display !== '';
@@ -3043,74 +2118,35 @@ function _toggleBodyScrollLock() {
         window.scrollTo(0, _savedScrollY);
     }
 }
-
 // ============================================
-// 13. КНОПКА «НАВЕРХ» / TELEGRAM FAB
+// 14. ССЫЛКИ WHATSAPP / TELEGRAM
 // ============================================
 
-function initScrollToTop() {
-    const scrollButton = document.getElementById('scrollToTop');
-    if (!scrollButton) return;
-
-    // Кнопка WhatsApp видна СРАЗУ, с первого экрана, а не после прокрутки.
-    // Прежде класс visible вешался только при pageYOffset > 300: посетитель,
-    // готовый написать сразу, кнопки не видел и уходил. Это главный канал
-    // связи — прятать его до скролла нечем оправдать.
-    //
-    // Слушатель скролла убран совсем, а не оставлен «на всякий случай»:
-    // при любом его срабатывании toggle снял бы класс у самого верха
-    // страницы, и кнопка моргала бы при возврате наверх.
-    scrollButton.classList.add('visible');
+// Собирает ссылки WhatsApp/Telegram с текстом под услугу, район и город
+// страницы. Единственный потребитель — нижняя панель связи нового дизайна
+// (buildContactBar в redesign.js). Функция живёт отдельно от неё, потому
+// что текст сообщения опирается на скрытое поле service и разбор адреса,
+// то есть на ту же логику, что и отправка заявки: держать её рядом
+// надёжнее, чем дублировать в redesign.js.
+/* Язык страницы для подписей и текста сообщения.
+   Обычно его ставит сама страница в window.__FORCE_LANG__, но на
+   служебных (/ge/terms/, /en/privacy/ и т.п.) этой переменной
+   нет — там оставался русский, и грузинская страница объявляла
+   кнопку связи как «Написать в WhatsApp». Запасной источник —
+   атрибут lang у <html>: он проставлен везде.
+   ⚠️ В разметке грузинский помечен кодом ka, а разделы сайта
+   лежат в /ge/ — здесь нужен именно ka, как в таблицах ниже. */
+function contactLang() {
+    if (window.__FORCE_LANG__) return window.__FORCE_LANG__;
+    const html = (document.documentElement.getAttribute('lang') || '').toLowerCase();
+    if (html.startsWith('ka') || html.startsWith('ge')) return 'ka';
+    if (html.startsWith('en')) return 'en';
+    return 'ru';
 }
 
-// Кнопка «наверх». В отличие от WhatsApp показывается не сразу, а после
-// прокрутки примерно на экран: на первом экране возвращаться некуда.
-//
-// Порог считается от высоты окна, а не фиксированным числом пикселей:
-// на телефоне 300 px — это треть экрана, кнопка выскакивала бы почти
-// сразу, а на десктопе 300 px проходят незаметно.
-function initBackToTop() {
-    const btn = document.getElementById('backToTop');
-    if (!btn) return;
-
-    const threshold = () => Math.max(400, window.innerHeight * 0.8);
-
-    // Состояние меняем только когда оно действительно изменилось: иначе
-    // classList дёргается на каждом кадре прокрутки.
-    let shown = false;
-    const sync = () => {
-        const need = window.pageYOffset > threshold();
-        if (need !== shown) {
-            shown = need;
-            btn.classList.toggle('visible', need);
-        }
-    };
-
-    // passive: слушатель ничего не отменяет, и браузер не ждёт его
-    // завершения, чтобы продолжить прокрутку.
-    window.addEventListener('scroll', sync, { passive: true });
-    window.addEventListener('resize', sync, { passive: true });
-    sync();
-
-    btn.addEventListener('click', () => {
-        // Уважаем системную настройку «уменьшить движение»: для тех, кому
-        // анимации противопоказаны, прыжок наверх делается мгновенно.
-        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
-    });
-}
-
-// ============================================
-// 14. ТРЕКИНГ КНОПКИ WHATSAPP
-// ============================================
-
-function initWhatsAppButtonTracking() {
-    const fab = document.getElementById('scrollToTop');
-    if (!fab) return;
-
-    const isMastersPage = window.location.pathname.includes('/masters/');
+function buildContactLinks() {
     const isBatumiPage = /\/batumi(?:\/|$)/i.test(window.location.pathname);
-    const lang = window.__FORCE_LANG__ || 'ru';
+    const lang = contactLang();
 
     // ── Услуга и район лендинга для предзаполненного текста WhatsApp ──
     // Берём из скрытого поля service, а НЕ из URL: на каждом лендинге оно уже
@@ -3152,18 +2188,10 @@ function initWhatsAppButtonTracking() {
     // лучше нейтральная фраза целиком, чем смесь двух языков.
     function buildWaText(code) {
         const city = cityNames[code] || cityNames.ru;
-        const pageLang = window.__FORCE_LANG__ || 'ru';
+        const pageLang = contactLang();
         // Услугу подставляем, только если текст на языке страницы.
         const svcUsable = (code === pageLang) ? svcName : '';
         const svcDistrictUsable = (code === pageLang) ? svcDistrict : '';
-
-        if (isMastersPage) {
-            return ({
-                ru: 'Здравствуйте! Хочу стать партнёром сервиса.',
-                en: 'Hello! I want to become a partner.',
-                ka: 'გამარჯობა! მინდა გავხდე პარტნიორი.'
-            })[code];
-        }
 
         // Главная страница (service пустой) или чужой язык — общий текст.
         if (!svcUsable) {
@@ -3199,11 +2227,15 @@ function initWhatsAppButtonTracking() {
     };
     const waHref = 'https://wa.me/995557645196?text=' + (waTexts[lang] || waTexts.ru);
 
-    // Telegram-бот: на странице мастеров — бот мастеров, иначе клиентский бот по языку
-    // страницы (RU/EN/GE). start=site_<lang> — для атрибуции.
-    const tgBots = { ru: 'mastera_ru_bot', en: 'mastera_en_bot', ka: 'mastera_ka_bot' };
-    const tgBot = isMastersPage ? 'mastera_tbilisi_bot' : (tgBots[lang] || tgBots.ru);
-    const tgHref = 'https://t.me/' + tgBot + '?start=site_' + lang;
+    // ⚠️ Кнопка «Написать в Telegram» ведёт в ЛИЧНЫЙ ЧАТ, а не в бота:
+    // посетитель, который жмёт «написать», хочет живого собеседника, а
+    // попадал в меню бота и уходил. На бота ведёт отдельная ссылка в
+    // подвале — она так и называется, «Telegram-бот».
+    //
+    // Параметра ?start= здесь нет намеренно: это обычный аккаунт, а не
+    // бот, и Telegram такой аргумент просто игнорирует. Язык в ссылке
+    // тоже не нужен — отвечает человек.
+    const tgHref = TELEGRAM_CHAT_URL;
 
     // Подписи (доступность/тултипы) по языку.
     const labels = ({
@@ -3212,256 +2244,22 @@ function initWhatsAppButtonTracking() {
         ka: { open: 'დაგვიკავშირდით',   wa: 'მოგვწერეთ WhatsApp-ში', tg: 'მოგვწერეთ Telegram-ში' }
     })[lang] || { open: 'Связаться с нами', wa: 'WhatsApp', tg: 'Telegram' };
 
-    // FAB больше не прямая ссылка, а переключатель меню с нейтральной «чат»-иконкой.
-    fab.removeAttribute('href');
-    fab.removeAttribute('target');
-    fab.classList.add('contact-fab');
-    fab.setAttribute('role', 'button');
-    fab.setAttribute('tabindex', '0');
-    fab.setAttribute('aria-label', labels.open);
-    fab.setAttribute('aria-expanded', 'false');
-    // FAB морфит иконку между двумя логотипами (WhatsApp ↔ Telegram). Смена —
-    // плавный «wipe»: новый слой прокрашивается по диагонали слева направо вслед
-    // за бликом. Стартует с WhatsApp (передний слой — is-front).
-    fab.innerHTML =
-        '<span class="cf-morph">' +
-            '<span class="cf-layer cf-layer--wa is-front" aria-hidden="true"><img src="/image/whatsapp-icon.webp" alt="" width="192" height="192" decoding="async"></span>' +
-            '<span class="cf-layer cf-layer--tg" aria-hidden="true"><img src="/image/telegram-icon.webp" alt="" width="192" height="192" decoding="async"></span>' +
-            '<span class="cf-shine" aria-hidden="true"></span>' +
-        '</span>';
-
-    // Две опции живут отдельным контейнером у <body> — у FAB overflow:hidden, иначе их обрежет.
-    const menu = document.createElement('div');
-    menu.className = 'contact-fab-menu';
-    menu.innerHTML =
-        '<a class="contact-opt contact-opt--tg" href="' + tgHref + '" target="_blank" rel="noopener" ' +
-        'aria-label="' + labels.tg + '" title="' + labels.tg + '">' +
-        '<img src="/image/telegram-icon.webp" alt="Telegram" width="192" height="192" loading="lazy" decoding="async"></a>' +
-        '<a class="contact-opt contact-opt--wa" href="' + waHref + '" target="_blank" rel="noopener" ' +
-        'aria-label="' + labels.wa + '" title="' + labels.wa + '">' +
-        '<img src="/image/whatsapp-icon.webp" alt="WhatsApp" width="192" height="192" loading="lazy" decoding="async"></a>';
-    document.body.appendChild(menu);
-
-    // Ротация слоёв FAB: блик и смена иконки играют всегда, независимо от
-    // системной настройки prefers-reduced-motion.
-    const cfLayers = Array.from(fab.querySelectorAll('.cf-layer'));
-    const cfShine = fab.querySelector('.cf-shine');
-    let cfIndex = 0;
-    let cfTimer = null;
-    // Перезапуск CSS-анимации: снять класс, форсировать reflow, навесить снова.
-    const cfRestart = (el, cls) => { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); };
-    const cfMorph = () => {
-        const next = (cfIndex + 1) % cfLayers.length;
-        cfLayers[cfIndex].classList.remove('is-front');
-        cfLayers[next].classList.add('is-front');
-        // Блик и прокраска — на одном таймере, поэтому всегда совпадают.
-        // Играем всегда, независимо от prefers-reduced-motion.
-        cfRestart(cfShine, 'go');
-        cfRestart(cfLayers[next], 'cf-wipe');
-        cfIndex = next;
-    };
-    const cfStart = () => { if (!cfTimer && cfLayers.length > 1) cfTimer = setInterval(cfMorph, 3200); };
-    const cfStop = () => { if (cfTimer) { clearInterval(cfTimer); cfTimer = null; } };
-    cfStart();
-
-    let isOpen = false;
-    const setOpen = (v) => {
-        isOpen = v;
-        fab.classList.toggle('open', v);
-        menu.classList.toggle('open', v);
-        fab.setAttribute('aria-expanded', String(v));
-        // Пока меню открыто — иконка стабильна; закрыли — снова играет.
-        if (v) cfStop(); else cfStart();
-    };
-
-    // Открытие/закрытие меню по клику на FAB (+ событие аналитики при открытии).
-    fab.addEventListener('click', function (e) {
-        e.preventDefault();
-        setOpen(!isOpen);
-        if (isOpen && typeof gtag === 'function') {
-            gtag('event', 'contact_open', { event_category: 'engagement', event_label: 'contact_fab' });
-        }
-    });
-    // Клавиатурная доступность: Enter/Space открывает, Esc закрывает.
-    fab.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fab.click(); }
-    });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
-    // Закрытие по клику вне меню и при прокрутке к верху (FAB скрывается).
-    document.addEventListener('click', function (e) {
-        if (isOpen && !menu.contains(e.target) && !fab.contains(e.target)) setOpen(false);
-    });
-    window.addEventListener('scroll', function () { if (window.pageYOffset <= 300) setOpen(false); });
-
-    // Клик по опции: при наличии gtag шлём событие и открываем канал с небольшой задержкой.
-    const bindOption = (selector, method, href) => {
-        const el = menu.querySelector(selector);
-        if (!el) return;
-        el.addEventListener('click', function (e) {
-            setOpen(false);
-            if (typeof gtag !== 'function') return; // нет аналитики — обычный переход по ссылке
-            e.preventDefault();
-            gtag('event', method + '_click', {
-                event_category: 'engagement',
-                event_label: method + '_fab',
-                method: method
-            });
-            setTimeout(function () { window.open(href, '_blank', 'noopener'); }, 300);
-        });
-    };
-    bindOption('.contact-opt--wa', 'whatsapp', waHref);
-    bindOption('.contact-opt--tg', 'telegram', tgHref);
+    return { waHref: waHref, tgHref: tgHref, labels: labels, lang: lang };
 }
-
 
 // ============================================
-// АКТУАЛЬНЫЙ EMAIL И МОБИЛЬНЫЙ ФУТЕР
+// ОТЛОЖЕННЫЕ ВЫЗОВЫ — только в самом конце файла
 // ============================================
-// Ссылка «Для мастеров» для футера на телефоне. Кнопка убрана из шапки
-// (освобождала там 52 px), но совсем снимать ссылку нельзя: это
-// единственный путь на /masters/ со всего сайта.
-//
-// ⚠️ Функция была потеряна при переделке бургер-меню (7a5e932) — остался
-// только вызов в initFooter. Падение ReferenceError рвало перестройку
-// футера целиком, на шаге 5 из 6: пропадали и сама ссылка, и строка
-// копирайта после неё. Ошибка тихая — консоль на телефоне никто не видит.
-function buildMastersLink() {
-    const source = document.querySelector('header .audience-link');
-    if (!source) return null;
-
-    const line = document.createElement('span');
-    line.className = 'footer-masters-mobile';
-    line.appendChild(document.createTextNode('🔧 '));
-
-    const link = document.createElement('a');
-    link.className = 'footer-link footer-masters-link';
-    link.href = source.getAttribute('href');
-    // Подпись берём из самой кнопки — она уже переведена на язык страницы
-    link.textContent = (source.textContent || '').trim() || 'Для мастеров';
-    line.appendChild(link);
-
-    return line;
+/* ⚠️ Стоит здесь, а НЕ рядом с обработчиком DOMContentLoaded выше.
+   Тег <script> подключён с defer: к моменту разбора документ часто
+   уже 'complete', и ветка с немедленным вызовом срабатывает сразу,
+   на той же строке. Наверху файла const A11Y_FIELD_LABELS и
+   NAME_PATTERN_ATTR ещё не инициализированы (временная мёртвая
+   зона), и вызов падал с «Cannot access ... before initialization»,
+   унося с собой подписи полей и маску имени. Здесь, после всех
+   объявлений, этого не происходит. */
+if (document.readyState === 'complete') {
+    applyFieldLabels();
+} else {
+    window.addEventListener('load', applyFieldLabels, { once: true });
 }
-
-function initFooter() {
-    document.querySelectorAll('.footer-text').forEach((footer) => {
-        // Десктоп не трогаем вообще.
-        if (window.innerWidth > 768) return;
-
-        // Сохраняем исходные элементы до перестройки DOM.
-        const mail = footer.querySelector('a[href^="mailto:"]');
-        const phone = footer.querySelector('a[href^="tel:"]');
-        const telegram = footer.querySelector('a[href*="t.me/"]');
-        const facebook = footer.querySelector('a[href*="facebook.com"]');
-        const brand = footer.querySelector('strong');
-        const oldCopyright = footer.querySelector('.footer-copyright-mobile');
-        // Ссылка «Для мастеров» теперь стоит в разметке — забираем её
-        // до очистки футера, чтобы переиспользовать, а не строить вторую.
-        const mastersInMarkup = footer.querySelector('a[href*="/masters/"], a.footer-masters-link');
-
-        // Описание сервиса — первая строка футера, до первого <br>.
-        //
-        // ⚠️ Раньше бралось из текстового узла ПОСЛЕ <strong>: копирайт
-        // стоял первой строкой, а описание шло за ним через «•». Теперь
-        // порядок обратный — описание сверху, копирайт внизу, — и прежний
-        // поиск возвращал пустую строку, то есть на телефоне первая
-        // строка футера просто исчезала.
-        let urgentText = '';
-        for (const node of footer.childNodes) {
-            if (node.nodeName === 'BR') break;
-            if (node.nodeType === Node.TEXT_NODE) urgentText += node.nodeValue;
-        }
-        urgentText = urgentText.replace(/^\s*•\s*/, '').trim();
-
-        // Если футер уже был обработан старой версией скрипта, восстанавливаем
-        // почтовую ссылку из уже созданного контейнера.
-        const existingMail = mail || footer.querySelector('.footer-email-mobile a[href^="mailto:"]');
-        const email = existingMail || document.createElement('a');
-        email.href = 'mailto:info@mastera.ge';
-        email.textContent = 'info@mastera.ge';
-        email.className = 'footer-link';
-
-        // Берём название бренда из исходного <strong>. Если старый запуск уже
-        // удалил его, используем существующий copyright как резерв.
-        const copyrightStrong = brand
-            ? brand.cloneNode(true)
-            : oldCopyright?.querySelector('strong')?.cloneNode(true);
-
-        // Нормализуем футер целиком. Это делает функцию идемпотентной:
-        // повторный запуск никогда не создаёт дубликаты или пустые строки.
-        footer.replaceChildren();
-
-        const appendBreak = () => footer.appendChild(document.createElement('br'));
-
-        // 1. Срочный выезд
-        if (urgentText) {
-            footer.appendChild(document.createTextNode(urgentText));
-        }
-        appendBreak();
-
-        // 2. Телефон
-        if (phone) {
-            footer.appendChild(document.createTextNode('📞 '));
-            footer.appendChild(phone);
-        }
-        appendBreak();
-
-        // 3. Telegram + Facebook — одна строка, без «•»
-        if (telegram) {
-            footer.appendChild(document.createTextNode('💬 '));
-            footer.appendChild(telegram);
-        }
-        if (facebook) {
-            footer.appendChild(document.createTextNode('  '));
-            footer.appendChild(document.createTextNode('📘 '));
-            footer.appendChild(facebook);
-        }
-        appendBreak();
-
-        // 4. Email — отдельная строка с иконкой
-        const emailLine = document.createElement('span');
-        emailLine.className = 'footer-email-mobile';
-        emailLine.appendChild(document.createTextNode('✉️ '));
-        emailLine.appendChild(email);
-        footer.appendChild(emailLine);
-        appendBreak();
-
-        // 5. «Для мастеров» — своей строкой под почтой.
-        // Кнопка убрана из шапки (освобождала там 52 px), но совсем
-        // снимать ссылку нельзя: это единственный путь на /masters/ со
-        // всего сайта, иначе страница осталась бы сиротой.
-        //
-        // ⚠️ Берём узел из разметки, если он там есть: иначе на телефоне
-        // появлялись бы ДВЕ ссылки — своя из HTML и построенная скриптом.
-        // buildMastersLink остаётся запасным путём для страниц, куда
-        // ссылку в разметку ещё не внесли.
-        let mastersLine = null;
-        if (mastersInMarkup) {
-            mastersLine = document.createElement('span');
-            mastersLine.className = 'footer-masters-mobile';
-            mastersLine.appendChild(document.createTextNode('🔧 '));
-            mastersLine.appendChild(mastersInMarkup);
-        } else {
-            mastersLine = buildMastersLink();
-        }
-        if (mastersLine) {
-            footer.appendChild(mastersLine);
-            appendBreak();
-        }
-
-        // 6. Copyright — всегда последним
-        const copyrightLine = document.createElement('span');
-        copyrightLine.className = 'footer-copyright-mobile';
-        copyrightLine.appendChild(document.createTextNode('© 2026 '));
-        if (copyrightStrong) {
-            copyrightLine.appendChild(copyrightStrong);
-        } else {
-            copyrightLine.appendChild(document.createTextNode('Мастера Грузии'));
-        }
-        footer.appendChild(copyrightLine);
-
-        footer.dataset.footerFixed = '1';
-    });
-}
-
-document.addEventListener('DOMContentLoaded', initFooter);

@@ -65,7 +65,7 @@
 // Версия статики. Одно число на три места: имя кэша, адреса в PRECACHE_URLS
 // и строки `?v=` в 108 HTML-страницах.
 //
-// ⚠️ При правке script.js / style.css / service.css поднимать ОБЯЗАТЕЛЬНО.
+// ⚠️ При правке script.js / redesign.css / redesign.js поднимать ОБЯЗАТЕЛЬНО.
 // Руками править не надо — есть скрипт, он меняет номер и здесь, и во всех
 // HTML сразу (иначе прекэш разойдётся со страницами, см. ниже):
 //
@@ -80,7 +80,7 @@
 // неравномерно — один отдавал новый файл, другой старый, и сброс кэша
 // вручную (Purge Everything) требовался после КАЖДОГО деплоя. С версией в
 // адресе новый файл — это новый URL: он доезжает до людей сразу.
-const ASSET_VERSION = '209';
+const ASSET_VERSION = '345';
 
 const CACHE_NAME = `mastera-landing-v${ASSET_VERSION}`;
 
@@ -93,9 +93,14 @@ const PRECACHE_URLS = [
   '/ge/',
   '/en/',
   '/site.webmanifest',
-  `/style.css?v=${ASSET_VERSION}`,
-  `/service.css?v=${ASSET_VERSION}`,
   `/script.js?v=${ASSET_VERSION}`,
+  // Единственный комплект стилей проекта: style.css и service.css
+  // (тёмный дизайн прода mastera.ge) из проекта удалены — все 129
+  // страниц подключают только эту пару. Держать их в прекэше было
+  // нельзя: cache.addAll() атомарен, и один 404 валит установку
+  // service worker'а целиком (так уже ломалось, см. «v5» выше).
+  `/redesign.css?v=${ASSET_VERSION}`,
+  `/redesign.js?v=${ASSET_VERSION}`,
   '/image/favicon.svg',
   '/image/favicon.ico',
   '/image/web-app-manifest-192x192.png',

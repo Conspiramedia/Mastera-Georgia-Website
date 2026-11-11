@@ -1,0 +1,5830 @@
+/* ============================================================
+   Mastera Georgia — светлая тема
+   ============================================================
+   Палитра, типографика и геометрия сняты с tehcore.ru:
+   решение владельца 05.11.2026 — повторить один в один.
+
+   ⚠️ Это ОТДЕЛЬНЫЙ проект, не правка mastera.ge. Прод живёт в
+   «Mastera Georgia Website» и остаётся тёмным, пока новый сайт
+   не будет готов целиком.
+
+   Главное отличие от донора: ТРИ языка вместо одного. Inter не
+   покрывает грузинский, поэтому к нему подключён NotoGeo — см.
+   «Шрифты» ниже, там же про вес 760, который у NotoGeo берётся
+   не так, как у Inter.
+   ============================================================ */
+
+:root {
+    /* ── Палитра донора ──────────────────────────────────── */
+    --navy-950: #041027;
+    --navy-900: #07152f;
+    --navy-850: #0a1b39;
+    --navy-800: #10264b;
+
+    /* Синий кнопки Telegram в нижней панели связи. Отдельный
+       токен, а не --blue-700 (#1f62d2): оттенок задан точно и
+       подгонять его под соседний нельзя. */
+    --blue-tg: #2368d9;
+    --blue-700: #1f62d2;
+    --blue-600: #2f77eb;
+    --blue-500: #3d8bff;
+    --blue-400: #6ba8ff;
+    --blue-100: #e7f1ff;
+
+    --cyan-100: #e9faff;
+    --cyan-300: #91dcf8;
+
+    --green-500: #20b983;
+    --green-100: #e3f8f0;
+    --amber-500: #f3a83b;
+    --red-500: #e75757;
+
+    /* Текст: ink — заголовки, ink-2 — основной, muted — вторичный.
+       Ни один из них не чёрный: #14223d на белом читается мягче,
+       чем #000, и держит синеватый тон всей страницы. */
+    --ink: #14223d;
+    --ink-2: #263754;
+    /* ⚠️ Оба серых подобраны по контрасту, а не на глаз: прежние
+       #65738b и #8290a6 не дотягивали до нормы WCAG AA (4.5:1 для
+       мелкого текста) и аудит доступности помечал их красным.
+       #65738b давал 4.46 на светлом фоне и 4.21 на голубом,
+       #8290a6 — всего 3.24 на белом.
+
+       Проверять нужно на ТРЁХ фонах сразу, на которых этот текст
+       реально стоит: белом #ffffff, светлом #f4f7fb и голубом
+       #e7f1ff (карточки городов). Голубой — самый строгий.
+
+       Текущие значения: muted 6.15/5.72/5.40, muted-2
+       5.17/4.81/4.54 — проходят везде с запасом.
+
+       ⚠️ muted-2 пришлось затемнить сильно (на 34 пункта), и при
+       прямом затемнении он совпал бы с muted — два оттенка
+       схлопнулись бы в один и вторичный текст перестал бы
+       отличаться от основного. Поэтому muted затемнён тоже:
+       разница между ними сохранена (контраст 1.19). Меняя один,
+       пересчитывать оба. */
+    --muted: #55627a;
+    --muted-2: #606e84;
+
+    --line: #dfe7f1;
+    --line-dark: rgba(255, 255, 255, 0.13);
+    --soft: #f4f7fb;
+    --white: #fff;
+
+    /* ── Тени ────────────────────────────────────────────────
+       Три уровня, все синеватые (не серые) — иначе карточка на
+       белом выглядит грязной. sm — карточки в покое, md —
+       поднятые блоки и ховер, lg — модальные окна. */
+    --shadow-sm: 0 8px 24px rgba(11, 31, 68, 0.08);
+    --shadow-md: 0 18px 50px rgba(9, 29, 66, 0.13);
+    --shadow-lg: 0 32px 90px rgba(3, 17, 43, 0.2);
+
+    /* ── Геометрия ───────────────────────────────────────────
+       Скругления крупные: 14px — мелкие элементы (кнопки,
+       поля), 22px — карточки, 32-42px — большие блоки.
+       ⚠️ Это заметно больше, чем на тёмном сайте (8-12px), и
+       именно радиус даёт светлой теме мягкость. Уменьшать
+       поштучно нельзя — расходится с остальными блоками. */
+    --radius-sm: 14px;
+    --radius-md: 22px;
+    --radius-lg: 32px;
+    --radius-xl: 42px;
+
+    --container: 1240px;
+    --header-height: 76px;
+    --ease: cubic-bezier(.2, .75, .2, 1);
+
+    /* Вертикальный ритм секций. 104px — шаг донора на десктопе;
+       на телефоне режется до 64px (см. медиазапрос внизу). */
+    --section-pad: 104px;
+
+    /* Стрелка «вперёд» для кнопок действия. Задаётся маской, а не
+       фоном: в data:URI не работает currentColor, а маска красится
+       через background-color и наследует цвет текста кнопки. */
+    --arrow-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3Cpolyline points='12 5 19 12 12 19'/%3E%3C/svg%3E");
+}
+
+/* ============================================================
+   Шрифты
+   ============================================================
+   Inter — латиница и кириллица, NotoGeo — грузинский.
+
+   ⚠️ Порядок в font-family ОБЯЗАТЕЛЬНО такой: Inter первым.
+   Если поставить NotoGeo вперёд, он возьмёт на себя и латиницу
+   с кириллицей (глифы там есть), и русская страница поедет
+   чужим шрифтом — заметить это трудно, буквы похожи.
+
+   ⚠️ Вес 760 у донора — это вариативный Inter. У NotoGeo
+   вариативной версии нет, есть три файла: 400, bold (500-700)
+   и black (800-900). Значение 760 для грузинского округлится
+   к bold — это ожидаемо и выглядит верно; подгонять отдельным
+   правилом не нужно, проверено на заголовках.
+   ============================================================ */
+
+/* ⚠️ Inter лежит ЛОКАЛЬНО, в /fonts/, а не на fonts.gstatic.com.
+   Две причины, обе проверены.
+
+   1. Прежние ссылки на gstatic вели на версию v13 и к 08.11.2026
+      отдавали 404: Google выкладывает шрифт по хешированному
+      адресу и меняет его при обновлении. Основной шрифт сайта не
+      грузился вовсе — текст рисовался системным фолбэком, а
+      браузер на каждой странице делал два напрасных запроса к
+      чужому домену. Ломается это молча: вёрстка не рассыпается,
+      просто буквы «не те».
+   2. Даже рабочая ссылка стоила бы DNS + TCP + TLS к чужому
+      домену в критическом пути, причём без preconnect — а шрифт
+      нужен для первой отрисовки текста (LCP).
+
+   Локальные файлы берутся из того же соединения, что и страница,
+   и попадают под preload в <head>. Разбиение на latin/cyrillic с
+   unicode-range сохранено: кириллический файл (18 КБ) не качается
+   на странице без кириллицы, латинский (47 КБ) — наоборот.
+   Обновляя шрифт, скачивай файл заново и клади рядом; ссылку на
+   gstatic возвращать нельзя. */
+@font-face {
+    font-family: 'Inter';
+    src: url('/fonts/inter-latin.woff2') format('woff2');
+    font-weight: 100 900;
+    font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('/fonts/inter-cyrillic.woff2') format('woff2');
+    font-weight: 100 900;
+    font-display: swap;
+    unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+/* ⚠️ unicode-range обязателен. Без него браузер качает все три
+   грузинских файла (40 КБ) на КАЖДОЙ странице, включая русские и
+   английские, где нет ни одной грузинской буквы — проверено: на
+   /ru/ грузинского текста нет, а шрифты грузились. С диапазоном
+   файл скачивается, только если на странице встретился символ из
+   него. Диапазон тот же, что у Google Fonts: основной блок,
+   Mtavruli и Nuskhuri. */
+@font-face {
+    font-family: 'NotoGeo';
+    src: url('/fonts/notosansgeorgian.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+    unicode-range: U+10A0-10FF, U+1C90-1CBA, U+1CBD-1CBF, U+2D00-2D2F;
+}
+
+@font-face {
+    font-family: 'NotoGeo';
+    src: url('/fonts/notosansgeorgian-bold.woff2') format('woff2');
+    font-weight: 500 700;
+    font-display: swap;
+    unicode-range: U+10A0-10FF, U+1C90-1CBA, U+1CBD-1CBF, U+2D00-2D2F;
+}
+
+@font-face {
+    font-family: 'NotoGeo';
+    src: url('/fonts/notosansgeorgian-black.woff2') format('woff2');
+    font-weight: 800 900;
+    font-display: swap;
+    unicode-range: U+10A0-10FF, U+1C90-1CBA, U+1CBD-1CBF, U+2D00-2D2F;
+}
+
+/* ============================================================
+   База
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    /* Место под полосу прокрутки занято всегда: иначе страница
+       без прокрутки шире страницы с ней, и при переходе между
+       ними вёрстку дёргает вбок. */
+    scrollbar-gutter: stable;
+    scroll-behavior: smooth;
+    /* ⚠️ Системная подсветка тапа — голубая полупрозрачная плёнка
+       поверх ссылки или кнопки в момент нажатия (по умолчанию
+       rgba(51,181,229,0.4) в Android WebView и Chrome). Она ложится
+       НА текст и гасит его: на тёмной кнопке белые буквы уходят в
+       серо-голубой, будто подвисли. Цвет системный, к палитре сайта
+       отношения не имеет.
+       Гасим на html — свойство наследуется, поэтому одно правило
+       закрывает все ссылки и кнопки сайта. Обратная связь на нажатие
+       никуда не девается: её даёт :active у самих элементов. */
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* ⚠️ Отступ под липкую шапку. Без него переход по якорю (#services,
+   #lead) ставит заголовок секции ровно ПОД шапку — она его
+   закрывает, и кажется, что ссылка ведёт не туда. */
+[id] {
+    scroll-margin-top: calc(var(--header-height) + 18px);
+}
+
+body {
+    margin: 0;
+    background: var(--white);
+    color: var(--ink-2);
+    font-family: 'Inter', 'NotoGeo', 'Segoe UI', Roboto, Arial, sans-serif;
+    /* 16 px — базовый кегль донора (замер). Было 17: от него
+       считаются все относительные размеры, и весь текст сайта
+       выходил на полшага крупнее оригинала. */
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+a {
+    color: var(--blue-700);
+    text-decoration: none;
+    transition: color 0.2s var(--ease);
+}
+
+a:hover {
+    color: var(--blue-600);
+}
+
+.container {
+    width: 100%;
+    max-width: var(--container);
+    margin: 0 auto;
+    /* Поля в процентах, а не в пикселях: на узком экране
+       фиксированные 20px оставляют текст впритык к краю. */
+    padding: 0 5%;
+}
+
+/* ── Заголовки ───────────────────────────────────────────────
+   Вес 760 и отрицательный трекинг — приём донора: крупный текст
+   на белом иначе выглядит разреженным. Чем крупнее кегль, тем
+   плотнее трекинг (-0.035em у h1, -0.01em у h4). */
+
+h1, h2, h3, h4 {
+    margin: 0 0 0.5em;
+    color: var(--ink);
+    font-weight: 760;
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+}
+
+h1 {
+    /* Формула донора, прочитанная из его CSS, а не выведенная из
+       замера одного экрана: clamp(2.65rem, 5.3vw, 5.05rem).
+       ⚠️ Прежнее значение 2.875rem было снято с внутренней
+       страницы донора, где заголовок мельче — на главной он
+       76 px против наших 46, то есть мы были в полтора раза
+       мельче эталона. */
+    font-size: clamp(2.65rem, 5.3vw, 5.05rem);
+    /* 760 — как у донора. Прежние 750 были догадкой. */
+    font-weight: 760;
+    letter-spacing: -0.035em;
+}
+
+h2 {
+    /* Формула донора: clamp(2rem, 3.5vw, 3.45rem). На 1440 это
+       50 px против наших прежних 23 — мы были вдвое мельче. */
+    font-size: clamp(2rem, 3.5vw, 3.45rem);
+    letter-spacing: -0.03em;
+}
+
+h3 {
+    font-size: 1.28rem;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+}
+
+h4 {
+    font-size: 1.05rem;
+    letter-spacing: -0.01em;
+}
+
+p {
+    margin: 0 0 1rem;
+    color: var(--muted);
+}
+
+/* ============================================================
+   Шапка
+   ============================================================ */
+
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    /* Полупрозрачный белый с размытием: под шапкой проезжает
+       контент, и сплошной белый смотрелся бы заплаткой. */
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: saturate(180%) blur(12px);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid rgba(223, 231, 241, 0.7);
+    box-shadow: 0 10px 30px rgba(7, 21, 47, 0.08);
+}
+
+.site-header__inner {
+    display: flex;
+    align-items: center;
+    /* 1.15rem вместо 1.5rem: два промежутка (логотип-меню и
+       меню-действия) отдают шапке ещё ~11 px. Вместе с
+       экономией на промежутках меню этого хватает, чтобы
+       грузинская шапка помещалась без наезда. */
+    gap: 1.15rem;
+    min-height: var(--header-height);
+    /* Контекст для выпадающей панели: без него она сравнивается
+       по слою с содержимым страницы, а не шапки. */
+    position: relative;
+    z-index: 1;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    /* Логотип не сжимается: при нехватке места ужимается меню,
+       а не название сервиса. */
+    flex: 0 0 auto;
+    color: var(--ink);
+}
+
+.logo:hover {
+    color: var(--ink);
+}
+
+.logo__mark {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+    background: linear-gradient(135deg, var(--blue-600), var(--blue-700));
+    color: var(--white);
+    box-shadow: 0 6px 16px rgba(31, 98, 210, 0.32);
+}
+
+.logo__mark svg {
+    /* 28 из 42 px стороны (две трети) вместо прежних 23 (55%):
+       ключ читался мелким, особенно на телефоне и в закладках.
+
+       ⚠️ Размер самого квадрата НЕ меняем: 42 px заложены в
+       высоту шапки и в расчёт порога бургера (1360 px). Растёт
+       только рисунок внутри.
+
+       ⚠️ Больше не берём: у контура ключа stroke-width 2 при
+       24-й сетке, и на 30+ px линия начинает казаться тонкой
+       относительно пятна — знак теряет плотность. */
+    width: 28px;
+    height: 28px;
+}
+
+.logo__text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.05;
+}
+
+.logo__name {
+    font-size: 1.22rem;
+    font-weight: 760;
+    letter-spacing: -0.03em;
+}
+
+.logo__sub {
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted-2);
+    /* ⚠️ Зазор обязателен: line-height 1.05 у .logo__text ставит
+       строки вплотную, и подпись прилипает к названию — замеренный
+       просвет был 0 px. 6 px — значение донора. */
+    margin-top: 6px;
+}
+
+.site-nav {
+    display: flex;
+    align-items: center;
+    /* 1.25rem вместо 1.6rem: между пунктами три промежутка, и
+       каждые 0.35rem возвращают меню ~17 px. Грузинской шапке не
+       хватало ровно 14 px (замер: нужно 1439 px окна при 1425
+       доступных), поэтому экономия здесь закрывает недостачу и
+       шрифт уменьшать не приходится. */
+    gap: 1.25rem;
+    /* Съедает свободное место, прижимая правую группу к краю. */
+    margin-left: auto;
+    /* ⚠️ Меню НЕ сжимается. Раньше здесь стояли flex-shrink: 1 и
+       min-width: 0 с пояснением, что ссылки «ужимаются». Это
+       неверно: у .site-nav__link стоит white-space: nowrap, и
+       сжимается только КОРОБКА меню — пункты вылезают за её
+       границы наружу, потому что overflow тут visible.
+       Замер на 1425 px по-грузински: коробке дано 395 px при
+       нужных 552, правый край последнего пункта уходил на 935 px,
+       а правая группа начинается с 802 — пункты оказывались ПОД
+       кнопкой города. Ровно это видно глазом как наезд.
+
+       ⚠️ overflow: hidden здесь стоять НЕ МОЖЕТ, хотя и прятал бы
+       переполнение: он обрезает выпадающие панели услуг и
+       районов, которые выходят за границы меню вниз. Панель
+       просто не видна, а причина не видна тем более — в DOM она
+       открыта.
+
+       Поэтому меню держит свою ширину, а когда её на всю шапку не
+       хватает, пункты уходят в бургер целиком (медиазапрос ниже).
+       Состояние всегда одно из двух — полное меню или бургер, без
+       промежуточного наезда. */
+    flex-shrink: 0;
+    flex-wrap: nowrap;
+}
+
+.site-nav__link {
+    white-space: nowrap;
+}
+
+.site-nav__link {
+    color: var(--ink-2);
+    font-size: 0.92rem;
+    /* 650 — значение донора. Inter переменный, дробные веса
+       поддерживает. */
+    font-weight: 650;
+}
+
+.site-nav__link:hover {
+    color: var(--blue-700);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    /* Язык и кнопка заявки не сжимаются: это главные действия
+       шапки, и ужимать их до многоточия нельзя. Место под них
+       освобождает меню выше. */
+    flex: 0 0 auto;
+    /* ⚠️ Прижим к правому краю именно здесь, а не на .site-nav
+       через её margin-left: auto. Ниже 1120 px меню скрыто
+       (display: none), его отступ не действует — и группа
+       вставала сразу за логотипом: на 414 px бургер не доходил
+       до края 70 px при поле контейнера 17. */
+    margin-left: auto;
+}
+
+/* ── Переключатель языка ─────────────────────────────────── */
+
+.lang-switch {
+    display: flex;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 12px;
+    background: var(--soft);
+}
+
+.lang-switch__btn {
+    padding: 6px 11px;
+    border-radius: 9px;
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    transition: all 0.2s var(--ease);
+}
+
+.lang-switch__btn:hover {
+    color: var(--ink);
+}
+
+.lang-switch__btn.is-active {
+    background: var(--white);
+    color: var(--blue-700);
+    box-shadow: 0 2px 6px rgba(11, 31, 68, 0.1);
+}
+
+/* ── Язык одной кнопкой ──────────────────────────────────
+   Кнопку с выпадающим списком строит script.js из тех же трёх
+   ссылок. Три отдельные кнопки занимали 110 px — место, нужное
+   городу, заявке и бургеру. */
+
+.lang-drop {
+    position: relative;
+    flex: 0 0 auto;
+}
+
+.lang-drop__btn {
+    display: flex;
+    align-items: center;
+    gap: 0.33rem;
+    height: 40px;
+    padding: 0 10px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--soft);
+    color: var(--ink-2);
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+}
+
+.lang-drop__btn:hover,
+.lang-drop.is-open .lang-drop__btn {
+    border-color: var(--blue-400);
+    background: var(--blue-100);
+    color: var(--blue-700);
+}
+
+.lang-drop__globe {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 auto;
+    opacity: 0.8;
+}
+
+.lang-drop__chev {
+    width: 13px;
+    height: 13px;
+    flex: 0 0 auto;
+    color: var(--muted-2);
+    transition: transform 0.2s var(--ease);
+}
+
+.lang-drop.is-open .lang-drop__chev {
+    transform: rotate(180deg);
+}
+
+.lang-drop__panel {
+    position: absolute;
+    top: calc(100% + 10px);
+    /* Прижата к правому краю кнопки: она стоит у края шапки, и
+       список, выровненный слева, вылез бы за экран. */
+    right: 0;
+    z-index: 120;
+    min-width: 186px;
+    padding: 7px;
+    border: 1px solid var(--line);
+    border-radius: 15px;
+    background: var(--white);
+    box-shadow: 0 22px 60px rgba(3, 17, 43, 0.17);
+    /* ⚠️ Закрытое состояние — display: none, а не прозрачность
+       с переходом. В фоновой вкладке браузер анимации
+       замораживает, и список, спрятанный через opacity +
+       visibility, не появлялся вовсе. Сдвиг оставляем: если
+       переход не проиграется, панель просто встанет на место. */
+    display: none;
+    transform: translateY(-6px);
+    transition: transform 0.18s var(--ease);
+}
+
+/* Мостик через зазор: без него курсор, идущий от кнопки к
+   списку, проходит над пустотой и список закрывается. */
+.lang-drop__panel::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 0;
+    right: 0;
+    height: 10px;
+}
+
+.lang-drop.is-open .lang-drop__panel {
+    display: block;
+    transform: none;
+}
+
+.lang-drop__item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 9px 10px;
+    border-radius: 10px;
+    color: var(--ink-2);
+    font-size: 0.89rem;
+    font-weight: 650;
+    transition: background 0.16s var(--ease), color 0.16s var(--ease);
+}
+
+.lang-drop__item:hover {
+    background: var(--soft);
+    color: var(--blue-700);
+}
+
+.lang-drop__item.is-active {
+    background: var(--blue-100);
+    color: var(--blue-700);
+    font-weight: 750;
+}
+
+.lang-drop__abbr {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 31px;
+    height: 24px;
+    border-radius: 7px;
+    background: var(--white);
+    box-shadow: inset 0 0 0 1px var(--line);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}
+
+.lang-drop__item.is-active .lang-drop__abbr {
+    background: var(--blue-700);
+    box-shadow: none;
+    color: var(--white);
+}
+
+.lang-drop__name {
+    flex: 1 1 auto;
+}
+
+.lang-drop__tick {
+    width: 15px;
+    height: 15px;
+    flex: 0 0 auto;
+    color: var(--blue-600);
+}
+
+/* ── Бургер и мобильное меню ──────────────────────────────
+   Размеры донора: кнопка 44×44 с радиусом 12, полоски 22×2.
+   Кнопку строит script.js — в разметке её нет, иначе пришлось
+   бы держать одинаковую вёрстку на двенадцати страницах. */
+
+.burger {
+    /* На десктопе не нужна: там меню и кнопка заявки на виду.
+       Показывается в медиазапросе ниже 1120 px. */
+    display: none;
+    position: relative;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 12px;
+    background: var(--soft);
+    cursor: pointer;
+    transition: background 0.2s var(--ease);
+}
+
+.burger:hover {
+    background: var(--blue-100);
+}
+
+.burger span {
+    position: absolute;
+    left: 11px;
+    width: 22px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--ink);
+    transition: transform 0.22s var(--ease), opacity 0.16s var(--ease);
+}
+
+/* Полоски разведены от середины: так при превращении в крестик
+   они сходятся в одну точку, а не прыгают. */
+.burger span:nth-child(1) { top: 15px; }
+.burger span:nth-child(2) { top: 21px; }
+.burger span:nth-child(3) { top: 27px; }
+
+.burger.is-open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.burger.is-open span:nth-child(2) { opacity: 0; }
+.burger.is-open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+.mobile-menu {
+    position: fixed;
+    /* top ставит скрипт по фактическому низу шапки: топбар
+       прокручивается, и жёсткое значение разошлось бы с ней. */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* Ниже шапки (100), но выше содержимого страницы. Модалка
+       города — 200, она открывается поверх этого меню. */
+    z-index: 90;
+    background: var(--white);
+    overflow-y: auto;
+    /* Инерционная прокрутка внутри панели на iOS. */
+    -webkit-overflow-scrolling: touch;
+    /* ⚠️ Сама панель не анимируется и не смещается: её показ не
+       должен зависеть от того, проиграется ли переход. В фоновой
+       вкладке браузер анимации замораживает — с opacity: 0 в
+       закрытом состоянии меню не появлялось вообще (проверено:
+       transitionend не приходит и за 2.5 с), а застрявший
+       translateY оставлял её на 6 px выше, под шапкой.
+       Прячет панель hidden; смягчает появление содержимое. */
+}
+
+/* ⚠️ Вес селектора должен быть НЕ НИЖЕ, чем у правила ниже по
+   файлу (.mobile-menu .mobile-menu__inner): там задана та же
+   opacity, и при равном весе побеждало бы позднее правило —
+   содержимое меню навсегда осталось бы прозрачным.
+   Здесь вес выше за счёт .is-open, поэтому раскрытие работает. */
+.mobile-menu.is-open .mobile-menu__inner {
+    opacity: 1;
+}
+
+/* ⚠️ Без этого правила панель видна всегда: hidden не
+   перебивает position: fixed, элемент просто остаётся на месте.
+   Та же ошибка уже была с модалкой города — она перехватывала
+   клики по всей странице. */
+.mobile-menu[hidden] {
+    display: none;
+}
+
+/* ⚠️ Прокрутку под открытой панелью блокирует НЕ это правило, а
+   общая функция lockScroll() в redesign.js — та же, что у окон
+   заявки и выбора города. Здесь overflow убран намеренно: правило
+   из таблицы стилей перебивало бы отступ, которым функция
+   возмещает исчезнувшую полосу прокрутки, и вёрстку дёргало бы
+   вбок на её ширину (15 px на десктопе).
+   Класс сохранён: на нём держатся стили самой панели. */
+
+/* ⚠️ Селектор усилен родителем (.mobile-menu .mobile-menu__inner)
+   намеренно. На этом же элементе висит класс .container, а у него
+   padding задан СОКРАЩЁННОЙ записью `padding: 0 5%` — она
+   выставляет и padding-top: 0. При равной силе селекторов
+   (оба в один класс) побеждал .container, и отступ сверху
+   пропадал: первая кнопка «Тбилиси» вставала вплотную под шапку
+   и даже заползала под неё на 6 px (замерено на 375 px).
+   Родитель в селекторе поднимает вес и возвращает отступ. */
+.mobile-menu .mobile-menu__inner {
+    display: grid;
+    gap: 2px;
+    /* 26 px, а не прежние 18: даже когда отступ работал, кнопка
+       смотрелась прижатой — панель открывается сразу под шапкой,
+       и воздух между ними нужен заметный. */
+    padding-top: 26px;
+    /* Запас снизу: последняя кнопка не должна упираться в край
+       экрана, а на iOS под неё уходит панель браузера. */
+    padding-bottom: 32px;
+    /* ⚠️ Вертикального сдвига при появлении здесь БЫТЬ НЕ ДОЛЖНО.
+       Раньше стояло transform: translateY(-6px) с переходом в
+       none: панель белая и неподвижная, поэтому глаз видел не
+       «появление», а рывок всего списка вниз на 6 px — и такой же
+       рывок вверх при закрытии. Владелец описал это как прыжок
+       контента при открытии бургера.
+       Замер подтвердил: верх кнопки «Тбилиси» шёл 133 -> 138 -> 139
+       уже ПОСЛЕ открытия, то есть список доезжал на глазах.
+       Смягчаем появление прозрачностью — она не двигает вёрстку. */
+    opacity: 0.001;
+    transition: opacity 0.18s var(--ease);
+}
+
+.mobile-menu__city {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 14px;
+    border: 1px solid var(--blue-100);
+    border-radius: 14px;
+    background: var(--blue-100);
+    color: var(--blue-700);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 760;
+    text-align: left;
+    cursor: pointer;
+}
+
+.mobile-menu__city svg {
+    width: 19px;
+    height: 19px;
+}
+
+.mobile-menu__city-chev {
+    color: var(--blue-500);
+}
+
+.mobile-menu__head {
+    margin: 1.1rem 0 0.1rem;
+    padding: 0 2px;
+    color: var(--muted-2);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.mobile-menu__group {
+    display: grid;
+}
+
+.mobile-menu__link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 8px;
+    border-bottom: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.93rem;
+    font-weight: 680;
+}
+
+.mobile-menu__link:hover {
+    color: var(--blue-700);
+}
+
+.mobile-menu__icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--soft);
+    color: var(--blue-600);
+}
+
+.mobile-menu__icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.mobile-menu__phone {
+    margin-top: 1.2rem;
+    padding: 4px 2px;
+    color: var(--ink);
+    font-size: 1.12rem;
+    font-weight: 760;
+    letter-spacing: -0.01em;
+    /* Номер и глазок в одну строку, по центру по вертикали. */
+    display: flex;
+    align-items: center;
+}
+
+.mobile-menu__phone-num {
+    /* Фиксируем цифры по ширине: иначе строка дёргается, когда
+       звёздочки сменяются цифрами (то же, что у топбара). */
+    font-variant-numeric: tabular-nums;
+}
+
+/* ⚠️ Свои цвета, а не те же, что у .topbar__phone-eye: там глазок
+   лежит на тёмной полосе и нарисован белым с прозрачностью. Здесь
+   фон панели белый — белый значок был бы не виден. */
+.mobile-menu__phone-eye {
+    display: inline-grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    margin-left: 8px;
+    border-radius: 9px;
+    background: var(--soft);
+    color: var(--ink-2);
+    cursor: pointer;
+    /* Палец попадает по цели: 30 px — минимум, ниже которого
+       промахиваются. Внутри значок мельче, его хватает глазу. */
+    flex: 0 0 auto;
+    transition: background-color 0.18s var(--ease), color 0.18s var(--ease);
+}
+
+.mobile-menu__phone-eye:hover,
+.mobile-menu__phone-eye:focus-visible {
+    /* Своего светло-синего в палитре нет, берём прозрачный от
+       основного синего — он подстроится при смене палитры. */
+    background: rgba(61, 139, 255, 0.12);
+    color: var(--blue-500);
+}
+
+.mobile-menu__phone-eye svg {
+    width: 17px;
+    height: 17px;
+}
+
+.mobile-menu__cta {
+    margin-top: 0.7rem;
+    width: 100%;
+}
+
+/* ============================================================
+   Кнопки
+   ============================================================
+   Три вида: primary (синяя заливка), secondary (бледно-синяя),
+   ghost (белая с тенью). Высота 50-56px — крупная, под палец. */
+
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* Размеры донора: min-height 48, padding 13/22, radius 14,
+       gap 10px, line-height 1.15. Прежние 14px/24px давали
+       кнопку выше и шире эталонной. */
+    gap: 10px;
+    min-height: 48px;
+    padding: 13px 22px;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 0.91rem;
+    font-weight: 760;
+    line-height: 1.15;
+    letter-spacing: normal;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease),
+                background-color 0.2s var(--ease);
+}
+
+.button--primary {
+    background: var(--blue-700);
+    color: var(--white);
+    box-shadow: 0 10px 26px rgba(31, 98, 210, 0.28);
+}
+
+.button--primary:hover {
+    /* ⚠️ Затемнение, а не осветление: прежний --blue-600 давал
+       белому тексту 4.23:1 при норме 4.5 — наведение делало
+       кнопку хуже читаемой, чем в покое (5.62:1). Осветлить синий
+       под белым текстом, не сломав норму, нельзя, поэтому отклик
+       идёт вниз по тону: 6.71:1. */
+    background: #1b57bb;
+    color: var(--white);
+    /* Подъём на 2px вместо смены цвета: на синем изменение
+       оттенка почти не читается, а движение заметно сразу. */
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px rgba(31, 98, 210, 0.35);
+}
+
+
+.button--ghost {
+    background: rgba(255, 255, 255, 0.82);
+    color: var(--ink);
+    box-shadow: var(--shadow-sm);
+}
+
+.button--ghost:hover {
+    background: var(--white);
+    color: var(--ink);
+    transform: translateY(-2px);
+}
+
+.button--large {
+    padding: 16px 28px;
+    font-size: 1.02rem;
+}
+
+/* ── Фирменный значок мессенджера в кнопке ──────────────────
+   Готовая картинка из /image/, та же, что в нижней панели
+   связи: знаки WhatsApp и Telegram узнаваемые, и нарисованный
+   похожий контур читается как подделка.
+
+   ⚠️ У двух файлов РАЗНЫЕ поля вокруг логотипа: WhatsApp
+   занимает 116 из 192 px холста, Telegram — 150 из 192. При
+   одинаковом width видимые кружки вышли бы разного калибра.
+   Выравниваем масштабом внутри общей рамки 22 px, а не разными
+   width: увеличение файла до 31 px растягивало саму кнопку с
+   53 до 65 px (замерено). scale прибавляет только видимый
+   размер и на раскладку не влияет.
+   Коэффициент — отношение полей: 150/116 ≈ 1.29. */
+.button__brand {
+    width: 22px;
+    height: 22px;
+    flex: 0 0 auto;
+    display: block;
+}
+
+.button__brand[src*="whatsapp"] {
+    transform: scale(1.29);
+}
+
+
+/* ── Стрелка в кнопке ────────────────────────────────────────
+   Одна стрелка на все кнопки действия: раньше её рисовали
+   вручную в разметке, и она стояла лишь у трёх из тринадцати
+   (`.v-button`, `.est-card__btn`, «Оставить заявку» в финальном
+   CTA). Остальные выглядели иначе без всякой причины.
+
+   Делаем псевдоэлементом, а не тегом в HTML: кнопки живут в
+   157 файлах и ещё с десяток собирается в redesign.js —
+   вставлять `<svg>` в каждую значило бы пропустить половину.
+   Правка CSS доходит до всех разом.
+
+   Размер 17 px взят у `.v-button` — она крупнее всех на
+   странице, и мельче у остальных стрелка смотрелась бы
+   случайной. Цвет наследуется: `currentColor` в data:URI не
+   работает, поэтому красим через `background-color` + `mask`,
+   и стрелка сама принимает цвет текста кнопки на любом фоне —
+   синем, белом, прозрачном. */
+.button::after,
+.cta-strip__btn::after {
+    content: '';
+    width: 17px;
+    height: 17px;
+    flex: 0 0 auto;
+    background-color: currentColor;
+    -webkit-mask: var(--arrow-mask) center / contain no-repeat;
+    mask: var(--arrow-mask) center / contain no-repeat;
+    transition: transform 0.2s var(--ease);
+}
+
+.button:hover::after,
+.cta-strip__btn:hover::after {
+    transform: translateX(3px);
+}
+
+/* `.cta-strip__btn` не был flex-контейнером — без этого стрелка
+   встала бы на свою строку под подписью. */
+.cta-strip__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ⚠️ Стрелку получают только кнопки действия. Исключения ниже —
+   не забытые случаи, а осознанные:
+
+   • `--ghost-dark` и `--white` в финальном CTA, а также любая
+     кнопка с `.button__brand` — это WhatsApp и Telegram. У них
+     уже есть фирменный значок слева; вторая иконка справа
+     превращает кнопку в ряд картинок.
+   • `.lead-form__submit` — отправка формы, а не переход. Стрелка
+     «вперёд» обещает следующий экран, которого не будет.
+   • Кнопки, где стрелка уже нарисована в разметке
+     (`.v-button`, `.est-card__btn`), иначе получили бы вторую. */
+.button--ghost-dark::after,
+.button:has(.button__brand)::after,
+.lead-form__submit::after,
+.v-button::after,
+.est-card__btn::after {
+    content: none;
+}
+
+/* ============================================================
+   Секции
+   ============================================================ */
+
+.section {
+    padding: var(--section-pad) 0;
+}
+
+/* Чередование фонов: белый → #f4f7fb → белый. Светло-серый
+   отделяет блоки без единой разделительной линии. */
+.section--soft {
+    background: var(--soft);
+}
+
+/* Тёмная секция — единственное место, где остаётся navy-фон.
+   Внутри неё текст и заголовки инвертируются. */
+.section--dark {
+    background: var(--navy-900);
+}
+
+.section--dark h2,
+.section--dark h3 {
+    color: var(--white);
+}
+
+.section--dark p {
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.section-head {
+    max-width: 760px;
+    margin-bottom: 3rem;
+}
+
+.section-head__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.9rem;
+    color: var(--blue-700);
+    font-size: 0.78rem;
+    font-weight: 760;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+}
+
+/* Короткая черта перед надзаголовком — приём донора, заменяет
+   собой иконку и держит левый край блока. */
+.section-head__eyebrow::before {
+    content: '';
+    width: 26px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--blue-600);
+}
+
+.section--dark .section-head__eyebrow {
+    color: var(--blue-400);
+}
+
+.section-head p {
+    margin-bottom: 0;
+    font-size: 1.06rem;
+}
+
+/* ============================================================
+   Hero
+   ============================================================ */
+
+.hero {
+    /* Градиент от бледно-голубого к белому: верх страницы
+       чуть холоднее, и шапка на нём не висит в пустоте.
+       Значения донора — сверено замером, совпадает до цифры. */
+    background: linear-gradient(#f8fbff 0%, var(--white) 74%);
+    /* ⚠️ У донора отступ адаптивный: 86px на десктопе, 52/64 на
+       узких экранах. Прежний комментарий называл донорскими
+       только 52/64 — это значение снято с узкого окна, и на
+       десктопе наш первый экран выходил теснее эталона.
+       Узкое значение — в медиазапросе 768 ниже. */
+    padding: 86px 0;
+}
+
+.hero__grid {
+    display: grid;
+    grid-template-columns: 1.04fr 0.96fr;
+    gap: 3.4rem;
+    /* align-items: start — фото поднято к верху секции, а не
+       центрировано по высоте текста. */
+    align-items: start;
+}
+
+/* Текст слева от формы заявки едет вместе с прокруткой.
+
+   Форма высокая (847 px на главной), а текст рядом — 272 px, и при
+   align-items: start под ним оставалось 575 px пустоты: человек
+   заполняет нижние поля, а заголовок с условиями давно уехал вверх
+   за край экрана. Липкая колонка держит их перед глазами до конца
+   блока и останавливается вместе с ним — ниже формы текст не уходит,
+   это свойство самого sticky, а не подобранная величина.
+
+   top: 97px — это высота липкой шапки (77 px) плюс 20 px воздуха,
+   иначе заголовок подъезжает под неё вплотную и читается обрезанным.
+   ⚠️ Меняя высоту .site-header, поправь и это число.
+
+   align-self: start обязателен: без него элемент растягивается на
+   всю высоту строки грида, прилипать внутри неё ему негде, и
+   sticky не делает ничего — колонка просто стоит на месте.
+
+   Только от 1025px: на 1024 и уже сетка превращается в одну колонку
+   (медиазапрос ниже), текст встаёт НАД формой, и липкость там
+   закрыла бы собой её верхние поля. На телефоне и планшете правило
+   не действует вовсе. */
+@media (min-width: 1025px) {
+    #lead .hero__grid > div:first-child {
+        position: sticky;
+        top: 97px;
+        align-self: start;
+    }
+}
+
+/* Заголовок главной. «Сервис подбора мастеров Тбилиси» длиннее
+   прежнего «Мастер приедет в день обращения», поэтому кегль
+   меньше глобального h1: иначе первая строка не помещается в
+   колонку и заголовок уезжает на третью строку. clamp подобран
+   так, чтобы «Сервис подбора мастеров» влезало в одну строку и
+   на десктопе, и на телефоне (проверено на 375px). */
+.hero h1 {
+    font-size: clamp(1.6rem, 4vw, 3rem);
+}
+
+.hero__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 1.1rem;
+    color: var(--blue-700);
+    font-size: 0.78rem;
+    font-weight: 760;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+}
+
+.hero__eyebrow::before {
+    content: '';
+    width: 26px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--blue-600);
+}
+
+.hero__lead {
+    max-width: 30em;
+    margin-bottom: 1.9rem;
+    /* Формула донора: clamp(1.08rem, 1.7vw, 1.28rem), lh 1.62.
+       ⚠️ Прежний 1rem был снят с внутренней страницы — на
+       главной лид крупнее основного текста, и именно он задаёт
+       «воздух» первого экрана. */
+    font-size: clamp(1.08rem, 1.7vw, 1.28rem);
+    line-height: 1.62;
+}
+
+/* Карточка с примером цены в hero главной — аналог «цитаты из
+   прайса» на доноре. Светлая, в отличие от тёмного u-quick-price
+   лендинга: здесь белый фон первого экрана. */
+.hero__price {
+    display: block;
+    margin-bottom: 26px;
+    padding: 16px 19px;
+    border-left: 3px solid var(--blue-500);
+    background: var(--soft);
+    border-radius: 0 12px 12px 0;
+    color: var(--ink);
+    transition: background-color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+
+.hero__price:hover {
+    background: var(--blue-100);
+    border-color: var(--blue-600);
+    color: var(--ink);
+}
+
+.hero__price__label {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--muted);
+    font-size: 0.88rem;
+}
+
+.hero__price__value {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 1.3rem;
+    font-weight: 760;
+    letter-spacing: -0.02em;
+}
+
+.hero__price__more {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--muted);
+    font-size: 0.84rem;
+}
+
+.hero__price__more svg {
+    width: 15px;
+    height: 15px;
+    transition: transform 0.25s var(--ease);
+}
+
+.hero__price:hover .hero__price__more svg {
+    transform: translateX(4px);
+}
+
+.hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin-bottom: 1.9rem;
+}
+
+/* ── Строка преимуществ под кнопками ─────────────────────── */
+
+.hero__perks {
+    /* ⚠️ Сетка, а не flex с переносом. Flex ставит пункты подряд
+       по ширине текста, и вторая колонка начиналась на разной
+       высоте в разных строках: «Отклик за 60 минут» на 377 px,
+       «Проверенные мастера» на 336 — расхождение 41 px, галочки
+       не выстраивались в линию. С тремя пунктами это не было
+       заметно, с четырьмя бросается в глаза. */
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    gap: 0.75rem 1.7rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.hero__perks li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--ink-2);
+    font-size: 0.92rem;
+    font-weight: 600;
+}
+
+.hero__perks svg {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
+    color: var(--green-500);
+}
+
+/* ── Правая колонка: фото с всплывающей карточкой ────────── */
+
+.hero__media {
+    position: relative;
+    /* min-width: 0 — иначе фото распирает grid-колонку.
+       padding-bottom — место под форму, висящую поверх нижнего
+       края снимка. Увеличен, чтобы форма меньше закрывала фото. */
+    min-width: 0;
+    padding-bottom: 130px;
+}
+
+/* Текстовые колонки hero. Собственного оформления у них нет, но
+   min-width: 0 обязателен: по умолчанию элемент grid не ужимается
+   меньше своего содержимого, и длинное грузинское слово распирает
+   колонку, ломая пропорцию. */
+.hero__text,
+.v-hero-copy {
+    min-width: 0;
+}
+
+.hero__photo {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    /* ⚠️ Контейнер (1.19:1) чуть шире снимка (1.15:1), поэтому
+       cover срезает его по высоте — и при значении по умолчанию
+       (center) каска мастера уходила под верхний край. Прижимаем
+       кадр к верху: голова остаётся целиком, а срезается пол,
+       который всё равно закрыт формой заявки поверх нижней трети.
+       На странице услуги (.v-hero-img, 1.06:1) обрезка наоборот
+       боковая, и правило там не нужно. Меняя фото — проверить
+       заново. */
+    object-position: center top;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+/* Форма поверх фото — как у донора: hero сразу предлагает
+   действие, а не обещание. Повторяет .v-float-form страницы
+   услуги, отличается только привязкой к этой колонке.
+   ⚠️ На телефоне встаёт в поток под фото (см. медиазапрос):
+   поверх снимка 260 px она закрыла бы его целиком. */
+.hero__form {
+    position: absolute;
+    left: 22px;
+    right: 22px;
+    bottom: 0;
+}
+
+/* ============================================================
+   Правовые страницы (политика, соглашение)
+   ============================================================
+   Одна колонка текста без картинок. Ширина ограничена не
+   контейнером, а длиной строки: читать юридический текст во всю
+   ширину монитора невозможно — глаз теряет начало строки.
+   ============================================================ */
+
+.legal {
+    /* ~70 знаков в строке — предел, после которого читаемость
+       резко падает.
+       ⚠️ Колонка шире прежних 44em: при 5% полях контейнера на
+       экране 1280 от 44em (704 px) оставалось 577 px текста —
+       заголовок в такую ширину не вставал. Поля задаём здесь
+       сами, фиксированные, а ширину считаем вместе с ними. */
+    max-width: 50rem;
+    padding: 0 24px;
+}
+
+.legal h1,
+.legal h2 {
+    /* ⚠️ Перенос внутри слова. «კონფიდენციალურობის» — одно слово
+       шириной 386 px при колонке 280 на экране 320: заголовок
+       распирал страницу, и прокрутка появлялась на всём сайте.
+       Русский и английский сюда не попадают: таких длинных слов
+       в них нет, правило срабатывает только когда иначе никак.
+       ⚠️ Это аварийный клапан, а не способ вместить заголовок:
+       кегль ниже подобран так, чтобы до переноса не доходило. */
+    overflow-wrap: anywhere;
+    /* Переносы по слогам — чтобы длинное слово рвалось по
+       правилам языка, а не посередине корня. Срабатывает
+       раньше, чем overflow-wrap. */
+    hyphens: auto;
+}
+
+.legal h1 {
+    /* ⚠️ Свой кегль, а не общий h1. Глобальный — clamp(2.65rem,
+       5.3vw, 5.05rem), то есть до 80 px: он рассчитан на заголовок
+       лендинга во всю ширину экрана. В колонке 50rem слово
+       «Пользовательское» при 67 px занимает 603 px против 577 px
+       колонки — оно физически не влезало, и overflow-wrap рвал его
+       пополам («Пользователь / ское»). Потолок 3.1rem (49.6 px)
+       оставляет запас даже для самого длинного слова на трёх
+       языках. */
+    font-size: clamp(1.95rem, 4.2vw, 3.1rem);
+    /* Трекинг мягче общего -0.035em: тот подобран под 80 px, на
+       50 px буквы от него слипаются. */
+    letter-spacing: -0.025em;
+    line-height: 1.14;
+    margin-bottom: 0.7em;
+}
+
+.legal h2 {
+    margin: 2.6rem 0 0.8rem;
+    /* 1.32rem при тексте 1rem — разница всего в треть, заголовки
+       тонули в абзацах. 1.45rem и трекинг как у h3: раздел видно
+       при беглой прокрутке. */
+    font-size: 1.45rem;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+}
+
+.legal p {
+    margin: 0 0 1.1rem;
+    color: var(--ink-2);
+    line-height: 1.75;
+}
+
+.legal__lead {
+    margin-bottom: 2.4rem;
+    padding: 20px 24px;
+    /* Полоса слева вместо рамки: вводный абзац отделён от текста,
+       но не выглядит врезкой-предупреждением. */
+    border-left: 3px solid var(--blue-500);
+    /* Скругление справа: прямые углы при цветной полосе слева
+       читались как незакрытый блок. 10px, а не --radius-sm (14):
+       та переменная рассчитана на карточки, у абзаца текста
+       такое скругление заметно само по себе. */
+    border-radius: 0 10px 10px 0;
+    background: var(--soft);
+    /* Вводный абзац крупнее основного текста — он задаёт тон
+       странице и читается первым. */
+    font-size: 1.06rem;
+    line-height: 1.68;
+}
+
+.legal a {
+    color: var(--blue-700);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.legal a:hover {
+    color: var(--blue-600);
+}
+
+.legal strong {
+    color: var(--ink);
+    font-weight: 700;
+}
+
+.legal__updated {
+    margin-top: 2.8rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.88rem;
+}
+
+/* На узком экране фиксированные 24px по краям съедают слишком
+   много от колонки: уменьшаем поля и подбираем кегль заголовков
+   заново — нижняя граница clamp рассчитана именно на эту ширину. */
+@media (max-width: 560px) {
+    .legal {
+        padding: 0 18px;
+    }
+
+    .legal__lead {
+        padding: 16px 18px;
+        font-size: 1rem;
+    }
+
+    .legal h2 {
+        margin: 2.1rem 0 0.7rem;
+        font-size: 1.24rem;
+    }
+}
+
+/* ============================================================
+   Интерактив шапки: услуги, город, телефон
+   ============================================================
+   Разметку этих блоков строит script.js — списки услуг и городов
+   лежат там в одном месте, а не повторяются в каждой странице.
+   Значения сняты замером с донора.
+   ============================================================ */
+
+/* ── Выпадающий список услуг ─────────────────────────────── */
+
+.nav-dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.nav-dropdown__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 11px 13px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.nav-dropdown.is-open .nav-dropdown__btn {
+    background: var(--blue-100);
+    color: var(--blue-700);
+}
+
+.nav-dropdown__chev {
+    width: 14px;
+    height: 14px;
+    transition: transform 0.2s var(--ease);
+}
+
+.nav-dropdown.is-open .nav-dropdown__chev {
+    transform: rotate(180deg);
+}
+
+.nav-dropdown__panel {
+    position: absolute;
+    /* Зазор 18px как у донора. Он же причина задержки закрытия
+       в redesign.js: курсор пересекает пустоту по пути к списку. */
+    top: calc(100% + 18px);
+    /* ⚠️ Панель центрируется по ЭКРАНУ, а не по своей кнопке.
+       Кнопки стоят в разных местах шапки и разъезжаются ещё и от
+       длины слов в каждом языке, поэтому привязка к краю кнопки
+       упиралась в край окна: у «Услуг» панель уходила за левый
+       край на 52 px, у «Районов» — за правый на 177 px, добавляя
+       странице горизонтальную прокрутку.
+
+       ⚠️ Почему не position: fixed, где хватило бы left: 50%.
+       У .site-header стоит backdrop-filter (размытие под шапкой), а
+       он делает элемент содержащим блоком для потомков с fixed.
+       Панель отсчитывалась бы от шапки, и «середина экрана»
+       оказалась бы серединой её контейнера — замерено: центр панели
+       1093 px вместо 720 px. Убрать размытие нельзя, это оформление
+       шапки.
+
+       Поэтому absolute и арифметика: 50% — середина кнопки (абсолют
+       считается от .nav-dropdown), --nav-dd-shift — насколько сама
+       кнопка смещена от середины экрана. CSS эту величину знать не
+       может: она зависит от места кнопки в меню, длины слов и
+       языка, — её подставляет JS (см. centerDropdownPanels в
+       redesign.js). Пока переменной нет, запасное значение 0 px
+       оставляет панель центрированной по кнопке, то есть прежнее
+       поведение без поломки. */
+    left: calc(50% - var(--nav-dd-shift, 0px));
+    transform: translateX(-50%) translateY(-8px);
+    width: min(760px, calc(100vw - 48px));
+    padding: 22px;
+    border-radius: 22px;
+    background: var(--white);
+    box-shadow: 0 32px 90px rgba(3, 17, 43, 0.2);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s var(--ease), visibility 0.2s var(--ease),
+                transform 0.2s var(--ease);
+    /* ⚠️ Панель выпадает НИЖЕ границы шапки, то есть оказывается
+       над контентом страницы. Шапка имеет z-index: 100 и создаёт
+       свой контекст наложения — внутри него z-index панели
+       считается заново, и значение 60 не спасало: панель всё
+       равно уходила под блоки страницы. Нужен слой выше всего,
+       что есть внутри шапки. */
+    z-index: 120;
+}
+
+.nav-dropdown.is-open .nav-dropdown__panel {
+    opacity: 1;
+    visibility: visible;
+    /* ⚠️ Сдвиг -50% обязан остаться: он и есть центрирование.
+       transform: none вернул бы панель левым краем на середину
+       экрана, то есть сместил бы её вправо на половину ширины. */
+    transform: translateX(-50%);
+}
+
+/* ⚠️ Мостик через зазор: без него панель закрывается, когда
+   курсор идёт от кнопки к списку — мышь оказывается над пустотой
+   и mouseleave срабатывает раньше, чем mouseenter панели. */
+.nav-dropdown__panel::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -18px;
+    height: 18px;
+}
+
+/* ⚠️ Мостик от КНОПКИ вниз. Панель центрирована по экрану, а
+   кнопка стоит где угодно в шапке, поэтому под кнопкой панели
+   может не быть вовсе: мостик ::before на самой панели закрывает
+   зазор только под ней. Курсор, идущий от кнопки вниз, шёл бы над
+   пустотой, mouseleave срабатывал бы раньше mouseenter панели, и
+   меню закрывалось бы на полпути — проверяется elementFromPoint в
+   точке под кнопкой, а не глазами.
+
+   Поэтому слой висит на ОБЁРТКЕ (.nav-dropdown), по её ширине, и
+   накрывает зазор между кнопкой и панелью (замер: 10 px — панель
+   отсчитывается от шапки, а не от кнопки, поэтому зазор меньше
+   прежних 18 px). Высота 18 px берётся с запасом: лишнее уходит
+   под саму панель и ни на что не влияет. Ширину окна тут брать
+   нельзя: 100vw считает и полосу прокрутки, из-за чего документ
+   растягивался и появлялась горизонтальная прокрутка. */
+.nav-dropdown.is-open::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 18px;
+}
+
+.nav-dropdown__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.nav-dropdown__grid a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 12px;
+    border-radius: 12px;
+    color: var(--ink);
+    font-size: 0.9rem;
+    line-height: 1.3;
+    transition: background-color 0.18s var(--ease);
+}
+
+/* ⚠️ Толщина задаётся здесь, на <strong>, а не на ссылке:
+   у <strong> свой bolder, и вместе с font-weight: 700 на ссылке
+   он давал 900 — подписи услуг выходили жирнее всего остального
+   на странице. У донора ровно 700. */
+.nav-dropdown__grid strong {
+    font-weight: 700;
+}
+
+.nav-dropdown__grid a:hover {
+    background: var(--soft);
+    color: var(--blue-700);
+}
+
+/* ── Панель районов ───────────────────────────────────────
+   Пять колонок вместо трёх: 10 районов Тбилиси дают ровно две
+   строки, 5 районов Батуми — одну. В трёх колонках выходило бы
+   четыре строки, последняя с одним пунктом.
+
+   Отдельная ширина панели НЕ нужна: пять колонок укладываются в
+   те же 760 px, что и у услуг (137 px на пункт), и ни одно
+   название не переносится на вторую строку — проверено замером
+   getClientRects на всех трёх языках, включая самое длинное
+   «ბათუმის აეროპორტი».
+
+   Позиционирование тоже общее: панель центрируется по экрану
+   (см. .nav-dropdown__panel), поэтому привязки к краю кнопки
+   здесь нет и быть не должно. */
+
+.nav-dropdown__grid--districts {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+/* Пункт района — без иконки, поэтому выравниваем текст по
+   левому краю и убираем зазор под плашку, иначе название
+   стояло бы с отступом в пустоту. */
+.nav-dropdown__grid--districts a {
+    gap: 0;
+    justify-content: flex-start;
+}
+
+.nav-dropdown__icon {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 auto;
+    border-radius: 10px;
+    background: #e7f1ff;
+    color: var(--blue-600);
+}
+
+.nav-dropdown__icon svg {
+    width: 17px;
+    height: 17px;
+}
+
+.nav-dropdown__all {
+    /* ⚠️ inline-flex, а не flex: кнопка должна быть по ширине
+       текста, а не во всю панель. При flex она растягивалась на
+       все 760 px, а justify-content: space-between отбрасывал
+       стрелку к дальнему краю — между подписью и стрелкой зияло
+       полпанели пустоты. Теперь ширину задаёт содержимое, а gap
+       держит стрелку рядом с текстом.
+
+       Блок остаётся прижатым к левому краю: inline-flex не
+       центрируется сам, а родитель .nav-dropdown__panel — обычный
+       блок без выравнивания. */
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+    padding: 12px 18px;
+    border-radius: 12px;
+    background: var(--navy-900);
+    color: var(--white);
+    /* 750 / 14.4 px — значения донора. */
+    font-size: 0.9rem;
+    font-weight: 750;
+}
+
+.nav-dropdown__all:hover {
+    background: var(--navy-850);
+    color: var(--white);
+}
+
+.nav-dropdown__all svg {
+    width: 17px;
+    height: 17px;
+    flex: 0 0 auto;
+    transition: transform 0.2s var(--ease);
+}
+
+.nav-dropdown__all:hover svg {
+    transform: translateX(4px);
+}
+
+/* ── Телефон под глазом ──────────────────────────────────── */
+
+.topbar__phone-num {
+    /* Фиксируем цифры по ширине: без этого строка дёргается,
+       когда звёздочки сменяются цифрами. */
+    font-variant-numeric: tabular-nums;
+}
+
+.topbar__phone-eye {
+    display: inline-grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    margin-left: 6px;
+    border-radius: 7px;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    transition: background-color 0.18s var(--ease), color 0.18s var(--ease);
+}
+
+.topbar__phone-eye:hover,
+.topbar__phone-eye:focus-visible {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--white);
+}
+
+.topbar__phone-eye svg {
+    width: 15px;
+    height: 15px;
+}
+
+/* ── Модальное окно выбора города ───────────────────────── */
+
+.city-modal {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 5%;
+    z-index: 200;
+}
+
+/* ⚠️ Атрибут hidden НЕ скрывает элемент с display: grid —
+   правило display перебивает его. Без этой строки прозрачная
+   подложка закрытого окна лежала поверх всей страницы и
+   перехватывала каждый клик: кнопки hero переставали нажиматься.
+   Ловится не глазами, а проверкой elementFromPoint. */
+.city-modal[hidden] {
+    display: none;
+}
+
+.city-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(4, 16, 39, 0.55);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    opacity: 0;
+    transition: opacity 0.2s var(--ease);
+}
+
+.city-modal.is-open .city-modal__backdrop {
+    opacity: 1;
+}
+
+.city-modal__window {
+    position: relative;
+    width: min(680px, 100%);
+    max-height: 86vh;
+    overflow-y: auto;
+    padding: 34px;
+    border-radius: 24px;
+    background: var(--white);
+    box-shadow: 0 40px 100px rgba(3, 17, 43, 0.35);
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+    transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+.city-modal.is-open .city-modal__window {
+    opacity: 1;
+    transform: none;
+}
+
+.city-modal__close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 12px;
+    background: var(--soft);
+    color: var(--ink-2);
+    cursor: pointer;
+    transition: background-color 0.18s var(--ease);
+}
+
+.city-modal__close:hover {
+    background: var(--line);
+}
+
+.city-modal__close svg {
+    width: 19px;
+    height: 19px;
+}
+
+.city-modal__title {
+    margin: 0 0 10px;
+    /* Запас справа под крестик: заголовок не должен под него
+       подлезать на узком окне. */
+    padding-right: 48px;
+    font-size: clamp(1.6rem, 3vw, 2.1rem);
+}
+
+.city-modal__lead {
+    margin: 0 0 24px;
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+.city-modal__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.city-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    color: var(--ink);
+    transition: border-color 0.18s var(--ease), box-shadow 0.18s var(--ease),
+                transform 0.18s var(--ease);
+}
+
+.city-card:hover {
+    border-color: var(--blue-400);
+    color: var(--ink);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(16, 56, 120, 0.12);
+}
+
+/* Город, на котором посетитель сейчас. */
+.city-card.is-current {
+    border-color: var(--blue-500);
+    background: var(--blue-100);
+}
+
+.city-card__icon {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 auto;
+    border-radius: 13px;
+    background: #e7f1ff;
+    color: var(--blue-600);
+}
+
+.city-card__icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.city-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    /* min-width: 0 — иначе длинная грузинская подпись распирает
+       карточку и ломает сетку из двух колонок. */
+    min-width: 0;
+}
+
+.city-card__body strong {
+    font-size: 1.1rem;
+    font-weight: 760;
+    letter-spacing: -0.02em;
+}
+
+/* ── Окно благодарности ───────────────────────────────────
+   Показывается после отправки любой из двух форм заявки:
+   основной (блок «Заявка») и быстрой на первом экране.
+
+   Разметку собирает buildThankYouModal() в script.js — в HTML
+   страниц её нет. Открывается через _modal(), который ставит
+   элементу display: flex, поэтому раскладка здесь на flex, а не
+   на grid: место центрирования должно совпадать с тем, что
+   выставляет JS, иначе окно встанет в левый верхний угол.
+
+   ⚠️ Затемнение — фон самого .ty-modal, без отдельного слоя
+   .__backdrop (как у окна выбора города). Так клик по фону можно
+   поймать сравнением e.target === modal, и прозрачная подложка
+   закрытого окна не остаётся висеть над страницей: display: none
+   убирает её целиком вместе с затемнением. */
+.ty-modal {
+    position: fixed;
+    inset: 0;
+    /* display задаёт JS: none / flex. Здесь его НЕ объявляем —
+       инлайновый стиль всё равно перебьёт, а в файле он сбивал бы
+       с толку при чтении. */
+    align-items: center;
+    justify-content: center;
+    padding: 5%;
+    background: rgba(4, 16, 39, 0.55);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    /* Выше шапки (100) и выпадающих панелей в ней (120): окно
+       подтверждения обязано лежать поверх всего. */
+    z-index: 200;
+}
+
+.ty-modal__window {
+    position: relative;
+    width: min(460px, 100%);
+    max-height: 86vh;
+    overflow-y: auto;
+    padding: 38px 34px 32px;
+    border-radius: 24px;
+    background: var(--white);
+    box-shadow: 0 40px 100px rgba(3, 17, 43, 0.35);
+    text-align: center;
+    animation: ty-pop 0.22s var(--ease);
+}
+
+/* Появление: короткий подъём со сжатия. Без анимации окно
+   возникает рывком и читается как ошибка браузера. */
+@keyframes ty-pop {
+    from { opacity: 0; transform: translateY(12px) scale(0.97); }
+    to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ty-modal__window {
+        animation: none;
+    }
+}
+
+.ty-modal__close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 12px;
+    background: var(--soft);
+    color: var(--ink-2);
+    cursor: pointer;
+    transition: background-color 0.18s var(--ease);
+}
+
+.ty-modal__close:hover {
+    background: var(--line);
+}
+
+.ty-modal__close svg {
+    width: 17px;
+    height: 17px;
+}
+
+/* Зелёная галочка: подтверждение читается за мгновение, раньше
+   текста. Зелёный здесь единственный на окне — он и означает
+   «принято», поэтому кнопка ниже остаётся синей. */
+.ty-modal__icon {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    background: var(--green-100);
+    color: var(--green-500);
+}
+
+.ty-modal__icon svg {
+    width: 30px;
+    height: 30px;
+}
+
+.ty-modal__title {
+    margin: 0 0 10px;
+    /* Крестик не мешает: заголовок по центру и короткий, но на
+       узком окне запас нужен с обеих сторон, чтобы текст не
+       подлезал под кнопку. */
+    padding: 0 28px;
+    font-size: clamp(1.35rem, 4vw, 1.7rem);
+}
+
+.ty-modal .thank-you-text {
+    margin: 0 0 22px;
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+/* Бейдж со временем отклика. Днём «15–60 минут», в тихие часы —
+   «На связи с 08:00» (quietHoursReplyTime в script.js). */
+.ty-modal__badge {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin: 0 0 24px;
+    padding: 14px 18px;
+    border-radius: 16px;
+    background: var(--soft);
+}
+
+.ty-modal__badge .badge-label {
+    color: var(--muted-2);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.ty-modal__badge .badge-value {
+    color: var(--ink);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.ty-modal__ok {
+    width: 100%;
+}
+
+.city-card__note {
+    color: var(--muted);
+    font-size: 0.84rem;
+    line-height: 1.4;
+}
+
+/* ── Планшет и телефон ───────────────────────────────────── */
+
+@media (max-width: 1024px) {
+    .nav-dropdown__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    /* ⚠️ Районам нужна своя строка: правило выше задаёт сетку по
+       базовому классу, а у панели районов 5 колонок приходят от
+       модификатора .nav-dropdown__grid--districts — он идёт ниже
+       в файле и при равной специфичности побеждает. Без этой
+       строки на планшете остались бы пять колонок по 60 px. */
+    .nav-dropdown__grid--districts {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .city-modal__window {
+        padding: 26px 20px;
+    }
+
+    /* На телефоне поле 5% с каждой стороны съедает ширину у
+       текста, а окно и так узкое: оставляем минимум. */
+    .ty-modal {
+        padding: 18px;
+    }
+
+    .ty-modal__window {
+        padding: 32px 22px 26px;
+    }
+
+    .city-modal__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .city-modal__close {
+        top: 14px;
+        right: 14px;
+        width: 36px;
+        height: 36px;
+    }
+}
+
+/* ============================================================
+   Тёмный hero страницы услуги (v-hero)
+   ============================================================
+   Вторая разновидность hero: на главной он светлый, на странице
+   услуги — тёмный с градиентом. Значения сняты замером с донора
+   (tehcore.ru/irkutsk/sborka-i-remont-mebeli/), не на глаз.
+
+   ⚠️ Отдельные классы (v-*), а не состояние .hero: светлый hero
+   главной остаётся как есть. Два разных блока, а не модификатор
+   одного — иначе правка главной потянет за собой страницу услуги.
+   ============================================================ */
+
+/* ── Узкая полоса над шапкой ─────────────────────────────── */
+
+.topbar {
+    background: var(--navy-950);
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.82rem;
+}
+
+.topbar__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    min-height: 36px;
+}
+
+.topbar__item {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: rgba(255, 255, 255, 0.82);
+    white-space: nowrap;
+}
+
+.topbar__item svg {
+    width: 15px;
+    height: 15px;
+    flex: 0 0 auto;
+    opacity: 0.75;
+}
+
+.topbar__phone {
+    color: var(--white);
+    font-weight: 700;
+}
+
+.topbar__phone:hover {
+    color: var(--blue-400);
+}
+
+/* На телефоне, как у донора: часы слева, телефон справа, а
+   обещание про стоимость скрыто — три пункта в строку не
+   помещаются даже по-русски, на грузинском тем более.
+   Часы оставляем: «работаем до 23:00» — довод позвонить вечером,
+   ради которого строку и держат. */
+@media (max-width: 768px) {
+    .topbar__item--promise {
+        display: none;
+    }
+
+    .topbar {
+        /* Кегль донора на телефоне: часы 11.5, телефон 12.2. */
+        font-size: 0.72rem;
+    }
+
+    .topbar__item svg {
+        width: 13px;
+        height: 13px;
+    }
+
+    .topbar__inner {
+        gap: 0.6rem;
+    }
+
+    .topbar__phone {
+        font-size: 0.76rem;
+    }
+}
+
+/* ⚠️ Ниже 360 px часы и телефон вместе не влезают: остаётся
+   телефон — по нему звонят, часы можно прочесть в подвале. */
+@media (max-width: 360px) {
+    .topbar__item--hours {
+        display: none;
+    }
+
+    .topbar__inner {
+        justify-content: center;
+    }
+}
+
+/* ── Город в шапке ───────────────────────────────────────── */
+
+.city-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 9px 13px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--soft);
+    color: var(--ink);
+    font-size: 0.9rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.city-pill:hover {
+    border-color: var(--blue-400);
+    color: var(--blue-700);
+}
+
+.city-pill svg {
+    width: 15px;
+    height: 15px;
+    flex: 0 0 auto;
+    color: var(--blue-600);
+}
+
+/* Шеврон вниз: показывает, что город переключается. У нас два
+   города, и без него плашка читается как просто подпись. Серый,
+   а не синий — метка слева главнее.
+   ⚠️ Селектор с двумя классами, а не один .city-pill__chev:
+   правило .city-pill svg выше весит больше одного класса и
+   перебивало размер — шеврон выходил 15 px вместо 13. */
+.city-pill .city-pill__chev {
+    width: 13px;
+    height: 13px;
+    color: var(--muted-2);
+}
+
+/* ── Хлебные крошки ──────────────────────────────────────── */
+
+.breadcrumbs {
+    padding: 15px 0;
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+.breadcrumbs a {
+    color: var(--muted);
+}
+
+.breadcrumbs a:hover {
+    color: var(--blue-700);
+}
+
+.breadcrumbs__sep {
+    margin: 0 0.4rem;
+    color: var(--muted-2);
+}
+
+/* Крошки лендинга. Разметка та же (.breadcrumbs), но строится
+   флексом: на телефоне длинное название услуги переносится, и без
+   align-items строка разъезжается по базовой линии. */
+.breadcrumbs__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px;
+}
+
+/* Текущая страница — не ссылка, поэтому плотнее и темнее:
+   иначе она читается как ещё один пункт пути. */
+.breadcrumbs__current {
+    color: var(--ink);
+    font-weight: 600;
+}
+
+
+/* ── Сам hero ────────────────────────────────────────────── */
+
+.v-hero {
+    /* 115deg — угол донора: светлее слева сверху, темнее справа. */
+    background: linear-gradient(115deg, #091b33, #102c4c);
+    color: var(--white);
+    padding: 54px 0 76px;
+    /* Форма выступает за нижний край медиа-колонки: прячем хвост
+       её тени, сама форма остаётся внутри padding-bottom. */
+    overflow: hidden;
+}
+
+.v-hero-grid {
+    display: grid;
+    grid-template-columns: 1.07fr 1fr;
+    gap: 54px;
+    /* Фото поднято к верху секции, а не центрировано. */
+    align-items: start;
+}
+
+/* Надзаголовок «MASTERA • Тбилиси» */
+.v-kicker {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin: 0 0 18px;
+    color: #98c8ff;
+    font-size: 0.72rem;
+    font-weight: 750;
+    letter-spacing: 0.16em;
+    line-height: 1.5;
+    text-transform: uppercase;
+}
+
+/* Точка-разделитель между брендом и городом. */
+.v-kicker__dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.6;
+}
+
+.v-hero h1 {
+    margin: 0 0 24px;
+    color: var(--white);
+    font-size: clamp(2.1rem, 3.6vw, 3.2rem);
+    font-weight: 750;
+    line-height: 1.1;
+    letter-spacing: -0.035em;
+}
+
+/* Вторая строка заголовка — голубая, с новой строки: так донор
+   отделяет город от названия услуги. */
+.v-hero h1 span {
+    display: block;
+    margin-top: 7px;
+    color: #90c8ff;
+}
+
+.v-intro {
+    max-width: 590px;
+    margin: 0 0 26px;
+    color: #d0dbea;
+    font-size: 1.02rem;
+    line-height: 1.65;
+}
+
+/* ── Плашка «примерная цена» ─────────────────────────────── */
+
+.u-quick-price {
+    display: block;
+    margin-bottom: 26px;
+    padding: 16px 19px;
+    /* Полоса слева вместо рамки по кругу — акцент, который не
+       спорит с кнопкой под ним. Углы прямые: это цитата из
+       прайса, а не карточка. */
+    border-left: 3px solid #75b6fc;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--white);
+    transition: background-color 0.2s var(--ease);
+}
+
+.u-quick-price:hover {
+    background: rgba(255, 255, 255, 0.09);
+    color: var(--white);
+}
+
+.u-quick-price__label {
+    display: block;
+    margin-bottom: 4px;
+    color: #c6d6ea;
+    font-size: 0.88rem;
+}
+
+.u-quick-price__value {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 1.3rem;
+    font-weight: 760;
+    letter-spacing: -0.02em;
+}
+
+.u-quick-price__more {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #a9c6e8;
+    font-size: 0.84rem;
+}
+
+.u-quick-price__more svg {
+    width: 15px;
+    height: 15px;
+    transition: transform 0.25s var(--ease);
+}
+
+.u-quick-price:hover .u-quick-price__more svg {
+    transform: translateX(4px);
+}
+
+/* ── Кнопки hero ─────────────────────────────────────────── */
+
+.v-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem 1.4rem;
+}
+
+.v-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    /* 13px по вертикали даёт 48 px высоты — ровно как у донора
+       (замер: 47–49 px у всех его кнопок). Было 15px → 50 px,
+       и кнопка выглядела грузной рядом с полем. */
+    padding: 13px 22px;
+    border: none;
+    border-radius: 12px;
+    /* ⚠️ Цвет задан переменной, а не литералом #2d75f0: тот давал
+       белому тексту контраст 4.27:1 при норме WCAG AA 4.5:1 —
+       Lighthouse помечал кнопку как нечитаемую. Текст здесь
+       0.91rem (14.6px), то есть НЕ «крупный», поблажка 3:1 к нему
+       не применяется. --blue-700 даёт 5.62:1 и уже используется
+       в .button--primary, так что главные кнопки сайта заодно
+       стали одного цвета. */
+    background: var(--blue-700);
+    color: var(--white);
+    font-family: inherit;
+    /* 760 — донорская толщина всех кнопок (замер). */
+    font-size: 0.91rem;
+    font-weight: 760;
+    letter-spacing: normal;
+    cursor: pointer;
+    box-shadow: 0 7px 20px rgba(25, 96, 210, 0.3);
+    transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease),
+                background-color 0.2s var(--ease);
+}
+
+.v-button:hover {
+    /* ⚠️ Наведение ЗАТЕМНЯЕТ, а не осветляет. Прежний --blue-500
+       давал 3.31:1 — хуже обычного состояния; --blue-600 тоже не
+       проходит (4.23:1 при норме 4.5). Любое осветление синего
+       под белым текстом норму ломает, поэтому отклик даём
+       затемнением: 6.71:1. Плюс тень и сдвиг — они и читаются
+       как реакция на курсор. */
+    background: #1b57bb;
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(25, 96, 210, 0.38);
+}
+
+.v-button svg {
+    width: 17px;
+    height: 17px;
+    flex: 0 0 auto;
+}
+
+.v-text-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #d5e7ff;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.v-text-link:hover {
+    color: var(--white);
+}
+
+.v-text-link svg {
+    width: 15px;
+    height: 15px;
+    flex: 0 0 auto;
+}
+
+.v-hero-note {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 21px;
+    color: #aebfd4;
+    font-size: 0.82rem;
+}
+
+.v-hero-note svg {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 auto;
+    opacity: 0.8;
+}
+
+/* ── Правая колонка: фото + форма поверх ─────────────────── */
+
+.v-hero-media {
+    position: relative;
+    /* min-width: 0 обязателен: иначе широкое фото распирает
+       grid-колонку и ломает пропорцию 1.07fr / 1fr. */
+    min-width: 0;
+    /* Место под форму, висящую поверх нижнего края фото.
+       Увеличено, чтобы форма меньше закрывала снимок. */
+    padding-bottom: 120px;
+}
+
+.v-hero-img {
+    display: block;
+    width: 100%;
+    height: 475px;
+    object-fit: cover;
+    border-radius: 25px;
+}
+
+.v-float-form {
+    position: absolute;
+    bottom: 0;
+    left: 24px;
+    right: 24px;
+    padding: 22px;
+    border-radius: 18px;
+    background: var(--white);
+    color: var(--ink);
+    box-shadow: 0 20px 40px rgba(0, 16, 36, 0.24);
+}
+
+.v-float-form h2 {
+    margin: 0 0 7px;
+    /* 1.44rem = 23 px при базовых 16 — кегль донора. */
+    font-size: 1.44rem;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+}
+
+.v-float-form__sub {
+    margin: 0 0 15px;
+    color: #637288;
+    font-size: 0.86rem;
+    line-height: 1.5;
+}
+
+.v-float-form__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.v-float-form .form-control {
+    /* Высота равна кнопке: они стоят в одной строке, и разница
+       даже в 2 px читается как перекос.
+       ⚠️ Высоту задаём явно, а не подбором padding: у поля есть
+       рамка и свой кегль, поэтому одинаковый padding давал
+       49.2 против 47.6 у кнопки. */
+    height: 48px;
+    padding: 0 15px;
+    border-radius: 12px;
+    background: var(--soft);
+}
+
+.v-float-form .v-button {
+    height: 48px;
+    /* Поля уже общих 22px: кнопка делит строку с полем пополам,
+       и при широкой подписи текст переносился на две строки. */
+    padding: 0 14px;
+    /* ⚠️ Подпись в одну строку. Без этого «Узнать стоимость»
+       ломалось пополам, а при фиксированной высоте 48 px вторая
+       строка вылезала за кнопку. Английский и грузинский
+       варианты ещё длиннее. */
+    white-space: nowrap;
+}
+
+.v-float-form .v-button svg {
+    /* Стрелка не сжимается, когда подписи тесно. */
+    flex: 0 0 auto;
+}
+
+.v-float-form .v-button {
+    justify-content: center;
+    width: 100%;
+}
+
+/* Согласие на обработку данных. */
+.v-consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    margin-top: 13px;
+    color: var(--muted);
+    font-size: 0.76rem;
+    line-height: 1.45;
+}
+
+.v-consent input {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 auto;
+    margin: 1px 0 0;
+    accent-color: var(--blue-600);
+}
+
+/* Ссылка на политику внутри подписи-галочки. Подчёркнута, иначе
+   в мелком сером тексте её не видно.
+   ⚠️ position: relative обязателен: ссылка лежит внутри <label>,
+   и без собственного слоя клик по ней достаётся галочке —
+   политика не открывается, а чекбокс переключается. */
+.v-consent a {
+    position: relative;
+    color: var(--blue-700);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.v-consent a:hover {
+    color: var(--blue-600);
+}
+
+/* ── Панель якорных ссылок под hero ──────────────────────── */
+
+.v-jumpbar {
+    border-bottom: 1px solid var(--line);
+    background: var(--white);
+}
+
+.v-jumpbar__inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    /* Только вертикальный отступ: боковые поля приходят от .container
+       (0 5%). Сокращённая запись padding: 18px 0 обнуляла их, и полоса
+       начиналась на 63 px левее шапки, заголовков и всего остального —
+       единственный блок страницы, выбитый из общей линии. */
+    padding-block: 18px;
+}
+
+.v-jumpbar a {
+    color: var(--ink-2);
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.v-jumpbar a:hover {
+    color: var(--blue-700);
+}
+
+/* ── Планшет и телефон ───────────────────────────────────── */
+
+@media (max-width: 1024px) {
+    .v-hero-grid {
+        grid-template-columns: 1fr;
+        gap: 2.6rem;
+    }
+
+    .v-hero-img {
+        height: 380px;
+    }
+}
+
+@media (max-width: 768px) {
+    .v-hero {
+        padding: 34px 0 48px;
+    }
+
+    .v-hero-img {
+        height: 260px;
+    }
+
+    /* ⚠️ Форма перестаёт висеть поверх фото: на 260 px она
+       закрыла бы снимок целиком. Становится в поток под ним, и
+       запас padding-bottom больше не нужен. */
+    .v-hero-media {
+        padding-bottom: 0;
+    }
+
+    .v-float-form {
+        position: static;
+        margin-top: 1rem;
+    }
+
+    /* Поле и кнопка в столбик: рядом они по 50%, и на узком
+       экране в кнопку не влезает даже русский текст. */
+    .v-float-form__row {
+        grid-template-columns: 1fr;
+    }
+
+    .v-actions .v-button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ============================================================
+   Полоса доверия под hero
+   ============================================================ */
+
+.trust-strip {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: var(--white);
+}
+
+.trust-strip__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    /* Фон-линия просвечивает в зазорах grid — так разделители
+       рисуются без border у каждой ячейки. */
+    background: var(--line);
+}
+
+.trust-strip__item {
+    padding: 26px 22px;
+    background: var(--white);
+    text-align: center;
+}
+
+.trust-strip__num {
+    display: block;
+    color: var(--ink);
+    font-size: 1.75rem;
+    font-weight: 760;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+
+.trust-strip__label {
+    display: block;
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+/* ============================================================
+   Карточки услуг
+   ============================================================ */
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.1rem;
+}
+
+.service-card {
+    display: flex;
+    gap: 1rem;
+    padding: 23px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--white);
+    box-shadow: 0 8px 24px rgba(7, 21, 47, 0.04);
+    transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease),
+                border-color 0.25s var(--ease);
+}
+
+.service-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--blue-400);
+    box-shadow: var(--shadow-md);
+}
+
+.service-card__icon {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    flex: 0 0 auto;
+    border-radius: 14px;
+    background: var(--blue-100);
+    color: var(--blue-700);
+}
+
+.service-card__icon svg {
+    width: 23px;
+    height: 23px;
+}
+
+.service-card__body {
+    /* min-width: 0 обязателен: у grid-элемента он по умолчанию
+       auto, и длинное слово в описании раздвигает карточку
+       шире колонки. */
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.service-card__title {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.8rem;
+    margin: 0 0 0.45rem;
+}
+
+.service-card__title h3 {
+    margin: 0;
+    /* ⚠️ min-width: 0 + перенос по слогам. Грузинские названия
+       услуг — одно длинное слово («კონდიციონერები»), и рядом с
+       ценником оно не помещалось: на 390 px карточка вылезала
+       за экран на 37 px и тянула за собой всю страницу.
+       Флекс-элемент по умолчанию не сжимается уже содержимого,
+       поэтому одного overflow-wrap мало. */
+    min-width: 0;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+}
+
+.service-card__price {
+    flex: 0 0 auto;
+    padding: 4px 11px;
+    border-radius: 999px;
+    background: var(--soft);
+    color: var(--blue-700);
+    font-size: 0.74rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.service-card__text {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.55;
+}
+
+.service-card__arrow {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.8rem;
+    color: var(--blue-600);
+}
+
+.service-card__arrow svg {
+    width: 19px;
+    height: 19px;
+    transition: transform 0.25s var(--ease);
+}
+
+.service-card:hover .service-card__arrow svg {
+    transform: translateX(4px);
+}
+
+/* ============================================================
+   Шаги работы (на тёмной секции)
+   ============================================================ */
+
+.steps-grid {
+    display: grid;
+    /* ⚠️ Жёстко 4 колонки, а не auto-fit: шагов ровно четыре, и при
+       auto-fit с minmax(230px) на 1240px влезало три — четвёртый
+       уходил на вторую строку один, и нумерация читалась как
+       «3 шага и ещё один». Перенос на планшете задан ниже. */
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.1rem;
+}
+
+.step-card {
+    padding: 26px 24px;
+    border: 1px solid var(--line-dark);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.step-card__num {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    margin-bottom: 1rem;
+    border-radius: 12px;
+    /* ⚠️ Был --blue-600: белая цифра на нём даёт 4.23:1 при норме
+       4.5. Цифра 0.95rem (15.2px) — до «крупного текста» (18.66px
+       bold, порог 3:1) не дотягивает, поблажки нет. --blue-700
+       даёт 5.62:1. */
+    background: var(--blue-700);
+    color: var(--white);
+    font-size: 0.95rem;
+    font-weight: 760;
+}
+
+.step-card h3 {
+    margin-bottom: 0.4rem;
+    font-size: 1.05rem;
+}
+
+.step-card p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.55;
+}
+
+/* ============================================================
+   Районы
+   ============================================================ */
+
+.districts-grid {
+    display: grid;
+    /* 215, а не 200: в Батуми названия длиннее тбилисских
+       («Аэропорт Батуми» — 214 px со всеми полями, иконкой и
+       стрелкой), и на узкой колонке они переносились на вторую
+       строку. Тогда карточка вырастала до 79 px, а соседний
+       однословный район оставался 55 — ряд шёл уступами.
+       ⚠️ Самое длинное название сайта — грузинское
+       «ბათუმის აეროპორტი», ему нужно 253 px. В одну строку оно
+       не влезает и при 215, поэтому высоту ряда равняет
+       grid-auto-rows ниже, а не ширина колонки. */
+    grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+    /* Все карточки ряда одной высоты, даже если одна подпись
+       встала в две строки: иначе ряд выглядит рваным. */
+    grid-auto-rows: 1fr;
+    gap: 0.8rem;
+}
+
+/* ⚠️ Без этого колонки разъезжаются. У 1fr минимум равен auto,
+   а auto-минимум карточки задаёт подсказка с white-space:
+   nowrap — самая длинная («Верхний Сабуртало, Нижний
+   Сабуртало») раздувала свою колонку до 330 px против 270 у
+   соседней, и ряд вылезал за экран (замер на 640 px: 7 карточек
+   за краем). Ноль снимает этот упор, и дальше работает
+   text-overflow подсказки. */
+.districts-grid > .district-card {
+    min-width: 0;
+}
+
+
+.district-card {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    /* Правое поле у́же левого: справа стоит стрелка, и её
+       собственный воздух складывался бы с полем. Было 17 с
+       обеих сторон — после добавления стрелки тексту оставалось
+       132 px, и двусловные названия Батуми («Старый Батуми»,
+       «Новый бульвар») переносились на вторую строку: карточка
+       вырастала с 55 до 79 px, а соседняя однословная
+       оставалась низкой. */
+    padding: 15px 13px 15px 17px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--white);
+    color: var(--ink-2);
+    font-size: 0.93rem;
+    font-weight: 600;
+    transition: all 0.2s var(--ease);
+}
+
+.district-card:hover {
+    border-color: var(--blue-400);
+    background: var(--blue-100);
+    color: var(--blue-700);
+    transform: translateY(-2px);
+}
+
+.district-card svg {
+    width: 17px;
+    height: 17px;
+    flex: 0 0 auto;
+    color: var(--blue-600);
+    /* Значок у первой строки, а не по центру двухстрочной
+       карточки: рядом с названием он читается как метка места,
+       посередине — как случайная картинка. */
+    align-self: flex-start;
+    margin-top: 1px;
+}
+
+/* Название и местности. Обёртка нужна, чтобы две строки вели
+   себя как один элемент флекса: без неё местности встали бы
+   третьим элементом в ряд со значком и названием. */
+.district-card__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.district-card__name {
+    display: block;
+}
+
+/* Популярные местности района — подсказка для того, кто не знает
+   деления города. Обрезаем в одну строку: у некоторых районов их
+   три, и карточки шли бы разной высоты. Так же сделано у
+   .area-card__hint на лендингах. */
+.district-card__hint {
+    display: block;
+    overflow: hidden;
+    color: var(--muted-2);
+    /* 0.74, а не 0.78: при крупном кегле одиночные длинные
+       названия («Приморский бульвар», «ზღვისპირა ბულვარი») не
+       помещались в узкую карточку и обрезались многоточием —
+       не хватало от 1 до 20 px (замерено на 480 px). */
+    font-size: 0.74rem;
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ⚠️ При наведении карточка целиком красится в синий, и
+   подсказка вместе с ней теряла бы свою приглушённость —
+   возвращаем ей отдельный, чуть светлее основного текста. */
+.district-card:hover .district-card__hint {
+    color: var(--blue-500);
+}
+
+/* Стрелка справа: карточка — ссылка на лендинг района, но
+   выглядела как неактивная плашка с подписью, и по ней не
+   нажимали. Рисуем псевдоэлементом, а не ещё одним <svg> в
+   разметке: карточек 60 на шести страницах, и вторая иконка
+   в каждой — это 60 мест, где можно разойтись.
+
+   ⚠️ Стрелка ставится фоном-картинкой (data:URI), а не
+   символом «→»: шрифтовая стрелка в трёх языках берётся из
+   разных начертаний и съезжает по базовой линии.
+   Цвет внутри URI задан числом — currentColor во внешнем
+   фоне не работает, поэтому оттенок меняем через opacity. */
+.district-card::after {
+    content: '';
+    width: 14px;
+    height: 14px;
+    /* auto прижимает стрелку к правому краю карточки. */
+    margin-left: auto;
+    flex: 0 0 auto;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232f77eb' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3Cpolyline points='12 5 19 12 12 19'/%3E%3C/svg%3E") center / contain no-repeat;
+    opacity: 0.45;
+    transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+.district-card:hover::after {
+    opacity: 1;
+    transform: translateX(3px);
+}
+
+/* ============================================================
+   FAQ
+   ============================================================ */
+
+.faq-list {
+    max-width: 860px;
+}
+
+.faq-item {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--white);
+    margin-bottom: 0.7rem;
+    overflow: hidden;
+}
+
+.faq-item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 19px 22px;
+    color: var(--ink);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    list-style: none;
+}
+
+/* Убираем стандартный треугольник — рисуем свой плюс. */
+.faq-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.faq-item summary::after {
+    content: '';
+    width: 11px;
+    height: 11px;
+    flex: 0 0 auto;
+    border-right: 2px solid var(--blue-600);
+    border-bottom: 2px solid var(--blue-600);
+    transform: rotate(45deg) translate(-2px, -2px);
+    transition: transform 0.25s var(--ease);
+}
+
+.faq-item[open] summary::after {
+    transform: rotate(-135deg) translate(-3px, -3px);
+}
+
+.faq-item__body {
+    padding: 0 22px 19px;
+}
+
+.faq-item__body p {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* ============================================================
+   Форма заявки
+   ============================================================ */
+
+.lead-form {
+    padding: 30px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    box-shadow: var(--shadow-md);
+}
+
+
+.form-control {
+    width: 100%;
+    padding: 13px 15px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--white);
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 0.97rem;
+    transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--blue-500);
+    /* Кольцо вместо толстой рамки: ширина поля не меняется,
+       соседние элементы не дёргаются. */
+    box-shadow: 0 0 0 3px rgba(61, 139, 255, 0.18);
+}
+
+.form-control::placeholder {
+    color: var(--muted-2);
+}
+
+textarea.form-control {
+    min-height: 118px;
+    resize: vertical;
+}
+
+/* ── Списки: своя стрелка ─────────────────────────────────────
+   Системную стрелку рисует ОС, и выглядит она чужой: в Windows
+   это мелкий чёрный треугольник впритык к краю поля, мимо нашей
+   палитры и скруглений.
+
+   ⚠️ Рисуем фоновой картинкой, а не псевдоэлементом: у <select>
+   нет ::after — содержимое отдаёт нативный виджет, и псевдоэлемент
+   просто не отрисуется. Обёртку заводить не стали: списки стоят в
+   разметке 129 страниц, их пришлось бы переверстать все.
+
+   ⚠️ appearance: none обязателен во всех трёх написаниях —
+   без -webkit- и -moz- системная стрелка останется поверх нашей,
+   и получится две стрелки сразу. */
+select.form-control {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    /* Место справа под стрелку, иначе длинный пункт заедет под неё. */
+    padding-right: 44px;
+    /* Шеврон цвета --muted (#65738b). Цвет внутри data-URI задан
+       числом: переменные CSS в background-image не подставляются. */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2365738b' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 18px 18px;
+    cursor: pointer;
+    /* Плавная смена цвета рамки у стрелки вместе с полем. */
+    transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease),
+                background-color 0.2s var(--ease);
+}
+
+/* Наведение: поле чуть подсвечивается — список выглядит нажимаемым,
+   а не просто текстовым полем. */
+select.form-control:hover {
+    border-color: var(--blue-500);
+    background-color: #fbfcfe;
+}
+
+/* В фокусе стрелка синеет заодно с рамкой: взгляд не теряет поле,
+   с которым работает. */
+select.form-control:focus {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231f62d2' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+}
+
+/* Пока список не выбран, подпись серая, как placeholder у полей
+   ввода: выбранное значение должно отличаться от приглашения.
+
+   ⚠️ Работает на :invalid без помощи JS: у обоих списков стоит
+   required, а первый пункт — пустой disabled selected. Пока он
+   выбран, поле невалидно. Класса-заглушки здесь не нужно. */
+select.form-control:invalid {
+    color: var(--muted-2);
+}
+
+/* ⚠️ Стрелку в Windows рисует ещё и псевдоэлемент ::-ms-expand —
+   appearance: none его не убирает, и стрелки задваиваются. */
+select.form-control::-ms-expand {
+    display: none;
+}
+
+
+/* Honeypot: поле-ловушка для ботов. Скрыто от людей и от
+   скринридеров, но остаётся в DOM — бот его заполнит. */
+.form-gotcha {
+    position: absolute;
+    left: -9999px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ============================================================
+   Финальный призыв
+   ============================================================ */
+
+.final-cta {
+    padding: var(--section-pad) 0;
+    background: linear-gradient(135deg, var(--navy-900), var(--navy-800));
+}
+
+.final-cta__grid {
+    display: grid;
+    /* Доля правой колонки прежняя (0.9fr), но снизу подпёрта
+       шириной, при которой пара кнопок встаёт в одну строку.
+       Было просто 0.9fr — на 1440 колонка выходила 497 px при
+       нужных 474 (RU) / 484 (EN), и запаса не оставалось.
+
+       ⚠️ Минимум подобран по замеру самой длинной подписи, а не
+       «с запасом»: лишние пиксели здесь отнимаются у заголовка
+       слева. При 560 px на всех языках русский текст ужимался
+       с 527 до 441 px и уезжал на лишнюю строку — грузинские
+       560 px ниже поэтому стоят отдельным правилом. */
+    grid-template-columns: minmax(0, 1fr) minmax(490px, 0.9fr);
+    gap: 3rem;
+    align-items: center;
+}
+
+/* Кнопки призыва. Раньше их раскладка стояла инлайновым
+   style= в шести файлах — поправить её значило править шесть
+   страниц, и стилей для них не было нигде.
+
+   Обе кнопки одной ширины: в разметке они разной длины
+   («Оставить заявку» против «Написать в Telegram», в грузинском
+   разрыв ещё больше), и пара смотрелась случайной. Две равные
+   колонки сетки равняют их по самой широкой.
+
+   ⚠️ Колонки заданы minmax(0, 1fr), а не 1fr: сокращённая
+   запись 1fr разворачивается в minmax(auto, 1fr), и auto-минимум
+   у кнопки с white-space: nowrap равен ширине её подписи. В
+   грузинском подписи длиннее — колонки переставали быть
+   равными (замер: 262.9 и 269.6 px) и вместе вылезали за
+   контейнер на 12 px. Ноль в минимуме снимает этот упор.
+
+   ⚠️ Вместе с ним снимаем и сам nowrap, иначе ширину держал бы
+   уже текст внутри кнопки: длинная подпись выезжала бы за
+   рамку. Перенос по словам безопаснее — высоту обе кнопки
+   держат общую, их равняет сама сетка. */
+.final-cta__buttons {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0.85rem;
+    /* Потолок, чтобы пара не растягивалась во всю колонку на
+       широком экране: кнопка в 400 px читается как баннер. */
+    max-width: 560px;
+}
+
+.final-cta__buttons .button {
+    white-space: normal;
+}
+
+/* На телефоне в две колонки не помещается даже короткая пара:
+   ставим в столбик, во всю ширину — равными они остаются и
+   так, а палец попадает в любую. */
+@media (max-width: 620px) {
+    .final-cta__buttons {
+        grid-template-columns: 1fr;
+        max-width: none;
+    }
+}
+
+/* Грузинской паре при общем кегле нужно 554 px против 474 у
+   русского — слова длиннее. Отдать ей эти 80 px из колонки
+   нельзя: тогда заголовок на 1920 уезжает на третью строку
+   (замер: 179 px против 119). Вместо ширины ужимаем кнопку —
+   кегль на ступень меньше и поля чуть у́же, подпись встаёт в
+   строку, а текст слева остаётся нетронутым.
+   Трогаем только этот блок: кнопки в остальных местах сайта
+   грузинскому кеглю не мешают. */
+html[lang="ka"] .final-cta__buttons .button {
+    padding-left: 18px;
+    padding-right: 18px;
+    font-size: 0.93rem;
+}
+
+.final-cta h2 {
+    color: var(--white);
+}
+
+.final-cta p {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 1.05rem;
+}
+
+/* ============================================================
+   Подвал
+   ============================================================ */
+
+.site-footer {
+    padding: 56px 0 30px;
+    background: var(--navy-950);
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 0.9rem;
+}
+
+/* ⚠️ Прежний .site-footer__grid убран: подвал собирает
+   redesign.js, и раскладка у него другая — три смысловые зоны
+   (бренд, все услуги, город и документы), а услуги внутри своей
+   зоны разложены ещё на три колонки по смыслу. Старое правило
+   на двенадцать пунктов не рассчитано: они уходили в одну
+   колонку длинным столбцом. */
+
+.site-footer__top {
+    display: grid;
+    /* Услуги посередине и шире всех: там три колонки ссылок.
+       Крайние зоны уже — в них короткий текст и список. */
+    /* ⚠ Доля услуг подобрана по замеру, а не на глаз: самая
+       длинная подпись «Компьютерный мастер» требует 167px, три
+       такие колонки с зазорами — 565px. При 1fr 1.9fr 1fr зоне
+       доставалось 557px только на самом широком контейнере. */
+    grid-template-columns: 0.85fr 2.3fr 0.95fr;
+    gap: 2.6rem;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--line-dark);
+}
+
+.site-footer__logo {
+    margin-bottom: 1.1rem;
+}
+
+/* Знак в подвале на тёмном фоне: тень от него не нужна — она
+   рассчитана на светлую подложку шапки и здесь только грязнит. */
+.site-footer__logo .logo__mark {
+    box-shadow: none;
+}
+
+.site-footer__logo .logo__name {
+    color: var(--white);
+}
+
+.site-footer__about {
+    margin: 0 0 1.2rem;
+    max-width: 34ch;
+    color: rgba(255, 255, 255, 0.62);
+    line-height: 1.65;
+}
+
+.site-footer__contacts {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.site-footer__contacts li {
+    margin-bottom: 0.5rem;
+}
+
+.site-footer__contacts a {
+    color: var(--white);
+    font-weight: 650;
+}
+
+/* Ссылка на страницу сервиса в Facebook. Стоит в списке контактов,
+   поэтому наследует его отступы; своё — только строка с иконкой.
+   ⚠️ Иконка сплошная (fill), в отличие от штриховых иконок сайта:
+   логотип соцсети в обводке не читается. */
+.site-footer__social a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    /* ⚠️ Цвет и ховер НЕ задаём: ниже по файлу стоит .site-footer a
+       с тем же значением (0.62) и тем же осветлением до белого при
+       наведении. При равном весе побеждало бы позднее правило, и
+       своё объявление здесь было бы мёртвым кодом — а на вид
+       рабочим. Ровно эта ловушка уже ловила проект на
+       .mobile-menu__inner.
+       Наследуем общий стиль ссылок подвала — так и задумано.
+       Легче телефона и почты получается само: те подняты до 650
+       отдельным правилом, соцсети этого не нужно. */
+    text-decoration: none;
+}
+
+.site-footer__social svg {
+    width: 20px;
+    height: 20px;
+    /* Иконка не должна сжиматься, если подпись переносится. */
+    flex: none;
+}
+
+.site-footer__hours {
+    color: rgba(255, 255, 255, 0.5);
+    /* Отбивка от контактов: выше телефон, почта и Facebook — все
+       способы связи подряд, а расписание к ним примечание.
+       ⚠️ Отступ стоит здесь, а не у .site-footer__social: пока
+       Facebook был последним, отбивали его, но после перестановки
+       это отделяло бы его от почты, с которой он в одной группе. */
+    margin-top: 0.85rem;
+}
+
+/* Три колонки услуг. auto-fit нельзя: группы разной длины, и при
+   автоподборе «Техника и связь» из двух пунктов занимала бы
+   столько же, сколько «Помощь по дому» из семи. */
+.site-footer__cols {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem;
+}
+
+/* Заголовок группы — не такой, как заголовок зоны: зона набрана
+   прописными с разрядкой, группа обычным регистром. Иначе два
+   заголовка подряд читаются как один уровень. */
+/* ⚠️ Селектор по h4, а не по h5: уровни заголовков подвала
+   подняты на один (h5 -> h4, h4 -> h3), чтобы не было разрыва
+   h2 -> h4 после секции «Нужен мастер сегодня?». Размер и вид
+   остались прежними — меняется только уровень в структуре. */
+.site-footer__col h4 {
+    margin: 0 0 0.9rem;
+    color: var(--white);
+    font-size: 0.92rem;
+    font-weight: 700;
+}
+
+/* Точка перед пунктом: двенадцать ссылок без маркеров сливаются
+   в сплошной текст. */
+.site-footer__col li {
+    position: relative;
+    padding-left: 14px;
+    margin-bottom: 0.55rem;
+    line-height: 1.45;
+}
+
+.site-footer__col li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.52em;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--blue-500);
+}
+
+/* Карточка выбора города. */
+.site-footer__city {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    margin-bottom: 1.4rem;
+    padding: 14px 16px;
+    border: 1px solid var(--line-dark);
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--white);
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.2s var(--ease), background-color 0.2s var(--ease);
+}
+
+.site-footer__city:hover {
+    border-color: var(--blue-500);
+    background: rgba(255, 255, 255, 0.09);
+}
+
+.site-footer__city-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    border-radius: 11px;
+    background: rgba(61, 139, 255, 0.16);
+    color: var(--blue-400);
+}
+
+.site-footer__city-icon svg {
+    width: 19px;
+    height: 19px;
+}
+
+.site-footer__city-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.site-footer__city-label {
+    font-size: 0.76rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.site-footer__city-body strong {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.site-footer__city-arrow {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    margin-left: auto;
+    color: var(--blue-400);
+    transition: transform 0.2s var(--ease);
+}
+
+.site-footer__city:hover .site-footer__city-arrow {
+    transform: translateX(3px);
+}
+
+.site-footer__links {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.site-footer__links li {
+    margin-bottom: 0.7rem;
+}
+
+/* ⚠ Порог 1180, а не 1080: при 1100px зоне услуг доставалось
+   429px — по 122px на колонку против нужных 167, и почти каждая
+   подпись переносилась. Рубеж считается от содержимого. */
+@media (max-width: 1180px) {
+    /* Зона услуг уходит под бренд и город: при трёх колонках
+       ссылок ей нужна вся ширина. */
+    .site-footer__top {
+        grid-template-columns: 1fr 1fr;
+        gap: 2.4rem;
+    }
+
+    .site-footer__services {
+        grid-column: 1 / -1;
+        order: 3;
+    }
+}
+
+@media (max-width: 760px) {
+    .site-footer__top {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    /* Колонки услуг в две: три на телефоне дают по одному слову
+       в строке, и названия переносятся по буквам. */
+    .site-footer__cols {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.4rem;
+    }
+
+    .site-footer__about {
+        max-width: none;
+    }
+}
+
+@media (max-width: 420px) {
+    .site-footer__cols {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Заголовок зоны подвала. ⚠️ h3, а не h4 — см. комментарий у
+   .site-footer__col h4 выше. Правило намеренно НЕ трогает
+   .site-footer__col h4: тот набран обычным регистром, а этот
+   прописными с разрядкой, и порядок правил здесь не спасёт —
+   у них разная специфичность. */
+.site-footer h3 {
+    margin-bottom: 0.9rem;
+    color: var(--white);
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.site-footer ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.site-footer li {
+    margin-bottom: 0.55rem;
+}
+
+.site-footer a {
+    color: rgba(255, 255, 255, 0.62);
+}
+
+.site-footer a:hover {
+    color: var(--white);
+}
+
+.site-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem 1.5rem;
+    justify-content: space-between;
+    padding-top: 22px;
+    font-size: 0.83rem;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+/* ============================================================
+   Узкий десктоп
+   ============================================================
+   ⚠️ Порог 1120px выбран по ГРУЗИНСКОЙ странице — она самая
+   широкая из трёх: подписи длиннее русских в полтора раза.
+   Если мерить по русской, порог вышел бы около 900px, и
+   грузинская ломалась бы в промежутке. Правило одно на все
+   языки, поэтому считаем по худшему. */
+
+@media (max-width: 1360px) {
+    /* ⚠️ Порог считается по САМОМУ ДЛИННОМУ языку — грузинскому.
+       Замер его шапки: логотип 195 + меню 535 + правая группа 460
+       + два промежутка = 1227 px содержимого, плюс поля
+       контейнера — около 1346 px окна. Ниже этого шапке физически
+       не хватает места.
+
+       ⚠️ Меню больше не сжимается (flex-shrink: 0 выше), поэтому
+       нехватка места выливается не в наезд, а в горизонтальную
+       прокрутку всей страницы: замер на 1185 px показал
+       scrollWidth 1286 против 1185 видимых. То есть порог обязан
+       стоять там, где шапка ещё целиком помещается, иначе одна
+       поломка меняется на другую. Прежние 1120 px (подобранные по
+       русскому) и промежуточные 1180 px этому не удовлетворяли.
+
+       Отдельный порог на каждый язык невозможен: CSS языка
+       страницы не знает, медиазапрос один на всех. Берём худший —
+       русскому и английскому меню хватило бы и 1260 px, они уйдут
+       в бургер чуть раньше, чем могли бы. Это дешевле и наезда, и
+       горизонтальной прокрутки. */
+    /* ⚠️ Порог считается по САМОМУ ДЛИННОМУ языку, а это
+       грузинский: пункты меню там 552 px против 436 у русского, и
+       кнопка вызова мастера тоже шире. Замер показал, что целой
+       грузинская шапка остаётся примерно до 1180 px — ниже пункты
+       начинали бы наезжать на кнопку города. Прежние 1120 px были
+       подобраны по русскому и для грузинского оказались малы.
+
+       Отдельный порог на каждый язык невозможен: CSS языка
+       страницы не знает, медиазапрос один на всех. Берём худший —
+       русский и английский уйдут в бургер на 60 px раньше, чем
+       могли бы, и это дешевле наезда. */
+    /* Пункты меню уходят в бургер, логотип и действия остаются:
+       по ним человек понимает, где он и что делать. */
+    .site-nav {
+        display: none;
+    }
+
+    .burger {
+        display: block;
+    }
+}
+
+/* ============================================================
+   Планшет
+   ============================================================ */
+
+@media (max-width: 1024px) {
+    .hero__grid,
+    .final-cta__grid {
+        grid-template-columns: 1fr;
+        gap: 2.4rem;
+    }
+
+    .hero__photo {
+        height: 340px;
+    }
+
+    .trust-strip__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Шаги: 4 в ряд не помещаются — ставим 2×2, пары остаются
+       осмысленными (1-2 «заявка», 3-4 «работа»). */
+    .steps-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ============================================================
+   Телефон
+   ============================================================ */
+
+@media (max-width: 768px) {
+    :root {
+        /* Шаг секций режется с 104 до 64px: на телефоне
+           десктопные отступы превращают страницу в бесконечную
+           ленту пустоты. */
+        --section-pad: 64px;
+    }
+
+    body {
+        font-size: 16px;
+    }
+
+    .hero {
+        /* Узкое значение донора: 52 сверху, 64 снизу. */
+        padding: 52px 0 64px;
+    }
+
+    /* Город и кнопка заявки уезжают в бургер — на узком экране
+       они не помещаются рядом с логотипом и языками.
+       ⚠️ Город скрывается здесь же: он добавлен страницами услуг
+       и в строку с логотипом и тремя языками не влезает —
+       на 420 px шапка уезжала за край на 3 px, на 320 px на 65.
+       В мобильном меню он первой же кнопкой, плюс дублируется в
+       хлебных крошках и в кикере hero. */
+    .site-nav,
+    .city-pill,
+    .header-actions .button {
+        display: none;
+    }
+
+    .hero__photo {
+        height: 260px;
+    }
+
+    /* Две колонки max-content на телефоне не помещаются: самая
+       длинная пара выходит за экран. */
+    .hero__perks {
+        grid-template-columns: 1fr;
+    }
+
+    /* ⚠️ Форма перестаёт быть плавающей: поверх фото 260 px она
+       закрыла бы снимок целиком. Встаёт в поток под ним, и запас
+       в колонке больше не нужен. */
+    .hero__form {
+        position: static;
+        margin-top: 1rem;
+    }
+
+    .hero__media {
+        padding-bottom: 0;
+    }
+
+    .services-grid,
+    .steps-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .districts-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .lead-form {
+        padding: 22px;
+    }
+}
+
+/* Районы переходят в один столбец раньше прочих сеток — на
+   519 px, а не на 420. На 440-480 px две колонки дают карточку
+   185-203 px, и в неё перестаёт помещаться даже одна местность:
+   «Приморский бульвар» и «ზღვისპირა ბულვარი» обрезались
+   многоточием (замерено). При 520 px карточка ещё 221 px, и всё
+   влезает целиком.
+   ⚠️ Правило обязано стоять НИЖЕ блока 768 px: там у сетки
+   repeat(2, 1fr), и при равной силе селекторов побеждает
+   последнее по файлу. */
+@media (max-width: 519px) {
+    .districts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 420px) {
+    /* ⚠️ На 360 px (iPhone SE, бюджетные Android) логотип и
+       переключатель языка вместе шире экрана — не хватало 6 px.
+       Поджимаем поля контейнера и сам переключатель: прятать
+       язык нельзя, это главный элемент трёхъязычного сайта. */
+    .container {
+        padding: 0 4%;
+    }
+
+    /* Свёрнутая кнопка языка ужимается до значка с кодом:
+       подпись и стрелка на узком экране не нужны — язык виден
+       по коду, а список всё равно открывается по нажатию. */
+    .lang-drop__btn {
+        padding: 0 8px;
+    }
+
+    .lang-drop__chev {
+        display: none;
+    }
+
+    .logo__mark {
+        width: 38px;
+        height: 38px;
+    }
+
+    /* Ценник переезжает под заголовок: в строку с длинным
+       грузинским словом он не помещается, а ужимать кегль
+       ради одного языка — портить остальные два. */
+    .service-card__title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.35rem;
+    }
+
+    .hero__cta .button {
+        width: 100%;
+    }
+}
+
+/* ============================================================
+   Очень узкие экраны (320 px)
+   ============================================================
+   Старый iPhone SE и бюджетные Android. Доля в трафике мала, но
+   горизонтальная прокрутка читается как поломка сайта.
+   ⚠️ Отдельный порог, а не общий с 420 px: на 360-420 подпись
+   помещается на всех трёх языках, и прятать её там незачем. */
+
+@media (max-width: 340px) {
+    /* Грузинское «სერვისი სახლისთვის» вдвое длиннее русского и
+       распирает шапку. Убираем подпись, название остаётся. */
+    .logo__sub {
+        display: none;
+    }
+
+    /* ⚠️ «Georgia» переезжает на вторую строку, на освободившееся
+       место подписи. В строку с «Mastera» она здесь не влезает:
+       замерено — логотип 191 px плюс языки 110 при доступных 305,
+       не хватало 33 px, и шапка уезжала за край вместе со всей
+       страницей. Слово не прячем: оно и есть то, что просили
+       добавить, а второй строкой читается так же. */
+    .logo__geo {
+        display: block;
+        /* Пробел в разметке нужен для строки — во второй строке он
+           дал бы отступ слева. */
+        margin-left: -0.28em;
+        font-size: 0.78em;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        color: var(--muted-2);
+    }
+}
+
+/* ============================================================
+   Уменьшение движения
+   ============================================================
+   Системная настройка «Reduce Motion» — выключаем анимации.
+   ⚠️ На прежнем сайте это правило однажды погасило и мигание
+   индикатора «сейчас онлайн», который к движению интерфейса
+   отношения не имеет. Здесь таких индикаторов пока нет; если
+   появятся — вносить в исключения, а не отменять правило. */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ============================================================
+   ФОРМА ЗАЯВКИ — рабочая разметка на новом макете
+
+   Форма перенесена с текущего сайта как есть: её поля (район,
+   отдельные Telegram/WhatsApp, согласие, фото) завязаны на
+   script.js и на контракт с ботом, и переписывать их ради
+   оформления нельзя. Прототип нового проекта этих полей не имел,
+   поэтому часть элементов осталась без стилей.
+
+   Здесь дописано только недостающее. Поля идут подряд, без
+   обёрток .form-row — отступ задаётся самим полям.
+   ============================================================ */
+
+/* Поля рабочей формы лежат прямым потомком <form>, а не внутри
+   .form-row, поэтому нижний отступ вешаем на них. */
+.lead-form > .form-control {
+    margin-bottom: 0.85rem;
+}
+
+/* «ИЛИ» между Telegram и WhatsApp: разделитель, а не заголовок. */
+.lead-form__or {
+    margin: 0.2rem 0 0.85rem;
+    color: var(--muted-2);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-align: center;
+}
+
+/* Согласие и «срочный заказ» — строки с флажком.
+   align-items: flex-start, потому что текст согласия переносится
+   на две строки, и по центру флажок уезжал бы к середине абзаца. */
+.lead-form__consent,
+.lead-urgent-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 0.7rem;
+    color: var(--muted);
+    font-size: 0.87rem;
+    line-height: 1.45;
+    cursor: pointer;
+}
+
+.lead-form__consent input[type="checkbox"],
+.lead-urgent-label input[type="checkbox"] {
+    flex: 0 0 auto;
+    width: 17px;
+    height: 17px;
+    margin-top: 1px;
+    accent-color: var(--blue-500);
+    cursor: pointer;
+}
+
+.lead-form__consent a {
+    color: var(--blue-600);
+    text-decoration: underline;
+}
+
+/* Загрузка фото. Нативный <input type="file"> скрыт: его текст
+   («Выбор файлов / Не выбран файл») задаёт локаль браузера, он не
+   переводится и ломает вид формы на трёх языках. Вместо него —
+   своя кнопка с переводом из locales. Прячем через clip, а не
+   display:none и не visibility: скрытый этими способами file-input
+   в Safari не отдаёт выбранные файлы, а скринридер теряет поле. */
+.lead-photo-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 0.85rem;
+    padding: 11px 14px;
+    border: 1px dashed var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--soft);
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.lead-photo-label {
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+.lead-photo-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.lead-photo-btn {
+    padding: 7px 14px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: var(--white);
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+/* Только для мыши: на тач-экране :hover залипает после тапа. */
+@media (hover: hover) and (pointer: fine) {
+
+  .lead-photo-btn:hover {
+      border-color: var(--blue-500);
+      color: var(--blue-600);
+  }
+}
+
+/* Миниатюры выбранных фото. Появляются только после выбора — пустой
+   блок схлопнут, поэтому gap обёртки лишнего зазора не даёт. */
+.lead-photo-previews {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.lead-photo-previews:empty {
+    display: none;
+}
+
+.lead-photo-thumb {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    border-radius: 9px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: var(--white);
+}
+
+.lead-photo-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.lead-photo-remove {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 22px;
+    height: 22px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(15, 23, 42, 0.72);
+    color: #fff;
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (hover: hover) and (pointer: fine) {
+
+  .lead-photo-remove:hover {
+      background: #e53935;
+  }
+}
+
+/* Кнопка отправки — во всю ширину формы и с отступом сверху:
+   в перенесённой разметке она идёт сразу за флажками, и без
+   отступа наезжала на строку «Срочный заказ». */
+.lead-form__submit {
+    width: 100%;
+    margin-top: 0.6rem;
+}
+
+/* ============================================================
+   СТРАНИЦА УСЛУГИ (ЛЕНДИНГ)
+
+   Секции, которых не было в макете нового проекта: там собран
+   только hero с формой. Прайс, FAQ, районы и переход в другой
+   город построены в той же системе — те же переменные, радиусы
+   и тени, что у карточек главной.
+   ============================================================ */
+
+/* ── Хлебные крошки ──────────────────────────────────────────
+   В прежней разметке их не было вовсе. Нужны и человеку (понятно,
+   где он и как вернуться), и поисковику: разметка BreadcrumbList
+   в <head> описывает путь, которого на странице не было видно. */
+/* ── Прайс: карточки-превью и полный прайс ──────────────────
+   Повтор прайса донора: три крупные карточки-превью, под ними
+   CTA «Рассчитать мою задачу», ниже — раскрывающийся полный
+   прайс с поиском и категориями. Карточки вместо таблицы: на
+   узком экране таблица режется, а карточки складываются в ряд. */
+
+.price-previews {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 1.5rem;
+}
+
+.price-preview {
+    display: flex;
+    flex-direction: column;
+    padding: 26px 24px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    /* Градиент как у карточки призыва «Нужна предварительная
+   оценка?» (.est-card): от светло-голубого к белому. */
+    background: linear-gradient(135deg, var(--blue-100), var(--white) 70%);
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.2s var(--ease), transform 0.2s var(--ease),
+                box-shadow 0.2s var(--ease);
+}
+
+.price-preview:hover {
+    border-color: var(--blue-400);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.price-preview__unit {
+    align-self: flex-start;
+    margin-bottom: 0.5rem;
+    padding: 4px 10px;
+    border-radius: 8px;
+    background: var(--blue-100);
+    color: var(--blue-700);
+    font-size: 0.75rem;
+    font-weight: 760;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.price-preview h3 {
+    margin: 0 0 0.4rem;
+    font-size: 1.15rem;
+}
+
+.price-preview__desc {
+    margin: 0 0 1rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.55;
+}
+
+/* Цена прижата к низу карточки: при разной длине описаний она
+   остаётся на одной линии по всем трём превью. */
+.price-preview__value {
+    margin-top: auto;
+    color: var(--ink);
+    font-size: 1.5rem;
+    font-weight: 760;
+    letter-spacing: -0.02em;
+}
+
+/* ── Стрелка в карточке прайса ───────────────────────────────
+   ⚠️ Только у варианта-ссылки. На лендингах той же разметкой
+   набраны 423 нерабочих блока <div class="price-preview"> —
+   это просто цифры, и стрелка обещала бы переход, которого
+   нет. Селектор a.price-preview отсекает их.
+
+   Стрелка встаёт в одну строку с ценой, а не отдельной
+   строкой под ней: цена уже прижата к низу карточки
+   (margin-top: auto), и вторая строка растянула бы карточку.
+   Цвет и размер — как у .district-card и .area-card, чтобы
+   все кликабельные карточки выглядели одинаково. */
+a.price-preview .price-preview__value {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+a.price-preview .price-preview__value::after {
+    content: '';
+    width: 14px;
+    height: 14px;
+    /* auto прижимает стрелку к правому краю карточки. */
+    margin-left: auto;
+    flex: 0 0 auto;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232f77eb' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3Cpolyline points='12 5 19 12 12 19'/%3E%3C/svg%3E") center / contain no-repeat;
+    opacity: 0.45;
+    transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+a.price-preview:hover .price-preview__value::after {
+    opacity: 1;
+    transform: translateX(3px);
+}
+
+/* CTA-строка на тёмном фоне — единственный тёмный акцент в
+   прайсе, подчёркивает переход к заявке. */
+.price-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 22px 26px;
+    margin-bottom: 1.5rem;
+    border-radius: var(--radius-md);
+    background: var(--navy-900);
+}
+
+/* Заголовок и подзаголовок — колонкой, чтобы кнопка осталась
+   вторым элементом флекса и space-between развёл их по краям.
+   Без обёртки подзаголовок встал бы третьим элементом строки
+   и выдавил кнопку на второй ряд. */
+.price-cta__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.price-cta__text {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 1.05rem;
+    font-weight: 650;
+}
+
+.price-cta__sub {
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 0.92rem;
+    line-height: 1.45;
+}
+
+/* Полный прайс — <details>: раскрывается без скрипта. */
+.price-full {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.price-full > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 20px 24px;
+    color: var(--ink);
+    font-size: 1.08rem;
+    font-weight: 760;
+    cursor: pointer;
+    list-style: none;
+}
+
+.price-full > summary::-webkit-details-marker {
+    display: none;
+}
+
+.price-full > summary::after {
+    content: "";
+    flex: 0 0 auto;
+    width: 9px;
+    height: 9px;
+    margin-right: 4px;
+    border-right: 2px solid var(--blue-600);
+    border-bottom: 2px solid var(--blue-600);
+    transform: rotate(45deg) translate(-2px, -2px);
+    transition: transform 0.2s var(--ease);
+}
+
+.price-full[open] > summary::after {
+    transform: rotate(-135deg) translate(-3px, -3px);
+}
+
+.price-full[open] > summary {
+    border-bottom: 1px solid var(--line);
+}
+
+.price-full__body {
+    padding: 20px 24px 24px;
+}
+
+.price-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1.4rem;
+}
+
+.price-search input {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 46px;
+    padding: 0 16px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--soft);
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+}
+
+.price-search input:focus {
+    border-color: var(--blue-400);
+    background: var(--white);
+}
+
+.price-search button {
+    flex: 0 0 auto;
+    height: 46px;
+    padding: 0 18px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--white);
+    color: var(--ink-2);
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 650;
+    cursor: pointer;
+    transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+.price-search button:hover {
+    border-color: var(--blue-400);
+    color: var(--blue-700);
+}
+
+.price-group {
+    margin-bottom: 1.4rem;
+}
+
+.price-group:last-child {
+    margin-bottom: 0;
+}
+
+.price-group__title {
+    margin: 0 0 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    font-size: 0.95rem;
+    font-weight: 760;
+    letter-spacing: -0.01em;
+}
+
+.price-line {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 11px 0;
+}
+
+.price-line__name {
+    min-width: 0;
+    flex: 1 1 auto;
+    color: var(--ink-2);
+    font-size: 0.93rem;
+}
+
+.price-line__unit {
+    flex: 0 0 auto;
+    color: var(--muted-2);
+    font-size: 0.8rem;
+}
+
+.price-line__val {
+    flex: 0 0 auto;
+    min-width: 70px;
+    text-align: right;
+    color: var(--blue-700);
+    font-size: 0.95rem;
+    font-weight: 760;
+    white-space: nowrap;
+}
+
+/* Скрытые строки поиска: класс вешает скрипт, когда название
+   не совпало с запросом. */
+.price-line.is-hidden {
+    display: none;
+}
+
+/* ── FAQ ─────────────────────────────────────────────────────
+   На <details>: аккордеон раскрывается без скрипта, работает
+   при отключённом JS и доступен с клавиатуры по умолчанию. */
+.faq-list {
+    display: grid;
+    gap: 12px;
+}
+
+.faq-row {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.faq-row summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 17px 22px;
+    color: var(--ink);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.4;
+    cursor: pointer;
+    /* Убираем системный треугольник: вместо него своя стрелка. */
+    list-style: none;
+}
+
+.faq-row summary::-webkit-details-marker {
+    display: none;
+}
+
+.faq-row summary::after {
+    content: "";
+    flex: 0 0 auto;
+    width: 9px;
+    height: 9px;
+    margin-right: 4px;
+    border-right: 2px solid var(--blue-600);
+    border-bottom: 2px solid var(--blue-600);
+    transform: rotate(45deg) translate(-2px, -2px);
+    transition: transform 0.2s var(--ease);
+}
+
+.faq-row[open] summary::after {
+    transform: rotate(-135deg) translate(-3px, -3px);
+}
+
+.faq-row[open] summary {
+    border-bottom: 1px solid var(--line);
+}
+
+.faq-row__answer {
+    padding: 15px 22px 19px;
+    color: var(--muted);
+    line-height: 1.68;
+}
+
+.faq-row__answer p {
+    margin: 0 0 0.7rem;
+}
+
+.faq-row__answer p:last-child {
+    margin-bottom: 0;
+}
+
+.faq-row__answer strong {
+    color: var(--ink);
+}
+
+/* ── Районы ──────────────────────────────────────────────────
+   Перелинковка страницы: каждая карточка ведёт на лендинг
+   района, поэтому это ссылки, а не подписи. */
+.area-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+    gap: 12px;
+}
+
+/* Сетка с колонкой под стрелку: название и подсказка слева,
+   стрелка справа по центру карточки. Раньше карточка была
+   display: block — ссылка без единого признака перехода, по ней
+   не нажимали. Стрелка та же, что в .district-card на главных,
+   чтобы два списка районов читались одинаково.
+
+   ⚠️ Правый столбец задан через grid, а не float/absolute:
+   подсказка местностей обрезается по ширине (text-overflow),
+   и при позиционировании поверх неё строка уезжала бы под
+   стрелку. Колонка отнимает место честно. */
+.area-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    /* Зазор ТОЛЬКО между колонками: общий gap добавился бы и
+       между строками — названием и подсказкой, — и карточка
+       выросла бы с 81 до 91 px (замерено). */
+    column-gap: 10px;
+    padding: 15px 14px 15px 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+    text-decoration: none;
+    transition: border-color 0.2s var(--ease), transform 0.2s var(--ease),
+                box-shadow 0.2s var(--ease);
+}
+
+.area-card:hover {
+    border-color: var(--blue-500);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Стрелка перехода. Фоном-картинкой, а не символом «→»:
+   шрифтовая стрелка в трёх языках берётся из разных начертаний
+   и съезжает по базовой линии. Цвет внутри data:URI задан
+   числом — currentColor во внешнем фоне не работает, оттенок
+   меняем прозрачностью. */
+.area-card::after {
+    content: '';
+    grid-column: 2;
+    grid-row: 1 / -1;
+    width: 14px;
+    height: 14px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232f77eb' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3Cpolyline points='12 5 19 12 12 19'/%3E%3C/svg%3E") center / contain no-repeat;
+    opacity: 0.45;
+    transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+.area-card:hover::after {
+    opacity: 1;
+    transform: translateX(3px);
+}
+
+/* Название и подсказка — в первой колонке, одна под другой.
+   Без явного указания они встали бы в соседние колонки сетки,
+   и подсказка оказалась бы справа от названия. */
+.area-card__name,
+.area-card__hint {
+    grid-column: 1;
+}
+
+.area-card__name {
+    display: block;
+    color: var(--ink);
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+/* Популярные местности района. Обрезаем в одну строку: у
+   некоторых районов их четыре, и карточки шли разной высоты. */
+.area-card__hint {
+    display: block;
+    margin-top: 3px;
+    overflow: hidden;
+    color: var(--muted-2);
+    font-size: 0.81rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Форма заявки читается узкой колонкой: во всю ширину 1240px
+   поля растягиваются на полметра и выглядят анкетой. */
+
+@media (max-width: 640px) {
+    .faq-row summary {
+        padding: 15px 17px;
+        font-size: 0.95rem;
+    }
+
+    .faq-row__answer {
+        padding: 13px 17px 17px;
+    }
+
+    }
+
+/* ============================================================
+   Перечень работ на лендинге услуги (.works-list)
+   ============================================================
+   Главный SEO-текст страницы: 20+ пунктов вида
+   «<strong>Прочистка засоров</strong> — описание». В старой
+   разметке это были карточки в сетке, но там на каждый пункт
+   приходилось по две-три строки текста, и сетка превращалась
+   в стену плашек разной высоты. Списком тот же текст читается
+   сверху вниз и не требует выравнивания карточек.
+
+   Маркер рисуем сами (::before), а не list-style: нужен
+   фирменный синий, а у нативного маркера цвет наследуется от
+   текста и отдельно не задаётся. */
+
+.works-list {
+    max-width: 880px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    /* Счётчик пунктов: нумерация 01, 02… как в секции «С чем
+       нужна помощь» донора. */
+    counter-reset: works;
+}
+
+.works-list li {
+    position: relative;
+    padding-left: 38px;
+    counter-increment: works;
+    /* Отступ между пунктами задаём снизу, а не gap: элемент не
+       flex/grid-контейнер, и gap здесь не действует. */
+    margin-bottom: 1.05rem;
+    color: var(--muted);
+    font-size: 0.97rem;
+    line-height: 1.62;
+}
+
+.works-list li:last-child {
+    margin-bottom: 0;
+}
+
+/* Маркер — порядковый номер в плашке фирменного синего, как на
+   доноре. Позиция в em: при другом кегле пункт и номер поедут
+   вместе. */
+.works-list li::before {
+    content: counter(works, decimal-leading-zero);
+    position: absolute;
+    top: 0.22em;
+    left: 0;
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    background: var(--blue-100);
+    color: var(--blue-700);
+    font-size: 0.72rem;
+    font-weight: 760;
+    letter-spacing: 0.02em;
+}
+
+/* Название работы — тёмным и плотным: в пункте это заголовок,
+   а описание после тире остаётся второстепенным. */
+.works-list strong {
+    color: var(--ink);
+    font-weight: 680;
+}
+
+@media (max-width: 640px) {
+    .works-list li {
+        padding-left: 33px;
+        margin-bottom: 0.9rem;
+        font-size: 0.93rem;
+    }
+
+    .works-list li::before {
+        width: 22px;
+        height: 22px;
+        border-radius: 7px;
+        font-size: 0.66rem;
+    }
+}
+
+/* ============================================================
+   Проза лендинга (.prose)
+   ============================================================
+   Сплошной текст о районе или городе: «Ваке — престижный зелёный
+   район в западной части Тбилиси…». На лендингах услуг такого
+   блока нет, на районных и батумских он несёт до 2300 знаков.
+
+   Ширину режем до 72 символов: строка во всю ширину контейнера
+   (1100 px) — это около 150 символов, и взгляд теряет начало
+   следующей строки. Ограничиваем в ch, а не в px: мера привязана
+   к размеру шрифта и переживёт смену типографики. */
+
+.prose {
+    max-width: 72ch;
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.72;
+}
+
+.prose p {
+    margin: 0 0 1.1rem;
+}
+
+.prose p:last-child {
+    margin-bottom: 0;
+}
+
+/* Выделения внутри прозы — тем же тёмным, что и заголовки:
+   в абзаце это смысловой акцент, а не вторая по важности мысль. */
+.prose strong {
+    color: var(--ink);
+    font-weight: 660;
+}
+
+.prose a {
+    color: var(--blue-700);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+    .prose {
+        font-size: 0.96rem;
+        line-height: 1.66;
+    }
+}
+
+/* Ссылка на смежную услугу внутри перечня работ: «…— отдельная
+   услуга →». Таких ссылок 453 на 117 страницах, и это заметная
+   часть перелинковки. Без оформления они не отличались от текста
+   пункта, и по ним никто не переходил.
+
+   Подчёркивание включаем сразу, а не по наведению: внутри абзаца
+   одним цветом ссылка не читается, а на телефоне наведения нет. */
+.works-list a,
+.prose a.footer-link {
+    color: var(--blue-700);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-color: rgba(31, 98, 210, 0.35);
+    transition: text-decoration-color 0.18s var(--ease);
+}
+
+.works-list a:hover,
+.prose a.footer-link:hover {
+    text-decoration-color: var(--blue-700);
+}
+
+/* ============================================================
+   Почему выбирают нас (.why-grid)
+   ============================================================
+   Карточки преимуществ на лендинге услуги: четыре довода в той
+   же системе радиусов и теней, что у остальных карточек. На
+   доноре этот блок стоит после прайса и перекрывает сомнение
+   «а зачем заказывать именно здесь». */
+
+.why-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.why-card {
+    padding: 22px 20px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+}
+
+.why-card__icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-bottom: 0.9rem;
+    border-radius: 12px;
+    background: var(--blue-100);
+    color: var(--blue-700);
+}
+
+.why-card__icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.why-card h3 {
+    margin: 0 0 0.35rem;
+    font-size: 1.02rem;
+}
+
+.why-card p {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.55;
+}
+
+/* ============================================================
+   За что обращаются (.about-list)
+   ============================================================
+   Раскрывающиеся блоки-доводы, как на доноре. На <details> без
+   скрипта: работает и при выключенном JS, доступен с клавиатуры. */
+
+.about-list {
+    display: grid;
+    gap: 12px;
+    max-width: 880px;
+}
+
+.about-item {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.about-item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 18px 22px;
+    color: var(--ink);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    list-style: none;
+}
+
+.about-item summary::-webkit-details-marker {
+    display: none;
+}
+
+/* Плюс вместо стрелки: раскрывающийся блок про «причины», а не
+   вопрос-ответ, и плюс читается как «добавить довод». */
+.about-item summary::after {
+    content: "+";
+    flex: 0 0 auto;
+    color: var(--blue-600);
+    font-size: 1.45rem;
+    font-weight: 500;
+    line-height: 1;
+    transition: transform 0.2s var(--ease);
+}
+
+.about-item[open] summary::after {
+    transform: rotate(45deg);
+}
+
+.about-item[open] summary {
+    border-bottom: 1px solid var(--line);
+}
+
+.about-item__body {
+    padding: 4px 22px 19px;
+    color: var(--muted);
+    font-size: 0.94rem;
+    line-height: 1.68;
+}
+
+.about-item__body p {
+    margin: 0 0 0.6rem;
+}
+
+.about-item__body p:last-child {
+    margin-bottom: 0;
+}
+
+.about-item__body strong {
+    color: var(--ink);
+}
+
+/* ── Адаптив новых блоков ─────────────────────────────────── */
+
+@media (max-width: 980px) {
+    .price-previews {
+        grid-template-columns: 1fr;
+    }
+
+    .why-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 560px) {
+    .why-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* На узком экране единица и цена переносятся под название:
+       строка «название · за штуку · от 30₾» не помещается. */
+    .price-line {
+        flex-wrap: wrap;
+        gap: 2px 10px;
+        padding: 10px 0;
+    }
+
+    .price-line__unit {
+        order: 3;
+        width: 100%;
+    }
+
+    .price-line__val {
+        min-width: 0;
+    }
+
+    .price-search {
+        flex-wrap: wrap;
+    }
+
+    .price-search input {
+        flex-basis: 100%;
+    }
+}
+
+/* ── Плавающие кнопки связи: WhatsApp и Telegram ────────────
+   На десктопе и планшете — две кнопки в ряд в правом нижнем
+   углу. На телефоне (<768px) — полная ширина внизу, с зазором и
+   безопасной зоной.
+   Отступ снизу у страницы задаёт JS по фактической высоте
+   панели — здесь его дублировать нельзя, иначе два источника
+   разойдутся при смене кегля. */
+.contact-bar {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 60;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    /* Кнопки вплотную, полоса скруглена по краям контейнера —
+       тот же вид, что и на мобильной версии. */
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 6px 20px rgba(4, 16, 39, 0.3);
+}
+
+/* Точка отсчёта для затемняющей накладки ::after. */
+.contact-bar__btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 52px;
+    padding: 10px 18px;
+    /* min-height считаем вместе с padding: иначе кнопка выйдет
+       выше заданной, и высота панели разойдётся с отступом. */
+    box-sizing: border-box;
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+/* ⚠️ Текст кнопки белый во ВСЕХ состояниях ссылки.
+   Без :hover и :focus глобальное `a:hover { color: var(--blue-600) }`
+   перекрашивало подпись в голубой. На тач-экране это особенно заметно:
+   :hover там залипает после тапа, и кнопка оставалась с выцветшим
+   текстом, пока посетитель не коснётся другого места экрана.
+   :visited — на случай, если ссылку уже открывали.
+   Обратную связь на нажатие даёт затемнение фона (::after), а не
+   смена цвета текста. */
+.contact-bar__btn:hover,
+.contact-bar__btn:focus,
+.contact-bar__btn:active,
+.contact-bar__btn:visited {
+    color: #fff;
+}
+
+/* Белый кружок под обоими логотипами: кнопки тёмные, и без
+   подложки зелёный WhatsApp тонет в тёмно-синем, а белый
+   Telegram сливается с заливкой. Кружок держит обёртка, а не
+   <img>: иначе увеличение рисунка растягивало бы и подложку. */
+.contact-bar__ico {
+    width: 26px;
+    height: 26px;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #fff;
+    overflow: hidden;
+}
+
+.contact-bar__btn img {
+    width: 20px;
+    height: 20px;
+    display: block;
+    flex: none;
+}
+
+/* ⚠️ У файлов разные поля вокруг логотипа: WhatsApp 116/192,
+   Telegram 150/192. Выравниваем видимый круг расчётом: круг
+   Telegram 150/192 × 20 = 15.6 px → у WhatsApp 15.6 × 192/116
+   ≈ 26 px, ровно в размер подложки. */
+.contact-bar__btn--wa img {
+    width: 26px;
+    height: 26px;
+}
+
+.contact-bar__btn--wa {
+    background: var(--navy-900);
+}
+
+.contact-bar__btn--tg {
+    background: var(--blue-tg);
+}
+
+/* Затемнение при нажатии накладкой, а не filter: brightness() —
+   фильтр применяется ко всему элементу, белый текст уходил в
+   серый. Накладка лежит ПОД содержимым (z-index 0 против 1),
+   поэтому темнеет только фон. */
+.contact-bar__btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: #000;
+    opacity: 0;
+    transition: opacity 0.12s ease;
+    pointer-events: none;
+}
+
+.contact-bar__btn:active::after {
+    opacity: 0.12;
+}
+
+/* Содержимое кнопки — над накладкой. Без этого ::after лёг бы
+   поверх текста и логотипа и затемнил бы их так же, как filter. */
+.contact-bar__btn > * {
+    position: relative;
+    z-index: 1;
+}
+
+@media (max-width: 768px) {
+
+    /* Панель приподнята над нижним краем и отступает от боков:
+       вплотную она читалась как часть системной панели телефона,
+       а не как элемент страницы. На iPhone к отступу добавляется
+       «безопасная зона». */
+    /* ⚠️ Зазор объявлен на :root, а не на .contact-bar: его читает
+       ещё и правило отступа у body, а body — родитель панели, и
+       переменная снизу вверх не наследуется. */
+    :root {
+        --contact-bar-gap: 12px;
+    }
+
+    .contact-bar {
+        left: var(--contact-bar-gap);
+        right: var(--contact-bar-gap);
+        bottom: calc(var(--contact-bar-gap) + env(safe-area-inset-bottom, 0px));
+        flex-direction: row;
+        gap: 0;
+        overflow: hidden;
+        border-radius: var(--radius-sm);
+        box-shadow: 0 6px 20px rgba(4, 16, 39, 0.3);
+    }
+
+    /* Отступ под панель. Класс вешает JS при её вставке.
+       Считаем, а не замеряем: 52px — min-height кнопки, зазор идёт
+       дважды, плюс безопасная зона у экранов с вырезом. */
+    body.has-contact-bar {
+        padding-bottom: calc(52px + var(--contact-bar-gap) * 2
+                             + env(safe-area-inset-bottom, 0px));
+    }
+
+    .contact-bar__btn {
+        flex: 1 1 50%;
+        min-height: 52px;
+        padding: 10px 8px;
+        border-radius: 0;
+        box-shadow: none;
+    }
+}
+
+/* ============================================================
+   ПРИЗЫВЫ К ДЕЙСТВИЮ
+
+   Четыре блока, которые собирает redesign.js, а не разметка:
+   окно заявки, блок предварительной оценки, полоска после
+   списка услуг и финальный призыв. Страниц 129, блоки на всех
+   одинаковые — вписанные руками они разошлись бы при первой
+   правке текста.
+   ============================================================ */
+
+/* ── Окно заявки ──────────────────────────────────────────── */
+
+.lead-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 120;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 4vh 16px;
+    opacity: 0;
+    transition: opacity 0.2s var(--ease);
+    /* Окно выше экрана прокручивается целиком: форма заявки с
+       полями, фото и согласием не помещается в один экран даже
+       на десктопе, а на телефоне не помещается заведомо. */
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.lead-modal.is-open {
+    opacity: 1;
+}
+
+.lead-modal[hidden] {
+    display: none;
+}
+
+.lead-modal__backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(4, 16, 39, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.lead-modal__window {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    /* margin:auto вместо align-items:center у родителя: при
+       центрировании флексом верх окна, переросшего экран,
+       уезжает за границу и становится недоступен прокруткой. */
+    margin: auto;
+    /* ⚠️ Окно не выше экрана, а длинную форму прокручивает
+       .lead-modal__scroll внутри. Пока окно росло свободно (1012 px
+       при экране 768) и прокручивался контейнер, окно уезжало вверх
+       целиком — вместе с крестиком: при прокрутке на 300 px он
+       оказывался на top:-230, то есть за экраном. Жать было некуда,
+       и окно не закрывалось. 4vh сверху и снизу — отступ родителя,
+       его надо вычесть, иначе окно вылезет за экран ровно на него. */
+    max-height: calc(100vh - 8vh);
+    max-height: calc(100dvh - 8vh);
+    display: flex;
+    flex-direction: column;
+    padding: 34px 34px 30px;
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(14px) scale(0.985);
+    transition: transform 0.24s var(--ease);
+}
+
+.lead-modal.is-open .lead-modal__window {
+    transform: none;
+}
+
+.lead-modal__close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 0;
+    border-radius: 12px;
+    background: var(--soft);
+    color: var(--muted);
+    cursor: pointer;
+    transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+.lead-modal__close:hover {
+    background: var(--blue-100);
+    color: var(--blue-700);
+}
+
+.lead-modal__close svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Заголовку нужен отступ справа под кнопку закрытия: без него
+   длинная грузинская строка заезжает под крестик. */
+/* Прокручивается содержимое, а не окно: так крестик, лежащий на
+   окне, остаётся на месте. min-height:0 обязателен — без него
+   flex-элемент не сжимается ниже содержимого и overflow не
+   включается, окно снова перерастает экран. */
+.lead-modal__scroll {
+    padding-right: 34px;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+.lead-modal__title {
+    margin: 0 0 0.6rem;
+    font-size: 1.85rem;
+    line-height: 1.16;
+}
+
+.lead-modal__lead {
+    margin: 0 0 1.4rem;
+    color: var(--muted);
+    font-size: 1rem;
+}
+
+/* Город: видно всегда, даже когда он уже определён адресом
+   страницы — человек должен понимать, куда поедет мастер. */
+.lead-modal__city {
+    margin-bottom: 1.2rem;
+}
+
+.lead-modal__city-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--ink);
+    font-size: 0.86rem;
+    font-weight: 750;
+}
+
+.lead-modal__city-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid var(--blue-100);
+    border-radius: var(--radius-sm);
+    background: var(--blue-100);
+    color: var(--blue-700);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 760;
+    cursor: pointer;
+    transition: background-color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+
+.lead-modal__city-btn:hover {
+    border-color: var(--blue-500);
+    background: #d8e8ff;
+}
+
+.lead-modal__city-btn svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+/* Шеврон справа — тот же знак, что у списков формы ниже: поле
+   города читается как такой же выбор, одним языком со всей
+   формой. Подпись «Сменить» он заменил: слово повторяло то, что
+   стрелка уже говорит. */
+.lead-modal__city-chev {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    margin-left: auto;
+    color: var(--blue-600);
+    transition: transform 0.25s var(--ease);
+}
+
+/* Лёгкий сдвиг вниз по наведению — подсказка, что откроется
+   список, а не переход на другую страницу. Поворот на 180°
+   приберегли для момента, когда окно городов реально открыто. */
+.lead-modal__city-btn:hover .lead-modal__city-chev {
+    transform: translateY(2px);
+}
+
+/* Форма переехала в окно: рамка и тень здесь лишние — их уже
+   даёт само окно, вложенная карточка выглядела бы коробкой в
+   коробке. */
+.lead-modal .lead-form {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+}
+
+/* Кнопка отправки в окне — по содержимому, а не во всю ширину:
+   в узком окне растянутая кнопка выглядит тяжёлой. Класс
+   навешивает JS при открытии и снимает при закрытии, поэтому в
+   секции #lead кнопка остаётся широкой. */
+.lead-form--modal .lead-form__submit {
+    width: auto;
+    align-self: flex-start;
+}
+
+@media (max-width: 768px) {
+    .lead-modal {
+        padding: 0;
+        /* Прокрутка контейнера здесь не нужна и вредна: окно и так
+           по высоте экрана, а лишний слой прокрутки на телефоне
+           перехватывал бы жест у формы. Флекс и прокрутка
+           содержимого заданы в базовых правилах выше. */
+        overflow: hidden;
+    }
+
+    .lead-modal__window {
+        max-width: none;
+        /* Ровно экран, без отступов родителя (на телефоне их нет).
+           dvh учитывает адресную строку Safari: 100vh в ней равен
+           экрану БЕЗ строки, и низ формы уходил под неё. Первое
+           правило — запасное для браузеров без dvh. */
+        max-height: 100vh;
+        max-height: 100dvh;
+        height: 100vh;
+        height: 100dvh;
+        /* На телефоне окно занимает экран целиком: скругления по
+           краям дали бы полоски фона, а не «карточку». */
+        border-radius: 0;
+        padding: 26px 18px 30px;
+    }
+
+    .lead-modal__scroll {
+        padding-right: 44px;
+    }
+
+    .lead-modal__title {
+        font-size: 1.45rem;
+    }
+
+    /* Во всю ширину: на узком экране кнопка по содержимому
+       теряется, а места под ней всё равно нет. */
+    .lead-form--modal .lead-form__submit {
+        width: 100%;
+    }
+}
+
+/* ── Полоска «не нашли свою задачу» ───────────────────────── */
+
+.cta-strip {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-top: 2rem;
+    padding: 18px 22px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+}
+
+.cta-strip__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    border-radius: 14px;
+    background: var(--blue-100);
+    color: var(--blue-700);
+}
+
+.cta-strip__icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.cta-strip__body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    /* min-width:0 обязателен: иначе длинный грузинский текст
+       распирает флекс-элемент и кнопка уезжает за край полоски. */
+    min-width: 0;
+}
+
+.cta-strip__body strong {
+    color: var(--ink);
+    font-size: 1.02rem;
+    font-weight: 780;
+}
+
+.cta-strip__body span {
+    color: var(--muted);
+    font-size: 0.93rem;
+}
+
+.cta-strip__btn {
+    margin-left: auto;
+    flex-shrink: 0;
+    padding: 12px 20px;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: var(--blue-100);
+    color: var(--blue-700);
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 760;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+.cta-strip__btn:hover {
+    background: #d8e8ff;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .cta-strip {
+        flex-wrap: wrap;
+        gap: 14px;
+    }
+
+    /* Раскладка узкого экрана задаётся сеткой, а не переносом
+       flex-строки. Значок и подпись стоят в первом ряду (значок
+       слева, как в соседних карточках), кнопка — во втором, по
+       центру и по ширине содержимого.
+
+       ⚠️ Почему не flex-wrap: там место переноса выбирает
+       браузер, и оно зависит от ширины. Перебрал оба варианта,
+       каждый ломался на своём участке (замерено по 22 ширинам
+       от 320 до 1440):
+         • подпись без нижнего предела ужималась до 13–100px на
+           414–520px, и текст сыпался по одному слову в строку;
+         • с min-width перенос уходил перед значком, и тот
+           вставал на отдельную строку над текстом.
+       Сетка убирает выбор: ряды заданы явно и не зависят от
+       того, сколько места осталось.
+
+       text-align: center здесь ставить нельзя — он наследуется
+       внутрь подписи и ломает её выключку. */
+    .cta-strip {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: center;
+        column-gap: 14px;
+        row-gap: 16px;
+    }
+
+    .cta-strip__btn {
+        /* Вторая строка во всю ширину сетки; auto-поля центруют
+           кнопку, ширину ей задаёт содержимое. */
+        grid-column: 1 / -1;
+        justify-self: center;
+        width: auto;
+        margin-left: 0;
+    }
+
+    /* Тёмная полоса прайса — то же самое: подпись и кнопка встают
+       друг под другом (перенос даёт flex-wrap в базовом правиле),
+       а space-between разводил их по краям строки. Прижимаем
+       содержимое к началу и центрируем кнопку полями auto.
+       Текст остаётся слева. Значка здесь нет, но механизм тот же,
+       что у .cta-strip, — чтобы блоки вели себя одинаково. */
+    .price-cta {
+        justify-content: flex-start;
+    }
+
+    .price-cta .button {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+/* ── Блок предварительной оценки ──────────────────────────── */
+
+/* ============================================================
+   Призывы внутри секций: после «Четырёх шагов» и после FAQ
+   ============================================================
+   Замер показал провал: между кнопкой в блоке цен (экран 6.3) и
+   карточкой оценки (экран 9.3) шло три экрана подряд без единой
+   точки действия. Эти два блока его закрывают.
+
+   ⚠️ Они НЕ копия .est-card и не копия друг друга: разная тема —
+   разное действие и разное оформление. После шагов — заявка
+   (светлая карточка на тёмной секции), после FAQ — живой контакт
+   (мягкая подложка, две кнопки). Одинаковые блоки подряд
+   читались бы как повтор баннера, который взгляд пропускает.
+   ============================================================ */
+
+/* ── После «Четырёх шагов». Секция тёмная (.section--dark),
+      поэтому карточка светлая: тёмная на тёмном не читалась бы. */
+.steps-cta {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    /* Отбивка от сетки шагов: блок внутри секции, но это уже
+       другой смысловой уровень. */
+    margin-top: 2.5rem;
+    padding: 24px 28px;
+    border-radius: var(--radius-md);
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+}
+
+.steps-cta__body {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+.steps-cta__title {
+    /* ⚠️ Цвет задаём явно: секция тёмная, её правила красят текст
+       в белый, и на белой карточке заголовок исчез бы. */
+    color: var(--ink);
+    font-size: 1.22rem;
+    line-height: 1.25;
+}
+
+.steps-cta__text {
+    color: var(--muted);
+    font-size: 0.97rem;
+    line-height: 1.5;
+}
+
+.steps-cta__btn {
+    /* Кнопка не сжимается, когда текст длинный. */
+    flex: none;
+}
+
+/* ── После FAQ. Секция светлая, поэтому мягкая подложка с
+      рамкой — как у карточек сайта, но с двумя действиями. */
+.faq-cta {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 2.5rem;
+    padding: 24px 28px;
+    border-radius: var(--radius-md);
+    /* Тёмная карточка на светлой секции — зеркало к .steps-cta,
+       где светлая карточка лежит на тёмной секции. Два блока
+       перекликаются, но не повторяют друг друга.
+       Цвет тот же, что у .section--dark, а не свой: иначе на
+       странице появился бы третий оттенок тёмного.
+       ⚠️ Рамку убрали: на тёмном фоне светлая --line выглядела
+       обводкой-ореолом, а тёмная на светлой секции не видна
+       вовсе. Границу держит сам контраст фона. */
+    background: var(--navy-900);
+    box-shadow: var(--shadow-md);
+}
+
+.faq-cta__body {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+/* ⚠️ Цвета задаём явно. Секция why светлая, её правила красят
+   текст в тёмный — на тёмной карточке он исчез бы. Значения
+   взяты у .section--dark (белый заголовок, 0.72 для текста),
+   чтобы тёмные блоки страницы выглядели одинаково. */
+.faq-cta__title {
+    color: var(--white);
+    font-size: 1.22rem;
+    line-height: 1.25;
+}
+
+.faq-cta__text {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.97rem;
+    line-height: 1.5;
+}
+
+.faq-cta__actions {
+    display: flex;
+    flex: none;
+    gap: 0.6rem;
+}
+
+/* ⚠️ Telegram на тёмной карточке. У .button--ghost фон
+   полупрозрачный белый (0.82) — он задуман для светлых
+   подложек; на тёмной сквозь него проступает navy, и кнопка
+   выглядит грязно-серой, будто выключенной. Делаем фон
+   прозрачным с белой рамкой: на тёмном это читается как
+   второстепенное, но доступное действие. */
+.faq-cta__actions .button--ghost {
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: transparent;
+    color: var(--white);
+    box-shadow: none;
+}
+
+.faq-cta__actions .button--ghost:hover,
+.faq-cta__actions .button--ghost:focus-visible {
+    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--white);
+}
+
+/* ── «Позвонить» — главное действие блока, поэтому парящая:
+      белый фон и крупная тень поднимают её над мягкой подложкой
+      карточки. Рядом Telegram спокойной кнопкой-призраком: два
+      одинаково ярких действия спорили бы друг с другом. */
+.faq-cta__call {
+    background: var(--white);
+    color: var(--ink);
+    /* Тень крупнее, чем у карточек (--shadow-sm): кнопка лежит
+       НА подложке, и при одинаковой тени казалась бы вровень
+       с ней, а не над. */
+    box-shadow: var(--shadow-md);
+    transition: transform 0.15s var(--ease), box-shadow 0.15s var(--ease);
+}
+
+.faq-cta__call:hover,
+.faq-cta__call:focus-visible {
+    background: var(--white);
+    color: var(--ink);
+    /* Приподнимаем ещё на 2 px — жест «кнопка откликается».
+       ⚠️ Сдвиг только по hover: постоянный translateY сместил бы
+       её относительно соседней кнопки, и строка встала бы криво. */
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* ⚠️ Размер inline-иконке внутри кнопки нужно задавать явно.
+   Функция svg() в redesign.js (в отличие от brandIcon, где стоят
+   width/height в атрибутах) размеров не ставит, а у <svg> без них
+   нет собственных пропорций: в колоночной раскладке на узком
+   экране телефонная трубка растягивалась во всю карточку.
+   Правило общее для обеих кнопок блока — и для Telegram (img), и
+   для звонка (svg). */
+.faq-cta__actions .button svg,
+.faq-cta__actions .button img {
+    flex: none;
+    width: 20px;
+    height: 20px;
+}
+
+/* На узком экране — в столбец: при горизонтальной раскладке
+   кнопки выдавливали текст в колонку в два-три слова. */
+@media (max-width: 768px) {
+    .steps-cta,
+    .faq-cta {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1.1rem;
+        padding: 20px;
+    }
+
+    .faq-cta__actions {
+        flex-direction: column;
+    }
+
+    .steps-cta__btn,
+    .faq-cta__actions .button {
+        justify-content: center;
+        width: 100%;
+    }
+}
+
+.est-section {
+    /* ⚠️ Сверху отступа НЕТ намеренно. Предыдущая секция (районы
+       или услуги) заканчивается своим padding-bottom в 104 px, и
+       собственные 104 px сверху складывались с ним: между сеткой
+       районов и карточкой зияло 208 px пустоты. Замерено.
+
+       Отступ блока от предыдущего задаёт она, а не мы: так работают
+       все секции страницы, и вмешиваться в эту схему нельзя —
+       иначе зазор зависел бы от того, что стоит выше.
+
+       Снизу отступ, наоборот, ОБЯЗАТЕЛЕН, хотя у следующей секции
+       заявки свой padding есть: тот лежит ВНУТРИ её серого блока и
+       отодвигает только форму, а край фона остаётся вплотную к
+       карточке (замер показывал 0 px).
+
+       ⚠️ Снизу ровно столько же, сколько сверху, — не доля от него.
+       Сверху зазор всегда равен --section-pad целиком (его даёт
+       padding-bottom предыдущей секции), и прежние 0.55 делали
+       нижний почти вдвое меньше: 64/35 на телефоне, 104/57 на
+       десктопе. Карточка висела в белой полосе не по центру, а
+       прижатой к нижнему краю, и это читалось как слипшиеся блоки.
+       Особенно заметно на главных, где секция выше тоже белая и
+       полоса не разделена цветом. Замерено. */
+    padding-top: 0;
+    padding-bottom: var(--section-pad);
+}
+
+.est-card {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 26px 30px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--blue-100), var(--white) 70%);
+    box-shadow: var(--shadow-sm);
+}
+
+.est-card__head {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.est-card__title {
+    margin: 0;
+    font-size: 1.32rem;
+    line-height: 1.2;
+}
+
+.est-card__note {
+    color: var(--muted);
+    font-size: 0.93rem;
+}
+
+.est-card__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+    flex-shrink: 0;
+    min-height: 52px;
+    padding: 14px 26px;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: var(--blue-700);
+    color: var(--white);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 760;
+    white-space: nowrap;
+    cursor: pointer;
+    box-shadow: 0 10px 26px rgba(31, 98, 210, 0.28);
+    transition: background-color 0.2s var(--ease), transform 0.2s var(--ease),
+                box-shadow 0.2s var(--ease);
+}
+
+.est-card__btn:hover {
+    /* ⚠️ Затемнение, как у .button--primary и .v-button: прежний
+       --blue-600 давал белому тексту 4.23:1 при норме 4.5, то
+       есть наведение ухудшало читаемость против 5.62:1 в покое. */
+    background: #1b57bb;
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px rgba(31, 98, 210, 0.35);
+}
+
+.est-card__btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+@media (max-width: 860px) {
+    .est-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.2rem;
+    }
+
+    .est-card__btn {
+        width: 100%;
+        margin-left: 0;
+        justify-content: center;
+    }
+}
+
+/* ── Финальный призыв ─────────────────────────────────────── */
+
+/* Вариант, который собирает JS на страницах без свёрстанного
+   .final-cta. В отличие от разметочного он рисует не полосу во
+   всю ширину, а карточку со скруглением внутри контейнера —
+   так блок читается как завершение страницы, а не как второй
+   подвал. */
+.final-cta--built {
+    padding: var(--section-pad) 0;
+    background: none;
+}
+
+.final-cta__card {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2.5rem;
+    align-items: center;
+    padding: 46px 52px;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, var(--navy-800), var(--navy-950));
+    box-shadow: var(--shadow-md);
+}
+
+.final-cta__card h2 {
+    margin: 0 0 0.7rem;
+    color: var(--white);
+    font-size: 2rem;
+    line-height: 1.15;
+}
+
+.final-cta__card p {
+    margin: 0;
+    max-width: 620px;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 1rem;
+}
+
+.final-cta__card .section-head__eyebrow {
+    color: var(--blue-400);
+}
+
+/* Кнопки той же парой, что и в размеченном блоке: равные по
+   ширине. Здесь разрыв был ещё заметнее — «Оставить заявку»
+   против «Позвонить» (замер: 225 и 176 px, в грузинском 292 и
+   166). Сетка равняет их по длинной.
+   ⚠️ Как и там, колонкам нужен minmax(0, …): от 1fr минимумом
+   становится ширина подписи с nowrap, и колонки снова
+   разъезжаются. */
+.final-cta__actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0.85rem;
+}
+
+.final-cta__actions .button {
+    white-space: normal;
+}
+
+/* Та же мера, что и в размеченном блоке: грузинские подписи
+   длиннее, и на узком экране «განაცხადის დატოვება» со значком
+   не помещалось даже во всю ширину колонки — кнопка вырастала
+   до 71 px, а соседняя короткая оставалась 53. */
+html[lang="ka"] .final-cta__actions .button {
+    padding-left: 18px;
+    padding-right: 18px;
+    font-size: 0.93rem;
+}
+
+/* Белая кнопка на тёмном: главное действие блока. Отдельный
+   вариант, потому что --primary (синяя) на тёмно-синем фоне
+   почти не отделяется от подложки. */
+.button--white {
+    background: var(--white);
+    color: var(--navy-900);
+}
+
+.button--white:hover {
+    background: var(--white);
+    color: var(--navy-900);
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
+}
+
+/* Второстепенная кнопка на тёмном. Обычная --ghost светлая и
+   спорила бы с белой за главную роль. */
+.button--ghost-dark {
+    border-color: rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--white);
+}
+
+.button--ghost-dark:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--white);
+    transform: translateY(-2px);
+}
+
+.button--ghost-dark svg,
+.button--white svg {
+    width: 19px;
+    height: 19px;
+}
+
+@media (max-width: 980px) {
+    .final-cta__card {
+        grid-template-columns: 1fr;
+        gap: 1.8rem;
+        padding: 34px 28px;
+    }
+
+    .final-cta__card h2 {
+        font-size: 1.6rem;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Кнопки в столбик: рядом они переносятся по-разному в трёх
+       языках, и грузинская пара разъезжается по высоте.
+       ⚠️ Одна колонка, а не flex-direction: column — блок выше
+       переведён на grid, и направление флекса на него уже не
+       действует. Без этой правки подписи вставали в две строки
+       и кнопка вырастала до 71 px.
+       768, а не 560: у этих кнопок, в отличие от размеченных,
+       есть ещё и значок (стрелка, трубка), и паре перестаёт
+       хватать ширины раньше — на 640-700 грузинские подписи
+       вставали в две строки. */
+    .final-cta__actions {
+        grid-template-columns: 1fr;
+    }
+
+    .final-cta__actions .button {
+        justify-content: center;
+    }
+}
+
+/* Слот, в который переезжает живая форма #clientLeadForm.
+   Отступ сверху отделяет её от выбора города. Собственных рамок
+   у слота нет — их даёт окно. */
+.lead-modal__slot {
+    margin-top: 0.2rem;
+}
+
+/* Текстовая колонка финального призыва. min-width:0 обязателен:
+   в grid-ячейке длинный грузинский заголовок иначе распирает
+   колонку и кнопки уезжают за край карточки. */
+.final-cta__text {
+    min-width: 0;
+}

@@ -48,8 +48,23 @@
     // Счётчик, а не флаг: окно выбора города можно открыть поверх
     // формы заявки, и закрытие верхнего окна не должно снимать
     // блокировку, пока открыто нижнее.
+    // ⚠️ Одного overflow: hidden НЕДОСТАТОЧНО. Он останавливает
+    // жест и колесо, но НЕ программную и не инерционную прокрутку:
+    // страница под меню продолжает ехать. Замер на 375x812: при
+    // открытом меню scrollTop уводился с 1500 на 2400, а на телефоне
+    // то же самое делает «доинерция» пальца после отпускания.
+    //
+    // Видно это было так: открыли бургер, фон тихо уполз, при
+    // закрытии браузер вернул страницу к своей позиции — контент
+    // прыгал вниз при открытии и сильнее вверх при закрытии.
+    //
+    // Поэтому держим тело на position: fixed со смещением top на
+    // текущую прокрутку: уезжать становится нечему. При снятии
+    // возвращаем ровно ту же позицию.
     var scrollLockCount = 0;
     var scrollLockPad = '';
+    var scrollLockY = 0;
+    var scrollLockStyles = null;
 
     function lockScroll() {
         scrollLockCount += 1;
@@ -58,25 +73,80 @@
         // её исчезновении. На телефонах и при overlay-полосах это
         // 0, и тогда отступ не нужен вовсе.
         var sbw = window.innerWidth - document.documentElement.clientWidth;
-        scrollLockPad = document.body.style.paddingRight;
-        document.body.style.overflow = 'hidden';
-        if (sbw > 0) {
-            // Прибавляем к собственному отступу тела, а не заменяем
-            // его: иначе на страницах со своим padding он потеряется.
-            // Без своего отступа пишем простое значение — calc(15px)
-            // работает, но в инспекторе читается как ошибка.
-            document.body.style.paddingRight = scrollLockPad
-                ? 'calc(' + scrollLockPad + ' + ' + sbw + 'px)'
-                : sbw + 'px';
-        }
+        var b = document.body;
+        // ⚠️ Ширину снимаем ДО правки стилей. Как только встанет
+        // overflow: hidden, полоса прокрутки исчезнет и
+        // clientWidth вырастет на её толщину — прочитанное после
+        // значение дало бы телу лишние 15 px.
+        var shirinaDo = document.documentElement.clientWidth;
+        scrollLockY = window.pageYOffset || document.documentElement.scrollTop || 0;
+        // Запоминаем инлайновые значения целиком, а не по одному:
+        // страница может прийти со своими, и затереть их нельзя.
+        scrollLockStyles = {
+            overflow: b.style.overflow,
+            position: b.style.position,
+            top: b.style.top,
+            left: b.style.left,
+            right: b.style.right,
+            width: b.style.width
+        };
+        scrollLockPad = b.style.paddingRight;
+
+        b.style.overflow = 'hidden';
+        b.style.position = 'fixed';
+        b.style.top = (-scrollLockY) + 'px';
+        b.style.left = '0';
+        b.style.right = '0';
+        // ⚠️ width обязателен: position: fixed вынимает тело из
+        // потока, и без явной ширины оно съёживается по содержимому.
+        //
+        // Берём ИМЕННО ту ширину, что была с полосой прокрутки
+        // (clientWidth), а не 100%. При fixed тело меряется от
+        // окна, в котором полосы уже нет, и 100% дало бы +15 px:
+        // страница становилась шире, чем была.
+        b.style.width = shirinaDo + 'px';
+
+        // ⚠️ Отступа справа здесь БЫТЬ НЕ ДОЛЖНО. Он нужен был
+        // старому способу (overflow: hidden без fixed), где тело
+        // растягивалось на освободившееся место. Сейчас ширина
+        // зафиксирована явно, и padding-right вдобавок к ней
+        // сдвигал бы содержимое внутрь.
+        //
+        // Именно так и было видно на десктопной ширине 1024:
+        // правый край шапки (position: sticky, то есть внутри
+        // тела) уезжал с 1009 на 994 при открытии меню и
+        // возвращался при закрытии. Замер: sbw = 15 px.
+        //
+        // Переменная sbw оставлена: она показывает, была ли полоса
+        // вообще, и по ней видно, что компенсация уже не нужна.
+        void sbw;
     }
 
     function unlockScroll() {
         if (scrollLockCount === 0) return;
         scrollLockCount -= 1;
         if (scrollLockCount > 0) return;
-        document.body.style.overflow = '';
-        document.body.style.paddingRight = scrollLockPad;
+        var b = document.body;
+        var st = scrollLockStyles || {};
+        b.style.overflow = st.overflow || '';
+        b.style.position = st.position || '';
+        b.style.top = st.top || '';
+        b.style.left = st.left || '';
+        b.style.right = st.right || '';
+        b.style.width = st.width || '';
+        b.style.paddingRight = scrollLockPad;
+        scrollLockStyles = null;
+
+        // ⚠️ Возврат позиции — без плавности. На <html> стоит
+        // scroll-behavior: smooth, и обычный scrollTo проигрывал бы
+        // обратный путь анимацией: после закрытия меню страница
+        // заметно «доезжала» на место. Поэтому выключаем поведение
+        // на время прыжка и возвращаем как было.
+        var htmlEl = document.documentElement;
+        var sb = htmlEl.style.scrollBehavior;
+        htmlEl.style.scrollBehavior = 'auto';
+        window.scrollTo(0, scrollLockY);
+        htmlEl.style.scrollBehavior = sb;
     }
     if (LANG !== 'ru' && LANG !== 'en' && LANG !== 'ge') LANG = 'ru';
 
@@ -1897,10 +1967,11 @@
             btn.setAttribute('aria-expanded', 'true');
             btn.setAttribute('aria-label', t('closeMenu'));
             menu.setAttribute('aria-hidden', 'false');
+            // ⚠️ Класс в CSS ничего не красит (проверено: правил с
+            // .menu-open в redesign.css нет) — он остаётся только
+            // как признак состояния для скриптов и отладки.
+            // Прокрутку держит общая lockScroll().
             document.body.classList.add('menu-open');
-            // ⚠️ Класс оставлен (на нём висят стили панели), но
-            // саму прокрутку блокирует общая функция — иначе меню
-            // дёргало бы вёрстку так же, как дёргали окна.
             lockScroll();
         }
 
@@ -1943,9 +2014,12 @@
             placeUnderHeader();
         });
 
-        // Прокрутка страницы при открытом меню: топбар уезжает,
-        // шапка поднимается — панель должна идти за её низом,
-        // иначе между ними откроется щель.
+        // Страховка: при открытом меню фон держит lockScroll(), так
+        // что прокрутке взяться неоткуда. Но если она всё же
+        // случится (внешний скрипт, восстановление позиции при
+        // возврате назад), панель должна идти за низом шапки —
+        // иначе между ними откроется щель. Замер на старом коде:
+        // шапка уходила со 113 на 77, а панель оставалась на 113.
         window.addEventListener('scroll', function () {
             if (menu.classList.contains('is-open')) placeUnderHeader();
         }, { passive: true });

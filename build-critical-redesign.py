@@ -122,6 +122,11 @@ CRITICAL = {
     '.lang-switch', '.lang-switch__btn', '.lang-switch__btn.is-active',
     '.lang-switch__btn:hover', '.lang-drop__panel', '.lang-drop__panel::before',
     '.mobile-menu', '.mobile-menu[hidden]', '.mobile-menu .mobile-menu__inner',
+    # ⚠️ Парное правило к .mobile-menu__inner, и без него нельзя:
+    # в __inner стоит opacity: 0.001, а видимость возвращает именно
+    # .is-open. Попади во встроенный CSS только первое — меню до
+    # загрузки redesign.css открывалось бы прозрачным.
+    '.mobile-menu.is-open .mobile-menu__inner',
     '.districts-panel', '.city-modal', '.city-modal[hidden]',
     '.lead-modal', '.lead-modal[hidden]', '.ty-modal', '.ty-modal[hidden]',
     '[hidden]',

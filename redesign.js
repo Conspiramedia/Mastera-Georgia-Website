@@ -1076,7 +1076,6 @@
                   '<ul class="site-footer__contacts">' +
                     '<li><a href="' + tel + '">' + telText + '</a></li>' +
                     '<li><a href="mailto:info@mastera.ge">info@mastera.ge</a></li>' +
-                    '<li class="site-footer__hours">' + t('ftSchedule') + '</li>' +
                     /* ⚠️ Ссылка на Facebook была в футере старого сайта на
                        151 странице, а JS редизайна перерисовывает подвал
                        целиком — и терял её. Это возврат потерянного, а не
@@ -1085,13 +1084,17 @@
                        /people/…, и прежняя ссылка стоила лишнего редиректа.
                        Место выбрано в контактах, а не в site-footer__links:
                        там юридические ссылки (политика, соглашение), среди
-                       них соцсеть теряется. */
+                       них соцсеть теряется.
+                       Порядок: телефон, почта, Facebook — это всё способы
+                       связаться. Расписание идёт последним и закрывает
+                       блок: оно не канал связи, а примечание к ним. */
                     '<li class="site-footer__social">' +
                       '<a href="' + FACEBOOK_URL + '" target="_blank" rel="noopener">' +
                         FACEBOOK_ICON +
                         '<span>' + t('ftFacebook') + '</span>' +
                       '</a>' +
                     '</li>' +
+                    '<li class="site-footer__hours">' + t('ftSchedule') + '</li>' +
                   '</ul>' +
                 '</div>' +
 

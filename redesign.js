@@ -342,6 +342,30 @@
         ftSchedule:  { ru: 'Ежедневно, 09:00–23:00', en: 'Daily, 09:00–23:00', ge: 'ყოველდღე, 09:00–23:00' },
         ftFacebook:  { ru: 'Мы в Facebook', en: 'We are on Facebook', ge: 'ჩვენ Facebook-ზე' },
         ftMasters:   { ru: 'Для мастеров', en: 'For masters', ge: 'ოსტატებისთვის' },
+
+        /* Блоки «после шагов» и «после FAQ». Переведены на en/ge
+           11.11.2026; до этого там стоял русский дубль. «Позвонить»
+           берём теми же словами, что finalCall ниже (Call / დარეკვა),
+           иначе одна кнопка на странице называлась бы по-разному. */
+        stepsCtaTitle: { ru: 'Шаг первый — за вами',
+                         en: 'The first step is yours',
+                         ge: 'პირველი ნაბიჯი თქვენზეა' },
+        stepsCtaText:  { ru: 'Опишите задачу, остальное сделаем мы. Отказаться можно на любом шаге — до согласования цены вы ничего не должны.',
+                         en: 'Describe the task, we will do the rest. You can stop at any step — until the price is agreed you owe nothing.',
+                         ge: 'აღწერეთ ამოცანა, დანარჩენს ჩვენ გავაკეთებთ. უარის თქმა ნებისმიერ ეტაპზე შეგიძლიათ — ფასის შეთანხმებამდე არაფერი გმართებთ.' },
+        stepsCtaBtn:   { ru: 'Описать задачу',
+                         en: 'Describe the task',
+                         ge: 'ამოცანის აღწერა' },
+
+        faqCtaTitle:   { ru: 'Остались сомнения?',
+                         en: 'Still have doubts?',
+                         ge: 'კიდევ გაქვთ ეჭვები?' },
+        faqCtaText:    { ru: 'Спросите живого человека — ответим за несколько минут, без обязательств.',
+                         en: 'Ask a real person — we reply within a few minutes, with no obligation.',
+                         ge: 'ჰკითხეთ ცოცხალ ადამიანს — რამდენიმე წუთში გიპასუხებთ, ვალდებულების გარეშე.' },
+        faqCtaCall:    { ru: 'Позвонить',
+                         en: 'Call',
+                         ge: 'დარეკვა' },
         ftPrivacy:   { ru: 'Политика конфиденциальности', en: 'Privacy policy', ge: 'კონფიდენციალურობის პოლიტიკა' },
         ftTerms:     { ru: 'Пользовательское соглашение', en: 'Terms of service', ge: 'მომხმარებლის შეთანხმება' },
         ftDistricts: { ru: 'Районы обслуживания', en: 'Service districts', ge: 'მომსახურების რაიონები' },
@@ -1359,9 +1383,22 @@
             open(e);
         });
 
+        /* ⚠️ Идём по родителям руками, а не через closest.
+           Клик по крестику приходит не на кнопку, а на <line>
+           внутри её <svg>, а у SVG-элементов closest появился
+           поздно (в Safari — с iOS 15): на старом телефоне
+           выражение бросало бы исключение раньше проверки, и
+           крестик не закрывал бы окно вообще. hasAttribute по той
+           же причине вызываем только там, где он точно есть. */
         modal.addEventListener('click', function (e) {
-            if (e.target.hasAttribute('data-close') ||
-                (e.target.closest && e.target.closest('[data-close]'))) close();
+            var n = e.target;
+            while (n && n !== modal) {
+                if (n.getAttribute && n.getAttribute('data-close') !== null) {
+                    close();
+                    return;
+                }
+                n = n.parentNode;
+            }
         });
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape' && !modal.hidden) close();
@@ -1515,6 +1552,115 @@
                   '</div>' +
                 '</div>';
             lead.parentNode.insertBefore(est, lead);
+        }
+
+        /* 2a. Призыв после блока «Четыре шага».
+               ⚠️ Дыра найдена замером, а не на глаз: между кнопкой
+               в prices (экран 6.3) и est-card (экран 9.3) шло три
+               экрана подряд без единой точки действия — секции
+               «Почему выбирают» и «Четыре шага».
+               После «Почему выбирают» призыв намеренно НЕ ставим:
+               секция короткая (0.7 экрана), и два призыва подряд
+               на полутора экранах давили бы.
+
+               Тема блока — прозрачность процесса, поэтому и текст
+               про неё: снимаем последнее возражение («а вдруг
+               втянусь и не смогу отказаться»), а не повторяем
+               «оставьте заявку» третий раз.
+
+               ⚠️ Секция how тёмная (.section--dark), поэтому
+               карточка светлая: на тёмном фоне тёмная подложка
+               est-card не читалась бы вовсе. */
+        var how = document.getElementById('how');
+        if (how && !document.querySelector('.steps-cta')) {
+            var sc2 = document.createElement('div');
+            sc2.innerHTML =
+                '<div class="steps-cta">' +
+                  '<div class="steps-cta__body">' +
+                    '<strong class="steps-cta__title">' + t('stepsCtaTitle') + '</strong>' +
+                    '<span class="steps-cta__text">' + t('stepsCtaText') + '</span>' +
+                  '</div>' +
+                  /* ⚠️ button--primary обязателен: класс .button сам по
+                     себе цвета не даёт, его задают модификаторы. Без
+                     него кнопка оставалась серой — это не стиль сайта,
+                     а системный вид <button> в браузере. */
+                  '<button type="button" ' +
+                    'class="button button--primary button--large steps-cta__btn" ' +
+                    'data-open-lead>' + t('stepsCtaBtn') + '</button>' +
+                '</div>';
+            // Внутрь секции: снаружи блок оторвался бы от шагов и
+            // читался как самостоятельный, уже четвёртый призыв.
+            var hc = how.querySelector('.container') || how;
+            hc.appendChild(sc2.firstChild);
+        }
+
+        /* 2b. Призыв после FAQ.
+               Тема — «остались вопросы», и это естественный мостик
+               к живому разговору, а не к форме. Поэтому здесь
+               мессенджер и звонок, а не кнопка заявки: человек,
+               дочитавший вопросы и не нашедший своего, хочет
+               спросить, а не заполнять поля.
+
+               ⚠️ Ссылки берём из window.buildContactLinks() — той
+               же функции, что строит кнопки финального блока и
+               контактной полосы. Своя t.me-ссылка разошлась бы с
+               ними при смене контакта. Функция живёт в script.js
+               (грузится с defer), поэтому при её отсутствии блок
+               не строим вовсе — так же поступает финальный CTA. */
+        /* ⚠️ Блок стоит после «Почему выбирают», а НЕ после FAQ,
+           хотя тема «остались вопросы» просилась туда. Замер
+           показал, почему нельзя: между низом блока после FAQ и
+           финальным призывом остаётся 104 px (0.14 экрана), и
+           кнопка «Написать в Telegram» повторяется в обоих —
+           два призыва вплотную читаются как баннерный повтор.
+           Здесь же он закрывает вторую половину найденной дыры:
+           между кнопкой в prices (экран 6.3) и est-card (9.3). */
+        var why = document.getElementById('why');
+        /* ⚠️ Если buildContactLinks ещё не подъехала — ждём и
+           строим блок позже, а не пропускаем его молча.
+           script.js грузится с defer, и порядок выполнения двух
+           файлов не гарантирован: при холодной загрузке блок
+           просто не появлялся.
+           Подписки на 'load' мало: документ часто уже complete
+           (так было в проверочном iframe — событие не придёт
+           никогда). Поэтому короткий повтор по таймеру. */
+        if (why && !document.querySelector('.faq-cta') &&
+            typeof window.buildContactLinks !== 'function') {
+            if (!buildPageCtas._waitContacts) {
+                buildPageCtas._waitContacts = 0;
+            }
+            if (buildPageCtas._waitContacts < 40) {
+                buildPageCtas._waitContacts += 1;
+                setTimeout(buildPageCtas, 50);
+            }
+        }
+        if (why && !document.querySelector('.faq-cta') &&
+            typeof window.buildContactLinks === 'function') {
+            var ct = window.buildContactLinks();
+            var tgBtn = ct && ct.tgHref
+                ? '<a class="button button--ghost button--large" href="' +
+                    ct.tgHref + '" target="_blank" rel="noopener">' +
+                    brandIcon('telegram') + ct.labels.tg + '</a>'
+                : '';
+            /* Звонок здесь — главное действие: человек, у которого
+               остались сомнения, быстрее получит ответ голосом, чем
+               перепиской. Поэтому кнопка выделена тенью и белым
+               фоном («парящая»), а Telegram рядом — спокойной
+               ссылкой-призраком. */
+            var callBtn =
+                '<a class="button button--large faq-cta__call" href="' +
+                  pageTel() + '">' + svg('phone') + t('faqCtaCall') + '</a>';
+            var fc = document.createElement('div');
+            fc.innerHTML =
+                '<div class="faq-cta">' +
+                  '<div class="faq-cta__body">' +
+                    '<strong class="faq-cta__title">' + t('faqCtaTitle') + '</strong>' +
+                    '<span class="faq-cta__text">' + t('faqCtaText') + '</span>' +
+                  '</div>' +
+                  '<div class="faq-cta__actions">' + tgBtn + callBtn + '</div>' +
+                '</div>';
+            var fqc = why.querySelector('.container') || why;
+            fqc.appendChild(fc.firstChild);
         }
 
         /* 3. Финальный призыв. На главных он свёрстан в разметке —

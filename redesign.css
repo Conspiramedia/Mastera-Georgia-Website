@@ -4144,10 +4144,26 @@ a.price-preview:hover .price-preview__value::after {
     background: var(--navy-900);
 }
 
+/* Заголовок и подзаголовок — колонкой, чтобы кнопка осталась
+   вторым элементом флекса и space-between развёл их по краям.
+   Без обёртки подзаголовок встал бы третьим элементом строки
+   и выдавил кнопку на второй ряд. */
+.price-cta__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
 .price-cta__text {
     color: rgba(255, 255, 255, 0.85);
     font-size: 1.05rem;
     font-weight: 650;
+}
+
+.price-cta__sub {
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 0.92rem;
+    line-height: 1.45;
 }
 
 /* Полный прайс — <details>: раскрывается без скрипта. */
@@ -5014,6 +5030,17 @@ a.price-preview:hover .price-preview__value::after {
        центрировании флексом верх окна, переросшего экран,
        уезжает за границу и становится недоступен прокруткой. */
     margin: auto;
+    /* ⚠️ Окно не выше экрана, а длинную форму прокручивает
+       .lead-modal__scroll внутри. Пока окно росло свободно (1012 px
+       при экране 768) и прокручивался контейнер, окно уезжало вверх
+       целиком — вместе с крестиком: при прокрутке на 300 px он
+       оказывался на top:-230, то есть за экраном. Жать было некуда,
+       и окно не закрывалось. 4vh сверху и снизу — отступ родителя,
+       его надо вычесть, иначе окно вылезет за экран ровно на него. */
+    max-height: calc(100vh - 8vh);
+    max-height: calc(100dvh - 8vh);
+    display: flex;
+    flex-direction: column;
     padding: 34px 34px 30px;
     border-radius: var(--radius-lg);
     background: var(--white);
@@ -5056,8 +5083,17 @@ a.price-preview:hover .price-preview__value::after {
 
 /* Заголовку нужен отступ справа под кнопку закрытия: без него
    длинная грузинская строка заезжает под крестик. */
+/* Прокручивается содержимое, а не окно: так крестик, лежащий на
+   окне, остаётся на месте. min-height:0 обязателен — без него
+   flex-элемент не сжимается ниже содержимого и overflow не
+   включается, окно снова перерастает экран. */
 .lead-modal__scroll {
     padding-right: 34px;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
 }
 
 .lead-modal__title {
@@ -5157,11 +5193,23 @@ a.price-preview:hover .price-preview__value::after {
 @media (max-width: 768px) {
     .lead-modal {
         padding: 0;
+        /* Прокрутка контейнера здесь не нужна и вредна: окно и так
+           по высоте экрана, а лишний слой прокрутки на телефоне
+           перехватывал бы жест у формы. Флекс и прокрутка
+           содержимого заданы в базовых правилах выше. */
+        overflow: hidden;
     }
 
     .lead-modal__window {
         max-width: none;
-        min-height: 100%;
+        /* Ровно экран, без отступов родителя (на телефоне их нет).
+           dvh учитывает адресную строку Safari: 100vh в ней равен
+           экрану БЕЗ строки, и низ формы уходил под неё. Первое
+           правило — запасное для браузеров без dvh. */
+        max-height: 100vh;
+        max-height: 100dvh;
+        height: 100vh;
+        height: 100dvh;
         /* На телефоне окно занимает экран целиком: скругления по
            краям дали бы полоски фона, а не «карточку». */
         border-radius: 0;
@@ -5313,6 +5361,192 @@ a.price-preview:hover .price-preview__value::after {
 }
 
 /* ── Блок предварительной оценки ──────────────────────────── */
+
+/* ============================================================
+   Призывы внутри секций: после «Четырёх шагов» и после FAQ
+   ============================================================
+   Замер показал провал: между кнопкой в блоке цен (экран 6.3) и
+   карточкой оценки (экран 9.3) шло три экрана подряд без единой
+   точки действия. Эти два блока его закрывают.
+
+   ⚠️ Они НЕ копия .est-card и не копия друг друга: разная тема —
+   разное действие и разное оформление. После шагов — заявка
+   (светлая карточка на тёмной секции), после FAQ — живой контакт
+   (мягкая подложка, две кнопки). Одинаковые блоки подряд
+   читались бы как повтор баннера, который взгляд пропускает.
+   ============================================================ */
+
+/* ── После «Четырёх шагов». Секция тёмная (.section--dark),
+      поэтому карточка светлая: тёмная на тёмном не читалась бы. */
+.steps-cta {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    /* Отбивка от сетки шагов: блок внутри секции, но это уже
+       другой смысловой уровень. */
+    margin-top: 2.5rem;
+    padding: 24px 28px;
+    border-radius: var(--radius-md);
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+}
+
+.steps-cta__body {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+.steps-cta__title {
+    /* ⚠️ Цвет задаём явно: секция тёмная, её правила красят текст
+       в белый, и на белой карточке заголовок исчез бы. */
+    color: var(--ink);
+    font-size: 1.22rem;
+    line-height: 1.25;
+}
+
+.steps-cta__text {
+    color: var(--muted);
+    font-size: 0.97rem;
+    line-height: 1.5;
+}
+
+.steps-cta__btn {
+    /* Кнопка не сжимается, когда текст длинный. */
+    flex: none;
+}
+
+/* ── После FAQ. Секция светлая, поэтому мягкая подложка с
+      рамкой — как у карточек сайта, но с двумя действиями. */
+.faq-cta {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 2.5rem;
+    padding: 24px 28px;
+    border-radius: var(--radius-md);
+    /* Тёмная карточка на светлой секции — зеркало к .steps-cta,
+       где светлая карточка лежит на тёмной секции. Два блока
+       перекликаются, но не повторяют друг друга.
+       Цвет тот же, что у .section--dark, а не свой: иначе на
+       странице появился бы третий оттенок тёмного.
+       ⚠️ Рамку убрали: на тёмном фоне светлая --line выглядела
+       обводкой-ореолом, а тёмная на светлой секции не видна
+       вовсе. Границу держит сам контраст фона. */
+    background: var(--navy-900);
+    box-shadow: var(--shadow-md);
+}
+
+.faq-cta__body {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+/* ⚠️ Цвета задаём явно. Секция why светлая, её правила красят
+   текст в тёмный — на тёмной карточке он исчез бы. Значения
+   взяты у .section--dark (белый заголовок, 0.72 для текста),
+   чтобы тёмные блоки страницы выглядели одинаково. */
+.faq-cta__title {
+    color: var(--white);
+    font-size: 1.22rem;
+    line-height: 1.25;
+}
+
+.faq-cta__text {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.97rem;
+    line-height: 1.5;
+}
+
+.faq-cta__actions {
+    display: flex;
+    flex: none;
+    gap: 0.6rem;
+}
+
+/* ⚠️ Telegram на тёмной карточке. У .button--ghost фон
+   полупрозрачный белый (0.82) — он задуман для светлых
+   подложек; на тёмной сквозь него проступает navy, и кнопка
+   выглядит грязно-серой, будто выключенной. Делаем фон
+   прозрачным с белой рамкой: на тёмном это читается как
+   второстепенное, но доступное действие. */
+.faq-cta__actions .button--ghost {
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: transparent;
+    color: var(--white);
+    box-shadow: none;
+}
+
+.faq-cta__actions .button--ghost:hover,
+.faq-cta__actions .button--ghost:focus-visible {
+    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--white);
+}
+
+/* ── «Позвонить» — главное действие блока, поэтому парящая:
+      белый фон и крупная тень поднимают её над мягкой подложкой
+      карточки. Рядом Telegram спокойной кнопкой-призраком: два
+      одинаково ярких действия спорили бы друг с другом. */
+.faq-cta__call {
+    background: var(--white);
+    color: var(--ink);
+    /* Тень крупнее, чем у карточек (--shadow-sm): кнопка лежит
+       НА подложке, и при одинаковой тени казалась бы вровень
+       с ней, а не над. */
+    box-shadow: var(--shadow-md);
+    transition: transform 0.15s var(--ease), box-shadow 0.15s var(--ease);
+}
+
+.faq-cta__call:hover,
+.faq-cta__call:focus-visible {
+    background: var(--white);
+    color: var(--ink);
+    /* Приподнимаем ещё на 2 px — жест «кнопка откликается».
+       ⚠️ Сдвиг только по hover: постоянный translateY сместил бы
+       её относительно соседней кнопки, и строка встала бы криво. */
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* ⚠️ Размер inline-иконке внутри кнопки нужно задавать явно.
+   Функция svg() в redesign.js (в отличие от brandIcon, где стоят
+   width/height в атрибутах) размеров не ставит, а у <svg> без них
+   нет собственных пропорций: в колоночной раскладке на узком
+   экране телефонная трубка растягивалась во всю карточку.
+   Правило общее для обеих кнопок блока — и для Telegram (img), и
+   для звонка (svg). */
+.faq-cta__actions .button svg,
+.faq-cta__actions .button img {
+    flex: none;
+    width: 20px;
+    height: 20px;
+}
+
+/* На узком экране — в столбец: при горизонтальной раскладке
+   кнопки выдавливали текст в колонку в два-три слова. */
+@media (max-width: 768px) {
+    .steps-cta,
+    .faq-cta {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1.1rem;
+        padding: 20px;
+    }
+
+    .faq-cta__actions {
+        flex-direction: column;
+    }
+
+    .steps-cta__btn,
+    .faq-cta__actions .button {
+        justify-content: center;
+        width: 100%;
+    }
+}
 
 .est-section {
     /* ⚠️ Сверху отступа НЕТ намеренно. Предыдущая секция (районы

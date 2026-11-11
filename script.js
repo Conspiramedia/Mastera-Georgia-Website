@@ -28,6 +28,9 @@ const i18n = {
         // 4–10 секунд, и без обратной связи человек жал кнопку повторно,
         // думая, что промахнулся.
         submitSending:       'Отправляем…',
+        telegramRequiredMaster: 'Пожалуйста, укажите Telegram — верификация мастера проходит в Telegram-боте',
+        specialtyOtherRequired: 'Пожалуйста, укажите вашу специальность',
+        masterFinishTelegram:   '✅ Продолжить в Telegram',
         // Быстрая форма первого экрана: человек оставляет только контакт.
         heroConsent:         'Пожалуйста, подтвердите согласие на обработку данных',
         heroContactEmpty:    'Пожалуйста, укажите номер WhatsApp',
@@ -106,6 +109,9 @@ const i18n = {
         submitTooLong:       'აღწერა ძალიან გრძელია — აღწერეთ მოკლედ, დანარჩენს ხელოსანს უამბობთ.',
         submitProfanity:     'გთხოვთ, გადააფორმულიროთ დავალების აღწერა.',
         submitSending:       'იგზავნება…',
+        telegramRequiredMaster: 'გთხოვთ, მიუთითოთ Telegram — ხელოსნის ვერიფიკაცია მიმდინარეობს Telegram-ბოტში',
+        specialtyOtherRequired: 'გთხოვთ, მიუთითოთ თქვენი სპეციალობა',
+        masterFinishTelegram:   '✅ გაგრძელება Telegram-ში',
         heroConsent:         'გთხოვთ, დაადასტუროთ თანხმობა მონაცემთა დამუშავებაზე',
         heroContactEmpty:    'გთხოვთ, მიუთითოთ WhatsApp-ის ნომერი',
         photoLabel:          '📷 პრობლემის ფოტო (სურვილისამებრ, 3-მდე)',
@@ -153,6 +159,9 @@ const i18n = {
         submitTooLong:       'The description is too long — keep it short, you can tell the rest to the specialist.',
         submitProfanity:     'Please rephrase the task description.',
         submitSending:       'Sending…',
+        telegramRequiredMaster: 'Please provide your Telegram — master verification is done in the Telegram bot',
+        specialtyOtherRequired: 'Please specify your specialty',
+        masterFinishTelegram:   '✅ Continue in Telegram',
         heroConsent:         'Please confirm your consent to data processing',
         heroContactEmpty:    'Please enter your WhatsApp number',
         photoLabel:          '📷 Photo of the problem (optional, up to 3)',
@@ -193,7 +202,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '345';
+const MASTERA_VERSION = '346';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Личный чат владельца сервиса: сюда ведут кнопки «Написать в Telegram»
@@ -262,6 +271,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initClientPhotoUpload();
     initClientDistrictOptions();
     initClientUrgentOption();
+    initOnlineCounter();
+    initFAQ();
+    initMasterLeadFormTracking();
     applyFieldLabels();
 });
 
@@ -2100,7 +2112,7 @@ function _toggleBodyScrollLock() {
     // конфликтуют: этот ставит body в position:fixed, и окно,
     // выросшее выше экрана, становится непрокручиваемым изнутри —
     // до кнопки отправки не добраться.
-    const anyOpen = ['thankYouModal']
+    const anyOpen = ['thankYouModal', 'masterLeadFormModal', 'masterThankYouModal']
         .some(id => {
             const m = document.getElementById(id);
             return m && m.style.display !== 'none' && m.style.display !== '';
@@ -2246,6 +2258,262 @@ function buildContactLinks() {
 
     return { waHref: waHref, tgHref: tgHref, labels: labels, lang: lang };
 }
+
+// ============================================================
+// СЛОЙ МАСТЕРОВ (/masters/) — легаси, страница осталась от
+// старого сайта. Анкета, модалки, онлайн-счётчик и FAQ-аккордеон
+// нужны только на ней; на остальных страницах init-функции сами
+// выходят по отсутствию DOM-элементов.
+// ============================================================
+
+const BOT_MASTER_URL = 'https://bot.mastera.ge/site/new-master';
+const SPECIALTY_OTHER_VALUE = { ru: 'Другое', en: 'Other', ka: 'სხვა' };
+const MASTER_BOT_DEEPLINK = 'https://t.me/mastera_tbilisi_bot?start=master';
+
+let masterLeadCode = '';
+function generateMasterLeadCode() {
+    try {
+        const bytes = new Uint8Array(12);
+        crypto.getRandomValues(bytes);
+        return Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+    } catch (e) {
+        return (Date.now().toString(16) + Math.random().toString(16).slice(2)).slice(0, 24);
+    }
+}
+
+function masterCityFromDistrict(slug) {
+    if (!slug || slug === 'All') return '';
+    if (slug === 'AllTB') return 'Тбилиси';
+    if (slug === 'AllBA') return 'Батуми';
+    var found = CITIES.find(function (c) {
+        return c.districts.some(function (d) { return d.slug === slug; });
+    });
+    return found ? found.value : '';
+}
+
+function masterDistrictForBot(slug) {
+    if (!slug) return 'Все районы';
+    if (slug === 'All' || slug === 'AllTB' || slug === 'AllBA') return 'Все районы';
+    return BOT_DISTRICT_MAP[slug] || slug;
+}
+
+async function sendMasterLeadToBot(formData) {
+    const get = (k) => (formData.get(k) || '').toString().trim();
+
+    const lang = ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru';
+    const otherValue = SPECIALTY_OTHER_VALUE[lang] || SPECIALTY_OTHER_VALUE.ru;
+    const specialtyOther = get('specialty_other');
+    let specialty = get('specialty');
+    if (specialty === otherValue && specialtyOther) {
+        specialty = specialtyOther;
+    }
+    const experience = get('experience');
+
+    const payload = {
+        name:      get('name'),
+        phone:     normalizeGeorgianPhone(get('phone')),
+        telegram:  get('telegram'),
+        whatsapp:  normalizeWhatsappPhone(get('whatsapp')),
+        specialty: experience ? specialty + ' (опыт: ' + experience + ' лет)' : specialty,
+        city:      get('city') || masterCityFromDistrict(get('district')),
+        district:  masterDistrictForBot(get('district')),
+        message:   get('about'),
+        specialty_raw: specialty,
+        experience:    experience,
+        code:          masterLeadCode,
+        honeypot:      get('_gotcha'),
+        lang:         lang
+    };
+
+    return await postBotJson(BOT_MASTER_URL, payload);
+}
+
+function masterFinishDeeplink() {
+    if (masterLeadCode) {
+        return MASTER_BOT_DEEPLINK.replace(/\?start=.*$/, '') + '?start=m_' + masterLeadCode;
+    }
+    return MASTER_BOT_DEEPLINK;
+}
+
+function ensureMasterTelegramButton() {
+    const modal = document.getElementById('masterThankYouModal');
+    if (!modal) return;
+    const content = modal.querySelector('.thank-you-content');
+    if (!content) return;
+    let link = content.querySelector('.master-tg-finish-btn');
+    if (!link) {
+        link = document.createElement('a');
+        link.className = 'master-tg-finish-btn';
+        link.target = '_blank';
+        link.rel = 'noopener';
+        link.textContent = t('masterFinishTelegram');
+        const okBtn = content.querySelector('.thank-you-btn');
+        if (okBtn) content.insertBefore(link, okBtn);
+        else content.appendChild(link);
+    }
+    link.href = masterFinishDeeplink();
+}
+
+function initOnlineCounter() {
+    const counterElement = document.querySelector('.online-count');
+    if (!counterElement) return;
+
+    const minCount = 3;
+    const maxCount = 16;
+    const baseVal = parseInt(counterElement.dataset.base, 10);
+    const initialCount = !isNaN(baseVal) ? baseVal : Math.floor(Math.random() * 8) + 1;
+    counterElement.textContent = initialCount;
+    let currentCount = initialCount;
+
+    function updateCounter() {
+        const change = Math.floor(Math.random() * 7) - 3;
+        let targetCount = Math.max(minCount, Math.min(maxCount, currentCount + change));
+        counterElement.classList.add('updating');
+        setTimeout(() => {
+            counterElement.textContent = targetCount;
+            counterElement.classList.remove('updating');
+            currentCount = targetCount;
+        }, 150);
+    }
+
+    function scheduleNextUpdate() {
+        const delay = Math.random() * 8000 + 12000;
+        setTimeout(() => { updateCounter(); scheduleNextUpdate(); }, delay);
+    }
+
+    setTimeout(scheduleNextUpdate, 5000);
+}
+
+function initFAQ() {
+    const faqItems = document.querySelectorAll('.faq-item');
+    if (faqItems.length === 0) return;
+
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        if (!question) return;
+        question.addEventListener('click', () => {
+            faqItems.forEach(other => {
+                if (other !== item) other.classList.remove('active');
+            });
+            item.classList.toggle('active');
+        });
+    });
+}
+
+function initMasterLeadFormTracking() {
+    const masterLeadForm = document.getElementById('masterLeadForm');
+    if (!masterLeadForm) return;
+
+    let isSubmitting = false;
+    let pendingMasterLeadCode = null;
+
+    ensureMasterTelegramButton();
+
+    masterLeadForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        if (isSubmitting) return;
+        if (!validateMasterLeadForm(e)) return;
+
+        isSubmitting = true;
+        const submitBtn = masterLeadForm.querySelector('button[type="submit"]');
+        const submitLabel = submitBtn ? submitBtn.textContent : null;
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = t('submitSending');
+        }
+
+        const formData = new FormData(masterLeadForm);
+
+        if (!pendingMasterLeadCode) pendingMasterLeadCode = generateMasterLeadCode();
+        masterLeadCode = pendingMasterLeadCode;
+
+        try {
+            await sendMasterLeadToBot(formData);
+
+            fetch('https://formspree.io/f/mykdoebj', {
+                method: 'POST',
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            }).catch((err) => console.error('Formspree (дубль анкеты):', err));
+
+            if (typeof gtag === 'function') {
+                gtag('event', 'generate_lead_master', {
+                    form_name: 'master_lead_form',
+                    form_location: 'Регистрация мастера',
+                    user_type: 'master',
+                    value: 0,
+                    currency: 'USD'
+                });
+            }
+
+            closeMasterLeadForm();
+            ensureMasterTelegramButton();
+            openMasterThankYou();
+            masterLeadForm.reset();
+            pendingMasterLeadCode = null;
+
+        } catch (error) {
+            console.error('Master form error:', error);
+            alert(t('submitError'));
+            isSubmitting = false;
+        } finally {
+            if (submitBtn) {
+                submitBtn.textContent = submitLabel;
+                const consent = document.getElementById('masterLeadConsent');
+                submitBtn.disabled = !!(consent && !consent.checked);
+            }
+        }
+    });
+
+    const masterLeadConsent   = document.getElementById('masterLeadConsent');
+    const masterLeadSubmitBtn = document.getElementById('masterLeadSubmitBtn');
+    if (masterLeadConsent && masterLeadSubmitBtn) {
+        masterLeadSubmitBtn.disabled = !masterLeadConsent.checked;
+        masterLeadConsent.addEventListener('change', function () {
+            masterLeadSubmitBtn.disabled = !this.checked;
+        });
+    }
+}
+
+function validateMasterLeadForm(e) {
+    const form          = e.target;
+    const nameInput     = form.querySelector('input[name="name"]');
+    const phoneInput    = document.getElementById('masterLeadPhone');
+    const telegramInput = form.querySelector('input[name="telegram"]');
+
+    const telegramValue = telegramInput ? telegramInput.value.trim() : '';
+
+    if (!validateName(nameInput)) return false;
+
+    if (!telegramValue) {
+        alert(t('telegramRequiredMaster'));
+        if (telegramInput) telegramInput.focus();
+        return false;
+    }
+
+    if (!validatePhone(phoneInput)) return false;
+    if (!validateTelegram(telegramInput)) return false;
+
+    const specialtySel = form.querySelector('select[name="specialty"]');
+    const otherInput   = form.querySelector('input[name="specialty_other"]');
+    if (specialtySel && otherInput) {
+        const lang = ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru';
+        const otherValue = SPECIALTY_OTHER_VALUE[lang] || SPECIALTY_OTHER_VALUE.ru;
+        if (specialtySel.value === otherValue && !otherInput.value.trim()) {
+            alert(t('specialtyOtherRequired'));
+            otherInput.focus();
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function openMasterThankYou()  { _modal('masterThankYouModal', 'flex'); }
+function closeMasterThankYou() { _modal('masterThankYouModal', 'none'); }
+function openMasterLeadForm()  { _modal('masterLeadFormModal', 'flex'); }
+function closeMasterLeadForm() { _modal('masterLeadFormModal', 'none'); }
+
 
 // ============================================
 // ОТЛОЖЕННЫЕ ВЫЗОВЫ — только в самом конце файла

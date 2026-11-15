@@ -202,7 +202,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '346';
+const MASTERA_VERSION = '347';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Личный чат владельца сервиса: сюда ведут кнопки «Написать в Telegram»
@@ -274,6 +274,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initOnlineCounter();
     initFAQ();
     initMasterLeadFormTracking();
+    // Списки анкеты мастера. Стоит ПЕРЕД applyFieldLabels(): та
+    // проставляет подписи уже существующим полям, а города и
+    // районы появляются только здесь.
+    initMasterFormSelects();
     applyFieldLabels();
 });
 
@@ -2295,6 +2299,112 @@ function masterDistrictForBot(slug) {
     if (!slug) return 'Все районы';
     if (slug === 'All' || slug === 'AllTB' || slug === 'AllBA') return 'Все районы';
     return BOT_DISTRICT_MAP[slug] || slug;
+}
+
+// Каскад «город → район» в анкете мастера.
+//
+// ⚠️ Клиентский buildDistrictSelect() здесь НЕ годится: он берёт
+// районы по городу СТРАНИЦЫ (clientDistrictsForPage), а у
+// /<lang>/masters/ города в адресе нет — список всегда сводился бы
+// к Тбилиси, и мастер из Батуми не нашёл бы своего района. Поэтому
+// у анкеты свой селект города, и районы перестраиваются под него.
+//
+// Специальность «Другое» уточняется текстом: без уточнения в бот
+// уходит бесполезное «Другое», и админ не понимает, кого завёл.
+function initMasterFormSelects() {
+    const form = document.getElementById('masterLeadForm');
+    if (!form) return;
+
+    const lang = ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru';
+    const citySel = form.querySelector('select[name="city"]');
+    const districtSel = form.querySelector('select[name="district"]');
+
+    // Опция с data-* переводами: при смене языка setLanguage
+    // переведёт её сам, пересобирать список не нужно.
+    const makeOption = (value, labels) => {
+        const opt = document.createElement('option');
+        opt.value = value;
+        opt.setAttribute('data-ru', labels.ru);
+        opt.setAttribute('data-en', labels.en);
+        opt.setAttribute('data-ka', labels.ka);
+        opt.textContent = labels[lang] || labels.ru;
+        return opt;
+    };
+
+    // --- Города ---
+    if (citySel) {
+        const cityPlaceholder = citySel.querySelector('option[value=""]');
+        citySel.innerHTML = '';
+        if (cityPlaceholder) citySel.appendChild(cityPlaceholder);
+        CITIES.forEach(function (c) {
+            citySel.appendChild(makeOption(c.value, { ru: c.ru, en: c.en, ka: c.ka }));
+        });
+    }
+
+    // --- Районы выбранного города ---
+    // Плейсхолдер и служебную опцию «Все районы» переносим из
+    // разметки: подписи у анкеты свои, а All означает, что мастер
+    // готов ехать по всему городу.
+    //
+    // ⚠️ hadAll и плейсхолдер снимаются ОДИН раз, до первой
+    // перестройки. Если читать их внутри fillDistricts, то первый
+    // же вызов очистит список, второй увидит пустой селект — и
+    // «Все районы» исчезнут навсегда при первой смене города.
+    const districtPlaceholder = districtSel
+        ? districtSel.querySelector('option[value=""]')
+        : null;
+    const districtHadAll = !!(districtSel &&
+        districtSel.querySelector('option[value="All"]'));
+
+    function fillDistricts() {
+        if (!districtSel) return;
+        const placeholder = districtPlaceholder;
+        const hadAll = districtHadAll;
+        const city = CITIES.find(function (c) {
+            return c.value === (citySel ? citySel.value : '');
+        });
+
+        districtSel.innerHTML = '';
+        if (placeholder) districtSel.appendChild(placeholder);
+
+        // Город не выбран — списка районов нет: слуги двух городов
+        // вперемешку уже приводили к заявкам в чужом городе.
+        if (!city) {
+            districtSel.value = '';
+            return;
+        }
+
+        city.districts.forEach(function (d) {
+            districtSel.appendChild(makeOption(d.slug, {
+                ru: districtLabel(d, 'ru', false),
+                en: districtLabel(d, 'en', false),
+                ka: districtLabel(d, 'ka', false)
+            }));
+        });
+        if (hadAll) districtSel.appendChild(makeOption('All', DISTRICT_SPECIAL.All));
+        districtSel.value = '';
+    }
+
+    if (citySel) citySel.addEventListener('change', fillDistricts);
+    fillDistricts();
+
+    // --- Уточнение специальности «Другое» ---
+    const specialtySel = form.querySelector('select[name="specialty"]');
+    const otherInput = form.querySelector('input[name="specialty_other"]');
+    if (specialtySel && otherInput) {
+        const otherValue = SPECIALTY_OTHER_VALUE[lang] || SPECIALTY_OTHER_VALUE.ru;
+        const syncOther = function () {
+            const on = specialtySel.value === otherValue;
+            // Скрытое поле обязательным быть не может — форма не
+            // отправилась бы, а браузер не смог бы показать, где
+            // ошибка. Поэтому required снимается вместе с показом.
+            otherInput.closest('.m-form__field').hidden = !on;
+            otherInput.required = on;
+            if (!on) otherInput.value = '';
+        };
+        specialtySel.addEventListener('change', syncOther);
+        syncOther();
+    }
 }
 
 async function sendMasterLeadToBot(formData) {

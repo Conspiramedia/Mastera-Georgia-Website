@@ -2739,6 +2739,225 @@ p {
 }
 
 /* ============================================================
+   Отзывы с Google Карт
+   ------------------------------------------------------------
+   Блок заменил собой полосу доверия (.trust-strip) на главных.
+   Цифры рейтинга вшиты в HTML, но размечены data-атрибутами
+   (data-gr-rating / data-gr-count): когда появится эндпоинт
+   бота /site/reviews, скрипт обновит их, не трогая вёрстку.
+
+   ⚠️ Рейтинг обязан совпадать с профилем Google: блок стоит
+   рядом со ссылкой на первоисточник, и расхождение читается
+   как обман. Прежняя полоса обещала 4.8 при реальных 4,4.
+   ============================================================ */
+
+.reviews {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: var(--soft);
+    padding: 64px 0;
+}
+
+/* Шапка: слева оценка, справа кнопки. На узких экранах
+   колонки схлопываются в одну (см. медиазапросы ниже). */
+.reviews__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 2.2rem;
+}
+
+.reviews__score {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.reviews__score-num {
+    color: var(--ink);
+    font-size: 3rem;
+    font-weight: 760;
+    letter-spacing: -0.04em;
+    line-height: 1;
+}
+
+.reviews__score-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Звёзды рисуются символами, а не картинкой: масштабируются
+   вместе с текстом и не тянут лишний запрос. */
+.reviews__stars {
+    color: var(--amber-500);
+    font-size: 1.05rem;
+    letter-spacing: 2px;
+    line-height: 1;
+}
+
+.reviews__score-label {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.reviews__score-label a {
+    color: var(--muted);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.reviews__score-label a:hover {
+    color: var(--blue-700);
+}
+
+.reviews__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+}
+
+.reviews__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.1rem;
+}
+
+.review-card {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+}
+
+.review-card__top {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.9rem;
+}
+
+/* Аватар — первая буква имени: у отзывов из Google нет фото,
+   которое мы вправе хранить у себя. */
+.review-card__avatar {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue-600), var(--blue-700));
+    color: var(--white);
+    font-size: 1.05rem;
+    font-weight: 760;
+    line-height: 1;
+}
+
+.review-card__who {
+    min-width: 0;
+}
+
+.review-card__name {
+    color: var(--ink);
+    font-size: 0.97rem;
+    font-weight: 700;
+    line-height: 1.25;
+    /* Ники в Google бывают длинными и с эмодзи — обрезаем,
+       иначе карточка расползается по высоте. */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.review-card__date {
+    color: var(--muted-2);
+    font-size: 0.8rem;
+}
+
+.review-card__stars {
+    margin-bottom: 0.7rem;
+    color: var(--amber-500);
+    font-size: 0.95rem;
+    letter-spacing: 2px;
+    line-height: 1;
+}
+
+.review-card__text {
+    margin: 0;
+    color: var(--ink-2);
+    font-size: 0.93rem;
+    line-height: 1.62;
+}
+
+/* Ответ владельца — визуально вложен в карточку отзыва,
+   отделён линией слева, как цитата. */
+.review-card__reply {
+    margin-top: 0.9rem;
+    padding-left: 13px;
+    border-left: 2px solid var(--line);
+}
+
+.review-card__reply-label {
+    display: block;
+    margin-bottom: 2px;
+    color: var(--muted-2);
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.review-card__reply-text {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.87rem;
+    line-height: 1.55;
+}
+
+@media (max-width: 1024px) {
+    .reviews__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Третья карточка в ряду из двух осталась бы одна во всю
+       ширину — растягиваем её на обе колонки. */
+    .reviews__grid .review-card:nth-child(3) {
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .reviews {
+        padding: 48px 0;
+    }
+
+    .reviews__head {
+        gap: 1.1rem;
+    }
+
+    .reviews__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .reviews__grid .review-card:nth-child(3) {
+        grid-column: auto;
+    }
+
+    .reviews__actions {
+        width: 100%;
+    }
+
+    /* Кнопки в строку не помещаются — каждая на всю ширину,
+       чтобы в них попадали пальцем. */
+    .reviews__actions .button {
+        flex: 1 1 100%;
+    }
+}
+
+/* ============================================================
    Карточки услуг
    ============================================================ */
 
@@ -5827,4 +6046,471 @@ html[lang="ka"] .final-cta__actions .button {
    колонку и кнопки уезжают за край карточки. */
 .final-cta__text {
     min-width: 0;
+}
+
+/* ============================================================
+   Страница для мастеров (/<lang>/masters/)
+   ------------------------------------------------------------
+   Префикс m- — чтобы не пересечься с клиентскими секциями:
+   страница живёт в общем redesign.css, а hero и шаги у клиента
+   свои. Старая страница была в чёрно-жёлтом оформлении прежнего
+   сайта и подключала style.css; здесь она переведена в светлый
+   дизайн и от старых стилей больше не зависит.
+   ============================================================ */
+
+.m-hero {
+    background: linear-gradient(#f8fbff 0%, var(--white) 74%);
+    padding: 72px 0;
+}
+
+.m-hero__grid {
+    display: grid;
+    grid-template-columns: 1.08fr 0.92fr;
+    gap: 3.2rem;
+    align-items: start;
+}
+
+.m-hero__text {
+    min-width: 0;
+}
+
+.m-hero h1 {
+    font-size: clamp(1.9rem, 3.6vw, 3.1rem);
+}
+
+.m-hero__lead {
+    max-width: 32em;
+    margin-bottom: 1.8rem;
+    font-size: clamp(1.05rem, 1.6vw, 1.22rem);
+    line-height: 1.62;
+}
+
+.m-hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin-bottom: 1.9rem;
+}
+
+.m-hero__perks {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    gap: 0.75rem 1.7rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.m-hero__perks li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--ink-2);
+    font-size: 0.92rem;
+    font-weight: 600;
+}
+
+.m-hero__perks svg {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
+    color: var(--green-500);
+}
+
+/* Карточка «кого ищем» — правая колонка первого экрана. На
+   планшете она уходит под текст первой. */
+.m-hero__card {
+    min-width: 0;
+    padding: 28px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--white);
+    box-shadow: var(--shadow-md);
+}
+
+.m-hero__card-title {
+    margin-bottom: 0.4rem;
+    font-size: 1.4rem;
+}
+
+.m-hero__card-sub {
+    margin-bottom: 1.2rem;
+    font-size: 0.92rem;
+}
+
+.m-hero__list {
+    margin: 0 0 1.5rem;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.6rem;
+}
+
+.m-hero__list li {
+    position: relative;
+    padding-left: 24px;
+    color: var(--ink-2);
+    font-size: 0.94rem;
+}
+
+/* Маркер — точка фирменного синего вместо дефолтного диска: он
+   выравнивается по первой строке и не прыгает при переносе. */
+.m-hero__list li::before {
+    content: '';
+    position: absolute;
+    top: 0.58em;
+    left: 6px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--blue-600);
+}
+
+.m-hero__card-btn {
+    width: 100%;
+}
+
+/* ---------- Шаги ---------- */
+
+.m-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.1rem;
+}
+
+.m-step {
+    padding: 26px 24px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+}
+
+.m-step__num {
+    display: block;
+    margin-bottom: 0.7rem;
+    color: var(--blue-600);
+    font-size: 0.95rem;
+    font-weight: 760;
+    letter-spacing: 0.06em;
+}
+
+.m-step__title {
+    margin-bottom: 0.5rem;
+    font-size: 1.12rem;
+}
+
+.m-step__text {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.6;
+}
+
+/* ---------- Условия ---------- */
+
+.m-terms {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.1rem;
+}
+
+.m-term {
+    padding: 24px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+}
+
+.m-term__title {
+    margin-bottom: 0.45rem;
+    font-size: 1.08rem;
+}
+
+.m-term__text {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.6;
+}
+
+/* ---------- Специальности ---------- */
+
+.m-specs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.m-spec {
+    padding: 11px 18px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--white);
+    color: var(--ink);
+    font-size: 0.93rem;
+    font-weight: 650;
+}
+
+/* ---------- Анкета ---------- */
+
+.m-form-wrap {
+    display: grid;
+    grid-template-columns: 1.4fr 0.6fr;
+    gap: 1.6rem;
+    align-items: start;
+}
+
+.m-form {
+    display: grid;
+    gap: 1rem;
+    padding: 30px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+}
+
+.m-form__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.m-form__field {
+    display: block;
+    min-width: 0;
+}
+
+.m-form__label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--ink);
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.m-form__opt {
+    color: var(--muted-2);
+    font-weight: 500;
+}
+
+.m-form__submit {
+    width: 100%;
+}
+
+.m-form__aside {
+    padding: 26px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--soft);
+}
+
+.m-form__aside-title {
+    margin-bottom: 0.5rem;
+    font-size: 1.12rem;
+}
+
+.m-form__aside-text {
+    margin-bottom: 1.1rem;
+    font-size: 0.92rem;
+}
+
+.m-form__aside .button {
+    width: 100%;
+}
+
+.m-form__aside-note {
+    margin: 1rem 0 0;
+    font-size: 0.86rem;
+}
+
+/* ---------- Вопросы ---------- */
+
+.m-faq {
+    display: grid;
+    gap: 0.7rem;
+    max-width: 880px;
+}
+
+.m-faq__item {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--white);
+    overflow: hidden;
+}
+
+.m-faq__q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 18px 22px;
+    color: var(--ink);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    list-style: none;
+}
+
+/* Родную стрелку <summary> убираем в обоих движках и рисуем
+   свою: дефолтный треугольник выпадает из типографики блока. */
+.m-faq__q::-webkit-details-marker {
+    display: none;
+}
+
+.m-faq__q::after {
+    content: '';
+    width: 11px;
+    height: 11px;
+    flex: 0 0 auto;
+    border-right: 2px solid var(--muted-2);
+    border-bottom: 2px solid var(--muted-2);
+    transform: rotate(45deg) translate(-2px, -2px);
+    transition: transform 0.2s var(--ease);
+}
+
+.m-faq__item[open] .m-faq__q::after {
+    transform: rotate(-135deg) translate(-2px, -2px);
+}
+
+.m-faq__q:hover {
+    color: var(--blue-700);
+}
+
+.m-faq__a {
+    padding: 0 22px 18px;
+}
+
+.m-faq__a p {
+    margin: 0;
+    font-size: 0.94rem;
+    line-height: 1.65;
+}
+
+/* ---------- Финальный призыв ---------- */
+
+.m-final {
+    padding: 72px 0;
+    background: var(--navy-900);
+}
+
+.m-final__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.8rem;
+}
+
+/* min-width: 0 обязателен — иначе длинный грузинский заголовок
+   распирает flex-колонку и кнопки уезжают за край экрана. */
+.m-final__text-wrap {
+    min-width: 0;
+}
+
+.m-final__title {
+    margin-bottom: 0.4rem;
+    color: var(--white);
+    font-size: clamp(1.6rem, 2.6vw, 2.3rem);
+}
+
+.m-final__text {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.m-final__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+
+/* ---------- Окно благодарности ---------- */
+
+.ty-modal__window {
+    width: 100%;
+    max-width: 460px;
+    padding: 34px;
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+}
+
+.ty-modal__title {
+    margin-bottom: 0.6rem;
+    font-size: 1.5rem;
+}
+
+.ty-modal__text {
+    margin-bottom: 1.4rem;
+    font-size: 0.95rem;
+}
+
+/* ⚠️ Окно открывает script.js, снимая атрибут hidden. Правило
+   display:flex у .ty-modal лежит в критическом CSS, поэтому без
+   скрытия по [hidden] окно было бы видно до инициализации. */
+.ty-modal[hidden] {
+    display: none;
+}
+
+@media (max-width: 1024px) {
+    .m-hero__grid {
+        grid-template-columns: 1fr;
+        gap: 2.4rem;
+    }
+
+    .m-steps,
+    .m-terms {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .m-form-wrap {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .m-hero {
+        padding: 46px 0 56px;
+    }
+
+    .m-hero__perks {
+        grid-template-columns: 1fr;
+    }
+
+    .m-hero__cta .button {
+        width: 100%;
+    }
+
+    .m-steps,
+    .m-terms {
+        grid-template-columns: 1fr;
+    }
+
+    .m-form,
+    .m-form__aside {
+        padding: 22px;
+    }
+
+    /* Два поля в строке на телефоне сжимаются до нечитаемых —
+       разворачиваем в столбец. */
+    .m-form__row {
+        grid-template-columns: 1fr;
+    }
+
+    .m-final {
+        padding: 52px 0;
+    }
+
+    .m-final__buttons {
+        width: 100%;
+    }
+
+    .m-final__buttons .button {
+        flex: 1 1 100%;
+    }
 }

@@ -1471,4 +1471,34 @@
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://mastera.ge/ru/masters/</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera.ge/ru/masters/"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera.ge/ge/masters/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mastera.ge/en/masters/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera.ge/ru/masters/"/>
+    <lastmod>2026-11-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://mastera.ge/en/masters/</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera.ge/ru/masters/"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera.ge/ge/masters/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mastera.ge/en/masters/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera.ge/ru/masters/"/>
+    <lastmod>2026-11-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://mastera.ge/ge/masters/</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera.ge/ru/masters/"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera.ge/ge/masters/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mastera.ge/en/masters/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera.ge/ru/masters/"/>
+    <lastmod>2026-11-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>

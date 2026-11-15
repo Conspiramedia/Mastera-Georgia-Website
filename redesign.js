@@ -468,6 +468,16 @@
         '6.81-4.66-1.46c-1.01-.32-1.03-1.01.21-1.5l18.23-7.03c.84-.31 1.58.2 1.3 ' +
         '1.3z"/></svg>';
 
+    /* Часы. Разметка взята из верхней плашки один в один: расписание
+       показывается в трёх местах (плашка, подвал, блок после отзывов),
+       и три разные иконки часов читались бы как три разных факта.
+       Штриховая, в отличие от сплошных логотипов выше. */
+    var CLOCK_ICON =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+        'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ' +
+        'aria-hidden="true"><circle cx="12" cy="12" r="10"/>' +
+        '<polyline points="12 6 12 12 16 14"/></svg>';
+
     /* Клиентский бот под язык страницы: RU/EN/KA — три разных бота.
        ⚠️ Имена обязаны совпадать с share_bot_url в locales/*.py бота.
        В разметке грузинский помечен как ka, разделы сайта лежат в
@@ -1191,7 +1201,7 @@
                         '<span>' + t('ftBot') + '</span>' +
                       '</a>' +
                     '</li>' +
-                    '<li class="site-footer__hours">' + t('ftSchedule') + '</li>' +
+                    '<li class="site-footer__hours">' + CLOCK_ICON + '<span>' + t('ftSchedule') + '</span></li>' +
                   '</ul>' +
                 '</div>' +
 
@@ -1851,7 +1861,7 @@
                     '</div>' +
                     '<div class="task-cta__actions">' +
                       tOpen + t('taskBtn') + tClose +
-                      '<div class="task-cta__hours">' + t('ftSchedule') + '</div>' +
+                      '<div class="task-cta__hours">' + CLOCK_ICON + '<span>' + t('ftSchedule') + '</span></div>' +
                     '</div>' +
                   '</div>' +
                 '</div>';

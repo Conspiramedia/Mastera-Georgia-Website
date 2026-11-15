@@ -1501,4 +1501,64 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://mastera.ge/ru/privacy/</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera.ge/ru/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera.ge/ge/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mastera.ge/en/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera.ge/ru/privacy/"/>
+    <lastmod>2026-11-15</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://mastera.ge/en/privacy/</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera.ge/ru/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera.ge/ge/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mastera.ge/en/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera.ge/ru/privacy/"/>
+    <lastmod>2026-11-15</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://mastera.ge/ge/privacy/</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera.ge/ru/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera.ge/ge/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mastera.ge/en/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera.ge/ru/privacy/"/>
+    <lastmod>2026-11-15</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://mastera.ge/ru/terms/</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera.ge/ru/terms/"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera.ge/ge/terms/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mastera.ge/en/terms/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera.ge/ru/terms/"/>
+    <lastmod>2026-11-15</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://mastera.ge/en/terms/</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera.ge/ru/terms/"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera.ge/ge/terms/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mastera.ge/en/terms/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera.ge/ru/terms/"/>
+    <lastmod>2026-11-15</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://mastera.ge/ge/terms/</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mastera.ge/ru/terms/"/>
+    <xhtml:link rel="alternate" hreflang="ka" href="https://mastera.ge/ge/terms/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mastera.ge/en/terms/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mastera.ge/ru/terms/"/>
+    <lastmod>2026-11-15</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
 </urlset>

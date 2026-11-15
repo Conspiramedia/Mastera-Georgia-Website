@@ -3048,6 +3048,29 @@ p {
     .reviews__actions {
         grid-template-columns: 1fr;
     }
+
+    /* Подпись «7 отзывов на Google Картах» уходит под цифру.
+       В строке с крупной 4,4 на неё остаётся около 190 px, и она
+       рвалась посреди названия («Google / Картах»). Звёзды
+       остаются рядом с цифрой — они короткие и держат строку,
+       а подпись переносится целиком.
+       ⚠️ align-items: flex-start, иначе центрирование по
+       вертикали поднимет звёзды к середине цифры. */
+    .reviews__score {
+        flex-wrap: wrap;
+        align-items: flex-start;
+        row-gap: 0.4rem;
+    }
+
+    .reviews__score-meta {
+        flex-wrap: wrap;
+        align-items: baseline;
+        row-gap: 0.3rem;
+    }
+
+    .reviews__score-label {
+        flex-basis: 100%;
+    }
 }
 
 /* ============================================================

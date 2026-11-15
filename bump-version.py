@@ -64,7 +64,11 @@ ASSETS = ("script.js", "style.css", "service.css",
           # элемент списка как /<значение>, и короткое «hero-bg.webp»
           # искало бы файл в корне сайта. Совпадения нет — версия
           # не проставляется, и скрипт лишь предупреждает в конце.
-          "image/hero-bg.webp", "image/telegram-icon.webp",
+          # Три размера одного фото (srcset): версия нужна каждому,
+          # иначе при замене фото браузер подтянет новый только для
+          # того файла, которому её проставили.
+          "image/hero-bg.webp", "image/hero-bg-480.webp",
+          "image/hero-bg-1120.webp", "image/telegram-icon.webp",
           "image/whatsapp-icon.webp", "image/footer-cta-bg.webp")
 
 # OG-превью (картинка ссылки в соцсетях). Отдельно от ASSETS, потому что путь

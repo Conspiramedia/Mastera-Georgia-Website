@@ -2500,23 +2500,30 @@ p {
     flex: 0 0 auto;
 }
 
-.v-text-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
+/* Вторая кнопка hero — «Другие услуги». Прозрачная с обводкой,
+   чтобы не спорить с синей «Оставьте заявку»: главное действие
+   на странице одно, вторая кнопка лишь предлагает осмотреться.
+   Раньше здесь стояла текстовая ссылка «Цены», но она вела на
+   тот же #prices, что и блок быстрой цены прямо над ней. */
+.v-button--ghost {
+    background: transparent;
+    border: 1px solid rgba(213, 231, 255, 0.45);
+    /* Рамка добавляет по пикселю сверху и снизу, и кнопка
+       становилась 51 px против 49 у соседней. Срезаем padding
+       на эту же величину — высоты совпадают. */
+    padding: 12px 21px;
     color: #d5e7ff;
-    font-size: 0.95rem;
-    font-weight: 600;
+    box-shadow: none;
 }
 
-.v-text-link:hover {
+.v-button--ghost:hover {
+    /* Синяя кнопка на наведение затемняется (см. выше); этой
+       затемняться некуда — она прозрачная. Поэтому отклик даём
+       подсветкой рамки и лёгкой заливкой. */
+    background: rgba(213, 231, 255, 0.12);
+    border-color: rgba(213, 231, 255, 0.75);
     color: var(--white);
-}
-
-.v-text-link svg {
-    width: 15px;
-    height: 15px;
-    flex: 0 0 auto;
+    box-shadow: none;
 }
 
 .v-hero-note {

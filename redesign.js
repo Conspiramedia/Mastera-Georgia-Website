@@ -383,6 +383,68 @@
                          en: 'Describe the task',
                          ge: 'ამოცანის აღწერა' },
 
+        /* Блок отзывов. Тексты слово в слово из разметки шести
+           главных: блок на лендингах обязан быть тем же самым,
+           а не похожим.
+           ⚠️ Даты — абсолютные месяцы, а не «2 дня назад», как было
+           в разметке. Относительная дата в статике устаревает сама:
+           на Google Картах отзыв Николая уже «3 дня назад» против
+           «2 дней» в HTML — расхождение через сутки после добавления.
+           Размножать такое на 141 страницу нельзя. */
+        rvEyebrow:     { ru: 'Отзывы',
+                         en: 'Reviews',
+                         ge: 'შეფასებები' },
+        rvH2:          { ru: 'Что говорят клиенты',
+                         en: 'What clients say',
+                         ge: 'რას ამბობენ კლიენტები' },
+        rvTitle:       { ru: 'Ваше мнение важно',
+                         en: 'Your opinion matters',
+                         ge: 'თქვენი აზრი გვაინტერესებს' },
+        rvSub:         { ru: 'Отзывы живут на Google Картах — мы их не редактируем и не удаляем. Прочитайте, что пишут клиенты, или оставьте свой.',
+                         en: 'The reviews live on Google Maps — we neither edit nor delete them. Read what clients say, or leave your own.',
+                         ge: 'შეფასებები Google რუკებზეა — ჩვენ მათ არ ვასწორებთ და არ ვშლით. წაიკითხეთ, რას წერენ კლიენტები, ან დატოვეთ თქვენი.' },
+        rvCount:       { ru: 'отзывов на',
+                         en: 'reviews on',
+                         ge: 'შეფასება —' },
+        rvMaps:        { ru: 'Google Картах',
+                         en: 'Google Maps',
+                         ge: 'Google რუკებზე' },
+        rvStarsLabel:  { ru: 'Оценка 4,4 из 5',
+                         en: 'Rated 4.4 out of 5',
+                         ge: 'შეფასება 4,4 5-დან' },
+        rvStars5:      { ru: 'Оценка 5 из 5',
+                         en: 'Rated 5 out of 5',
+                         ge: 'შეფასება 5 5-დან' },
+        rvRead:        { ru: 'Посмотреть отзывы',
+                         en: 'Read the reviews',
+                         ge: 'შეფასებების ნახვა' },
+        rvWrite:       { ru: 'Написать отзыв',
+                         en: 'Write a review',
+                         ge: 'შეფასების დატოვება' },
+        /* Пометка о переводе: у русских отзывов её нет — они и есть
+           оригинал. Пустая строка здесь означает «не показывать». */
+        rvTranslated:  { ru: '',
+                         en: '(Translated from Russian)',
+                         ge: '(ნათარგმნია რუსულიდან)' },
+        /* Месяцы по датам с Google Карт: июнь, ноябрь и октябрь 2026. */
+        rvDate1:       { ru: 'Июнь 2026',
+                         en: 'June 2026',
+                         ge: '2026 ივნისი' },
+        rvDate2:       { ru: 'Ноябрь 2026',
+                         en: 'November 2026',
+                         ge: '2026 ნოემბერი' },
+        rvDate3:       { ru: 'Октябрь 2026',
+                         en: 'October 2026',
+                         ge: '2026 ოქტომბერი' },
+        rvText1:       { ru: 'Хочу выразить огромную благодарность за отличную работу! Вызывал мастера для ремонта варочной панели, и результат превзошёл все ожидания. Отдельное спасибо мастеру Александру — настоящий профессионал своего дела. Он быстро разобрался в проблеме, нашёл причину поломки и качественно всё отремонтировал',
+                         en: 'Huge thanks for the excellent work! I called a handyman to repair my cooktop, and the result exceeded all expectations. Special thanks to Alexander — a true professional. He quickly identified the problem, found the cause of the fault and repaired everything properly.',
+                         ge: 'დიდი მადლობა შესანიშნავი სამუშაოსთვის! გამოვიძახე ოსტატი ქუხნის ზედაპირის შესაკეთებლად და შედეგმა ყველა მოლოდინს გადააჭარბა. განსაკუთრებული მადლობა ოსტატ ალექსანდრეს — ნამდვილი პროფესიონალია. სწრაფად გაერკვა პრობლემაში და ხარისხიანად შეაკეთა.' },
+        rvText2:       { ru: 'Поздно вечером обратился за помощью в монтаже телевизора на стену, сразу же ответили, договорились, что днём приедут установят. Мастер приехал вовремя, быстро и качественно сделал свою работу, учёл все пожелания.',
+                         en: 'Late in the evening I asked for help mounting a TV on the wall. They answered straight away and agreed that someone would come and install it during the day. The handyman arrived on time, did the job quickly and well, and took all my wishes into account.',
+                         ge: 'გვიან საღამოს მივმართე ტელევიზორის კედელზე დამონტაჟების თხოვნით, მაშინვე მიპასუხეს და შევთანხმდით, რომ დღისით მოვიდოდნენ. ოსტატი დროულად მოვიდა, სწრაფად და ხარისხიანად შეასრულა სამუშაო, ყველა სურვილი გაითვალისწინა.' },
+        rvText3:       { ru: 'Хорошее место, персонал отличный, приветливый, качество идеально, спасибо огромное, вы очень классные.',
+                         en: 'Great place, the staff is excellent and friendly, the quality is perfect, thank you so much, you are really great.',
+                         ge: 'კარგი ადგილია, პერსონალი შესანიშნავი და თავაზიანი, ხარისხი იდეალური, დიდი მადლობა, ძალიან მაგრები ხართ.' },
         faqCtaTitle:   { ru: 'Остались сомнения?',
                          en: 'Still have doubts?',
                          ge: 'კიდევ გაქვთ ეჭვები?' },
@@ -468,6 +530,16 @@
         '6.81-4.66-1.46c-1.01-.32-1.03-1.01.21-1.5l18.23-7.03c.84-.31 1.58.2 1.3 ' +
         '1.3z"/></svg>';
 
+    /* Google-отзывы: рейтинг, число и ссылки одним местом.
+       Те же значения стоят в разметке шести главных и в
+       aggregateRating каждой страницы; при обновлении отзывов
+       правятся три места, и держать их рядом — единственный
+       способ не забыть одно из них.
+       Сверено с Google Картами 15.11.2026: 4,4 при 7 отзывах. */
+    var GR_RATING = '4,4';
+    var GR_COUNT = '7';
+    var GR_PLACE_URL = 'https://maps.app.goo.gl/TrW7KzPo6HohbvBn7';
+    var GR_WRITE_URL = 'https://g.page/r/CSw2TjzauF7ZEBE/review';
     /* Часы. Разметка взята из верхней плашки один в один: расписание
        показывается в трёх местах (плашка, подвал, блок после отзывов),
        и три разные иконки часов читались бы как три разных факта.
@@ -1867,6 +1939,84 @@
            ⚠️ Строится ТОЛЬКО там, где есть секция отзывов, то есть на
            шести главных. На лендингах услуг и районов свои призывы,
            и ещё одна тёмная полоса читалась бы как повтор баннера. */
+        /* 2c. Блок отзывов на лендингах.
+              В разметке он есть только на шести главных: блок писали
+              руками, а 141 лендинг генерировался своим шаблоном и
+              отзывов не получил. Между тем человек приходит на
+              «Электрик в Тбилиси» прямо из поиска и на главную может
+              не зайти вовсе — подтверждения доверия он не видел бы
+              нигде.
+
+              Собираем тот же блок, что на главных, а не похожий:
+              тексты, ссылки и структура совпадают дословно.
+
+              ⚠️ Строим ПЕРЕД .task-cta (блок 3 ниже): тот цепляется
+              к .reviews и на лендингах не появился бы, не найдя её.
+              Порядок двух блоков в коде — часть логики, не случайность.
+              ⚠️ Если .reviews уже есть в разметке (главные) — не
+              трогаем: иначе получили бы два блока отзывов подряд. */
+        var faqSec = document.getElementById('faq');
+        if (faqSec && !document.querySelector('.reviews')) {
+            var rvStars5 = t('rvStars5');
+            var rvTr = t('rvTranslated');
+            /* Пометка о переводе — только у нерусских версий:
+               русский отзыв и есть оригинал. */
+            var trMark = rvTr ? ' <em>' + rvTr + '</em>' : '';
+
+            function reviewCard(letter, name, date, text) {
+                return '<article class="review-card">' +
+                         '<div class="review-card__top">' +
+                           '<span class="review-card__avatar" aria-hidden="true">' + letter + '</span>' +
+                           '<span class="review-card__who">' +
+                             '<span class="review-card__name">' + name + '</span>' +
+                             '<span class="review-card__date">' + date + '</span>' +
+                           '</span>' +
+                         '</div>' +
+                         '<div class="review-card__stars" role="img" aria-label="' + rvStars5 + '">★★★★★</div>' +
+                         '<p class="review-card__text">' + text + trMark + '</p>' +
+                       '</article>';
+            }
+
+            var rv = document.createElement('section');
+            rv.className = 'reviews';
+            rv.id = 'reviews';
+            rv.innerHTML =
+                '<div class="container">' +
+                  '<div class="section-head">' +
+                    '<span class="section-head__eyebrow">' + t('rvEyebrow') + '</span>' +
+                    '<h2>' + t('rvH2') + '</h2>' +
+                  '</div>' +
+                  '<div class="reviews__head">' +
+                    '<div class="reviews__head-text">' +
+                      '<h3 class="reviews__head-title">' + t('rvTitle') + '</h3>' +
+                      '<div class="reviews__score">' +
+                        '<span class="reviews__score-num" data-gr-rating>' + GR_RATING + '</span>' +
+                        '<span class="reviews__score-meta">' +
+                          '<span class="reviews__stars" role="img" aria-label="' + t('rvStarsLabel') + '">★★★★☆</span>' +
+                          '<span class="reviews__score-label">' +
+                            '<span data-gr-count>' + GR_COUNT + '</span> ' + t('rvCount') + ' ' +
+                            '<a href="' + GR_PLACE_URL + '" target="_blank" rel="noopener nofollow">' + t('rvMaps') + '</a>' +
+                          '</span>' +
+                        '</span>' +
+                      '</div>' +
+                      '<p class="reviews__head-sub">' + t('rvSub') + '</p>' +
+                    '</div>' +
+                    '<div class="reviews__actions">' +
+                      '<a class="button button--ghost-dark button--large" href="' + GR_PLACE_URL + '" target="_blank" rel="noopener nofollow">' + t('rvRead') + '</a>' +
+                      '<a class="button button--white button--large" href="' + GR_WRITE_URL + '" target="_blank" rel="noopener nofollow">' + t('rvWrite') + '</a>' +
+                    '</div>' +
+                  '</div>' +
+                  '<div class="reviews__grid">' +
+                    reviewCard('Т', 'Торнике Катамадзе', t('rvDate1'), t('rvText1')) +
+                    reviewCard('N', 'Nikolai Toporkov', t('rvDate2'), t('rvText2')) +
+                    reviewCard('7', '777Crazy777', t('rvDate3'), t('rvText3')) +
+                  '</div>' +
+                '</div>';
+            /* Перед FAQ: сначала люди подтверждают, что сервису можно
+               верить, потом человек идёт в частные вопросы. На главных
+               порядок тот же — отзывы выше FAQ. */
+            faqSec.parentNode.insertBefore(rv, faqSec);
+        }
         var reviews = document.querySelector('.reviews');
         if (reviews && !document.querySelector('.task-cta')) {
             /* Кнопка ведёт в форму на самой странице, а где её нет —

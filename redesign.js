@@ -436,7 +436,21 @@
         rvDate3:       { ru: 'Октябрь 2026',
                          en: 'October 2026',
                          ge: '2026 ოქტომბერი' },
-        rvText1:       { ru: 'Хочу выразить огромную благодарность за отличную работу! Вызывал мастера для ремонта варочной панели, и результат превзошёл все ожидания. Отдельное спасибо мастеру Александру — настоящий профессионал своего дела. Он быстро разобрался в проблеме, нашёл причину поломки и качественно всё отремонтировал',
+        /* Ответы Mastera Georgia под каждым отзывом. Тексты и
+           подпись — слово в слово из разметки главных. */
+        rvReplyLabel:  { ru: 'Ответ Mastera Georgia',
+                         en: 'Response from Mastera Georgia',
+                         ge: 'Mastera Georgia-ს პასუხი' },
+        rvReply1:      { ru: 'Спасибо за приятный отклик)',
+                         en: 'Thank you for the kind words)',
+                         ge: 'მადლობა სასიამოვნო გამოხმაურებისთვის)' },
+        rvReply2:      { ru: 'Большое спасибо за ваш отзыв и высокую оценку. Мы всегда стараемся учитывать все пожелания клиентов и приезжать точно в назначенное время.',
+                         en: "Many thanks for your review and high rating. We always try to take every client's wishes into account and arrive exactly on time.",
+                         ge: 'დიდი მადლობა შეფასებისთვის. ყოველთვის ვცდილობთ გავითვალისწინოთ კლიენტის სურვილები და ზუსტად დათქმულ დროს მივიდეთ.' },
+        rvReply3:      { ru: 'Вам спасибо, рады были помочь))',
+                         en: 'Thank you, we were glad to help))',
+                         ge: 'თქვენ გმადლობთ, სიამოვნებით დაგეხმარეთ))' },
+        rvText1:       { ru: 'Хочу выразить огромную благодарность за отличную работу! Вызывал мастера для ремонта варочной панели, и результат превзошёл все ожидания. Отдельное спасибо мастеру Александру — настоящий профессионал своего дела. Он быстро разобрался в проблеме, нашёл причину поломки и качественно всё отремонтировал.',
                          en: 'Huge thanks for the excellent work! I called a handyman to repair my cooktop, and the result exceeded all expectations. Special thanks to Alexander — a true professional. He quickly identified the problem, found the cause of the fault and repaired everything properly.',
                          ge: 'დიდი მადლობა შესანიშნავი სამუშაოსთვის! გამოვიძახე ოსტატი ქუხნის ზედაპირის შესაკეთებლად და შედეგმა ყველა მოლოდინს გადააჭარბა. განსაკუთრებული მადლობა ოსტატ ალექსანდრეს — ნამდვილი პროფესიონალია. სწრაფად გაერკვა პრობლემაში და ხარისხიანად შეაკეთა.' },
         rvText2:       { ru: 'Поздно вечером обратился за помощью в монтаже телевизора на стену, сразу же ответили, договорились, что днём приедут установят. Мастер приехал вовремя, быстро и качественно сделал свою работу, учёл все пожелания.',
@@ -1958,12 +1972,13 @@
         var faqSec = document.getElementById('faq');
         if (faqSec && !document.querySelector('.reviews')) {
             var rvStars5 = t('rvStars5');
+            var rvReplyLabel = t('rvReplyLabel');
             var rvTr = t('rvTranslated');
             /* Пометка о переводе — только у нерусских версий:
                русский отзыв и есть оригинал. */
             var trMark = rvTr ? ' <em>' + rvTr + '</em>' : '';
 
-            function reviewCard(letter, name, date, text) {
+            function reviewCard(letter, name, date, text, reply) {
                 return '<article class="review-card">' +
                          '<div class="review-card__top">' +
                            '<span class="review-card__avatar" aria-hidden="true">' + letter + '</span>' +
@@ -1974,6 +1989,13 @@
                          '</div>' +
                          '<div class="review-card__stars" role="img" aria-label="' + rvStars5 + '">★★★★★</div>' +
                          '<p class="review-card__text">' + text + trMark + '</p>' +
+                         /* Ответ сервиса — не украшение: он показывает, что
+                            на каждый отзыв здесь отвечают. На главных он
+                            есть у всех трёх отзывов. */
+                         '<div class="review-card__reply">' +
+                           '<span class="review-card__reply-label">' + rvReplyLabel + '</span>' +
+                           '<p class="review-card__reply-text">' + reply + '</p>' +
+                         '</div>' +
                        '</article>';
             }
 
@@ -2007,9 +2029,9 @@
                     '</div>' +
                   '</div>' +
                   '<div class="reviews__grid">' +
-                    reviewCard('Т', 'Торнике Катамадзе', t('rvDate1'), t('rvText1')) +
-                    reviewCard('N', 'Nikolai Toporkov', t('rvDate2'), t('rvText2')) +
-                    reviewCard('7', '777Crazy777', t('rvDate3'), t('rvText3')) +
+                    reviewCard('Т', 'Торнике Катамадзе', t('rvDate1'), t('rvText1'), t('rvReply1')) +
+                    reviewCard('N', 'Nikolai Toporkov', t('rvDate2'), t('rvText2'), t('rvReply2')) +
+                    reviewCard('7', '777Crazy777', t('rvDate3'), t('rvText3'), t('rvReply3')) +
                   '</div>' +
                 '</div>';
             /* Перед FAQ: сначала люди подтверждают, что сервису можно

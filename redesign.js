@@ -15,6 +15,23 @@
 
     // Язык берём из <html lang>, а не из URL: на локальном сервере
     // путь может начинаться с чего угодно.
+    /* Версия статики для картинок, которые собирает этот скрипт.
+       bump-version.py правит только HTML, и без этой приписки
+       браузер держал бы старый файл до 4 часов, а Service Worker
+       (Cache First) отдавал бы его вообще без запроса к сети.
+       Номер читаем из адреса самого скрипта — его туда ставит
+       bump-version.py, так источник версии остаётся один. */
+    var ASSET_V = (function () {
+        var me = document.currentScript;
+        if (!me) {
+            // currentScript пуст, если скрипт выполняется отложенно:
+            // ищем себя в разметке по имени файла.
+            me = document.querySelector('script[src*="redesign.js"]');
+        }
+        var m = me && /[?&]v=(\d+)/.exec(me.getAttribute('src') || '');
+        return m ? '?v=' + m[1] : '';
+    })();
+
     var LANG = (document.documentElement.lang || 'ru').toLowerCase();
     // ⚠️ В разметке грузинский помечен как ka — это его код по
     // ISO, и так его понимают поисковик и экранный диктор. В
@@ -514,7 +531,7 @@
            экрана пустой и значок появляется уже на глазах.
            Размеры в атрибутах — чтобы место было отведено
            заранее и строка не дёргалась. */
-        return '<img class="button__brand" src="/image/' + name + '-icon.webp"' +
+        return '<img class="button__brand" src="/image/' + name + '-icon.webp' + ASSET_V + '"' +
                ' alt="" width="24" height="24" decoding="async">';
     }
 
@@ -2620,7 +2637,7 @@
             '<a class="contact-bar__btn contact-bar__btn--wa" href="' + links.waHref + '"' +
             ' target="_blank" rel="noopener" aria-label="' + links.labels.wa + '">' +
                 '<span class="contact-bar__ico" aria-hidden="true">' +
-                    '<img src="/image/whatsapp-icon.webp" alt="" width="96" height="96"' +
+                    '<img src="/image/whatsapp-icon.webp' + ASSET_V + '" alt="" width="96" height="96"' +
                     ' decoding="async">' +
                 '</span>' +
                 '<span>' + caption.wa + '</span>' +
@@ -2628,7 +2645,7 @@
             '<a class="contact-bar__btn contact-bar__btn--tg" href="' + links.tgHref + '"' +
             ' target="_blank" rel="noopener" aria-label="' + links.labels.tg + '">' +
                 '<span class="contact-bar__ico" aria-hidden="true">' +
-                    '<img src="/image/telegram-icon.webp" alt="" width="96" height="96"' +
+                    '<img src="/image/telegram-icon.webp' + ASSET_V + '" alt="" width="96" height="96"' +
                     ' decoding="async">' +
                 '</span>' +
                 '<span>' + caption.tg + '</span>' +

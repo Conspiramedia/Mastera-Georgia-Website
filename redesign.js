@@ -1617,27 +1617,28 @@
             sc.appendChild(strip.firstChild);
         }
 
-        /* 2. Блок предварительной оценки — сразу за районами.
-              Человек увидел, что его район обслуживают, и тут же
-              получает короткий путь рядом с длинным (форма ниже).
+        /* 2. Карточка предварительной оценки — ВНУТРИ секции районов,
+              последним элементом её контейнера. Человек увидел, что
+              его район обслуживают, и тут же получает короткий путь
+              рядом с длинным (форма ниже).
 
-              ⚠️ Раньше блок ставился перед #lead. На шести главных
-              это работало — там перед #lead как раз #districts, — но на
-              141 лендинге перед #lead стоят «Другие услуги» с собственным
-              призывом cta-strip внутри. Замер на лендинге электрика:
-              cta-strip кончался на 7731, est-card шёл 7835–8046, #lead
-              начинался с 8046 — три призыва подряд на четверти экрана,
-              причём средний висел в пустоте между чужими блоками.
-              ⚠️ Сразу за #how ставить нельзя: внутри #how уже строится
-              .steps-cta с такой же кнопкой, и между ними осталось бы 104 px
-              — та же ошибка, что описана ниже про блок после FAQ. */
+              ⚠️ Именно внутрь, а не следующей секцией: снаружи карточка
+              прижималась вплотную к границе цветного фона секции (замер:
+              секция кончалась на 5696, карточка начиналась там же) и висела
+              на белом, оторванная от районов. Внутри она лежит на фоне
+              секции и читается как её часть.
+              ⚠️ Раньше вставлялась перед #lead. На шести главных это
+              работало (там перед #lead как раз #districts), но на 141 лендинге
+              перед #lead стоят «Другие услуги» со своим призывом cta-strip,
+              и карточка падала третьим призывом подряд с зазорами 104 и 0 px.
+              ⚠️ В #how ставить нельзя: там уже строится .steps-cta с такой же
+              кнопкой — два призыва вплотную. */
         var lead = document.getElementById('lead');
         var districts = document.getElementById('districts');
         if (lead && !document.querySelector('.est-card')) {
-            var est = document.createElement('section');
+            var est = document.createElement('div');
             est.className = 'est-section';
             est.innerHTML =
-                '<div class="container">' +
                   '<div class="est-card">' +
                     '<div class="est-card__head">' +
                       '<h2 class="est-card__title">' + t('estTitle') + '</h2>' +
@@ -1650,15 +1651,26 @@
                       'aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/>' +
                       '<polyline points="12 5 19 12 12 19"/></svg>' +
                     '</button>' +
-                  '</div>' +
-                '</div>';
-            /* За районами, а если секции районов на странице нет —
-               по-прежнему перед формой: лучше не на идеальном месте,
-               чем нигде. */
-            if (districts) {
-                districts.parentNode.insertBefore(est, districts.nextSibling);
+                  '</div>';
+            /* Внутрь контейнера районов, последним элементом —
+               так карточка лежит на фоне секции и получает её ширину.
+               Без .container внутри секции кладём в саму секцию, а если
+               секции районов нет вовсе — по-прежнему отдельным блоком
+               перед формой: лучше не на идеальном месте, чем нигде.
+               ⚠️ В запасном случае карточке нужен свой .container —
+               иначе она растянется на всю ширину окна без полей. */
+            var dc = districts && (districts.querySelector('.container') || districts);
+            if (dc) {
+                est.classList.add('est-section--inside');
+                dc.appendChild(est);
             } else {
-                lead.parentNode.insertBefore(est, lead);
+                var wrap = document.createElement('section');
+                wrap.className = 'est-section';
+                var inner = document.createElement('div');
+                inner.className = 'container';
+                inner.appendChild(est.firstChild);
+                wrap.appendChild(inner);
+                lead.parentNode.insertBefore(wrap, lead);
             }
         }
 

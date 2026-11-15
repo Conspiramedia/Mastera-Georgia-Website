@@ -353,6 +353,22 @@
         ftBot:       { ru: 'Telegram-бот', en: 'Telegram bot', ge: 'Telegram-ბოტი' },
         ftMasters:   { ru: 'Для мастеров', en: 'For masters', ge: 'ოსტატებისთვის' },
 
+        /* Тёмная полоса сразу после отзывов: прочитав чужой опыт,
+           человек готов написать — и точка действия должна быть прямо
+           здесь, а не через два экрана. Часы берём ftSchedule — ту же
+           строку, что в подвале и верхней плашке: три разных расписания
+           на одной странице — готовый рассинхрон. */
+        taskEyebrow: { ru: 'Связаться', en: 'Get in touch', ge: 'დაგვიკავშირდით' },
+        taskTitle:   { ru: 'Начнём с вашей задачи.',
+                       en: 'Let’s start with your task.',
+                       ge: 'დავიწყოთ თქვენი დავალებით.' },
+        taskText:    { ru: 'Уточним задачу, условия выезда и удобное время. Состав работ и полную стоимость согласуем заранее.',
+                       en: 'We’ll clarify the task, call-out terms and a convenient time. The scope and the full price are agreed in advance.',
+                       ge: 'დავამხდარებთ დავალებას, გამოძახების პირობებსა და მოსახერხებელ დროს. სამუშაოს შემადგენლობასა და სრულ ღირებულებას წინასწარ ვთანხმდებთ.' },
+        taskBtn:     { ru: 'Обсудить задачу и стоимость',
+                       en: 'Discuss the task and price',
+                       ge: 'დავამიზოთ დავალება და ღირებულება' },
+
         /* Блоки «после шагов» и «после FAQ». Переведены на en/ge
            11.11.2026; до этого там стоял русский дубль. «Позвонить»
            берём теми же словами, что finalCall ниже (Call / დარეკვა),
@@ -1799,6 +1815,47 @@
                   '</div>' +
                 '</div>';
             main.appendChild(fin);
+        }
+
+        /* ── «Начнём с вашей задачи» — сразу после отзывов ──
+
+           Место выбрано не произвольно: прочитав чужой опыт,
+           человек готов написать — а ближайшая точка действия шла через
+           два экрана (районы и форма).
+
+           ⚠️ Строится ТОЛЬКО там, где есть секция отзывов, то есть на
+           шести главных. На лендингах услуг и районов свои призывы,
+           и ещё одна тёмная полоса читалась бы как повтор баннера. */
+        var reviews = document.querySelector('.reviews');
+        if (reviews && !document.querySelector('.task-cta')) {
+            /* Кнопка ведёт в форму на самой странице, а где её нет —
+               ссылкой на /<lang>/#lead. Та же развилка, что у финального
+               призыва: data-open-lead без формы нажимался бы вхолостую. */
+            var tHasForm = !!document.getElementById('clientLeadForm');
+            var tOpen = tHasForm
+                ? '<button type="button" class="button button--primary button--large" data-open-lead>'
+                : '<a class="button button--primary button--large" href="/' + LANG + '/#lead">';
+            var tClose = tHasForm ? '</button>' : '</a>';
+
+            var task = document.createElement('section');
+            task.className = 'task-cta';
+            task.innerHTML =
+                '<div class="container">' +
+                  '<div class="task-cta__grid">' +
+                    '<div class="task-cta__text">' +
+                      '<div class="task-cta__eyebrow">' +
+                        'MASTERA <span>/ ' + (currentCity().name[LANG] || currentCity().name.ru) + '</span>' +
+                      '</div>' +
+                      '<h2 class="task-cta__title">' + t('taskTitle') + '</h2>' +
+                      '<p class="task-cta__sub">' + t('taskText') + '</p>' +
+                    '</div>' +
+                    '<div class="task-cta__actions">' +
+                      tOpen + t('taskBtn') + tClose +
+                      '<div class="task-cta__hours">' + t('ftSchedule') + '</div>' +
+                    '</div>' +
+                  '</div>' +
+                '</div>';
+            reviews.parentNode.insertBefore(task, reviews.nextSibling);
         }
     }
 

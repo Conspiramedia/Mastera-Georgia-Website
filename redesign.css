@@ -2783,24 +2783,57 @@ p {
 
 /* Шапка: слева оценка, справа кнопки. На узких экранах
    колонки схлопываются в одну (см. медиазапросы ниже). */
+/* Шапка блока — тёмная карточка, как у финального призыва
+   (.final-cta__card): слева текст с оценкой, справа пара кнопок.
+   Раньше здесь была светлая строка «оценка слева, кнопки
+   справа» — кнопки висели над карточками сами по себе, без
+   объяснения, куда ведут.
+   ⚠️ Тёмный фон здесь не копия, а необходимость: секция стоит на
+   сером (--soft), и светлая карточка на нём не отделялась бы от
+   подложки — ровно поэтому .button--primary на тёмно-синем
+   заменён на белую кнопку, см. ниже. */
 .reviews__head {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2.5rem;
     align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
-    margin-bottom: 2.2rem;
+    margin-bottom: 2.6rem;
+    padding: 40px 46px;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, var(--navy-800), var(--navy-950));
+    box-shadow: var(--shadow-md);
+}
+
+.reviews__head-text {
+    min-width: 0;
+}
+
+.reviews__head-title {
+    margin: 0 0 0.6rem;
+    color: var(--white);
+    font-size: 1.85rem;
+    font-weight: 760;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+}
+
+.reviews__head-sub {
+    margin: 0;
+    max-width: 44em;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 1rem;
 }
 
 .reviews__score {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
 }
 
 .reviews__score-num {
-    color: var(--ink);
-    font-size: 3rem;
+    color: var(--white);
+    font-size: 2.1rem;
     font-weight: 760;
     letter-spacing: -0.04em;
     line-height: 1;
@@ -2808,8 +2841,8 @@ p {
 
 .reviews__score-meta {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
+    align-items: center;
+    gap: 0.55rem;
 }
 
 /* Звёзды рисуются символами, а не картинкой: масштабируются
@@ -2822,24 +2855,40 @@ p {
 }
 
 .reviews__score-label {
-    color: var(--muted);
-    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.92rem;
 }
 
 .reviews__score-label a {
-    color: var(--muted);
+    color: rgba(255, 255, 255, 0.72);
     text-decoration: underline;
     text-underline-offset: 2px;
 }
 
 .reviews__score-label a:hover {
-    color: var(--blue-700);
+    color: var(--white);
 }
 
+/* Пара кнопок равной ширины — тем же приёмом, что в финальном
+   призыве: подписи разной длины («Посмотреть отзывы» против
+   «Написать отзыв»), и без сетки пара смотрелась бы случайной.
+   ⚠️ minmax(0, …), а не 1fr: от 1fr минимумом колонки становится
+   ширина подписи, и колонки снова разъезжаются. */
 .reviews__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.7rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0.85rem;
+    min-width: 430px;
+}
+
+.reviews__actions .button {
+    /* Кегль и поля ужаты заранее, как в .final-cta__buttons:
+       «Посмотреть отзывы» со стрелкой в половину колонки иначе
+       уходит на вторую строку. */
+    white-space: normal;
+    padding-left: 18px;
+    padding-right: 18px;
+    font-size: 0.95rem;
 }
 
 .reviews__grid {
@@ -2952,13 +3001,33 @@ p {
     }
 }
 
+/* Текст и кнопки в карточке перестают помещаться в строку: от
+   980 px правая колонка (430 px минимум) съедает больше
+   половины, и заголовок ломается на три строки. Та же точка,
+   что у .final-cta__card. */
+@media (max-width: 980px) {
+    .reviews__head {
+        grid-template-columns: 1fr;
+        gap: 1.8rem;
+        padding: 34px 30px;
+    }
+
+    .reviews__actions {
+        min-width: 0;
+    }
+}
+
 @media (max-width: 768px) {
     .reviews {
         padding: 48px 0;
     }
 
     .reviews__head {
-        gap: 1.1rem;
+        padding: 28px 22px;
+    }
+
+    .reviews__head-title {
+        font-size: 1.5rem;
     }
 
     .reviews__grid {
@@ -2968,15 +3037,16 @@ p {
     .reviews__grid .review-card:nth-child(3) {
         grid-column: auto;
     }
+}
 
+/* Пара кнопок в строку не помещается — ставим в столбик, во всю
+   ширину, чтобы в них попадали пальцем.
+   ⚠️ Точка 620 px, а не 768: до неё пара ещё помещается рядом, и
+   две кнопки в столбик занимали бы пол-экрана зря. Та же
+   граница, что у .final-cta__buttons. */
+@media (max-width: 620px) {
     .reviews__actions {
-        width: 100%;
-    }
-
-    /* Кнопки в строку не помещаются — каждая на всю ширину,
-       чтобы в них попадали пальцем. */
-    .reviews__actions .button {
-        flex: 1 1 100%;
+        grid-template-columns: 1fr;
     }
 }
 
@@ -3505,6 +3575,24 @@ select.form-control::-ms-expand {
 
 .final-cta__buttons .button {
     white-space: normal;
+    /* ⚠️ Кегль и поля ужаты у ВСЕХ языков, не только у грузинского
+       (его правило ниже оставлено — ему нужно ещё теснее).
+       Замер на 1440: колонка сетки даёт кнопке 242 px, а
+       «Написать в Telegram» требует 260 — текст 172 + значок 22 +
+       зазор 10 + поля 28×2. Не хватало 18 px, и подпись уходила на
+       вторую строку, делая кнопку 72 px против 56 у соседней.
+
+       Расширить колонку нельзя: minmax(540px, …) чинит кнопку, но
+       на 1920 отнимает у заголовка столько, что «Нужен мастер
+       сегодня?» уезжает на вторую строку (проверено). Поэтому
+       ужимаем саму кнопку — как уже сделано для грузинского.
+
+       Разной ширины колонки (max-content) тоже не подходят: пара
+       становится 224 и 262 px и смотрится случайной — ровно то,
+       против чего заведена сетка выше. */
+    padding-left: 18px;
+    padding-right: 18px;
+    font-size: 0.95rem;
 }
 
 /* На телефоне в две колонки не помещается даже короткая пара:

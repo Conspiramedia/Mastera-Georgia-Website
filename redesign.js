@@ -2665,43 +2665,6 @@
         document.body.classList.add('has-contact-bar');
     }
 
-    function buildPriceSearch() {
-        var boxes = document.querySelectorAll('.price-search');
-        Array.prototype.forEach.call(boxes, function (box) {
-            var input = box.querySelector('input');
-            var reset = box.querySelector('button');
-            if (!input) return;
-
-            var full = box.closest('.price-full');
-            if (!full) return;
-            var lines = full.querySelectorAll('.price-line');
-            var groups = full.querySelectorAll('.price-group');
-
-            function filter() {
-                var q = (input.value || '').trim().toLowerCase();
-                Array.prototype.forEach.call(lines, function (line) {
-                    var name = line.querySelector('.price-line__name');
-                    var text = name ? name.textContent.toLowerCase() : '';
-                    line.classList.toggle('is-hidden', !!q && text.indexOf(q) === -1);
-                });
-                Array.prototype.forEach.call(groups, function (group) {
-                    var anyVisible = Array.prototype.some.call(
-                        group.querySelectorAll('.price-line'),
-                        function (l) { return !l.classList.contains('is-hidden'); });
-                    group.style.display = anyVisible ? '' : 'none';
-                });
-            }
-
-            input.addEventListener('input', filter);
-            if (reset) {
-                reset.addEventListener('click', function () {
-                    input.value = '';
-                    filter();
-                });
-            }
-        });
-    }
-
     function init() {
         // ⚠️ Порядок не произвольный. Бургер собирает панель из уже
         // готовой шапки: пункты меню берёт из .site-nav, телефон —
@@ -2755,7 +2718,6 @@
         buildPhoneReveal();
         buildBurger();
         buildLangSwitch();
-        buildPriceSearch();
         buildContactBar();
 
         // Подпись города приводим к адресу страницы: в разметке

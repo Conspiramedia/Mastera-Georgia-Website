@@ -4653,53 +4653,6 @@ a.price-preview:hover .price-preview__value::after {
     padding: 20px 24px 24px;
 }
 
-.price-search {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 1.4rem;
-}
-
-.price-search input {
-    flex: 1 1 auto;
-    min-width: 0;
-    height: 46px;
-    padding: 0 16px;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    background: var(--soft);
-    color: var(--ink);
-    font-family: inherit;
-    font-size: 0.95rem;
-    outline: none;
-    transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
-}
-
-.price-search input:focus {
-    border-color: var(--blue-400);
-    background: var(--white);
-}
-
-.price-search button {
-    flex: 0 0 auto;
-    height: 46px;
-    padding: 0 18px;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    background: var(--white);
-    color: var(--ink-2);
-    font-family: inherit;
-    font-size: 0.9rem;
-    font-weight: 650;
-    cursor: pointer;
-    transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
-}
-
-.price-search button:hover {
-    border-color: var(--blue-400);
-    color: var(--blue-700);
-}
-
 .price-group {
     margin-bottom: 1.4rem;
 }
@@ -4746,12 +4699,6 @@ a.price-preview:hover .price-preview__value::after {
     font-size: 0.95rem;
     font-weight: 760;
     white-space: nowrap;
-}
-
-/* Скрытые строки поиска: класс вешает скрипт, когда название
-   не совпало с запросом. */
-.price-line.is-hidden {
-    display: none;
 }
 
 /* ── FAQ ─────────────────────────────────────────────────────
@@ -5281,14 +5228,7 @@ a.price-preview:hover .price-preview__value::after {
         white-space: normal;
     }
 
-    .price-search {
-        flex-wrap: wrap;
-    }
-
-    .price-search input {
-        flex-basis: 100%;
-    }
-}
+        }
 
 /* ── Плавающие кнопки связи: WhatsApp и Telegram ────────────
    На десктопе и планшете — две кнопки в ряд в правом нижнем

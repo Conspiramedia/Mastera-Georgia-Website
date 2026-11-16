@@ -117,6 +117,12 @@ CRITICAL = {
     # y=3170. Это и был бы тот самый скачок вёрстки, ради предотвращения
     # которого критический css и собирают.
     '.site-nav', '.site-nav__link', '.site-nav__link:hover',
+    # ⚠️ Обязателен в критическом CSS, а не только в redesign.css:
+    # шапка — это первый экран. Без него три пункта («Цены»,
+    # «Вопросы», «Отзывы») успевают отрисоваться до загрузки
+    # основной таблицы, шапка на грузинском переполняется, и при
+    # подхвате redesign.css содержимое прыгает.
+    '.site-nav__link--burger-only',
     '.nav-dropdown', '.nav-dropdown__btn', '.nav-dropdown__chev',
     '.nav-dropdown__panel', '.nav-dropdown::after',
     '.lang-switch', '.lang-switch__btn', '.lang-switch__btn.is-active',

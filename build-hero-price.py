@@ -28,7 +28,10 @@ def lang_of(rel):
 
 def build_card(t):
     label, value, more = t
-    return ('      <a href="#services" class="hero__price">\n'
+    # Ведём на #prices, а не на #services: плашка показывает цифру,
+    # и человек, нажавший на неё, ищет цены, а не список услуг.
+    # Для выбора услуги ниже по странице стоит своя кнопка.
+    return ('      <a href="#prices" class="hero__price">\n'
             '        <span class="hero__price__label">' + label + '</span>\n'
             '        <span class="hero__price__value">' + value + '</span>\n'
             '        <span class="hero__price__more">' + more + ' ' + SVG + '</span>\n'

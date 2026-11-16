@@ -458,24 +458,24 @@
         rvReplyLabel:  { ru: 'Ответ Mastera Georgia',
                          en: 'Response from Mastera Georgia',
                          ge: 'Mastera Georgia-ს პასუხი' },
-        rvReply1:      { ru: 'Спасибо за приятный отклик)',
-                         en: 'Thank you for the kind words)',
-                         ge: 'მადლობა სასიამოვნო გამოხმაურებისთვის)' },
+        rvReply1:      { ru: 'Спасибо за отзыв! Мы всегда стараемся делать работу идеально и быть приветливыми с клиентами. Обращайтесь!',
+                         en: 'Thank you for your review! We always do our best to deliver flawless work and stay friendly with every client. Come back any time!',
+                         ge: 'მადლობა შეფასებისთვის! ყოველთვის ვცდილობთ სამუშაო იდეალურად შევასრულოთ და თავაზიანები ვიყოთ კლიენტებთან. მოგვმართეთ!' },
         rvReply2:      { ru: 'Большое спасибо за ваш отзыв и высокую оценку. Мы всегда стараемся учитывать все пожелания клиентов и приезжать точно в назначенное время.',
                          en: "Many thanks for your review and high rating. We always try to take every client's wishes into account and arrive exactly on time.",
                          ge: 'დიდი მადლობა შეფასებისთვის. ყოველთვის ვცდილობთ გავითვალისწინოთ კლიენტის სურვილები და ზუსტად დათქმულ დროს მივიდეთ.' },
-        rvReply3:      { ru: 'Вам спасибо, рады были помочь))',
-                         en: 'Thank you, we were glad to help))',
-                         ge: 'თქვენ გმადლობთ, სიამოვნებით დაგეხმარეთ))' },
+        rvReply3:      { ru: 'Спасибо за отзыв! Передадим вашу благодарность нашему мастеру — ему будет очень приятно. Мы всегда стараемся делать работу идеально и быть приветливыми с клиентами.',
+                         en: 'Thank you for your review! We will pass your thanks on to our handyman — he will be delighted. We always do our best to deliver flawless work and stay friendly with every client.',
+                         ge: 'მადლობა შეფასებისთვის! თქვენს მადლობას ოსტატს გადავცემთ — მას ძალიან სასიამოვნო იქნება. ყოველთვის ვცდილობთ სამუშაო იდეალურად შევასრულოთ და თავაზიანები ვიყოთ კლიენტებთან.' },
         rvText1:       { ru: 'Хочу выразить огромную благодарность за отличную работу! Вызывал мастера для ремонта варочной панели, и результат превзошёл все ожидания. Отдельное спасибо мастеру Александру — настоящий профессионал своего дела. Он быстро разобрался в проблеме, нашёл причину поломки и качественно всё отремонтировал.',
                          en: 'Huge thanks for the excellent work! I called a handyman to repair my cooktop, and the result exceeded all expectations. Special thanks to Alexander — a true professional. He quickly identified the problem, found the cause of the fault and repaired everything properly.',
                          ge: 'დიდი მადლობა შესანიშნავი სამუშაოსთვის! გამოვიძახე ოსტატი ქუხნის ზედაპირის შესაკეთებლად და შედეგმა ყველა მოლოდინს გადააჭარბა. განსაკუთრებული მადლობა ოსტატ ალექსანდრეს — ნამდვილი პროფესიონალია. სწრაფად გაერკვა პრობლემაში და ხარისხიანად შეაკეთა.' },
         rvText2:       { ru: 'Поздно вечером обратился за помощью в монтаже телевизора на стену, сразу же ответили, договорились, что днём приедут установят. Мастер приехал вовремя, быстро и качественно сделал свою работу, учёл все пожелания.',
                          en: 'Late in the evening I asked for help mounting a TV on the wall. They answered straight away and agreed that someone would come and install it during the day. The handyman arrived on time, did the job quickly and well, and took all my wishes into account.',
                          ge: 'გვიან საღამოს მივმართე ტელევიზორის კედელზე დამონტაჟების თხოვნით, მაშინვე მიპასუხეს და შევთანხმდით, რომ დღისით მოვიდოდნენ. ოსტატი დროულად მოვიდა, სწრაფად და ხარისხიანად შეასრულა სამუშაო, ყველა სურვილი გაითვალისწინა.' },
-        rvText3:       { ru: 'Хорошее место, персонал отличный, приветливый, качество идеально, спасибо огромное, вы очень классные.',
-                         en: 'Great place, the staff is excellent and friendly, the quality is perfect, thank you so much, you are really great.',
-                         ge: 'კარგი ადგილია, პერსონალი შესანიშნავი და თავაზიანი, ხარისხი იდეალური, დიდი მადლობა, ძალიან მაგრები ხართ.' },
+        rvText3:       { ru: 'Отличный сервис! Оставил заявку на сайте, мне ответили сразу, согласовали цену, и мастер приехал очень быстро, даже раньше назначенного времени. Задача была непростая — монтаж сложной конструкции и сборка мебели. Мастер всё сделал качественно и аккуратно, всё подогнал по уровню, подробно объяснил.',
+                         en: 'Excellent service! I left a request on the website, got an answer straight away, we agreed on the price, and the handyman arrived very quickly — even earlier than scheduled. The job was not a simple one: mounting a complex structure and assembling furniture. He did everything neatly and to a high standard, levelled it all up and explained the details.',
+                         ge: 'შესანიშნავი სერვისი! განაცხადი საიტზე დავტოვე, მაშინვე მიპასუხეს, ფასი შევათანხმეთ და ოსტატი ძალიან სწრაფად მოვიდა, დათქმულ დროზე ადრეც კი. დავალება არ იყო მარტივი — რთული კონსტრუქციის მონტაჟი და ავეჯის აწყობა. ოსტატმა ყველაფერი ხარისხიანად და გულდასმით გააკეთა, ყველაფერი დონეზე მოარგო და დაწვრილებით ამიხსნა.' },
         faqCtaTitle:   { ru: 'Остались сомнения?',
                          en: 'Still have doubts?',
                          ge: 'კიდევ გაქვთ ეჭვები?' },
@@ -1560,6 +1560,12 @@
                 }
             }
             // Оглавление и подвал — обычная прокрутка.
+            // ⚠️ .v-jumpbar в разметке больше нет: полосу быстрых
+            // ссылок убрали 16.11.2026 как дубль бургера (её пункты
+            // «Районы» и «Вопросы» повторяли меню, «Заявка» —
+            // кнопку шапки, а «Цены» переехали в меню). Проверку
+            // оставляем: она ничего не стоит и вернёт прежнее
+            // поведение, если полосу когда-нибудь вернут.
             if (a.closest('.v-jumpbar') || a.closest('.site-footer')) return;
             // Ссылка на форму ДРУГОЙ страницы (/ru/#lead с лендинга):
             // пусть браузер уходит по ней, формы здесь может не быть.
@@ -2537,8 +2543,82 @@
         // Переход по ссылке внутри меню закрывает его: якорь на той
         // же странице адрес не меняет, и панель осталась бы висеть
         // поверх того, к чему человек прокрутился.
+        //
+        // ⚠️ Якорь на ЭТОЙ же странице требует особого обращения, иначе
+        // он не работает вовсе. Пока меню открыто, lockScroll() держит
+        // body в position: fixed, а unlockScroll() при закрытии
+        // возвращает страницу на запомненную позицию
+        // (window.scrollTo(0, scrollLockY)). Порядок получался такой:
+        // браузер прыгал к якорю → close() снимал блокировку → scrollTo
+        // утаскивал обратно. Снаружи это выглядело как мёртвая ссылка:
+        // нажимаешь «Как работаем», «Районы», «Вопросы» — и остаёшься
+        // там же, где был. Ссылки на другие страницы не ломались:
+        // там возврат позиции уже ни на что не влияет.
+        //
+        // Поэтому для своего якоря переход берём на себя: гасим
+        // штатное поведение, закрываем меню и прокручиваем к цели
+        // ПОСЛЕ снятия блокировки.
         menu.addEventListener('click', function (e) {
-            if (e.target.closest && e.target.closest('a')) close();
+            var a = e.target.closest && e.target.closest('a');
+            if (!a) return;
+
+            var href = a.getAttribute('href') || '';
+            // Свой якорь — это «#id» длиннее одного символа. Голый «#»
+            // ведёт наверх и цели не имеет, его отдаём браузеру.
+            var svoyYakor = href.charAt(0) === '#' && href.length > 1;
+
+            if (!svoyYakor) { close(); return; }
+
+            var cel = null;
+            try {
+                cel = document.getElementById(decodeURIComponent(href.slice(1)));
+            } catch (err) {
+                cel = document.getElementById(href.slice(1));
+            }
+            // Якоря с таким id на странице нет (например, пункт меню
+            // общий для всех страниц, а секция есть не везде) — пусть
+            // браузер решает сам, мы только закрываем панель.
+            if (!cel) { close(); return; }
+
+            e.preventDefault();
+            close();
+
+            // ⚠️ Ждём снятия блокировки, а не прокручиваем сразу.
+            // unlockScroll() внутри close() выполняется синхронно, но
+            // свой scrollTo он делает последним — прокрутка отсюда
+            // попала бы под него. setTimeout(0) ставит нас в очередь
+            // следующим, когда позиция уже восстановлена.
+            setTimeout(function () {
+                // Отступ на шапку: она sticky и накрыла бы собой
+                // заголовок секции, к которой прокрутились.
+                var shapka = header.getBoundingClientRect().height || 0;
+                var verh = cel.getBoundingClientRect().top +
+                           (window.pageYOffset || document.documentElement.scrollTop || 0) -
+                           shapka - 12;
+                if (verh < 0) verh = 0;
+
+                // Плавность — только если человек её не отключил
+                // в системе: при prefers-reduced-motion анимация
+                // прокрутки ему противопоказана.
+                var bezAnimacii = window.matchMedia &&
+                    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+                try {
+                    window.scrollTo({
+                        top: verh,
+                        behavior: bezAnimacii ? 'auto' : 'smooth'
+                    });
+                } catch (err) {
+                    // Старые браузеры не знают объектной формы scrollTo.
+                    window.scrollTo(0, verh);
+                }
+
+                // Адрес меняем вручную: preventDefault его не обновил,
+                // а ссылка на секцию должна оставаться копируемой.
+                if (window.history && window.history.pushState) {
+                    window.history.pushState(null, '', href);
+                }
+            }, 0);
         });
 
         document.addEventListener('keydown', function (e) {

@@ -426,9 +426,9 @@
         rvMaps:        { ru: 'Google Картах',
                          en: 'Google Maps',
                          ge: 'Google რუკებზე' },
-        rvStarsLabel:  { ru: 'Оценка 4,4 из 5',
-                         en: 'Rated 4.4 out of 5',
-                         ge: 'შეფასება 4,4 5-დან' },
+        rvStarsLabel:  { ru: 'Оценка 4,5 из 5',
+                         en: 'Rated 4.5 out of 5',
+                         ge: 'შეფასება 4,5 5-დან' },
         rvStars5:      { ru: 'Оценка 5 из 5',
                          en: 'Rated 5 out of 5',
                          ge: 'შეფასება 5 5-დან' },
@@ -563,12 +563,20 @@
 
     /* Google-отзывы: рейтинг, число и ссылки одним местом.
        Те же значения стоят в разметке шести главных и в
-       aggregateRating каждой страницы; при обновлении отзывов
-       правятся три места, и держать их рядом — единственный
-       способ не забыть одно из них.
-       Сверено с Google Картами 15.11.2026: 4,4 при 7 отзывах. */
-    var GR_RATING = '4,4';
-    var GR_COUNT = '7';
+       aggregateRating каждой страницы. Руками их не правят: всё
+       проставляет `python update-reviews.py <число> <рейтинг>`,
+       он же поднимает версию статики.
+       Сверено с Google Картами 21.11.2026: 4,5 при 8 отзывах. */
+    var GR_RATING = '4,5';
+    var GR_COUNT = '8';
+
+    /* Разделитель дробной части зависит от языка: по-английски пишут 4.5,
+       по-русски и по-грузински — 4,5. Константа одна на три языка, поэтому
+       на EN-странице запятая стояла рядом с aria-label «Rated 4.5 out of
+       5» — цифра и подпись противоречили друг другу. */
+    function grRating() {
+        return LANG === 'en' ? GR_RATING.replace(',', '.') : GR_RATING;
+    }
     var GR_PLACE_URL = 'https://maps.app.goo.gl/TrW7KzPo6HohbvBn7';
     var GR_WRITE_URL = 'https://g.page/r/CSw2TjzauF7ZEBE/review';
     /* Часы. Разметка взята из верхней плашки один в один: расписание
@@ -2035,7 +2043,7 @@
                     '<div class="reviews__head-text">' +
                       '<h3 class="reviews__head-title">' + t('rvTitle') + '</h3>' +
                       '<div class="reviews__score">' +
-                        '<span class="reviews__score-num" data-gr-rating>' + GR_RATING + '</span>' +
+                        '<span class="reviews__score-num" data-gr-rating>' + grRating() + '</span>' +
                         '<span class="reviews__score-meta">' +
                           '<span class="reviews__stars" role="img" aria-label="' + t('rvStarsLabel') + '">★★★★☆</span>' +
                           '<span class="reviews__score-label">' +

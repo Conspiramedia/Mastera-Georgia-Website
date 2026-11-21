@@ -202,7 +202,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '389';
+const MASTERA_VERSION = '390';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Личный чат владельца сервиса: сюда ведут кнопки «Написать в Telegram»
@@ -1584,13 +1584,22 @@ function initClientLeadFormTracking() {
             await sendLeadToBot(formData, pendingIdempotencyKey);
 
             if (typeof gtag === 'function') {
-                gtag('event', 'generate_lead_client', {
+                // Два события на одно действие — см. комментарий к sendLead()
+                // в блоке отслеживания кликов: общее копит историю, детальное
+                // уходит в Google Ads отдельной конверсией. Здесь вызовы
+                // выписаны прямо: sendLead живёт в другой области видимости.
+                // value: 3 — заполненная форма ближе к сделке, чем клик:
+                // человек оставил задачу и контакт, заявка уже в боте.
+                var leadParams = {
                     form_name: 'client_lead_form',
                     form_location: 'Заявка клиента',
                     user_type: 'client',
-                    value: 1,
+                    contact_method: 'form',
+                    value: 3,
                     currency: 'USD'
-                });
+                };
+                gtag('event', 'generate_lead_client', leadParams);
+                gtag('event', 'lead_form', leadParams);
             }
 
             // Окно заявки, если оно открыто, закроется само:
@@ -1777,13 +1786,19 @@ function initHeroQuickForm() {
             });
 
             if (typeof gtag === 'function') {
-                gtag('event', 'generate_lead_client', {
+                // Своё событие, отдельно от основной формы: здесь клиент
+                // оставил только номер WhatsApp, задачу не описал — для Ads
+                // это другой по качеству лид, и смешивать их нельзя.
+                var heroParams = {
                     form_name: 'hero_quick_form',
                     form_location: 'Быстрая заявка, первый экран',
                     user_type: 'client',
-                    value: 1,
+                    contact_method: 'form',
+                    value: 3,
                     currency: 'USD'
-                });
+                };
+                gtag('event', 'generate_lead_client', heroParams);
+                gtag('event', 'lead_form_hero', heroParams);
             }
 
             openThankYou('hero');
@@ -2696,6 +2711,27 @@ if (document.readyState === 'complete') {
         gtag('event', eventName, params);
     }
 
+    // Клиентская заявка шлётся ДВУМЯ событиями сразу, и это не дубль:
+    //   generate_lead_client — общее, по нему считают все заявки вместе
+    //                          и сравнивают с историей (копится с запуска);
+    //   detailName           — своё на каждый канал (lead_phone, lead_whatsapp,
+    //                          lead_telegram, lead_form…), и именно его
+    //                          импортируют в Google Ads отдельной конверсией.
+    // Иначе телефон, WhatsApp и Telegram различались бы только параметром
+    // form_name, а Ads умеет брать из GA4 событие целиком, не его часть:
+    // три действия слились бы в одну конверсию. Разводить их условиями
+    // внутри GA4 тоже можно, но та настройка живёт в вебе, не видна в коде
+    // и теряется при любой правке счётчика.
+    function sendLead(detailName, params) {
+        send('generate_lead_client', params);
+
+        // Копия, иначе send() дописал бы контекст страницы в тот же объект
+        // повторно, а общее и детальное событие ушли бы с общими ссылками.
+        var detail = {};
+        for (var k in params) detail[k] = params[k];
+        send(detailName, detail);
+    }
+
     document.addEventListener('click', function (e) {
         var link = e.target.closest ? e.target.closest('a[href]') : null;
         if (!link) return;
@@ -2705,7 +2741,10 @@ if (document.readyState === 'complete') {
         // --- Телефон -----------------------------------------------------
         if (href.indexOf('tel:') === 0) {
             if (alreadyCounted(href)) return;
-            send('generate_lead_client', {
+            // value: 1 — клик по номеру самый дешёвый сигнал: человек мог
+            // набрать и не дозвониться. Ads сравнивает каналы по value,
+            // поэтому ставим ниже мессенджера и формы.
+            sendLead('lead_phone', {
                 form_name: 'phone_click',
                 form_location: link.className || 'phone_link',
                 user_type: 'client',
@@ -2722,12 +2761,14 @@ if (document.readyState === 'complete') {
         // заранее: добавите ссылку — отслеживание заработает само.
         if (href.indexOf('wa.me') !== -1 || href.indexOf('api.whatsapp.com') !== -1) {
             if (alreadyCounted(href)) return;
-            send('generate_lead_client', {
+            // value: 2 — переход в мессенджер надёжнее звонка: диалог
+            // остаётся, человек напишет и позже.
+            sendLead('lead_whatsapp', {
                 form_name: 'whatsapp_click',
                 form_location: link.className || 'whatsapp_link',
                 user_type: 'client',
                 contact_method: 'whatsapp',
-                value: 1,
+                value: 2,
                 currency: 'USD'
             });
             return;
@@ -2762,12 +2803,13 @@ if (document.readyState === 'complete') {
                     currency: 'USD'
                 });
             } else {
-                send('generate_lead_client', {
+                // value: 2 — как у WhatsApp: мессенджер, диалог не теряется.
+                sendLead('lead_telegram', {
                     form_name: 'telegram_click',
                     form_location: link.className || 'telegram_bot_link',
                     user_type: 'client',
                     contact_method: 'telegram',
-                    value: 1,
+                    value: 2,
                     currency: 'USD'
                 });
             }

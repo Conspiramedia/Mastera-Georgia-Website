@@ -202,7 +202,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '390';
+const MASTERA_VERSION = '391';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Личный чат владельца сервиса: сюда ведут кнопки «Написать в Telegram»
@@ -2711,6 +2711,19 @@ if (document.readyState === 'complete') {
         gtag('event', eventName, params);
     }
 
+    // Кто нажал — определяет СТРАНИЦА, а не ссылка.
+    // Телеграм-чат t.me/job_kot один на всех: туда пишут и мастера, и
+    // заказчики, а кто именно — видно по тому, откуда пришли. Мастерам
+    // отведён раздел /<lang>/masters/, всё остальное — клиентское.
+    // ⚠️ Раньше здесь стояла проверка самой ссылки (`job_kot` → мастер),
+    // и клик по кнопке Telegram в нижней панели на клиентской странице
+    // уходил как generate_lead_master с value 0. В конверсии Google Ads
+    // такие клики не попадают вовсе — обращения клиентов с мобильных,
+    // а это основной трафик, были не видны рекламе.
+    function isMasterPage() {
+        return /\/masters(?:\/|$)/i.test(location.pathname);
+    }
+
     // Клиентская заявка шлётся ДВУМЯ событиями сразу, и это не дубль:
     //   generate_lead_client — общее, по нему считают все заявки вместе
     //                          и сравнивают с историей (копится с запуска);
@@ -2741,6 +2754,18 @@ if (document.readyState === 'complete') {
         // --- Телефон -----------------------------------------------------
         if (href.indexOf('tel:') === 0) {
             if (alreadyCounted(href)) return;
+            // В разделе мастеров по номеру звонит соискатель, а не заказчик.
+            if (isMasterPage()) {
+                send('generate_lead_master', {
+                    form_name: 'phone_click',
+                    form_location: 'master_page_phone',
+                    user_type: 'master',
+                    contact_method: 'phone',
+                    value: 0,
+                    currency: 'USD'
+                });
+                return;
+            }
             // value: 1 — клик по номеру самый дешёвый сигнал: человек мог
             // набрать и не дозвониться. Ads сравнивает каналы по value,
             // поэтому ставим ниже мессенджера и формы.
@@ -2756,11 +2781,23 @@ if (document.readyState === 'complete') {
         }
 
         // --- WhatsApp ----------------------------------------------------
-        // Кнопок wa.me на сайте сейчас нет (WhatsApp в формах — это поле
-        // ввода номера, оно уходит вместе с заявкой). Ветка оставлена
-        // заранее: добавите ссылку — отслеживание заработает само.
+        // Ссылка живёт в нижней панели `.contact-bar` (мобильные): её строит
+        // JS из buildContactLinks(), в HTML страниц её нет — искать кнопку
+        // поиском по разметке бесполезно.
         if (href.indexOf('wa.me') !== -1 || href.indexOf('api.whatsapp.com') !== -1) {
             if (alreadyCounted(href)) return;
+            // В разделе мастеров пишет соискатель, а не заказчик.
+            if (isMasterPage()) {
+                send('generate_lead_master', {
+                    form_name: 'whatsapp_click',
+                    form_location: 'master_page_whatsapp',
+                    user_type: 'master',
+                    contact_method: 'whatsapp',
+                    value: 0,
+                    currency: 'USD'
+                });
+                return;
+            }
             // value: 2 — переход в мессенджер надёжнее звонка: диалог
             // остаётся, человек напишет и позже.
             sendLead('lead_whatsapp', {
@@ -2776,15 +2813,13 @@ if (document.readyState === 'complete') {
 
         // --- Telegram ----------------------------------------------------
         if (href.indexOf('t.me/') !== -1) {
-            // job_kot — канал для мастеров, а не клиентская заявка.
-            // Считаем отдельным событием, иначе отклики на вакансию
-            // попадут в конверсии Google Ads как платные лиды.
-            var isMasterChannel = href.indexOf('job_kot') !== -1;
             var isSupport = href.indexOf('masterasupport') !== -1;
 
             if (alreadyCounted(href)) return;
 
-            if (isMasterChannel) {
+            // Раздел мастеров — отклик на вакансию, не платный лид:
+            // value 0, в конверсии Google Ads не идёт.
+            if (isMasterPage()) {
                 send('generate_lead_master', {
                     form_name: 'telegram_click',
                     form_location: 'master_vacancy_link',

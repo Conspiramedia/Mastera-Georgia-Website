@@ -202,7 +202,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '388';
+const MASTERA_VERSION = '389';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Личный чат владельца сервиса: сюда ведут кнопки «Написать в Telegram»
@@ -2641,3 +2641,136 @@ if (document.readyState === 'complete') {
 } else {
     window.addEventListener('load', applyFieldLabels, { once: true });
 }
+
+/* ========================================================================
+   Отслеживание кликов по контактам (GA4 → конверсии Google Ads)
+   ------------------------------------------------------------------------
+   Зачем: до этого в GA4 уходили только отправки форм (generate_lead_client
+   и generate_lead_master). Клиент, который вместо формы нажал «позвонить»
+   или ушёл в Telegram-бота, в статистике не появлялся вообще — конверсии
+   в Google Ads висели пустыми, а умные стратегии ставок учиться было не на чем.
+
+   Почему делегирование на document, а не обработчики на каждой кнопке:
+   контактные ссылки раскиданы по 160 страницам (шапка, подвал, блоки CTA),
+   часть из них без классов, а часть появляется динамически (кнопка Telegram
+   после регистрации мастера). Один слушатель по href ловит все случаи сразу
+   и не требует править разметку.
+
+   Почему capture + passive: клик по ссылке уводит со страницы, и обычный
+   слушатель на всплытии может не успеть отработать. Фаза перехвата
+   срабатывает раньше любых обработчиков, которые гасят событие.
+   ===================================================================== */
+(function () {
+    'use strict';
+
+    // Повторные клики по одной и той же ссылке за короткий промежуток —
+    // это нетерпение пользователя, а не отдельные заявки. Ключ дедупликации —
+    // сам href: иначе клик по телефону в шапке глушил бы клик по Telegram
+    // в подвале, сделанный через секунду, и заявка терялась бы.
+    var DEDUP_MS = 1500;
+    var lastHit = Object.create(null);
+
+    function alreadyCounted(key) {
+        var now = Date.now();
+        if (lastHit[key] && now - lastHit[key] < DEDUP_MS) return true;
+        lastHit[key] = now;
+        return false;
+    }
+
+    // Страница вида /ru/tbilisi/elektrik-tbilisi/ → язык, город и услуга.
+    // Нужно, чтобы в GA4 было видно, какие именно лендинги дают заявки:
+    // по этим срезам потом отключают неокупаемые группы объявлений.
+    function pageContext() {
+        var parts = location.pathname.split('/').filter(Boolean);
+        return {
+            page_lang: parts[0] || 'ru',
+            page_city: parts[1] || 'index',
+            page_service: parts[2] || 'landing'
+        };
+    }
+
+    function send(eventName, params) {
+        if (typeof gtag !== 'function') return;
+        var ctx = pageContext();
+        for (var k in ctx) params[k] = ctx[k];
+        gtag('event', eventName, params);
+    }
+
+    document.addEventListener('click', function (e) {
+        var link = e.target.closest ? e.target.closest('a[href]') : null;
+        if (!link) return;
+
+        var href = link.getAttribute('href') || '';
+
+        // --- Телефон -----------------------------------------------------
+        if (href.indexOf('tel:') === 0) {
+            if (alreadyCounted(href)) return;
+            send('generate_lead_client', {
+                form_name: 'phone_click',
+                form_location: link.className || 'phone_link',
+                user_type: 'client',
+                contact_method: 'phone',
+                value: 1,
+                currency: 'USD'
+            });
+            return;
+        }
+
+        // --- WhatsApp ----------------------------------------------------
+        // Кнопок wa.me на сайте сейчас нет (WhatsApp в формах — это поле
+        // ввода номера, оно уходит вместе с заявкой). Ветка оставлена
+        // заранее: добавите ссылку — отслеживание заработает само.
+        if (href.indexOf('wa.me') !== -1 || href.indexOf('api.whatsapp.com') !== -1) {
+            if (alreadyCounted(href)) return;
+            send('generate_lead_client', {
+                form_name: 'whatsapp_click',
+                form_location: link.className || 'whatsapp_link',
+                user_type: 'client',
+                contact_method: 'whatsapp',
+                value: 1,
+                currency: 'USD'
+            });
+            return;
+        }
+
+        // --- Telegram ----------------------------------------------------
+        if (href.indexOf('t.me/') !== -1) {
+            // job_kot — канал для мастеров, а не клиентская заявка.
+            // Считаем отдельным событием, иначе отклики на вакансию
+            // попадут в конверсии Google Ads как платные лиды.
+            var isMasterChannel = href.indexOf('job_kot') !== -1;
+            var isSupport = href.indexOf('masterasupport') !== -1;
+
+            if (alreadyCounted(href)) return;
+
+            if (isMasterChannel) {
+                send('generate_lead_master', {
+                    form_name: 'telegram_click',
+                    form_location: 'master_vacancy_link',
+                    user_type: 'master',
+                    contact_method: 'telegram',
+                    value: 0,
+                    currency: 'USD'
+                });
+            } else if (isSupport) {
+                // Поддержка — не заявка: ценность 0, чтобы не искажать
+                // стоимость конверсии, но событие нужно для аналитики.
+                send('contact_support', {
+                    form_name: 'telegram_support',
+                    contact_method: 'telegram',
+                    value: 0,
+                    currency: 'USD'
+                });
+            } else {
+                send('generate_lead_client', {
+                    form_name: 'telegram_click',
+                    form_location: link.className || 'telegram_bot_link',
+                    user_type: 'client',
+                    contact_method: 'telegram',
+                    value: 1,
+                    currency: 'USD'
+                });
+            }
+        }
+    }, { capture: true, passive: true });
+})();

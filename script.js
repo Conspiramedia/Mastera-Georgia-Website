@@ -202,7 +202,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '393';
+const MASTERA_VERSION = '394';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Личный чат владельца сервиса: сюда ведут кнопки «Написать в Telegram»
@@ -577,7 +577,15 @@ function normalizeGeorgianPhone(value) {
 
 // Форматирование телефонных номеров
 function initPhoneFormatting() {
-    const phoneInputs = document.querySelectorAll('#leadPhone');
+    // Берём оба поля телефона: клиентскую заявку (#leadPhone) и анкету мастера
+    // (#masterLeadPhone). Раньше селектор знал только о клиентском, и анкета
+    // мастера оставалась БЕЗ маски: подсказка обещала «+995 5XX XXX XXX», а
+    // нативный pattern из HTML («^\+995[0-9]{9}$») пробелов не знал и такой
+    // номер отклонял. Привычный местный набор «555123456» тоже не проходил —
+    // дописывать код страны было некому. Единственный рабочий способ ввода,
+    // слитный «+995555123456», в подсказке не значился: мастер упирался в
+    // «Введите данные в указанном формате» без шанса понять, чего от него ждут.
+    const phoneInputs = document.querySelectorAll('#leadPhone, #masterLeadPhone');
     const whatsappInputs = document.querySelectorAll('input[name="whatsapp"]');
     const PREFIX_LEN = '+995'.length;
 

@@ -33,7 +33,7 @@
   <!-- Open Graph -->
   <meta property="og:title" content="Mastera.ge — Сервис подбора мастеров в Грузии">
   <meta property="og:description" content="Mastera.ge — сервис подбора проверенных мастеров в Тбилиси и Батуми. Сантехника, электрика, ремонт, сборка мебели.">
-  <meta property="og:image" content="https://mastera.ge/image/og-preview-ru.jpg?v=394">
+  <meta property="og:image" content="https://mastera.ge/image/og-preview-ru.jpg?v=395">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:type" content="website">
@@ -44,7 +44,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Мастера Грузии — Сантехник, Электрик, Ремонт любой сложности">
   <meta name="twitter:description" content="Сервис подбора мастеров в Тбилиси. Сантехника, электрика, мастер на все руки, мелкий ремонт. Отклик за 60 минут.">
-  <meta name="twitter:image" content="https://mastera.ge/image/og-preview-ru.jpg?v=394">
+  <meta name="twitter:image" content="https://mastera.ge/image/og-preview-ru.jpg?v=395">
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/image/favicon.svg">
@@ -60,12 +60,26 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/image/apple-touch-icon.png">
 
   <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7SLML317LT"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-7SLML317LT');
+    // Счётчик только на боевом домене — см. комментарий в языковых разделах.
+    // Здесь скрипт googletagmanager подключается из JS, а не тегом в разметке:
+    // тег грузился бы раньше любой проверки, и копия сайта на чужом домене
+    // всё равно отметилась бы в отчётах.
+    (function () {
+      if (['mastera.ge', 'www.mastera.ge'].indexOf(location.hostname) === -1) {
+        window.gtag = function () {};
+        return;
+      }
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      window.gtag = gtag;
+      gtag('js', new Date());
+      gtag('config', 'G-7SLML317LT');
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-7SLML317LT';
+      document.head.appendChild(s);
+    })();
   </script>
 
   <style>

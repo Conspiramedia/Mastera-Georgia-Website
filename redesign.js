@@ -1265,7 +1265,7 @@
                   '<div class="logo site-footer__logo">' +
                     '<span class="logo__mark">' + svg('tool') + '</span>' +
                     '<span class="logo__text">' +
-                      '<span class="logo__name">Mastera Georgia</span>' +
+                      '<span class="logo__name">Mastera<span class="logo__geo">.ge</span></span>' +
                     '</span>' +
                   '</div>' +
                   '<p class="site-footer__about">' + t('ftAbout') + '</p>' +

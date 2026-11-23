@@ -353,9 +353,9 @@
         finalCall:    { ru: 'Позвонить', en: 'Call', ge: 'დარეკვა' },
 
         /* ── Подвал ──────────────────────────────────────────── */
-        ftAbout:     { ru: 'Mastera Georgia — ваш надёжный помощник по дому. Сантехника, электрика, ремонт бытовой техники, сборка мебели и мелкий бытовой ремонт. Работаем качественно и по фиксированным ценам. Условия и стоимость уточняйте в вашем городе.',
-                       en: 'Mastera Georgia is your reliable help around the home. Plumbing, electrics, appliance repair, furniture assembly and small household repairs. We work to a high standard at fixed prices. Check terms and prices for your city.',
-                       ge: 'Mastera Georgia — თქვენი საიმედო დამხმარე სახლში. სანტექნიკა, ელექტრიკა, საყოფაცხოვრებო ტექნიკის შეკეთება, ავეჯის აწყობა და წვრილი საოჯახო რემონტი. ვმუშაობთ ხარისხიანად და ფიქსირებულ ფასებში. პირობები და ღირებულება დააზუსტეთ თქვენს ქალაქში.' },
+        ftAbout:     { ru: 'Mastera.ge — ваш надёжный помощник по дому. Сантехника, электрика, ремонт бытовой техники, сборка мебели и мелкий бытовой ремонт. Работаем качественно и по фиксированным ценам. Условия и стоимость уточняйте в вашем городе.',
+                       en: 'Mastera.ge is your reliable help around the home. Plumbing, electrics, appliance repair, furniture assembly and small household repairs. We work to a high standard at fixed prices. Check terms and prices for your city.',
+                       ge: 'Mastera.ge — თქვენი საიმედო დამხმარე სახლში. სანტექნიკა, ელექტრიკა, საყოფაცხოვრებო ტექნიკის შეკეთება, ავეჯის აწყობა და წვრილი საოჯახო რემონტი. ვმუშაობთ ხარისხიანად და ფიქსირებულ ფასებში. პირობები და ღირებულება დააზუსტეთ თქვენს ქალაქში.' },
         ftAllServices: { ru: 'Все услуги', en: 'All services', ge: 'ყველა სერვისი' },
         ftHome:      { ru: 'Помощь по дому', en: 'Household help', ge: 'დახმარება სახლში' },
         ftAppliance: { ru: 'Бытовая техника', en: 'Home appliances', ge: 'საყოფაცხოვრებო ტექნიკა' },

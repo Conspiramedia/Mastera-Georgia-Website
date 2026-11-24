@@ -58,11 +58,25 @@ GREEN = (32, 185, 131)            # --green-500
 WHITE = (255, 255, 255)
 SOFT = (244, 247, 251)            # --soft
 
-# ⚠️ Название бренда — ВЕЗДЕ «Mastera Georgia», латиницей, независимо
+# ── Тёмная подложка (с 24.11.2026) ─────────────────────────────
+# Фон взят из подвала сайта (--navy-900), текст белый.
+# ⚠️ Синий --blue-700 на тёмном даёт контраст 2.1:1 и тонет —
+# ровно то, на что наткнулись в подвале сайта 23.11. Берём
+# --blue-400: 6.4:1, тот же синий, но читаемый.
+# Светлые INK/MUTED/BLUE/SOFT оставлены выше намеренно: чтобы
+# вернуть светлый вариант, достаточно поменять эти четыре строки.
+FON = (7, 21, 47)                 # --navy-900
+TEKST = (255, 255, 255)           # вместо INK
+TEKST_TUSK = (174, 191, 212)      # вместо MUTED, светло-серый
+AKCENT = (107, 168, 255)          # --blue-400, вместо BLUE
+
+# ⚠️ Название бренда — ВЕЗДЕ «Mastera.ge», латиницей, независимо
 # от языка страницы: так оно набрано в шапке сайта на всех трёх
 # языках. Переводить его («Мастера Грузии», «საქართველოს ოსტატები»)
 # нельзя — в превью ссылки бренд должен узнаваться одинаково.
-BREND = 'Mastera Georgia'
+# Было «Mastera Georgia» до 24.11.2026 — переименовано вместе с
+# логотипом в шапке и подвале сайта.
+BREND = 'Mastera.ge'
 
 TEKSTY = {
     'ru': {
@@ -260,7 +274,7 @@ def podgotovit_foto(shirina, vysota):
 
     # Если кадр вышел за пределы снимка — подложим белое поле, а не
     # сдвинем кадр: сдвиг снова срезал бы фигуру с другой стороны.
-    holst = Image.new('RGB', (shirina, vysota), (255, 255, 255))
+    holst = Image.new('RGB', (shirina, vysota), FON)
     holst.paste(im, (-left, -top))
     im = holst
 
@@ -286,6 +300,25 @@ def podgotovit_foto(shirina, vysota):
     return im, maska
 
 
+def draw_brend(d, xy, tekst, shrift, cvet_imya, cvet_domen):
+    """Рисует «Mastera.ge»: имя одним цветом, «.ge» другим.
+
+    Так же набрано в шапке и подвале сайта: .logo__geo красится
+    отдельно от .logo__name. Делим по ПОСЛЕДНЕЙ точке, а не по
+    первой: в «mastera.ge» она одна, но правило переживёт и домен
+    вида «mastera.co.ge».
+    """
+    x, y = xy
+    i = tekst.rfind('.')
+    if i < 0:
+        d.text((x, y), tekst, font=shrift, fill=cvet_imya, anchor='la')
+        return
+    imya, domen = tekst[:i], tekst[i:]
+    d.text((x, y), imya, font=shrift, fill=cvet_imya, anchor='la')
+    d.text((x + d.textlength(imya, font=shrift), y), domen,
+           font=shrift, fill=cvet_domen, anchor='la')
+
+
 def sobrat(lang):
     t = TEKSTY[lang]
     gruz = (lang == 'ka')
@@ -307,7 +340,7 @@ def sobrat(lang):
     f_zap_gor = ImageFont.truetype(sobrat_shrift(700), 24)
     f_zap_zag = ImageFont.truetype(sobrat_shrift(800), 58 if gruz else 64)
 
-    holst = Image.new('RGB', (W, H), WHITE)
+    holst = Image.new('RGB', (W, H), FON)
 
     # ── фотография слева
     # 470 хватает: фигура 380x595 вписывается по ВЫСОТЕ (k=0.985,
@@ -346,7 +379,7 @@ def sobrat(lang):
     holst.paste(znak, (X, y_znak), znak)
 
     X_text = X + ZNAK + ZAZOR_ZNAK
-    d.text((X_text, y), t['zagolovok'], font=f_zag, fill=INK, anchor='la')
+    draw_brend(d, (X_text, y), t['zagolovok'], f_zag, TEKST, AKCENT)
 
     # ⚠️ Подчёркивание — короткий акцент фиксированной длины, как в
     # превью старого сайта, а НЕ линия во всю ширину заголовка.
@@ -360,7 +393,7 @@ def sobrat(lang):
     y_cherta = y + f_zag.getmetrics()[0] + ZAZOR_CHERTA
     d.rounded_rectangle([X_text, y_cherta,
                          X_text + CHERTA_W, y_cherta + CHERTA_H],
-                        radius=CHERTA_H // 2, fill=BLUE)
+                        radius=CHERTA_H // 2, fill=AKCENT)
 
     # подзаголовок
     # ⚠️ Кегль тоже подбираем: грузинское «სანტექნიკოსი, ელექტრიკოსი,
@@ -379,9 +412,9 @@ def sobrat(lang):
 
     y = y_cherta + 40
     if gruz:
-        draw_mixed(d, (X, y), t['podzagolovok'], f_pod, f_zap_pod, MUTED)
+        draw_mixed(d, (X, y), t['podzagolovok'], f_pod, f_zap_pod, TEKST_TUSK)
     else:
-        d.text((X, y), t['podzagolovok'], font=f_pod, fill=MUTED, anchor='la')
+        d.text((X, y), t['podzagolovok'], font=f_pod, fill=TEKST_TUSK, anchor='la')
 
     # пилюля с городами
     y += int(f_pod.size * 1.5) + 18
@@ -391,18 +424,21 @@ def sobrat(lang):
         w_gor = d.textlength(t['goroda'], font=f_gor)
     PAD_X, PAD_Y = 22, 12
     vys_pil = f_gor.size + PAD_Y * 2
+    # ⚠️ Пилюля заливается АКЦЕНТОМ, а текст в ней — цветом фона:
+    # на тёмном холсте светлая плашка с тёмными буквами читается
+    # лучше, чем синяя с белыми (та сливается с фоном).
     d.rounded_rectangle([X, y, X + w_gor + PAD_X * 2, y + vys_pil],
-                        radius=vys_pil // 2, fill=BLUE)
+                        radius=vys_pil // 2, fill=AKCENT)
     if gruz:
         draw_mixed(d, (X + PAD_X, y + PAD_Y - 2), t['goroda'],
-                   f_gor, f_zap_gor, WHITE)
+                   f_gor, f_zap_gor, FON)
     else:
         d.text((X + PAD_X, y + PAD_Y - 2), t['goroda'], font=f_gor,
-               fill=WHITE, anchor='la')
+               fill=FON, anchor='la')
 
     # телефон
     y += vys_pil + 24
-    d.text((X, y), t['telefon'], font=f_tel, fill=INK, anchor='la')
+    d.text((X, y), t['telefon'], font=f_tel, fill=TEKST, anchor='la')
     w_tel = d.textlength(t['telefon'], font=f_tel)
 
     # строка мессенджеров
@@ -427,9 +463,9 @@ def sobrat(lang):
 
     y += int(f_tel.size * 1.12) + 6
     if gruz:
-        draw_mixed(d, (X, y), t['svyaz'], f_svz, f_zap_svz, MUTED)
+        draw_mixed(d, (X, y), t['svyaz'], f_svz, f_zap_svz, TEKST_TUSK)
     else:
-        d.text((X, y), t['svyaz'], font=f_svz, fill=MUTED, anchor='la')
+        d.text((X, y), t['svyaz'], font=f_svz, fill=TEKST_TUSK, anchor='la')
 
     # домен внизу, с подчёркиванием — как в старом превью
     # ⚠️ Черта той же длины, что под заголовком (86 px), а НЕ по ширине
@@ -437,10 +473,10 @@ def sobrat(lang):
     # черты на одной картинке выглядели разными элементами. На проде
     # обе одинаковые, замерено: 86x7.
     y_dom = H - 92
-    d.text((X, y_dom), DOMEN, font=f_dom, fill=INK, anchor='la')
+    draw_brend(d, (X, y_dom), DOMEN, f_dom, TEKST, AKCENT)
     y_pod = y_dom + f_dom.getmetrics()[0] + ZAZOR_CHERTA
     d.rounded_rectangle([X, y_pod, X + CHERTA_W, y_pod + CHERTA_H],
-                        radius=CHERTA_H // 2, fill=BLUE)
+                        radius=CHERTA_H // 2, fill=AKCENT)
 
     return holst
 

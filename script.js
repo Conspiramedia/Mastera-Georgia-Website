@@ -202,7 +202,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '399';
+const MASTERA_VERSION = '400';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Личный чат владельца сервиса: сюда ведут кнопки «Написать в Telegram»
@@ -991,6 +991,100 @@ function botCityFromUrl() {
 
 
 
+// ============================================
+// КАНАЛ ПРИВЛЕЧЕНИЯ (source) — для сверки GA4 с заявками в боте
+// ============================================
+//
+// Зачем. GA4 считает НАЖАТИЯ по каналам, бот — реальные сделки. Связать их
+// было нечем: заявка не знала, откуда пришёл человек. Отсюда разрыв «68
+// событий generate_lead_client против 14 сделок» — какие из них принесли
+// деньги, увидеть не получалось. Теперь заявка несёт канал с собой.
+//
+// Значение уезжает в вебхук полем source и ложится в requests.source.
+// Белый список значений продублирован в боте (ALLOWED_REQUEST_SOURCES):
+// вебхук открыт наружу, своей проверке сайта там не доверяют.
+
+var SOURCE_STORAGE_KEY = 'mg_src';
+var SOURCE_TTL_MS = 30 * 24 * 60 * 60 * 1000;   // 30 дней — окно атрибуции Ads
+
+function detectVisitSource() {
+    // Канал ТЕКУЩЕГО захода. Порядок проверок — от надёжного к слабому.
+    var params = new URLSearchParams(window.location.search);
+
+    // 1) Реклама. gclid Google ставит сам при включённом автотеггинге, он
+    //    надёжнее utm: utm можно забыть проставить, gclid появляется всегда.
+    if (params.get('gclid') || params.get('gbraid') || params.get('wbraid')) return 'paid';
+
+    var medium = (params.get('utm_medium') || '').toLowerCase();
+    if (medium === 'cpc' || medium === 'ppc' || medium === 'paid') return 'paid';
+    if (medium) return 'referral';   // размеченная ссылка, но не реклама
+
+    // 2) Реферер. Пустой — прямой заход или переход из приложения.
+    var ref = '';
+    try { ref = document.referrer || ''; } catch (e) { ref = ''; }
+    if (!ref) return 'direct';
+
+    var host = '';
+    try { host = new URL(ref).hostname.toLowerCase(); } catch (e) { return 'direct'; }
+
+    // Переход внутри сайта каналом не считается: источник уже сохранён
+    // при первом заходе, и перезаписывать его на 'referral' нельзя.
+    if (host === window.location.hostname) return '';
+
+    // 3) ИИ-ассистенты. В GA4 это заметный канал (13 сеансов за 21–24.11,
+    //    5 ключевых событий), поэтому выделяем отдельно от органики.
+    if (/(^|\.)(chatgpt\.com|chat\.openai\.com|openai\.com|perplexity\.ai|claude\.ai|copilot\.microsoft\.com|gemini\.google\.com)$/.test(host)) {
+        return 'ai';
+    }
+
+    // 4) Поисковики — органика (реклама отсеяна выше по gclid/utm).
+    if (/(^|\.)(google\.[a-z.]+|bing\.com|yandex\.[a-z]+|duckduckgo\.com|search\.brave\.com|ecosia\.org|yahoo\.com)$/.test(host)) {
+        return 'organic';
+    }
+
+    return 'referral';
+}
+
+function rememberVisitSource() {
+    // Запоминаем ПЕРВЫЙ значимый источник на 30 дней.
+    //
+    // Почему первый, а не последний: человек кликает рекламу, уходит думать,
+    // через день возвращается напрямую и оставляет заявку. По последнему
+    // касанию заслуга досталась бы 'direct', и реклама выглядела бы
+    // бесполезной. Окно 30 дней совпадает с окном атрибуции Ads.
+    var now = Date.now();
+    var fresh = detectVisitSource();
+    if (!fresh) return;                     // переход внутри сайта — не трогаем
+
+    try {
+        var saved = JSON.parse(localStorage.getItem(SOURCE_STORAGE_KEY) || 'null');
+        if (saved && saved.src && (now - saved.ts) < SOURCE_TTL_MS) {
+            // Уже есть свежая метка. Перезаписываем только ради рекламы:
+            // новый платный клик — новая оплаченная сессия, её и засчитываем.
+            if (fresh !== 'paid') return;
+        }
+        localStorage.setItem(SOURCE_STORAGE_KEY, JSON.stringify({ src: fresh, ts: now }));
+    } catch (e) {
+        // Приватный режим или запрет хранилища — молча работаем без памяти,
+        // источник определится по текущему заходу в getVisitSource().
+    }
+}
+
+function getVisitSource() {
+    // Значение для отправки в бот. Сохранённое важнее текущего: заявку
+    // оставляют часто не в тот заход, когда пришли по рекламе.
+    try {
+        var saved = JSON.parse(localStorage.getItem(SOURCE_STORAGE_KEY) || 'null');
+        if (saved && saved.src && (Date.now() - saved.ts) < SOURCE_TTL_MS) return saved.src;
+    } catch (e) { /* хранилище недоступно — ниже определим по текущему заходу */ }
+    return detectVisitSource() || 'direct';
+}
+
+// Запомнить источник как можно раньше: до того, как человек уйдёт бродить
+// по страницам и реферер сменится на внутренний.
+rememberVisitSource();
+
+
 // Районы для КЛИЕНТСКОЙ формы — по городу страницы (см. botCityFromUrl).
 // Показывать тбилисские районы на батумском лендинге нельзя: заявка ушла бы
 // с районом чужого города и не нашла бы ни одного мастера.
@@ -1216,7 +1310,9 @@ async function sendLeadToBot(formData, idempotencyKey) {
         lang:        ['ru', 'en', 'ka'].includes(currentLang) ? currentLang : 'ru',
         urgent:      !!(document.getElementById('leadUrgent') && document.getElementById('leadUrgent').checked),
         photos:      leadPhotoDataUrls.slice(0, MAX_LEAD_PHOTOS),
-        idempotency_key: idempotencyKey
+        idempotency_key: idempotencyKey,
+        // 📊 Канал привлечения — для сверки GA4 с реальными сделками в боте.
+        source:      getVisitSource()
     };
 
     return await postBotJson(BOT_REQUEST_URL, payload);
@@ -1805,7 +1901,9 @@ function initHeroQuickForm() {
                 lang:        lang,
                 urgent:      false,
                 photos:      [],
-                idempotency_key: idempotencyKey
+                idempotency_key: idempotencyKey,
+                // 📊 Канал привлечения — см. getVisitSource().
+                source:      getVisitSource()
             });
 
             if (typeof gtag === 'function') {

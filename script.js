@@ -202,7 +202,7 @@ const i18n = {
 // Нужна, чтобы проверить, какой файл реально исполняется у посетителя:
 // в консоли `MASTERA_VERSION` отвечает сразу, без сверки размеров и дат.
 // Поднимается скриптом bump-version.py вместе с остальными местами.
-const MASTERA_VERSION = '400';
+const MASTERA_VERSION = '401';
 window.MASTERA_VERSION = MASTERA_VERSION;
 
 // Личный чат владельца сервиса: сюда ведут кнопки «Написать в Telegram»
@@ -1085,6 +1085,72 @@ function getVisitSource() {
 rememberVisitSource();
 
 
+// ============================================
+// 🔗 CLIENT ID GA4 — склейка заявки с сеансом аналитики
+// ============================================
+// ЗАЧЕМ. Канал (source выше) отвечает на вопрос «откуда пришёл человек».
+// client_id отвечает на другой: «какой именно сеанс GA4 это был». Без него
+// сделку нельзя вернуть в GA4 через Measurement Protocol так, чтобы Google
+// понял, КАКОЙ клик её принёс: событие прилетело бы без привязки к сеансу.
+//
+// Сегодня поле не используется — оно копится в боте про запас, чтобы в
+// январе переход на оптимизацию по сделкам стал настройкой, а не новой
+// правкой сайта с ожиданием нового месяца данных.
+//
+// ⚠️ GA4 здесь грузится ЛЕНИВО (см. <head>: скрипт подключается после
+// первого скролла/клика). Заполнивший форму человек заведомо что-то нажимал,
+// поэтому к отправке счётчик обычно готов. Но «обычно» — не «всегда»:
+// отправка заявки не вправе зависеть от рекламного скрипта. Отсюда два
+// независимых пути и мягкий отказ, если не сработал ни один.
+
+var GA_MEASUREMENT_ID = 'G-7SLML317LT';
+var gaClientIdCache = '';
+
+function readGaClientIdFromCookie() {
+    // Запасной путь: куку _ga ставит сам GA4, она переживает перезагрузку.
+    // Формат: GA1.1.1234567890.1700000000, где client_id — две последние
+    // части. Берём именно их, а не всю строку: GA ждёт «число.число».
+    try {
+        var m = document.cookie.match(/(?:^|;\s*)_ga=([^;]+)/);
+        if (!m) return '';
+        var parts = decodeURIComponent(m[1]).split('.');
+        if (parts.length < 4) return '';
+        var cid = parts.slice(-2).join('.');
+        return /^\d+\.\d+$/.test(cid) ? cid : '';
+    } catch (e) {
+        return '';
+    }
+}
+
+function requestGaClientId() {
+    // Основной путь: спрашиваем у самого gtag. Ответ приходит колбэком,
+    // поэтому результат кладём в кеш заранее, а не в момент отправки формы.
+    try {
+        if (typeof window.gtag !== 'function') return;
+        window.gtag('get', GA_MEASUREMENT_ID, 'client_id', function (cid) {
+            if (typeof cid === 'string' && /^\d+\.\d+$/.test(cid)) gaClientIdCache = cid;
+        });
+    } catch (e) {
+        // Счётчик не загрузился или заблокирован — останется путь через куку.
+    }
+}
+
+function getGaClientId() {
+    // Значение для отправки. Пустая строка — нормальный исход (блокировщик
+    // рекламы, приватный режим, отказ от кук), заявка уходит как обычно.
+    if (gaClientIdCache) return gaClientIdCache;
+    var fromCookie = readGaClientIdFromCookie();
+    if (fromCookie) gaClientIdCache = fromCookie;
+    return gaClientIdCache;
+}
+
+// Спрашиваем сразу и ещё раз позже: на первом проходе GA4 обычно ещё не
+// подгрузился, а к моменту заполнения формы уже успевает.
+requestGaClientId();
+setTimeout(requestGaClientId, 3000);
+window.addEventListener('pointerdown', function () { setTimeout(requestGaClientId, 1200); }, { passive: true, once: true });
+
+
 // Районы для КЛИЕНТСКОЙ формы — по городу страницы (см. botCityFromUrl).
 // Показывать тбилисские районы на батумском лендинге нельзя: заявка ушла бы
 // с районом чужого города и не нашла бы ни одного мастера.
@@ -1312,7 +1378,9 @@ async function sendLeadToBot(formData, idempotencyKey) {
         photos:      leadPhotoDataUrls.slice(0, MAX_LEAD_PHOTOS),
         idempotency_key: idempotencyKey,
         // 📊 Канал привлечения — для сверки GA4 с реальными сделками в боте.
-        source:      getVisitSource()
+        source:      getVisitSource(),
+        // 🔗 Сеанс GA4 — чтобы в будущем вернуть сделку в аналитику адресно.
+        client_id:   getGaClientId()
     };
 
     return await postBotJson(BOT_REQUEST_URL, payload);
@@ -1903,7 +1971,8 @@ function initHeroQuickForm() {
                 photos:      [],
                 idempotency_key: idempotencyKey,
                 // 📊 Канал привлечения — см. getVisitSource().
-                source:      getVisitSource()
+                source:      getVisitSource(),
+                client_id:   getGaClientId()
             });
 
             if (typeof gtag === 'function') {

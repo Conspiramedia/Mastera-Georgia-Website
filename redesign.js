@@ -2348,14 +2348,30 @@
             link.appendChild(num);
             link.parentNode.insertBefore(eye, link.nextSibling);
 
+            var revealed = false;
+
             function reveal(e) {
                 // Глаз раскрывает номер, но не уводит на звонок:
                 // иначе на десктопе клик открыл бы приложение.
                 if (e) { e.preventDefault(); e.stopPropagation(); }
+                // Защита от повторного вызова: на сенсорном экране
+                // pointerdown и click приходят оба, и без флага номер
+                // раскрывался бы дважды, а eye.remove() падал бы.
+                if (revealed) return;
+                revealed = true;
                 num.textContent = link.dataset.full;
                 eye.remove();
             }
 
+            // ⚠️ pointerdown, а не click: на телефоне между касанием и
+            // click проходит заметная пауза (браузер ждёт, не будет ли
+            // это двойной тап или свайп). Человеку кажется, что сайт
+            // подвис, и он жмёт второй раз. pointerdown срабатывает в
+            // момент касания — номер раскрывается сразу.
+            //
+            // click оставлен запасным путём: pointer-события есть не
+            // везде, а клавиатурный Enter вообще приходит только так.
+            eye.addEventListener('pointerdown', reveal);
             eye.addEventListener('click', reveal);
             eye.addEventListener('keydown', function (e) {
                 if (e.key === 'Enter' || e.key === ' ') reveal(e);
